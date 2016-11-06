@@ -1,0 +1,5174 @@
+﻿<Gauge Name="HUD-F15C" Version="5.0">
+
+
+<!--
+Version 5.00
+	[EDT] Weapon周り
+Version 4.50
+	[EDT] Texture -> Polyline 終わり
+Version 4.0
+	[EDT] Texture -> Polyline (Reticle関係 , Heading Indicator , Airspeed)
+Version 3.0
+	[EDT] Texture -> Polyline (Aircraft Sym , VV , Steering Needle , SRM/MRM Cricle)
+Version 2.0
+	[EDT] F-15E -> F-15C
+	-->
+<Image Name="HUD_back.bmp" ImageSizes="500,500"/>
+<Element>
+	<Visible>(L:HUD Power, bool) ! (L:INS_RDY, bool) and</Visible>
+	<Element Name="Macro">
+		<Macro Name="AboveMinSpeed">(A:Airspeed indicated, knots) 14 &gt;</Macro>
+		<Macro Name="mod_h">@1 @2 @1 @2 / flr * -</Macro>
+		<Macro Name="radnor180_h">@mod_h( @1 pi +, pi 2 * ) pi -</Macro>
+		<Macro Name="radnor90_h">@radnor180_h( @1 ) sp0 l0 abs pi 2 / &lt;= if{ l0 } els{  pi 2 / @mod_h( l0 pi 2 / +, pi ) - }</Macro>
+		<Macro Name="HUDX1">-8.5</Macro>
+		<Macro Name="HUDX2">8.5</Macro>
+		<Macro Name="HUDY1">-4.0</Macro>
+		<Macro Name="HUDY2">13.0</Macro>
+		<Macro Name="SinBank">(A:PLANE BANK DEGREES, radians) sin</Macro>
+		<Macro Name="CosBank">(A:PLANE BANK DEGREES, radians) cos</Macro>
+		<Macro Name="LadderRefIsVV">(L:VectorOnGlass, enum) @AboveMinSpeed &amp;&amp;</Macro>
+		<Macro Name="LadderRefX">@LadderRefIsVV if{ (L:VVectX, degrees) } els{ 0 }</Macro>
+		<Macro Name="LadderRefY">@LadderRefIsVV if{ (L:VVectY, degrees) } els{ 0 }</Macro>
+		<Macro Name="ClimbAngle">(A:VELOCITY WORLD Y, m/s) (A:GROUND VELOCITY, m/s) atg2 rddg /-/</Macro>
+		<Macro Name="LadderRefAngle">@LadderRefIsVV if{ @ClimbAngle } els{ (A:PLANE PITCH DEGREES, degrees) }</Macro>
+		<Macro Name="LadderTransitionSpeed">6.00</Macro>
+		<Macro Name="SymColor">(L:HUD_COLOR_SYM)</Macro>
+		<Macro Name="LadderIsNearRef">
+			@LadderTransitionSpeed (L:delta time, seconds) * (&gt;L:LadderStep, degrees)
+			@LadderRefX (L:LadderX, degrees) - sqr @LadderRefY (L:LadderY, degrees) - sqr + sqrt (&gt;L:LadderOffset, degrees)
+			(L:LadderStep, degrees) (L:LadderOffset, degrees) &gt;=
+		</Macro>
+		<Macro Name="LadderMove">
+			@LadderRefX  (L:LadderX, degrees) -  (L:LadderStep, degrees) *   (L:LadderOffset, degrees)  /   (L:LadderX, degrees) + (&gt;L:LadderX, degrees)
+			@LadderRefY  (L:LadderY, degrees) - (L:LadderStep, degrees) *   (L:LadderOffset, degrees)  /  (L:LadderY, degrees) + (&gt;L:LadderY, degrees)
+			(L:LadderY, degrees) @CosBank * (L:LadderX, degrees) @SinBank * + (A:PLANE PITCH DEGREES, degrees) + (&gt;L:LadderAngle, degrees)
+		</Macro>
+		<Macro Name="LadderSnap">
+			@LadderRefX  (&gt;L:LadderX, degrees)
+			@LadderRefY  (&gt;L:LadderY, degrees)
+			@LadderRefAngle  (&gt;L:LadderAngle, degrees)
+		</Macro>
+		<Element>
+			<Select>
+				<Value>
+					(P:LOCAL TIME, seconds) s0 0.40 % 0.20 &lt; l0 (L:Time-3, seconds) == || (&gt;L:IsFlashTime, bool)
+					(L:Time-2, seconds) (&gt;L:Time-3, seconds)
+					(L:Time-1, seconds) (&gt;L:Time-2, seconds)
+					l0 (&gt;L:Time-1, seconds)
+
+				@AboveMinSpeed
+					if{
+						(A:VELOCITY BODY X, m/s) (A:VELOCITY BODY Z, m/s) atg2 rddg /-/ (&gt;L:DriftX, degrees)
+						(A:VELOCITY BODY Y, m/s) (A:VELOCITY BODY Z, m/s) atg2 rddg /-/ (&gt;L:DriftY, degrees)
+					}
+					els{
+						(A:PLANE PITCH DEGREES,degrees) (A:PLANE BANK DEGREES,radians) sin * /-/ (&gt;L:DriftX, degrees)
+						(A:PLANE PITCH DEGREES,degrees) (A:PLANE BANK DEGREES,radians) cos * /-/ (&gt;L:DriftY, degrees)
+					}
+
+					@AboveMinSpeed (L:Cage switch,enum) 0 &gt; &amp;&amp;
+					if{
+						(L:DriftX, degrees) (A:PLANE BANK DEGREES, radians) cos (A:PLANE BANK DEGREES, radians) cos * * /-/ (&gt;L:CageX, degrees)
+						(L:DriftX, degrees) (A:PLANE BANK DEGREES, radians) cos (A:PLANE BANK DEGREES, radians) sin * * (&gt;L:CageY, degrees)
+
+					}
+					els{
+						0 (&gt;L:CageX, degrees)
+						0 (&gt;L:CageY, degrees)
+					}
+
+					(L:DriftX, degrees) (L:CageX, degrees) + (&gt;L:VVectX, degrees)
+					(L:DriftY, degrees) (L:CageY, degrees) + (&gt;L:VVectY, degrees)
+
+					(L:DriftX, degrees) abs @HUDX2 &lt; @HUDY1 @HUDY2 (L:DriftY, degrees) rng &amp;&amp; if{ 1 (&gt;L:GhostVectorOnGlass, enum) } els{ 0 (&gt;L:GhostVectorOnGlass, enum) }
+					(L:VVectX, degrees) abs @HUDX2 &lt; @HUDY1 @HUDY2 (L:VVectY, degrees) rng &amp;&amp; if{ 1 (&gt;L:VectorOnGlass, enum) } els{ 0 (&gt;L:VectorOnGlass, enum) }
+
+					@LadderRefIsVV (L:LadderRefWasVV, enum) == !
+						if{
+							@LadderRefIsVV (&gt;L:LadderRefWasVV, enum)
+							1 (&gt;L:LadderTransitionTrigger, bool)
+						}
+					(P:LOCAL TIME, seconds) s0 (L:Last time, seconds) - s1 0 &gt;
+						if{
+							l1 (&gt;L:delta time, seconds)
+							l0 (&gt;L:Last time, seconds)
+						}
+
+					(L:LadderTransitionTrigger, bool)
+						if{
+							@LadderIsNearRef !
+							if{ @LadderMove }
+							els{
+								@LadderSnap 0 (&gt;L:LadderTransitionTrigger, bool)
+							}
+						}
+						els{ @LadderSnap }
+
+					(L:LadderTransitionTrigger, bool)
+						if{
+							@LadderIsNearRef !
+							if{ @LadderMove }
+							els{
+								@LadderSnap 0 (&gt;L:LadderTransitionTrigger, bool)
+							}
+						}
+						els{ @LadderSnap }
+				</Value>
+			</Select>
+		</Element>
+		<Element>
+			<Macro Name="Minimum_Warning_Time">5.0</Macro>
+			<Macro Name="Roll_delay">(A:PLANE BANK DEGREES, radians) abs 2.7 /</Macro>
+			<Macro Name="Total_Warning_Time">@Minimum_Warning_Time @Roll_delay +</Macro>
+			<Macro Name="Initial_Altitude_Loss">(A:VELOCITY WORLD Y, feet per second) /-/ @Total_Warning_Time *</Macro>
+			<Macro Name="Recovery_max_G">4.0</Macro>
+			<Macro Name="ClimbAngle_rad">(A:VELOCITY WORLD Y, m/s) (A:GROUND VELOCITY, m/s) atg2 /-/</Macro>
+			<Macro Name="Recovery_altitude_loss">1 @ClimbAngle_rad cos - (A:VELOCITY BODY Z, m/s) sqr * 9.81 / @Recovery_max_G / 0.3048 /</Macro>
+			<Macro Name="Dive_Altitude">@Initial_Altitude_Loss @Recovery_altitude_loss +</Macro>
+			<Macro Name="Floor_Airspeed">(L:WoffW Time, seconds) 60 &lt; if{ 250 } els{ 200 }</Macro>
+			<Macro Name="Floor_vsi">(L:WoffW Time, seconds) 60 &lt; if{ -300 } els{ -1500 }</Macro>
+			<Macro Name="Gear">(L:WoffW Time, seconds) 60 &lt; if{ 1 } els{ (A:GEAR HANDLE POSITION, percent) }</Macro>
+			<Macro Name="vsi_less_than">(A:VELOCITY WORLD Y, feet per minute) @1 &lt; if{ 1 } els{ 0 }</Macro>
+			<Macro Name="Below">(A:Radio height, feet) @1 &lt; if{ 1 } els{ 0 }</Macro>
+			<Macro Name="Above">@Below(@1) ! </Macro>
+			<Macro Name="Faster">(A:AIRSPEED INDICATED, knots) @1 &gt; if{ 1 } els{ 0 }</Macro>
+			<Macro Name="Slower">@Faster(@1) !</Macro>
+			<Macro Name="CFIT">
+				@Above(150) 	@vsi_less_than(0)		@Below(@Dive_Altitude)		&amp;&amp; &amp;&amp;
+				@Below(90)	@vsi_less_than(0) 		@Faster(@Floor_Airspeed) 		&amp;&amp; &amp;&amp; ||
+				@Below(150)	@vsi_less_than(@Floor_vsi) 	@Slower(@Floor_Airspeed)	@Gear	&amp;&amp; &amp;&amp; &amp;&amp; ||
+				(A:Sim On Ground, bool) ! &amp;&amp;
+				if{ 1 }
+				els{ 0 }
+			</Macro>
+			<Macro Name="CHECK_GEAR">
+						(A:Radio height, feet) 150 &lt;
+						(A:Vertical speed, feet per minute) -100 &lt; &amp;&amp;
+						(A:AIRSPEED INDICATED, knots) 200 &lt; &amp;&amp;
+						(A:GEAR HANDLE POSITION, percent) 0 == &amp;&amp;
+						if{ 1 }
+						els{ 0 }
+			</Macro>
+			<Macro Name="LAW_setting">(L:Setting LAW, enum)</Macro>
+			<Element>
+				<Select>
+					<Value>
+						(L:Low Altitude Warning, bool)
+						(A:Radio Height, feet) (L:Radio Height-1, feet) @LAW_setting rng
+						(A:Vertical speed, feet per minute) 0 &lt; &amp;&amp; ||
+						if{
+							(L:LAW_timer, seconds) 0 ==
+							if{
+								(P:Absolute Time, seconds) (&gt;L:LAW_timer, seconds)
+							}
+							(P:Absolute Time, seconds) (L:LAW_timer, seconds) - 3 &lt; (&gt;L:Low Altitude Warning, bool)
+						}
+						els{
+							0 (&gt;L:Low Altitude Warning, bool)
+							0 (&gt;L:LAW_timer, seconds)
+						}
+						(A:Radio Height, feet) (&gt;L:Radio Height-1, feet)
+						@CFIT (&gt;L:PULL_UP_WARNING)
+						(A:Sim On Ground, bool)
+							if{ (P:LOCAL TIME, seconds) (&gt;L:WoffW Start Time, seconds) 0 (&gt;L:WoffW Time, seconds) }
+							els{ (P:LOCAL TIME, seconds) (L:WoffW Start Time, seconds) - (&gt;L:WoffW Time, seconds) }
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+
+	</Element>
+
+	<Element Name="HUD Symbology">
+		<Element Name="Pitch Scale">
+			<Visible>(L:HUD Reject Mode, enum) 1 ==</Visible>
+			<Element Name="Horizon Line">
+				<Element>
+					<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+						<Point X="20" Y="0"/>
+						<Point X="180" Y="0"/>
+						<Point X="180" Y="15"/>
+					</Polyline>
+				</Element>
+				<Element>
+					<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+						<Point X="-20" Y="0"/>
+						<Point X="-180" Y="0"/>
+						<Point X="-180" Y="15"/>
+					</Polyline>
+				</Element>
+			</Element>
+
+			<Element Name="Pitch_Ladder_20_5">
+				<Element Name="20">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="28"/>
+							<Point X="52" Y="15"/>
+							<Point X="133" Y="15"/>
+							<Axis X="154" Y="935"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="28"/>
+							<Point X="256" Y="15"/>
+							<Point X="175" Y="15"/>
+							<Axis X="154" Y="935"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>20</String>
+								<Axis X="-30" Y="930"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>20</String>
+								<Axis X="220" Y="930"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="15">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="258"/>
+							<Point X="52" Y="245"/>
+							<Point X="133" Y="245"/>
+							<Axis X="154" Y="935"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="258"/>
+							<Point X="256" Y="245"/>
+							<Point X="175" Y="245"/>
+							<Axis X="154" Y="935"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>15</String>
+								<Axis X="-30" Y="700"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>15</String>
+								<Axis X="220" Y="700"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="10">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="488"/>
+							<Point X="52" Y="475"/>
+							<Point X="133" Y="475"/>
+							<Axis X="154" Y="935"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="488"/>
+							<Point X="256" Y="475"/>
+							<Point X="175" Y="475"/>
+							<Axis X="154" Y="935"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>10</String>
+								<Axis X="-30" Y="470"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>10</String>
+								<Axis X="220" Y="470"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="5">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="718"/>
+							<Point X="52" Y="705"/>
+							<Point X="133" Y="705"/>
+							<Axis X="154" Y="935"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="718"/>
+							<Point X="256" Y="705"/>
+							<Point X="175" Y="705"/>
+							<Axis X="154" Y="935"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>5</String>
+								<Axis X="-30" Y="240"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>5</String>
+								<Axis X="220" Y="240"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+			</Element>
+			<Element Name="Pitch_Ladder_-5_-20">
+				<Element Name="5">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="9"/>
+								<Point X="52" Y="22"/>
+								<Point X="64" Y="22"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="22"/>
+								<Point X="104" Y="22"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="22"/>
+								<Point X="133" Y="22"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="9"/>
+								<Point X="256" Y="22"/>
+								<Point X="246" Y="22"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="22"/>
+								<Point X="206" Y="22"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="22"/>
+								<Point X="175" Y="22"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>5</String>
+								<Axis X="-30" Y="-210"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>5</String>
+								<Axis X="220" Y="-210"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="10">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="238"/>
+								<Point X="52" Y="252"/>
+								<Point X="64" Y="252"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="252"/>
+								<Point X="104" Y="252"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="252"/>
+								<Point X="133" Y="252"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="238"/>
+								<Point X="256" Y="252"/>
+								<Point X="246" Y="252"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="252"/>
+								<Point X="206" Y="252"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="252"/>
+								<Point X="175" Y="252"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>10</String>
+								<Axis X="-30" Y="-440"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>10</String>
+								<Axis X="220" Y="-440"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="15">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="470"/>
+								<Point X="52" Y="482"/>
+								<Point X="64" Y="482"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="482"/>
+								<Point X="104" Y="482"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="482"/>
+								<Point X="133" Y="482"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="470"/>
+								<Point X="256" Y="482"/>
+								<Point X="246" Y="482"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="482"/>
+								<Point X="206" Y="482"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="482"/>
+								<Point X="175" Y="482"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>15</String>
+								<Axis X="-30" Y="-670"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>15</String>
+								<Axis X="220" Y="-670"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="20">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="700"/>
+								<Point X="52" Y="712"/>
+								<Point X="64" Y="712"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="712"/>
+								<Point X="104" Y="712"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="712"/>
+								<Point X="133" Y="712"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="700"/>
+								<Point X="256" Y="712"/>
+								<Point X="246" Y="712"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="712"/>
+								<Point X="206" Y="712"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="712"/>
+								<Point X="175" Y="712"/>
+								<Axis X="154" Y="-208"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>20</String>
+								<Axis X="-30" Y="-900"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>20</String>
+								<Axis X="220" Y="-900"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+			</Element>
+			<Element Name="Pitch_Ladder_60_25">
+				<Element Name="60">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="28"/>
+							<Point X="52" Y="15"/>
+							<Point X="133" Y="15"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="28"/>
+							<Point X="256" Y="15"/>
+							<Point X="175" Y="15"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>60</String>
+							<Axis X="-30" Y="2760"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>60</String>
+							<Axis X="220" Y="2760"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="55">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="258"/>
+							<Point X="52" Y="245"/>
+							<Point X="133" Y="245"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="258"/>
+							<Point X="256" Y="245"/>
+							<Point X="175" Y="245"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>55</String>
+							<Axis X="-30" Y="2530"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>55</String>
+							<Axis X="220" Y="2530"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="50">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="488"/>
+							<Point X="52" Y="475"/>
+							<Point X="133" Y="475"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="488"/>
+							<Point X="256" Y="475"/>
+							<Point X="175" Y="475"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>50</String>
+							<Axis X="-30" Y="2300"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>50</String>
+							<Axis X="220" Y="2300"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="45">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="718"/>
+							<Point X="52" Y="705"/>
+							<Point X="133" Y="705"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="718"/>
+							<Point X="256" Y="705"/>
+							<Point X="175" Y="705"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>45</String>
+							<Axis X="-30" Y="2070"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>45</String>
+							<Axis X="220" Y="2070"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="40">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="948"/>
+							<Point X="52" Y="935"/>
+							<Point X="133" Y="935"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="948"/>
+							<Point X="256" Y="935"/>
+							<Point X="175" Y="935"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>40</String>
+							<Axis X="-30" Y="1840"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>40</String>
+							<Axis X="220" Y="1840"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="35">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="1177"/>
+							<Point X="52" Y="1165"/>
+							<Point X="133" Y="1165"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="1177"/>
+							<Point X="256" Y="1165"/>
+							<Point X="175" Y="1165"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>35</String>
+							<Axis X="-30" Y="1610"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>35</String>
+							<Axis X="220" Y="1610"/>
+							</Text>
+						</Element>
+					</Element>
+					</Element>
+				<Element Name="30">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="1407"/>
+							<Point X="52" Y="1394"/>
+							<Point X="133" Y="1394"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="1407"/>
+							<Point X="256" Y="1394"/>
+							<Point X="175" Y="1394"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>30</String>
+							<Axis X="-30" Y="1390"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>30</String>
+							<Axis X="220" Y="1390"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="25">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="1638"/>
+							<Point X="52" Y="1625"/>
+							<Point X="133" Y="1625"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="1638"/>
+							<Point X="256" Y="1625"/>
+							<Point X="175" Y="1625"/>
+							<Axis X="154" Y="2774"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>25</String>
+							<Axis X="-30" Y="1160"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>25</String>
+							<Axis X="220" Y="1160"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+			</Element>
+			<Element Name="Pitch_Ladder_-25_-60">
+				<Element Name="25">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="15"/>
+								<Point X="52" Y="28"/>
+								<Point X="64" Y="28"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="28"/>
+								<Point X="104" Y="28"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="28"/>
+								<Point X="133" Y="28"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="15"/>
+								<Point X="256" Y="28"/>
+								<Point X="246" Y="28"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="28"/>
+								<Point X="206" Y="28"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="28"/>
+								<Point X="175" Y="28"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>25</String>
+							<Axis X="-30" Y="-1140"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>25</String>
+							<Axis X="220" Y="-1140"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="30">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="245"/>
+								<Point X="52" Y="258"/>
+								<Point X="64" Y="258"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="258"/>
+								<Point X="104" Y="258"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="258"/>
+								<Point X="133" Y="258"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="245"/>
+								<Point X="256" Y="258"/>
+								<Point X="246" Y="258"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="258"/>
+								<Point X="206" Y="258"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="258"/>
+								<Point X="175" Y="258"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>30</String>
+							<Axis X="-30" Y="-1370"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>30</String>
+							<Axis X="220" Y="-1370"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="35">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="475"/>
+								<Point X="52" Y="488"/>
+								<Point X="64" Y="488"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="488"/>
+								<Point X="104" Y="488"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="488"/>
+								<Point X="133" Y="488"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="475"/>
+								<Point X="256" Y="488"/>
+								<Point X="246" Y="488"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="488"/>
+								<Point X="206" Y="488"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="488"/>
+								<Point X="175" Y="488"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>35</String>
+							<Axis X="-30" Y="-1600"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>35</String>
+							<Axis X="220" Y="-1600"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="40">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="705"/>
+								<Point X="52" Y="718"/>
+								<Point X="64" Y="718"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="718"/>
+								<Point X="104" Y="718"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="718"/>
+								<Point X="133" Y="718"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="705"/>
+								<Point X="256" Y="718"/>
+								<Point X="246" Y="718"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="718"/>
+								<Point X="206" Y="718"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="718"/>
+								<Point X="175" Y="718"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>40</String>
+							<Axis X="-30" Y="-1830"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>40</String>
+							<Axis X="220" Y="-1830"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="45">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="935"/>
+								<Point X="52" Y="948"/>
+								<Point X="64" Y="948"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="948"/>
+								<Point X="104" Y="948"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="948"/>
+								<Point X="133" Y="948"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="935"/>
+								<Point X="256" Y="948"/>
+								<Point X="246" Y="948"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="948"/>
+								<Point X="206" Y="948"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="948"/>
+								<Point X="175" Y="948"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>45</String>
+								<Axis X="-30" Y="-2060"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>45</String>
+								<Axis X="220" Y="-2060"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="50">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="1165"/>
+								<Point X="52" Y="1177"/>
+								<Point X="64" Y="1177"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="1177"/>
+								<Point X="104" Y="1177"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="1177"/>
+								<Point X="133" Y="1177"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="1165"/>
+								<Point X="256" Y="1177"/>
+								<Point X="246" Y="1177"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="1177"/>
+								<Point X="206" Y="1177"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="1177"/>
+								<Point X="175" Y="1177"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>50</String>
+							<Axis X="-30" Y="-2290"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>50</String>
+							<Axis X="220" Y="-2290"/>
+							</Text>
+						</Element>
+					</Element>
+
+				</Element>
+				<Element Name="55">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="1394"/>
+								<Point X="52" Y="1407"/>
+								<Point X="64" Y="1407"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="1407"/>
+								<Point X="104" Y="1407"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="1407"/>
+								<Point X="133" Y="1407"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="1394"/>
+								<Point X="256" Y="1407"/>
+								<Point X="246" Y="1407"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="1407"/>
+								<Point X="206" Y="1407"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="1407"/>
+								<Point X="175" Y="1407"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>55</String>
+							<Axis X="-30" Y="-2520"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>55</String>
+							<Axis X="220" Y="-2520"/>
+							</Text>
+						</Element>
+					</Element>
+
+				</Element>
+				<Element Name="60">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="1625"/>
+								<Point X="52" Y="1638"/>
+								<Point X="64" Y="1638"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="1638"/>
+								<Point X="104" Y="1638"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="1638"/>
+								<Point X="133" Y="1638"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="1625"/>
+								<Point X="256" Y="1638"/>
+								<Point X="246" Y="1638"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="1638"/>
+								<Point X="206" Y="1638"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="1638"/>
+								<Point X="175" Y="1638"/>
+								<Axis X="154" Y="-1127"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>60</String>
+							<Axis X="-30" Y="-2750"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>60</String>
+							<Axis X="220" Y="-2750"/>
+							</Text>
+						</Element>
+					</Element>
+
+				</Element>
+			</Element>
+			<Element Name="Pitch_Ladder_65_top">
+				<Element Name="80u">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="33"/>
+							<Point X="52" Y="46"/>
+							<Point X="113" Y="46"/>
+							<Axis X="154" Y="4645"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+
+							<Point X="256" Y="33"/>
+							<Point X="256" Y="46"/>
+							<Point X="175" Y="46"/>
+							<Axis X="154" Y="4645"/>
+						</Polyline>
+					</Element>
+				</Element>
+				<Element Name="85u">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="263"/>
+							<Point X="52" Y="279"/>
+							<Point X="133" Y="279"/>
+							<Axis X="154" Y="4645"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="263"/>
+							<Point X="256" Y="279"/>
+							<Point X="175" Y="279"/>
+							<Axis X="154" Y="4645"/>
+						</Polyline>
+					</Element>
+				</Element>
+				<Element Name="90Arc">
+					<Arc Radius="40" StartAngle="360" EndAngle="0" LineWidth="5" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
+						<Axis X="40" Y="4179"/>
+					</Arc>
+				</Element>
+				<Element Name="85">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="749"/>
+							<Point X="52" Y="736"/>
+							<Point X="133" Y="736"/>
+							<Axis X="154" Y="4645"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="749"/>
+							<Point X="256" Y="736"/>
+							<Point X="175" Y="736"/>
+							<Axis X="154" Y="4645"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>85</String>
+							<Axis X="-30" Y="3910"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>85</String>
+							<Axis X="220" Y="3910"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="80">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="979"/>
+							<Point X="52" Y="967"/>
+							<Point X="133" Y="967"/>
+							<Axis X="154" Y="4645"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="979"/>
+							<Point X="256" Y="967"/>
+							<Point X="175" Y="967"/>
+							<Axis X="154" Y="4645"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>80</String>
+							<Axis X="-30" Y="3680"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>80</String>
+							<Axis X="220" Y="3680"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="75">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="1208"/>
+							<Point X="52" Y="1195"/>
+							<Point X="133" Y="1195"/>
+							<Axis X="154" Y="4645"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="1208"/>
+							<Point X="256" Y="1195"/>
+							<Point X="175" Y="1195"/>
+							<Axis X="154" Y="4645"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>75</String>
+							<Axis X="-30" Y="3450"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>75</String>
+							<Axis X="220" Y="3450"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="70">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="1438"/>
+							<Point X="52" Y="1426"/>
+							<Point X="133" Y="1426"/>
+							<Axis X="154" Y="4645"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="1438"/>
+							<Point X="256" Y="1426"/>
+							<Point X="175" Y="1426"/>
+							<Axis X="154" Y="4645"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>70</String>
+							<Axis X="-30" Y="3220"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>70</String>
+							<Axis X="220" Y="3220"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="65">
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="52" Y="1670"/>
+							<Point X="52" Y="1657"/>
+							<Point X="133" Y="1657"/>
+							<Axis X="154" Y="4645"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="256" Y="1670"/>
+							<Point X="256" Y="1657"/>
+							<Point X="175" Y="1657"/>
+							<Axis X="154" Y="4645"/>
+						</Polyline>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>65</String>
+							<Axis X="-30" Y="2990"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>65</String>
+							<Axis X="220" Y="2990"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+			</Element>
+			<Element Name="Pitch_Ladder_-65 Bottom">
+				<Element Name="65">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="33"/>
+								<Point X="52" Y="46"/>
+								<Point X="64" Y="46"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="46"/>
+								<Point X="104" Y="46"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="46"/>
+								<Point X="133" Y="46"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="33"/>
+								<Point X="256" Y="46"/>
+								<Point X="246" Y="46"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="46"/>
+								<Point X="206" Y="46"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="46"/>
+								<Point X="175" Y="46"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>65</String>
+							<Axis X="-30" Y="-2970"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>65</String>
+							<Axis X="220" Y="-2970"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="70">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="263"/>
+								<Point X="52" Y="279"/>
+								<Point X="64" Y="279"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="279"/>
+								<Point X="104" Y="279"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="279"/>
+								<Point X="133" Y="279"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="263"/>
+								<Point X="256" Y="279"/>
+								<Point X="246" Y="279"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="279"/>
+								<Point X="206" Y="279"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="279"/>
+								<Point X="175" Y="279"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>70</String>
+							<Axis X="-30" Y="-3195"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>70</String>
+							<Axis X="220" Y="-3195"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="75">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="502"/>
+								<Point X="52" Y="515"/>
+								<Point X="64" Y="515"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="515"/>
+								<Point X="104" Y="515"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="515"/>
+								<Point X="133" Y="515"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="502"/>
+								<Point X="256" Y="515"/>
+								<Point X="246" Y="515"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="515"/>
+								<Point X="206" Y="515"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="515"/>
+								<Point X="175" Y="515"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>75</String>
+							<Axis X="-30" Y="-3430"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>75</String>
+							<Axis X="220" Y="-3430"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="80">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="736"/>
+								<Point X="52" Y="749"/>
+								<Point X="64" Y="749"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="749"/>
+								<Point X="104" Y="749"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="749"/>
+								<Point X="133" Y="749"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="736"/>
+								<Point X="256" Y="749"/>
+								<Point X="246" Y="749"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="749"/>
+								<Point X="206" Y="749"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="749"/>
+								<Point X="175" Y="749"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>80</String>
+							<Axis X="-30" Y="-3670"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>80</String>
+							<Axis X="220" Y="-3670"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="85">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="967"/>
+								<Point X="52" Y="979"/>
+								<Point X="64" Y="979"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="979"/>
+								<Point X="104" Y="979"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="979"/>
+								<Point X="133" Y="979"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="967"/>
+								<Point X="256" Y="979"/>
+								<Point X="246" Y="979"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="979"/>
+								<Point X="206" Y="979"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="979"/>
+								<Point X="175" Y="979"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element Name="Text">
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>85</String>
+							<Axis X="-30" Y="-3900"/>
+							</Text>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Text X="110" Y="30" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>85</String>
+							<Axis X="220" Y="-3900"/>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+
+				<Element Name="90">
+					<Element Name="Arc">
+						<Arc Radius="40" StartAngle="360" EndAngle="0" LineWidth="5" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
+							<Axis X="40" Y="-4100"/>
+						</Arc>
+					</Element>
+					<Element Name="Poly">
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="0" Y="0"/>
+							<Point X="60" Y="60"/>
+							<Axis X="30" Y="-4110"/>
+						</Polyline>
+					</Element>
+					<Element Name="Poly">
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="60" Y="0"/>
+							<Point X="0" Y="60"/>
+							<Axis X="30" Y="-4110"/>
+						</Polyline>
+					</Element>
+				</Element>
+				<Element Name="85d">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="1426"/>
+								<Point X="52" Y="1438"/>
+								<Point X="64" Y="1438"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="1438"/>
+								<Point X="104" Y="1438"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="1438"/>
+								<Point X="133" Y="1438"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="1426"/>
+								<Point X="256" Y="1438"/>
+								<Point X="246" Y="1438"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="1438"/>
+								<Point X="206" Y="1438"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="1438"/>
+								<Point X="175" Y="1438"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+					</Element>
+
+				</Element>
+				<Element Name="60">
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="52" Y="1657"/>
+								<Point X="52" Y="1670"/>
+								<Point X="64" Y="1670"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="84" Y="1670"/>
+								<Point X="104" Y="1670"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="124" Y="1670"/>
+								<Point X="133" Y="1670"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="256" Y="1657"/>
+								<Point X="256" Y="1670"/>
+								<Point X="246" Y="1670"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="226" Y="1670"/>
+								<Point X="206" Y="1670"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="186" Y="1670"/>
+								<Point X="175" Y="1670"/>
+								<Axis X="154" Y="-2934"/>
+							</Polyline>
+						</Element>
+					</Element>
+
+				</Element>
+			</Element>
+			<Shift>
+				<Value>(L:LadderAngle, degrees)</Value>
+				<Nonlinearity>
+					<Item Value="-90" Y="4139"/>
+					<Item Value="90" Y="-4139"/>
+				</Nonlinearity>
+			</Shift>
+			<Rotate>
+				<Value>(A:PLANE BANK DEGREES,radians)</Value>
+			</Rotate>
+			<Shift>
+				<Value>(L:LadderX, degrees)</Value>
+				<Nonlinearity>
+					<Item Value="0" X="330"/>
+					<Item Value="90" X="-3790"/>
+				</Nonlinearity>
+			</Shift>
+			<Shift>
+				<Value>(L:LadderY, degrees)</Value>
+		        <Nonlinearity>
+					<Item Value="0" Y="330"/>
+					<Item Value="90" Y="4470"/>
+				</Nonlinearity>
+			</Shift>
+		</Element>
+
+		<Element Name="Aircrat Symbol">
+			<Position X="330" Y="287"/>
+			<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+				<Point X="-30" Y="-1"/>
+				<Point X="-20" Y="-1"/>
+				<Point X="-10" Y="10"/>
+				<Point X="0" Y="0"/>
+				<Point X="10" Y="10"/>
+				<Point X="20" Y="-1"/>
+				<Point X="30" Y="-1"/>
+			</Polyline>
+		</Element>
+
+		<Element Name="Velocity Vector">
+			<Visible>
+			(L:HUD Reject Mode, enum) 1 ==
+			(L:VectorOnGlass, enum) 0 == and
+				if{ (L:IsFlashTime) }
+				els{ (L:VectorOnGlass, enum) 1 == }
+			</Visible>
+			<Element>
+				<Arc Radius="12" StartAngle="360" EndAngle="0" LineWidth="5" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
+					<Axis X="-28" Y="-21"/>
+				</Arc>
+			</Element>
+			<Element>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+					<Point X="12" Y="0"/>
+					<Point X="22" Y="0"/>
+					<Axis X="-42" Y="-35"/>
+				</Polyline>
+			</Element>
+			<Element>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+					<Point X="-12" Y="0"/>
+					<Point X="-22" Y="0"/>
+					<Axis X="-42" Y="-35"/>
+				</Polyline>
+			</Element>
+			<Element>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+					<Point X="0" Y="-12"/>
+					<Point X="0" Y="-22"/>
+					<Axis X="-42" Y="-35"/>
+				</Polyline>
+			</Element>
+			<Shift>
+				<Value>(L:VVectX, degrees) @HUDX1 max @HUDX2 min</Value>
+				<Nonlinearity>
+					<Item Value="-90" X="4427"/>
+					<Item Value="90" X="-3851"/>
+				</Nonlinearity>
+			</Shift>
+			<Shift>
+				<Value>(L:VVectY, degrees) @HUDY1 max @HUDY2 min</Value>
+				<Nonlinearity>
+					<Item Value="0" Y="295"/>
+					<Item Value="90" Y="4435"/>
+				</Nonlinearity>
+			</Shift>
+		</Element>
+
+		<Element Name="Velocity Vector Ghost">
+			<Macro Name="CageZ">(L:CageX, degrees) abs 1.5 &lt; (L:CageY, degrees) abs 1.5 &lt; &amp;&amp;</Macro>
+			<Visible>
+				(L:HUD Reject Mode, enum) 1 ==
+				(L:Cage switch,enum) 0 &gt; and
+			</Visible>
+			<Element>
+				<Polyline Color="0" LineWidth="5" Bright="Yes">
+					<Point X="12" Y="0"/>
+					<Point X="22" Y="0"/>
+					<Axis X="-42" Y="-35"/>
+				</Polyline>
+			</Element>
+			<Element>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+					<Point X="-12" Y="0"/>
+					<Point X="-22" Y="0"/>
+					<Axis X="-42" Y="-35"/>
+				</Polyline>
+			</Element>
+			<Element>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+					<Point X="0" Y="-12"/>
+					<Point X="0" Y="-22"/>
+					<Axis X="-42" Y="-35"/>
+				</Polyline>
+			</Element>
+			<Shift>
+		   		<Value>(L:DriftX, degrees) @HUDX1 max @HUDX2 min</Value>
+		      	<Nonlinearity>
+					<Item Value="-90" X="4427"/>
+					<Item Value="90" X="-3851"/>
+					<Axis X="-42" Y="-35"/>
+				</Nonlinearity>
+				</Shift>
+			<Shift>
+		 		<Value>(L:DriftY, degrees) @HUDY1 max @HUDY2 min</Value>
+				<Nonlinearity>
+					<Item Value="0" Y="295"/>
+					<Item Value="90" Y="4435"/>
+				</Nonlinearity>
+			</Shift>
+		</Element>
+
+		<Element Name="ILS Needle">
+			<Visible>(L:ILS Switch, enum) 1 &lt; (L:HUD_MASTER_MODE, enum) 2 &lt; &amp;&amp;</Visible>
+			<Macro Name="ILS_LOC_Mode">
+				(A:NAV2 HAS LOCALIZER, bool) (A:NAV2 SIGNAL, bool) &amp;&amp;
+					if{ 0 }
+					els{
+						(A:NAV2 HAS NAV, bool) !
+							if{ 1 }
+							els{ 2 }
+					}
+			</Macro>
+			<Macro Name="ILS_GS_Mode">(A:NAV2 HAS GLIDE SLOPE, bool) if{ 0 } els{ (A:NAV2 HAS NAV, bool) ! if{ 1 } els{ 2 } }</Macro>
+			<Macro Name="LOC_Needle">0 (L:LOC Error, degrees) (A:NAV2 RADIAL ERROR, degrees) 3 @ILS_LOC_Mode case</Macro>
+			<Macro Name="GS_Needle">0 (L:GS Error, degrees) (A:NAV2 GLIDE SLOPE ERROR, degrees) 3 @ILS_GS_Mode case</Macro>
+
+			<Element Name="GlideSlope">
+				<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+				<Visible>(L:HSI_MODE,enum) 3 == (L:HSI_MODE,enum) 4 == or @ILS_LOC_Mode 2 &lt; and</Visible>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+					<Point X="0" Y="0"/>
+					<Point X="115" Y="0"/>
+				</Polyline>
+				<Shift>
+					<Value Minimum="-1.4" Maximum="1.4">@GS_Needle</Value>
+					<Nonlinearity>
+						<Item Value="-1.4" X="-16" Y="-20"/>
+						<Item Value="0" X="-16" Y="30"/>
+						<Item Value="1.4" X="-16" Y="80"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+			<Element Name="Localizer">
+				<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+				<Visible>(L:HSI_MODE,enum) 3 == (L:HSI_MODE,enum) 4 == or @ILS_LOC_Mode 2 &lt; and</Visible>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+					<Point X="0" Y="0"/>
+					<Point X="0" Y="115"/>
+				</Polyline>
+				<Shift>
+					<Value Minimum="-6" Maximum="6">@LOC_Needle</Value>
+					<Nonlinearity>
+						<Item Value="-6" X="-12" Y="-24"/>
+						<Item Value="0" X="38" Y="-24"/>
+						<Item Value="6" X="88" Y="-24"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+			<Element Name="GPS Flight Director">
+				<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+				<Visible>(L:HSI_MODE,enum) 0 == (A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and</Visible>
+
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="9" Bright="Yes">
+					<Point X="0" Y="0"/>
+					<Point X="0" Y="115"/>
+				</Polyline>
+				<Shift>
+					<Value Minimum="-6" Maximum="6">(A:GPS WP BEARING, degrees) (A:GPS WP DESIRED TRACK, degrees) - 10 *</Value>
+					<Nonlinearity>
+						<Item Value="6" X="-12" Y="-24"/>
+						<Item Value="0" X="38" Y="-24"/>
+						<Item Value="-6" X="88" Y="-24"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+			<Element Name="TCN Flight Director">
+				<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+				<Visible>(L:HSI_MODE,enum) 2 == (A:NAV HAS NAV:1, enum) 0 != and</Visible>
+
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="9" Bright="Yes">
+					<Point X="0" Y="0"/>
+					<Point X="0" Y="115"/>
+				</Polyline>
+				<Shift>
+					<Value Minimum="-6" Maximum="6">(A:AUTOPILOT FLIGHT DIRECTOR BANK, degrees)</Value>
+					<Nonlinearity>
+						<Item Value="6" X="-12" Y="-24"/>
+						<Item Value="0" X="38" Y="-24"/>
+						<Item Value="-6" X="88" Y="-24"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+			<Shift>
+				<Value>(L:VVectX, degrees) @HUDX1 max @HUDX2 min</Value>
+				<Nonlinearity>
+					<Item Value="-90"  X="4427"/>
+					<Item Value="90" X="-3851"/>
+				</Nonlinearity>
+			</Shift>
+			<Shift>
+				<Value>(L:VVectY, degrees) @HUDY1 max @HUDY2 min</Value>
+				<Nonlinearity>
+					<Item Value="0" Y="253"/>
+					<Item Value="90"  Y="4392"/>
+				</Nonlinearity>
+			</Shift>
+		</Element>
+
+		<Element Name="Pitch Steering (ILS)">
+			<Element>
+				<Visible>(L:HSI_MODE,enum) 3 == (L:HSI_MODE,enum) 4 == or (A:NAV2 HAS GLIDE SLOPE, bool) and</Visible>
+					<Position X="130" Y="470"/>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+					<Point X="32" Y="6"/>
+					<Point X="16" Y="6"/>
+					<Point X="16" Y="57"/>
+					<Point X="28" Y="57"/>
+					<Point X="16" Y="57"/>
+					<Point X="16" Y="108"/>
+					<Point X="32" Y="108"/>
+					<Point X="16" Y="108"/>
+					<Point X="16" Y="159"/>
+					<Point X="28" Y="159"/>
+					<Point X="16" Y="159"/>
+					<Point X="16" Y="209"/>
+					<Point X="32" Y="209"/>
+					<Axis X="16" Y="5"/>
+				</Polyline>
+			</Element>
+			<Element>
+				<Visible>(L:HSI_MODE,enum) 3 == (L:HSI_MODE,enum) 4 == or (A:NAV2 HAS GLIDE SLOPE, bool) and</Visible>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+					<Point X="-10" Y="-10"/>
+					<Point X="0" Y="0"/>
+					<Point X="-10" Y="10"/>
+				</Polyline>
+				<Shift>
+					<Value Minimum="-6.0" Maximum="6.0">@GS_Needle</Value>
+					<Nonlinearity>
+						<Item Value="6.0" X="130" Y="470"/>
+						<Item Value="-6.0" X="130" Y="674"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+		</Element>
+
+		<Element Name="Bank Steering (CDI)">
+			<Visible>(L:HUD_MASTER_MODE, enum) 2 &lt;</Visible>
+			<Macro Name="NAV1_CDI">(A:NAV1 CDI, number) 127 / 10 *</Macro>
+			<Macro Name="TCN_CDI">(L:TCN CDI, degrees)</Macro>
+			<Macro Name="GPS_CDI">@radnor90_h( (A:GPS WP BEARING, radians) (A:GPS WP DESIRED TRACK, radians) - ) rddg</Macro>
+			<Macro Name="Current_CDI">@TCN_CDI @TCN_CDI @NAV1_CDI @GPS_CDI 4 (L:HUD_STEER_MODE) case</Macro>
+			<Macro Name="NAV1_Course">(A:NAV1 OBS, radians) (A:Plane heading degrees gyro, radians) -</Macro>
+			<Macro Name="TCN_Course">(L:CSEL Carrier, radians) (A:Plane heading degrees true, radians) -</Macro>
+			<Macro Name="GPS_Course">(A:GPS WP DESIRED TRACK, radians) (A:Plane heading degrees gyro, radians) -</Macro>
+			<Macro Name="Selected_Course">@TCN_Course @TCN_Course @NAV1_Course @GPS_Course 4 (L:HUD_STEER_MODE) case</Macro>
+			<Element>
+				<Visible>
+					(L:HUD_STEER_MODE) 1 ==
+					(L:HUD_STEER_MODE) 3 == or
+				</Visible>
+				<Element>
+					<Position X="330" Y="467"/>
+					<Element>
+						<Arc Radius="10" StartAngle="360" EndAngle="0" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
+							<Axis X="-91" Y="11"/>
+						</Arc>
+					</Element>
+					<Element>
+						<Arc Radius="10" StartAngle="360" EndAngle="0" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
+							<Axis X="-41" Y="11"/>
+						</Arc>
+					</Element>
+					<Element>
+						<Arc Radius="10" StartAngle="360" EndAngle="0" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
+							<Axis X="11" Y="11"/>
+						</Arc>
+					</Element>
+					<Element>
+						<Arc Radius="10" StartAngle="360" EndAngle="0" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
+							<Axis X="61" Y="11"/>
+						</Arc>
+					</Element>
+					<Element>
+						<Arc Radius="10" StartAngle="360" EndAngle="0" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
+							<Axis X="111" Y="11"/>
+						</Arc>
+					</Element>
+					<Rotate>
+						<Value>@Selected_Course</Value>
+					</Rotate>
+				</Element>
+				<Element>
+					<Position X="330" Y="467"/>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+						<Point X="0" Y="0"/>
+						<Point X="-20" Y="30"/>
+						<Point X="20" Y="30"/>
+						<Point X="0" Y="0"/>
+						<Point X="-18" Y="28"/>
+						<Point X="18" Y="28"/>
+						<Point X="0" Y="0"/>
+						<Point X="-16" Y="26"/>
+						<Point X="16" Y="26"/>
+						<Point X="0" Y="0"/>
+						<Point X="-14" Y="24"/>
+						<Point X="14" Y="24"/>
+						<Point X="0" Y="0"/>
+						<Point X="-12" Y="22"/>
+						<Point X="12" Y="22"/>
+						<Point X="0" Y="0"/>
+						<Point X="-10" Y="20"/>
+						<Point X="10" Y="20"/>
+						<Point X="0" Y="0"/>
+						<Point X="-8" Y="18"/>
+						<Point X="8" Y="18"/>
+						<Point X="0" Y="0"/>
+						<Point X="-6" Y="16"/>
+						<Point X="6" Y="16"/>
+						<Point X="0" Y="0"/>
+						<Point X="-4" Y="14"/>
+						<Point X="4" Y="14"/>
+						<Point X="0" Y="0"/>
+						<Point X="-2" Y="12"/>
+						<Point X="2" Y="12"/>
+						<Point X="0" Y="0"/>
+						<Point X="0" Y="10"/>
+						<Point X="0" Y="10"/>
+						<Point X="0" Y="0"/>
+						<Point X="0" Y="120"/>
+
+						<Axis X="0" Y="60"/>
+					</Polyline>
+					<Shift>
+						<Value Minimum="-10" Maximum="10">@Current_CDI</Value>
+						<Nonlinearity>
+							<Item Value="-10" X="228" Y="467" />
+							<Item Value="0" X="330" Y="467"/>
+							<Item Value="10" X="432" Y="467"/>
+						</Nonlinearity>
+					</Shift>
+					<Rotate>
+						<Value>@Selected_Course</Value>
+					</Rotate>
+				</Element>
+	 		</Element>
+		</Element>
+
+		<Element Name="Heading Scale">
+			<Visible>(L:HUD Reject Mode, enum) 1 ==</Visible>
+			<Element>
+		    	<Position X="330" Y="75"/>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+					<Point X="-15" Y="15"/>
+					<Point X="0" Y="0"/>
+					<Point X="15" Y="15"/>
+				</Polyline>
+			</Element>
+			<Element>
+				<Macro Name="round_point25">@1 0.25 / near 0.25 *</Macro>
+				<Macro Name="GPS_Bearing180">(A:GPS WP BEARING, degrees) 180 + (A:GPS GROUND MAGNETIC TRACK, degrees) - dnor</Macro>
+				<Macro Name="TCN_Bearing180">@round_point25( (L:TCN Radial, degrees) 180 + (A:PLANE HEADING DEGREES TRUE, degrees) - dnor )</Macro>
+				<Macro Name="PDGT_Bearing180">@round_point25( (L:PDGT_Radial, degrees) 180 + (A:PLANE HEADING DEGREES TRUE, degrees) - dnor )</Macro>
+				<Macro Name="NAV_Bearing180">
+					(A:NAV1 HAS LOCALIZER, bool) !
+					if{ @round_point25( (A:NAV1 RADIAL, degrees) (A:NAV1 MAGVAR, degrees) - (A:PLANE HEADING DEGREES TRUE, degrees) - dnor ) }
+					els{ @round_point25( (A:NAV1 LOCALIZER, degrees) 180 + (A:PLANE HEADING DEGREES TRUE, degrees) - dnor ) }
+				</Macro>
+				<Macro Name="Marker_Bearing180">@PDGT_Bearing180 @TCN_Bearing180 @NAV_Bearing180 @GPS_Bearing180 4 (L:HUD_STEER_MODE) case</Macro>
+				<Element>
+					<Visible>
+						(L:HUD_STEER_MODE) 0 == (A:GPS IS ACTIVE WAY POINT, bool) &amp;&amp;
+						(L:HUD_STEER_MODE) 1 == ||
+						(L:HUD_STEER_MODE) 2 == ||
+						(L:HUD_STEER_MODE) 3 == ||
+					</Visible>
+					<Element>
+						<Position X="150" Y="480"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="9" Bright="Yes">
+							<Point X="0" Y="0"/>
+							<Point X="0" Y="15"/>
+						</Polyline>
+						<Shift>
+							<Value Minimum="164.4" Maximum="195.6">@Marker_Bearing180</Value>
+							<Nonlinearity>
+								<Item Value="164.4" X="135" Y="75"/>
+								<Item Value="170.0" X="205" Y="75"/>
+								<Item Value="180.0" X="330" Y="75"/>
+								<Item Value="190.0" X="455" Y="75"/>
+								<Item Value="195.6" X="525" Y="75"/>
+							</Nonlinearity>
+						</Shift>
+					</Element>
+					<Element>
+						<Visible>164.4 195.6 @Marker_Bearing180 rng !</Visible>
+						<Element>
+							<Position X="110" Y="80"/>
+							<Text X="50" Y="30" Bright="Yes" Length="3" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Center" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>%(@Marker_Bearing180 180 - (A:Plane heading degrees gyro, degrees) + dnor)%!03d!</String>
+							</Text>
+							<Shift>
+								<Value>@Marker_Bearing180 195.6 &gt; if{ 390 } els{ 0 }</Value>
+								<Scale X="1"/>
+							</Shift>
+						</Element>
+					</Element>
+				</Element>
+			</Element>
+			<Element>
+				<Macro Name="hdg_float">(A:Plane heading degrees gyro, degrees)</Macro>
+				<Macro Name="hdg_int">@hdg_float 10 / int 10 * @1 +</Macro>
+				<Macro Name="hdg_pix">125 10 /</Macro>
+				<Element Name="Text">
+					<Element>
+						<Position X="280" Y="34"/>
+						<Clip Left="100" Right="560"/>
+						<Text X="100" Y="30" Bright="Yes" Length="34" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Center" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%(@hdg_int(-20) dnor 10 /)%!02d!</String>
+						</Text>
+						<Shift>
+							<Value>@hdg_int(-20) @hdg_float - @hdg_pix *</Value>
+							<Scale X="1"/>
+						</Shift>
+					</Element>
+					<Element>
+						<Position X="280" Y="34"/>
+						<Clip Left="100" Right="560"/>
+						<Text X="100" Y="30" Bright="Yes" Length="34" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Center" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%(@hdg_int(-10) dnor 10 /)%!02d!</String>
+						</Text>
+						<Shift>
+							<Value>@hdg_int(-10) @hdg_float - @hdg_pix *</Value>
+							<Scale X="1"/>
+						</Shift>
+					</Element>
+					<Element>
+						<Position X="280" Y="34"/>
+						<Clip Left="100" Right="560"/>
+						<Text X="100" Y="30" Bright="Yes" Length="34" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Center" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%(@hdg_int(0) dnor 10 /)%!02d!</String>
+						</Text>
+						<Shift>
+							<Value>@hdg_int(0) @hdg_float - @hdg_pix *</Value>
+							<Scale X="1"/>
+						</Shift>
+					</Element>
+					<Element>
+						<Position X="280" Y="34"/>
+						<Clip Left="100" Right="560"/>
+						<Text X="100" Y="30" Bright="Yes" Length="34" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Center" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%(@hdg_int(10) dnor 10 /)%!02d!</String>
+						</Text>
+						<Shift>
+							<Value>@hdg_int(10) @hdg_float - @hdg_pix *</Value>
+							<Scale X="1"/>
+						</Shift>
+					</Element>
+					<Element>
+						<Position X="280" Y="34"/>
+						<Clip Left="100" Right="560"/>
+						<Text X="100" Y="30" Bright="Yes" Length="34" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Center" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%(@hdg_int(20) dnor 10 /)%!02d!</String>
+						</Text>
+						<Shift>
+							<Value>@hdg_int(20) @hdg_float - @hdg_pix *</Value>
+							<Scale X="1"/>
+						</Shift>
+					</Element>
+				</Element>
+				<Element Name="Line">
+					<Position X="339" Y="28"/>
+					<Element Name="BaseLine">
+						<Clip Left="100" Right="560"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+							<Point X="0" Y="17"/>
+							<Point X="525" Y="17"/>
+							<Axis X="209" Y="-30"/>
+						</Polyline>
+					</Element>
+					<Element Name="VertLine">
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="0" Y="17"/>
+								<Point X="0" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="25" Y="17"/>
+								<Point X="25" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="50" Y="17"/>
+								<Point X="50" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="75" Y="17"/>
+								<Point X="75" Y="6"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="100" Y="17"/>
+								<Point X="100" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="125" Y="17"/>
+								<Point X="125" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="150" Y="17"/>
+								<Point X="150" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="175" Y="17"/>
+								<Point X="175" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="200" Y="17"/>
+								<Point X="200" Y="6"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="225" Y="17"/>
+								<Point X="225" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="250" Y="17"/>
+								<Point X="250" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="275" Y="17"/>
+								<Point X="275" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="300" Y="17"/>
+								<Point X="300" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="325" Y="17"/>
+								<Point X="325" Y="6"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="350" Y="17"/>
+								<Point X="350" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="375" Y="17"/>
+								<Point X="375" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="400" Y="17"/>
+								<Point X="400" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="425" Y="17"/>
+								<Point X="425" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="450" Y="17"/>
+								<Point X="450" Y="6"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="475" Y="17"/>
+								<Point X="475" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="500" Y="17"/>
+								<Point X="500" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Left="100" Right="560"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+								<Point X="525" Y="17"/>
+								<Point X="525" Y="11"/>
+								<Axis X="209" Y="-30"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Shift>
+						<Value>@hdg_int(0) @hdg_float - @hdg_pix *</Value>
+						<Scale X="1"/>
+					</Shift>
+				</Element>
+			</Element>
+		</Element>
+
+		<Element Name="Airspeed Scale">
+			<Macro Name="spd_float">(A:Airspeed indicated, knots)</Macro>
+			<Macro Name="spd_int">@spd_float 100 / int 100 * @1 +</Macro>
+			<Macro Name="spd_pix">50 10 /</Macro>
+			<Visible>(L:HUD Reject Mode, enum) 1 ==</Visible>
+            <Position X="-40" Y="40"/>
+			<Element Name="Needle">
+				<Position X="110" Y="246"/>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+					<Point X="15" Y="-15"/>
+					<Point X="0" Y="0"/>
+					<Point X="15" Y="15"/>
+				</Polyline>
+			</Element>
+			<Element Name="Text">
+				<Position X="-30" Y="270"/>
+				<Element>
+					<Clip Top="40" Bottom="530"/>
+					<Text X="110" Y="50" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>%(@spd_int(-50))%!d!</String>
+					</Text>
+					<Shift>
+						<Value>@spd_int(-60) @spd_float - @spd_pix *</Value>
+						<Scale Y="1"/>
+					</Shift>
+				</Element>
+				<Element>
+					<Clip Top="40" Bottom="530"/>
+					<Text X="110" Y="50" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>%(@spd_int(0))%!d!</String>
+					</Text>
+					<Shift>
+						<Value>@spd_int(-10) @spd_float - @spd_pix *</Value>
+						<Scale Y="1"/>
+					</Shift>
+				</Element>
+				<Element>
+					<Clip Top="40" Bottom="530"/>
+					<Text X="110" Y="50" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>%(@spd_int(50))%!d!</String>
+					</Text>
+					<Shift>
+						<Value>@spd_int(40) @spd_float - @spd_pix *</Value>
+						<Scale Y="1"/>
+					</Shift>
+				</Element>
+				<Element>
+					<Clip Top="40" Bottom="530"/>
+					<Text X="110" Y="50" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>%(@spd_int(100))%!d!</String>
+					</Text>
+					<Shift>
+						<Value>@spd_int(90) @spd_float - @spd_pix *</Value>
+						<Scale Y="1"/>
+					</Shift>
+				</Element>
+			</Element>
+			<Element Name="Line">
+				<Position X="60" Y="205"/>
+				<Element Name="BaseLine">
+					<Clip Top="40" Bottom="530"/>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+						<Point X="17" Y="0"/>
+						<Point X="17" Y="1000"/>
+						<Axis X="-30" Y="209"/>
+					</Polyline>
+				</Element>
+				<Element Name="VertLine">
+					<Element Name="-50">
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="0"/>
+							<Point X="-5" Y="0"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="50"/>
+							<Point X="5" Y="50"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="100"/>
+							<Point X="5" Y="100"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="150"/>
+							<Point X="5" Y="150"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="200"/>
+							<Point X="5" Y="200"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element Name="0">
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="250"/>
+							<Point X="-10" Y="250"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="300"/>
+							<Point X="5" Y="300"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="350"/>
+							<Point X="5" Y="350"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="400"/>
+							<Point X="5" Y="400"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="450"/>
+							<Point X="5" Y="450"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element Name="50">
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="500"/>
+							<Point X="-5" Y="500"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="550"/>
+							<Point X="5" Y="550"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="600"/>
+							<Point X="5" Y="600"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="650"/>
+							<Point X="5" Y="650"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="700"/>
+							<Point X="5" Y="700"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element Name="100">
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="750"/>
+							<Point X="-10" Y="750"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="800"/>
+							<Point X="5" Y="800"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="850"/>
+							<Point X="5" Y="850"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="900"/>
+							<Point X="5" Y="900"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="950"/>
+							<Point X="5" Y="950"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element Name="150">
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="17" Y="1000"/>
+							<Point X="-5" Y="1000"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+				</Element>
+				<Shift>
+					<Value>@spd_int(0) @spd_float - @spd_pix *</Value>
+					<Scale Y="1"/>
+				</Shift>
+			</Element>
+		</Element>
+
+		<Element Name="Altitude Scale">
+			<Visible>(L:HUD Reject Mode, enum) 1 ==</Visible>
+			<Position X="600" Y="40"/>
+			<Element Name="Needle">
+				<Position X="0" Y="246"/>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+					<Point X="-15" Y="-15"/>
+					<Point X="0" Y="0"/>
+					<Point X="-15" Y="15"/>
+				</Polyline>
+			</Element>
+
+			<Element Name="ALT">
+				<Visible>(A:GEAR HANDLE POSITION, bool) 0 ==</Visible>
+				<Macro Name="alt_float">(A:Indicated Altitude, feet)</Macro>
+				<Macro Name="alt_int">@alt_float 500 / int 500 * @1 +</Macro>
+				<Macro Name="alt_pix">5 10 / -1 *</Macro>
+				<Element Name="Text">
+					<Position X="10" Y="210"/>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Text X="150" Y="50" Bright="Yes" Length="5" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%(@alt_int(-500))%!d!</String>
+						</Text>
+						<Shift>
+							<Value>@alt_int(-510) @alt_float - @alt_pix *</Value>
+							<Scale Y="1"/>
+						</Shift>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Text X="150" Y="50" Bright="Yes" Length="5" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%(@alt_int(0))%!d!</String>
+						</Text>
+						<Shift>
+							<Value>@alt_int(-10) @alt_float - @alt_pix *</Value>
+							<Scale Y="1"/>
+						</Shift>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Text X="150" Y="50" Bright="Yes" Length="5" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%(@alt_int(500))%!d!</String>
+						</Text>
+						<Shift>
+							<Value>@alt_int(490) @alt_float - @alt_pix *</Value>
+							<Scale Y="1"/>
+						</Shift>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Text X="150" Y="50" Bright="Yes" Length="5" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%(@alt_int(1000))%!d!</String>
+						</Text>
+						<Shift>
+							<Value>@alt_int(990) @alt_float - @alt_pix *</Value>
+							<Scale Y="1"/>
+						</Shift>
+					</Element>
+				</Element>
+				<Element Name="Line">
+					<Position X="-45" Y="-45"/>
+					<Element Name="BaseLine">
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+							<Point X="17" Y="0"/>
+							<Point X="17" Y="1000"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element Name="VertLine">
+						<Element Name="-100">
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="0"/>
+								<Point X="35" Y="0"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="50"/>
+								<Point X="30" Y="50"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="100"/>
+								<Point X="30" Y="100"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="150"/>
+								<Point X="30" Y="150"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="200"/>
+								<Point X="30" Y="200"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element Name="0">
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="250"/>
+								<Point X="35" Y="250"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="300"/>
+								<Point X="30" Y="300"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="350"/>
+								<Point X="30" Y="350"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="400"/>
+								<Point X="30" Y="400"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="450"/>
+								<Point X="30" Y="450"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element Name="100">
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="500"/>
+								<Point X="35" Y="500"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="550"/>
+								<Point X="30" Y="550"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="600"/>
+								<Point X="30" Y="600"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="650"/>
+								<Point X="30" Y="650"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="700"/>
+								<Point X="30" Y="700"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element Name="200">
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="750"/>
+								<Point X="35" Y="750"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Shift>
+						<Value>@alt_int(0) @alt_float - @alt_pix *</Value>
+						<Scale Y="1"/>
+					</Shift>
+				</Element>
+			</Element>
+
+ 			<Element Name="Radar ALT">
+				<Visible>(A:GEAR HANDLE POSITION, bool) 0 &gt;</Visible>
+				<Macro Name="ralt_float">(A:RADIO HEIGHT, feet)</Macro>
+				<Macro Name="ralt_int">@ralt_float 100 / int 100 * @1 +</Macro>
+				<Macro Name="ralt_pix">50 20 / -1 *</Macro>
+				<Element Name="Text">
+					<Position X="50" Y="190"/>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Text X="110" Y="50" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%(@ralt_int(-100))%!d!</String>
+						</Text>
+						<Shift>
+							<Value>@ralt_int(-110) @ralt_float - @ralt_pix *</Value>
+							<Scale Y="1"/>
+						</Shift>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Text X="110" Y="50" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%(@ralt_int(0))%!d!</String>
+						</Text>
+						<Shift>
+							<Value>@ralt_int(-10) @ralt_float - @ralt_pix *</Value>
+							<Scale Y="1"/>
+						</Shift>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Text X="110" Y="50" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%(@ralt_int(100))%!d!</String>
+						</Text>
+						<Shift>
+							<Value>@ralt_int(90) @ralt_float - @ralt_pix *</Value>
+							<Scale Y="1"/>
+						</Shift>
+					</Element>
+					<Element>
+						<Clip Top="40" Bottom="530"/>
+						<Text X="110" Y="50" Bright="Yes" Length="4" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Transparent="True" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%(@ralt_int(200))%!d!</String>
+						</Text>
+						<Shift>
+							<Value>@ralt_int(190) @ralt_float - @ralt_pix *</Value>
+							<Scale Y="1"/>
+						</Shift>
+					</Element>
+				</Element>
+				<Element Name="Line">
+					<Position X="-45" Y="-50"/>
+					<Element Name="BaseLine">
+						<Clip Top="40" Bottom="530"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+							<Point X="17" Y="0"/>
+							<Point X="17" Y="1000"/>
+							<Axis X="-30" Y="209"/>
+						</Polyline>
+					</Element>
+					<Element Name="VertLine">
+						<Element Name="-100">
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="0"/>
+								<Point X="35" Y="0"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="50"/>
+								<Point X="30" Y="50"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="100"/>
+								<Point X="30" Y="100"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="150"/>
+								<Point X="30" Y="150"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="200"/>
+								<Point X="30" Y="200"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element Name="0">
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="250"/>
+								<Point X="35" Y="250"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="300"/>
+								<Point X="30" Y="300"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="350"/>
+								<Point X="30" Y="350"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="400"/>
+								<Point X="30" Y="400"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="450"/>
+								<Point X="30" Y="450"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element Name="100">
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="500"/>
+								<Point X="35" Y="500"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="550"/>
+								<Point X="30" Y="550"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="600"/>
+								<Point X="30" Y="600"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="650"/>
+								<Point X="30" Y="650"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element>
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="700"/>
+								<Point X="30" Y="700"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+						<Element Name="200">
+							<Clip Top="40" Bottom="530"/>
+							<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+								<Point X="17" Y="750"/>
+								<Point X="35" Y="750"/>
+								<Axis X="-30" Y="209"/>
+							</Polyline>
+						</Element>
+					</Element>
+					<Shift>
+						<Value>@ralt_int(0) @ralt_float - @ralt_pix *</Value>
+						<Scale Y="1"/>
+					</Shift>
+				</Element>
+			</Element>
+		</Element>
+
+		<Element Name="AOA Scale">
+			<Visible>(L:HSI_MODE,enum) 3 &lt; (L:HUD Reject Mode, enum) 1 == and</Visible>
+			<Element>
+				<Position X="130" Y="470"/>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+					<Point X="32" Y="6"/>
+					<Point X="16" Y="6"/>
+					<Point X="16" Y="57"/>
+					<Point X="28" Y="57"/>
+					<Point X="16" Y="57"/>
+					<Point X="16" Y="108"/>
+					<Point X="32" Y="108"/>
+					<Point X="16" Y="108"/>
+					<Point X="16" Y="159"/>
+					<Point X="28" Y="159"/>
+					<Point X="16" Y="159"/>
+					<Point X="16" Y="209"/>
+					<Point X="32" Y="209"/>
+					<Axis X="16" Y="5"/>
+				</Polyline>
+			</Element>
+			<Element>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+					<Point X="-10" Y="-10"/>
+					<Point X="0" Y="0"/>
+					<Point X="-10" Y="10"/>
+				</Polyline>
+				<Shift>
+					<Value Minimum="-10.0" Maximum="50.0">(A:INCIDENCE ALPHA, degrees)</Value>
+					<Nonlinearity>
+						<Item Value="50.0" X="130" Y="470"/>
+						<Item Value="-10.0" X="130" Y="674"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+		</Element>
+
+		<Element Name="Gun Cross">
+			<Element>
+				<Position X="330" Y="195"/>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+					<Point X="-15" Y="0"/>
+					<Point X="15" Y="0"/>
+				</Polyline>
+			</Element>
+			<Element>
+				<Position X="330" Y="195"/>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+					<Point X="0" Y="-15"/>
+					<Point X="0" Y="15"/>
+				</Polyline>
+			</Element>
+		</Element>
+
+		<Element Name="HUD Window Symbols">
+		<Visible>(L:HUD Reject Mode, enum) 1 ==</Visible>
+			<Element Name="Range Rate  (Window 1)">
+				<Visible>(L:HUD_MASTER_MODE, enum) 2 == (L:RLST, bool) and</Visible>
+				<Element Name="Range Scale">
+					<Position X="530" Y="287"/>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+						<Point X="15" Y="0"/>
+						<Point X="5" Y="0"/>
+						<Point X="5" Y="60"/>
+						<Point X="15" Y="60"/>
+						<Point X="5" Y="60"/>
+						<Point X="5" Y="120"/>
+						<Point X="15" Y="120"/>
+						<Point X="5" Y="120"/>
+						<Point X="5" Y="180"/>
+						<Point X="15" Y="180"/>
+						<Point X="5" Y="180"/>
+						<Point X="5" Y="240"/>
+						<Point X="15" Y="240"/>
+						<Axis X="5" Y="5"/>
+					</Polyline>
+				</Element>
+				<Element Name="Calet">
+					<Position X="530" Y="515"/>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+						<Point X="-10" Y="-10"/>
+						<Point X="0" Y="0"/>
+						<Point X="-10" Y="10"/>
+					</Polyline>
+					<Shift>
+						<Value>(L:LAAJ, nmiles) (L:RADAR_SCALE, nmiles) / 0 max 1 min</Value>
+						<Scale Y="-240"/>
+					</Shift>
+				</Element>
+				<Element Name="Range Rate (+- KTS)">
+					<Position X="430" Y="515"/>
+					<Element>
+						<Text Bright="Yes" Luminous="Yes" X="100" Y="32" Length="5" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:LAAI, knots) 10 / near 10 *)%!d!</String>
+							<Axis X="12" Y="16"/>
+						</Text>
+					</Element>
+					<Shift>
+						<Value>(L:LAAJ, nmiles) (L:RADAR_SCALE, nmiles) / 0 max 1 min</Value>
+						<Scale Y="-240"/>
+					</Shift>
+				</Element>
+				<Element Name="Scale Number">
+					<Element>
+						<Position X="539" Y="270"/>
+						<Text Bright="Yes" Luminous="Yes" X="100" Y="32" Length="5" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:RADAR_SCALE, nmiles))%!d!</String>
+							<Axis X="12" Y="16"/>
+						</Text>
+					</Element>
+					<Element>
+						<Position X="557" Y="400"/>
+						<Text Bright="Yes" Luminous="Yes" X="100" Y="32" Length="5" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:RADAR_SCALE, nmiles) 0.5 *)%!d!</String>
+							<Axis X="12" Y="16"/>
+						</Text>
+					</Element>
+				</Element>
+				<Element Name="RMAX/MIN SYMBOLS">
+						<Position X="539" Y="520"/>
+					<Element id="RMAX 1 SYMBOLS">
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="0" Y="0"/>
+							<Point X="20" Y="0"/>
+						</Polyline>
+						<Shift>
+							<Value>(L:RMAX_1)</Value>
+							<Scale Y="-24"/>
+						</Shift>
+					</Element>
+					<Element id="RMAX 2 SYMBOLS">
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="0" Y="0"/>
+							<Point X="20" Y="0"/>
+						</Polyline>
+						<Shift>
+							<Value>(L:RMAX_2)</Value>
+							<Scale Y="-24"/>
+						</Shift>
+					</Element>
+					<Element id="RMIN SYMBOLS">
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+							<Point X="0" Y="0"/>
+							<Point X="20" Y="0"/>
+						</Polyline>
+						<Shift>
+							<Value>(L:RMIN)</Value>
+							<Scale Y="-24"/>
+						</Shift>
+					</Element>
+				</Element>
+			</Element>
+
+			<Element Name="Left Side">
+				<Position X="-40" Y="530"/>
+				<Element Name="ILS Marker (Window 2)">
+					<Position X="0" Y="0"/>
+					<Visible>(L:HUD_MASTER_MODE, enum) 0 ==</Visible>
+					<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>%((A:MARKER BEACON STATE, enum) (L:IsFlashTime) and )%{if}MKR%{end}</String>
+					</Text>
+				</Element>
+				<Element Name="ARMT Counts (Window 2)">
+					<Visible>(L:HUD_MASTER_MODE, enum) 2 ==</Visible>
+					<Element Name="GUN Round Remaining">
+						<Visible>(L:AAM_SEL, Enum) 0 ==</Visible>
+						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:AO_GUN_AMMO_COUNT, Number))%!03d!</String>
+						</Text>
+					</Element>
+					<Element Name="SRM Count">
+						<Visible>(L:AAM_SEL, Enum) 1 ==</Visible>
+						<Element>
+							<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>S %((L:AO_SRM_QTY, Number))%!d!</String>
+							</Text>
+						</Element>
+					</Element>
+					<Element Name="MRM Count">
+						<Visible>(L:AAM_SEL, Enum) 2 ==</Visible>
+						<Element>
+							<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>M %((L:AO_SRM_QTY, Number))%!d!</String>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+
+				<Element Name="Aircraft Mach (Window 7)">
+					<Element>
+						<Position X="-65" Y="30"/>
+						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6"  Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%( (A:Airspeed mach, machs) 1.00 &gt; )%{if}%((A:Airspeed mach, machs) int )%!d!%{else}%{end}</String>
+						</Text>
+					</Element>
+					<Element>
+						<Position X="0" Y="30"/>
+						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>% .%((A:Airspeed mach, machs) (A:Airspeed mach, machs) int - 1000 * int)%!03d!</String>
+						</Text>
+					</Element>
+				</Element>
+
+				<Element Name="Aircraft G / Target Mach (Window 8)">
+					<Element Name="Aircraft G">
+						<Visible>(L:HUD_MASTER_MODE, enum) 0 ==</Visible>
+						<Position X="0" Y="60"/>
+						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((A:G Force,G Force) 99.9 min -99.9 max)%!3.1f!% G</String>
+						</Text>
+					</Element>
+					<Element Name="Target Mach">
+						<Visible>(L:RLST, bool) (L:HUD_MASTER_MODE, enum) 2 == and</Visible>
+						<Position X="0" Y="60"/>
+						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>TM %((L:TGT_AIRSPEED_MACH))%!1.1f!</String>
+						</Text>
+					</Element>
+				</Element>
+			</Element>
+
+			<Element Name="Right Side">
+				<Position X="600" Y="530"/>
+				<Element Name="ADI Steering Modes (Window 3)">
+				<Visible>(L:HUD_MASTER_MODE, enum) 0 ==</Visible>
+					<Element Name="ADI Steering Modes">
+						<Position X="0" Y="0"/>
+						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((A:Autopilot master, bool))%{if}A%{end}%((L:HUD_STEER_MODE))%{case}%{:0}NAV%{:1}TCN%{:2}%ILSN%{:3}ILST%{end}</String>
+						</Text>
+					</Element>
+					<Element Name="GPS ID">
+						<Visible>(L:HUD_STEER_MODE) 0 == (L:HUD_STEER_MODE) 2 == or</Visible>
+							<Position X="70" Y="0"/>
+							<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>%((A:GPS WP NEXT ID, string))%!s!</String>
+							</Text>
+					</Element>
+					<Element Name="NAV1 Freq">
+						<Element>
+							<Select>
+								<Value>
+									(A:Nav1 Active Frequency, MHz) s0 112.3 &lt;
+									if{ l0 10 * 1063 - int (&gt;L:TCN-channel, enum) }
+									els{ l0 10 * 1053 - int (&gt;L:TCN-channel, enum) }
+								</Value>
+							</Select>
+						</Element>
+						<Element>
+							<Visible>(L:HUD_STEER_MODE) 1 ==</Visible>
+							<Element>
+								<Position X="70" Y="0"/>
+								<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+									<String>%((A:NAV1 HAS LOCALIZER, bool))%{if}%((A:Nav1 Active Frequency, MHz))%!4.2f!%{else}%( (L:TCN-channel, enum) )%!d!%( (A:Nav1 Active Frequency, MHz) 10 * 1 % 0 == )%{if}X%{else}Y</String>
+								</Text>
+							</Element>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="SRM In Range / Track Mem / Jam Codes / MRM Hold ALT (Window 3)">
+					<Visible>(L:HUD_MASTER_MODE, enum) 2 ==</Visible>
+					<Element Name="SRM In Range">
+						<Visible>(L:AAM_SEL, Enum) 1 ==</Visible>
+						<Element>
+							<Position X="0" Y="0"/>
+							<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>%((L:SRM_IN_RNG))%{case}%{:0}NO ZN%{:1}IN RNG%{end}</String>
+							</Text>
+						</Element>
+					</Element>
+					<Element Name="Track Memory">
+						<Visible>(L:RDR_TRK_MEM_ENABLE)</Visible>
+						<Position X="0" Y="0"/>
+						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>MEM</String>
+						</Text>
+					</Element>
+					<Element Name="Radar JAM Codes">
+						<Visible>(L:RDR_JAM_ENABLE)</Visible>
+						<Position X="0" Y="0"/>
+						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:RDR_JAM_CODES))%{case}%{:0}JAM%{:1}HOJ%{:2}%AOJ%{end}</String>
+						</Text>
+					</Element>
+					<Element Name="MRM Hold Altitide">
+						<Visible>(L:AAM_SEL, Enum) 2 == (L:RDR_HOLD_ALT_ENABLE) and</Visible>
+						<Position X="0" Y="0"/>
+						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>HD ALT</String>
+						</Text>
+					</Element>
+				</Element>
+
+				<Element Name="TCN / NAV Ranges (Window 4)">
+					<Visible>(L:HUD_MASTER_MODE, enum) 0 ==</Visible>
+					<Position X="0" Y="30"/>
+					<Macro Name="Current_Range">(A:NAV DME:2, nmiles) (A:NAV DME:2, nmiles) (A:NAV1 DME, nmiles) (A:GPS WP DISTANCE, nmiles) 4 (L:HUD_STEER_MODE) case 999.9 min 0 max</Macro>
+					<Text X="120" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>%((L:HUD_STEER_MODE))%{case}%{:0}N%{:1}T%{:2}N%{:3}T%{end} %(@Current_Range)%!4.1f!%</String>
+					</Text>
+				</Element>
+				<Element Name="Radar Range (Window 4)">
+					<Element>
+						<Visible>(L:HUD_MASTER_MODE, enum) 2 == (L:RLST, bool) and</Visible>
+						<Element>
+							<Position X="0" Y="30"/>
+							<Text X="100" Y="32" Bright="Yes" Length="14" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>R %((L:LAAJ, nmiles))%!3.1f!</String>
+							</Text>
+						</Element>
+					</Element>
+				</Element>
+				<Element Name="Radar Special Modes (Window 4)">
+					<Visible>(L:HUD_MASTER_MODE, enum) 2 == (L:RLST, bool) ! and</Visible>
+					<Element>
+						<Position X="0" Y="30"/>
+						<Text X="100" Y="30" Bright="Yes" Length="14" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:KNOB_FS_RDR_SPL_MODE))%{case}%{:1}MN TRK%{:2}SNIFF%{:3}FLOOD%{end}</String>
+						</Text>
+					</Element>
+				</Element>
+
+				<Element Name="Time To Go (Window 5)">
+					<Element Name="NAV TTG">
+						<Visible>(L:HUD_MASTER_MODE, enum) 3 ! (L:AAM_SEL, Enum) 0 == and </Visible>
+						<Macro Name="Current_TTG">(L:ETE_Carrier, seconds) (L:ETE_Carrier, seconds) (L:NAV1 ETE, seconds) (A:GPS WP ETE, seconds) 4 (L:HUD_STEER_MODE) case</Macro>
+						<Element>
+							<Select>
+								<Value>
+									(L:HUD_STEER_MODE) 1 ==
+									if{
+										(A:Radio height, feet) (A:NAV1 DME, feet) / asin cos (A:NAV1 DME, feet) * 6076 / (&gt;L:NAV1GroundDistance, nmiles)
+										(L:NAV1GroundDistance, meters) 100 &gt;
+										if{ (L:NAV1GroundDistance, nmiles) (A:GROUND VELOCITY, knots) / 3600 * (&gt;L:NAV1 ETE, seconds) }
+										els{ 0 (&gt;L:NAV1 ETE, seconds) }
+									}
+									(L:HUD_STEER_MODE) 2 &gt;
+									if{
+										(L:TCN Slant Range, meters) 100 &gt;
+										if{ (A:NAV DME:2, nmiles) (A:GROUND VELOCITY, knots) / 3600 * (&gt;L:ETE_Carrier, seconds) }
+										els{ 0 (&gt;L:ETE_Carrier, seconds) }
+									}
+								</Value>
+							</Select>
+						</Element>
+						<Element>
+							<Position X="0" Y="60"/>
+							<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>%( @Current_TTG 3600 &lt; )%{if}%(@Current_TTG 60 / 60 % int )%!02d! MIN%{else}59 MIN</String>
+							</Text>
+						</Element>
+					</Element>
+					<Element Name="MRM TTG">
+						<Visible>(L:HUD_MASTER_MODE, enum) 2 == (L:AAM_SEL, Enum) 2 == and</Visible>
+						<Element>
+							<Position X="0" Y="60"/>
+							<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>%((L:MRM_TTG) 0 != )%{if}%((L:MRM_TTG) 99 &lt; )%{if}%((L:MRM_TTG))%!02d! SEC%{else}99 SEC%{else}%{end}99 SEC%{end}</String>
+							</Text>
+						</Element>
+					</Element>
+					<Element Name="A/G TTG">
+						<Visible>(L:HUD_MASTER_MODE, enum) 3 ==</Visible>
+						<Element>
+							<Position X="0" Y="60"/>
+							<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>%( (L:TTGT, seconds) 6000 &lt; )%{if}%((L:TTGT, seconds) 60 / int )%!02d!:%((L:TTGT, seconds) 60 % int )%!02d!%{else}99:59%{end} TTGT</String>
+							</Text>
+						</Element>
+					</Element>
+
+
+				</Element>
+
+				<Element Name="ILS Course Set (Window 6)">
+					<Visible>(L:HSI_MODE,enum) 3 == (L:HSI_MODE,enum) 4 == or @ILS_GS_Mode 2 &lt; and (L:HUD_MASTER_MODE, enum) 0 == and</Visible>
+					<Position X="0" Y="90"/>
+					<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>%((L:HUD_GLDSLP))%{case}%{:0}CSET%{:1}GSUP%{:2}GSDN%{end}</String>
+					</Text>
+				</Element>
+				<Element Name="ASPECT ANGLE (Window 6)">
+				<Visible>(L:HUD_MASTER_MODE, enum) 2 == (L:RLST, bool) and</Visible>
+					<Element>
+						<Position X="0" Y="90"/>
+						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:LAAN) 0 == )%{if}T%{end}%{else}%((L:LAAN) abs 18 == )%{if}H%{end}</String>
+						</Text>
+					</Element>
+					<Element>
+						<Position X="0" Y="90"/>
+						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%( (L:LAAN) 0 != (L:LAAN) abs 18 != &amp;&amp; )%{if}%((L:LAAN) abs)%!02d!%( (L:LAAN) 0 &gt; )%{if}R%{else}L%{end}</String>
+						</Text>
+					</Element>
+				</Element>
+				<Element Name="RAM Track (Window 6)">
+					<Visible>(L:HUD_MASTER_MODE, enum) 2 == (L:RLST, bool) ! and</Visible>
+					<Element>
+						<Position X="0" Y="90"/>
+						<Text X="100" Y="30" Bright="Yes" Length="14" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>RAM</String>
+						</Text>
+					</Element>
+				</Element>
+			</Element>
+		</Element>
+
+		<Element Name="Pull Up Warning">
+			<Visible>(L:PULL_UP_WARNING)</Visible>
+			<Element>
+				<Visible>(L:IsFlashTime)</Visible>
+				<Element>
+					<Position X="330" Y="287"/>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+						<Point X="-100" Y="-100"/>
+						<Point X="100" Y="100"/>
+					</Polyline>
+				</Element>
+				<Element>
+					<Position X="330" Y="287"/>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+						<Point X="100" Y="-100"/>
+						<Point X="-100" Y="100"/>
+					</Polyline>
+				</Element>
+			</Element>
+		</Element>
+	</Element>
+
+
+	<Element Name="A/A">
+		<Visible>(L:HUD_MASTER_MODE, enum) 2 ==</Visible>
+		<Element Name="Macro">
+			<Macro Name="HUD_X_limit1">-8.5</Macro>
+			<Macro Name="HUD_X_limit2">8.5</Macro>
+			<Macro Name="HUD_Y_limit1">-4.0</Macro>
+			<Macro Name="HUD_Y_limit2">13.0</Macro>
+			<Macro Name="BGOH">
+				(L:Point_X_ref, degrees) @HUD_X_limit1 &gt;
+				(L:Point_X_ref, degrees) @HUD_X_limit2 &lt;
+				(L:Point_Y_ref, degrees) @HUD_Y_limit1 &gt;
+				(L:Point_Y_ref, degrees) @HUD_Y_limit2 &lt;
+				&amp;&amp; &amp;&amp; &amp;&amp;
+				if{ 1 } els{ 0 }
+			</Macro>
+			<Select>
+				<Value>
+					@BGOH (&gt;L:BGOH, bool)
+
+					(L:RLST, bool) 1 ==
+						if{
+							(L:Point_X_ref, degrees) (&gt;L:Point_X_ref_HUD, degrees)
+							(L:Point_Y_ref, degrees) (&gt;L:Point_Y_ref_HUD, degrees)
+						}
+						els{
+							-1 (&gt;L:Point_X_ref_HUD, degrees)
+							-1 (&gt;L:Point_Y_ref_HUD, degrees)
+						}
+
+					(L:Point_X_ref_HUD, degrees) @HUD_X_limit1 &lt;
+					if{
+						(L:Point_Y_ref_HUD, degrees) @HUD_X_limit1 * (L:Point_X_ref_HUD, degrees) / (&gt;L:Point_Y_ref_HUD, degrees)
+						@HUD_X_limit1 (&gt;L:Point_X_ref_HUD, degrees)
+					}
+					(L:Point_X_ref_HUD, degrees) @HUD_X_limit2 &gt;
+					if{
+						(L:Point_Y_ref_HUD, degrees) @HUD_X_limit2 * (L:Point_X_ref_HUD, degrees) / (&gt;L:Point_Y_ref_HUD, degrees)
+						@HUD_X_limit2 (&gt;L:Point_X_ref_HUD, degrees)
+					}
+					(L:Point_Y_ref_HUD, degrees) @HUD_Y_limit1 &lt;
+					if{
+						(L:Point_X_ref_HUD, degrees) @HUD_Y_limit1 * (L:Point_Y_ref_HUD, degrees) / (&gt;L:Point_X_ref_HUD, degrees)
+						@HUD_Y_limit1 (&gt;L:Point_Y_ref_HUD, degrees)
+					}
+					(L:Point_Y_ref_HUD, degrees) @HUD_Y_limit2 &gt;
+					if{
+						(L:Point_X_ref_HUD, degrees) @HUD_Y_limit2 * (L:Point_Y_ref_HUD, degrees) / (&gt;L:Point_X_ref_HUD, degrees)
+						@HUD_Y_limit2 (&gt;L:Point_Y_ref_HUD, degrees)
+					}
+				</Value>
+			</Select>
+		</Element>
+
+		<Element Name="Gun">
+		<Visible>(L:AAM_SEL, Enum) 0 == </Visible>
+			<Element Name="Gun Reticle">
+				<Macro Name="On_Glass">@1 abs 8.5 &lt; -4.0 13.0 @2 rng &amp;&amp; if{ 1 } els{ (L:Flashing) }</Macro>
+				<Visible>
+					(L:AAM_SEL, Enum) 0 ==
+					@On_Glass((L:Lead_X, degrees),(L:Lead_Y, degrees)) and
+				</Visible>
+				<Element>
+					<Element Name="No Lock">
+						<Visible>(L:RLST, bool) 0 ==</Visible>
+						<Element Namr="Outer Arc">
+							<Arc Radius="70" StartAngle="360" EndAngle="0" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="Yes">
+								<Axis X="70" Y="70"/>
+							</Arc>
+						</Element>
+						<Element Name="Inter Arc">
+							<Element Name="30-330">
+								<Arc Radius="40" StartAngle="30" EndAngle="330" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="Yes">
+									<Axis X="40" Y="40"/>
+								</Arc>
+							</Element>
+
+							<Element Name="120-60">
+								<Arc Radius="40" StartAngle="120" EndAngle="60" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="Yes">
+									<Axis X="40" Y="40"/>
+								</Arc>
+							</Element>
+
+							<Element Name="210-50">
+								<Arc Radius="40" StartAngle="210" EndAngle="150" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="Yes">
+									<Axis X="40" Y="40"/>
+								</Arc>
+							</Element>
+
+							<Element Name="300-240">
+								<Arc Radius="40" StartAngle="300" EndAngle="240" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="Yes">
+									<Axis X="40" Y="40"/>
+								</Arc>
+							</Element>
+
+							<Element Name="Center Point">
+								<Arc Radius="2" StartAngle="0" EndAngle="360" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="Yes">
+									<Axis X="2" Y="2"/>
+								</Arc>
+							</Element>
+						</Element>
+						<Element Name="Line">
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="80" Y="0"/>
+									<Point X="70" Y="0"/>
+								</Polyline>
+							</Element>
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="-70" Y="0"/>
+									<Point X="-80" Y="0"/>
+								</Polyline>
+							</Element>
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="0" Y="70"/>
+									<Point X="0" Y="80"/>
+								</Polyline>
+							</Element>
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="0" Y="-70"/>
+									<Point X="0" Y="-80"/>
+								</Polyline>
+							</Element>
+
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="60" Y="35"/>
+									<Point X="70" Y="40"/>
+								</Polyline>
+							</Element>
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="35" Y="60"/>
+									<Point X="40" Y="70"/>
+								</Polyline>
+							</Element>
+
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="-60" Y="-35"/>
+									<Point X="-70" Y="-40"/>
+								</Polyline>
+							</Element>
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="-35" Y="-60"/>
+									<Point X="-40" Y="-70"/>
+								</Polyline>
+							</Element>
+
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="60" Y="-35"/>
+									<Point X="70" Y="-40"/>
+								</Polyline>
+							</Element>
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="35" Y="-60"/>
+									<Point X="40" Y="-70"/>
+								</Polyline>
+							</Element>
+
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="-60" Y="35"/>
+									<Point X="-70" Y="40"/>
+								</Polyline>
+							</Element>
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="-35" Y="60"/>
+									<Point X="-40" Y="70"/>
+								</Polyline>
+							</Element>
+						</Element>
+					</Element>
+
+					<Element Name="Lock">
+						<Visible>(L:RLST, bool) 1 ==</Visible>
+						<Element Namr="Outer Arc">
+							<Arc Radius="70" StartAngle="360" EndAngle="0" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="Yes">
+								<Axis X="70" Y="70"/>
+							</Arc>
+						</Element>
+						<Element Name="Center Point">
+							<Arc Radius="2" StartAngle="0" EndAngle="360" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="Yes">
+								<Axis X="2" Y="2"/>
+							</Arc>
+						</Element>
+						<Element Name="Outer Point">
+							<Arc Radius="2" StartAngle="0" EndAngle="360" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="Yes">
+								<Axis X="-70" Y="-70"/>
+							</Arc>
+						</Element>
+						<Element Name="Line">
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="80" Y="0"/>
+									<Point X="70" Y="0"/>
+								</Polyline>
+							</Element>
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="-70" Y="0"/>
+									<Point X="-80" Y="0"/>
+								</Polyline>
+							</Element>
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="0" Y="70"/>
+									<Point X="0" Y="80"/>
+								</Polyline>
+							</Element>
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="0" Y="-70"/>
+									<Point X="0" Y="-80"/>
+								</Polyline>
+							</Element>
+
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="60" Y="35"/>
+									<Point X="70" Y="40"/>
+								</Polyline>
+							</Element>
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="35" Y="60"/>
+									<Point X="40" Y="70"/>
+								</Polyline>
+							</Element>
+
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="-60" Y="-35"/>
+									<Point X="-70" Y="-40"/>
+								</Polyline>
+							</Element>
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="-35" Y="-60"/>
+									<Point X="-40" Y="-70"/>
+								</Polyline>
+							</Element>
+
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="60" Y="-35"/>
+									<Point X="70" Y="-40"/>
+								</Polyline>
+							</Element>
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="35" Y="-60"/>
+									<Point X="40" Y="-70"/>
+								</Polyline>
+							</Element>
+
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="-60" Y="35"/>
+									<Point X="-70" Y="40"/>
+								</Polyline>
+							</Element>
+							<Element>
+								<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+									<Point X="-35" Y="60"/>
+									<Point X="-40" Y="70"/>
+								</Polyline>
+							</Element>
+						</Element>
+					</Element>
+
+					<Shift>
+						<Value>(L:Lead_X, degrees) @HUDX1 max @HUDX2 min</Value>
+						<Nonlinearity>
+							<Item Value="0"  X="330"/>
+							<Item Value="90" X="-3809"/>
+						</Nonlinearity>
+					</Shift>
+					<Shift>
+						<Value>(L:Lead_Y, degrees) @HUDY1 max @HUDY2 min</Value>
+						<Nonlinearity>
+							<Item Value="0" Y="287"/>
+							<Item Value="90"  Y="4426"/>
+						</Nonlinearity>
+					</Shift>
+				</Element>
+				<Element>
+					<Visible>(L:GNDR, bool) (L:LLine) and</Visible>
+					<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+					<Rectangle Width="3" Height="62" Color="%((L:HUD_COLOR_SYM))" FillColor="%((L:HUD_COLOR_SYM))" LineWidth="1" Bright="Yes">
+						<HeightCode>(L:Lag_X, degrees) sqr (L:Lag_Y, degrees) sqr + sqrt 45.99 * 0.20 *</HeightCode>
+						<Axis X="1" Y="0"/>
+					</Rectangle>
+					<Rotate>
+						<Value>(L:Lag_X, degrees) (L:Lag_Y, degrees) atg2 pi +</Value>
+					</Rotate>
+					<Shift>
+						<Value>(L:Lead_X, degrees) @HUDX1 max @HUDX2 min</Value>
+						<Nonlinearity>
+							<Item Value="0"  X="330"/>
+							<Item Value="90" X="-3809"/>
+						</Nonlinearity>
+					</Shift>
+					<Shift>
+						<Value>(L:Lead_Y, degrees) @HUDY1 max @HUDY2 min</Value>
+						<Nonlinearity>
+							<Item Value="0" Y="287"/>
+							<Item Value="90"  Y="4426"/>
+						</Nonlinearity>
+					</Shift>
+				</Element>
+			</Element>
+
+			<Element Name="Range Bar Tab">
+				<Macro Name="On_Glass">@1 abs 8.5 &lt; -4.0 13.0 @2 rng &amp;&amp; if{ 1 } els{ (L:Flashing) }</Macro>
+				<Visible>
+					(L:AAM_SEL, Enum) 0 ==
+					(L:RLST, bool) &amp;&amp;
+					@On_Glass((L:Lead_X, degrees),(L:Lead_Y, degrees)) &amp;&amp;
+				</Visible>
+				<Macro Name="rng_deg">(L:LAAJ, feet) 6000 / 180 *</Macro>
+				<Element>
+					<Visible>@rng_deg 180 &gt;</Visible>
+					<Arc StartAngle="90" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+						<Axis X="70" Y="70"/>
+					</Arc>
+					<Rotate>
+						<Value>@rng_deg 180 - 180 min dgrd</Value>
+					</Rotate>
+					<Shift>
+						<Value>(L:Lead_X, degrees) @HUDX1 max @HUDX2 min</Value>
+						<Nonlinearity>
+							<Item Value="0"  X="330"/>
+							<Item Value="90" X="-3809"/>
+						</Nonlinearity>
+					</Shift>
+					<Shift>
+						<Value>(L:Lead_Y, degrees) @HUDY1 max @HUDY2 min</Value>
+						<Nonlinearity>
+							<Item Value="0" Y="287"/>
+							<Item Value="90"  Y="4426"/>
+						</Nonlinearity>
+					</Shift>
+				</Element>
+				<Element>
+					<Visible>@rng_deg 90 &gt;</Visible>
+					<Arc StartAngle="0" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+						<Axis X="70" Y="70"/>
+					</Arc>
+					<Rotate>
+						<Value>@rng_deg 90 - 90 min dgrd</Value>
+					</Rotate>
+					<Shift>
+						<Value>(L:Lead_X, degrees) @HUDX1 max @HUDX2 min</Value>
+						<Nonlinearity>
+							<Item Value="0"  X="330"/>
+							<Item Value="90" X="-3809"/>
+						</Nonlinearity>
+					</Shift>
+					<Shift>
+						<Value>(L:Lead_Y, degrees) @HUDY1 max @HUDY2 min</Value>
+						<Nonlinearity>
+							<Item Value="0" Y="287"/>
+							<Item Value="90"  Y="4426"/>
+						</Nonlinearity>
+					</Shift>
+				</Element>
+				<Element>
+					<Visible>@rng_deg 45 &gt;</Visible>
+					<Arc StartAngle="-45" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+						<Axis X="70" Y="70"/>
+					</Arc>
+					<Rotate>
+						<Value>@rng_deg 45 - 45 min dgrd</Value>
+					</Rotate>
+					<Shift>
+						<Value>(L:Lead_X, degrees) @HUDX1 max @HUDX2 min</Value>
+						<Nonlinearity>
+							<Item Value="0"  X="330"/>
+							<Item Value="90" X="-3809"/>
+						</Nonlinearity>
+					</Shift>
+					<Shift>
+						<Value>(L:Lead_Y, degrees) @HUDY1 max @HUDY2 min</Value>
+						<Nonlinearity>
+							<Item Value="0" Y="287"/>
+							<Item Value="90"  Y="4426"/>
+						</Nonlinearity>
+					</Shift>
+				</Element>
+				<Element>
+					<Visible>@rng_deg 22.5 &gt;</Visible>
+					<Arc StartAngle="-67.5" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+						<Axis X="70" Y="70"/>
+					</Arc>
+					<Rotate>
+						<Value>@rng_deg 22.5 - 22.5 min dgrd</Value>
+					</Rotate>
+					<Shift>
+						<Value>(L:Lead_X, degrees) @HUDX1 max @HUDX2 min</Value>
+						<Nonlinearity>
+							<Item Value="0"  X="330"/>
+							<Item Value="90" X="-3809"/>
+						</Nonlinearity>
+					</Shift>
+					<Shift>
+						<Value>(L:Lead_Y, degrees) @HUDY1 max @HUDY2 min</Value>
+						<Nonlinearity>
+							<Item Value="0" Y="287"/>
+							<Item Value="90"  Y="4426"/>
+						</Nonlinearity>
+					</Shift>
+				</Element>
+				<Element>
+					<Visible>@rng_deg 11.25 &gt;</Visible>
+					<Arc StartAngle="-78.75" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+						<Axis X="70" Y="70"/>
+					</Arc>
+					<Rotate>
+						<Value>@rng_deg 11.25 - 11.25 min dgrd</Value>
+					</Rotate>
+					<Shift>
+						<Value>(L:Lead_X, degrees) @HUDX1 max @HUDX2 min</Value>
+						<Nonlinearity>
+							<Item Value="0"  X="330"/>
+							<Item Value="90" X="-3809"/>
+						</Nonlinearity>
+					</Shift>
+					<Shift>
+						<Value>(L:Lead_Y, degrees) @HUDY1 max @HUDY2 min</Value>
+						<Nonlinearity>
+							<Item Value="0" Y="287"/>
+							<Item Value="90"  Y="4426"/>
+						</Nonlinearity>
+					</Shift>
+				</Element>
+				<Element>
+					<Visible>@rng_deg 0 &gt;</Visible>
+					<Arc StartAngle="-80" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+						<Axis X="70" Y="70"/>
+					</Arc>
+					<Shift>
+						<Value>(L:Lead_X, degrees) @HUDX1 max @HUDX2 min</Value>
+						<Nonlinearity>
+							<Item Value="0"  X="330"/>
+							<Item Value="90" X="-3809"/>
+						</Nonlinearity>
+					</Shift>
+					<Shift>
+						<Value>(L:Lead_Y, degrees) @HUDY1 max @HUDY2 min</Value>
+						<Nonlinearity>
+							<Item Value="0" Y="287"/>
+							<Item Value="90"  Y="4426"/>
+						</Nonlinearity>
+					</Shift>
+				</Element>
+				<Element>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+						<Point X="70" Y="5"/>
+						<Point X="70" Y="20"/>
+						<Axis X="70" Y="70"/>
+					</Polyline>
+					<Rotate>
+						<Value>@rng_deg 0 max 360 min dgrd</Value>
+					</Rotate>
+					<Shift>
+						<Value>(L:Lead_X, degrees) @HUDX1 max @HUDX2 min</Value>
+						<Nonlinearity>
+							<Item Value="0"  X="330"/>
+							<Item Value="90" X="-3809"/>
+						</Nonlinearity>
+					</Shift>
+					<Shift>
+						<Value>(L:Lead_Y, degrees) @HUDY1 max @HUDY2 min</Value>
+						<Nonlinearity>
+							<Item Value="0" Y="287"/>
+							<Item Value="90"  Y="4426"/>
+						</Nonlinearity>
+					</Shift>
+				</Element>
+			</Element>
+
+			<Element Name="Target Designator">
+				<Element Name="TD BOX">
+					<Visible>
+						(L:RLST, bool)
+						(L:BGOH, bool)
+						(L:Flashing) || &amp;&amp;
+					</Visible>
+					<Element>
+						<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+							<Point X="6" Y="6"/>
+							<Point X="72" Y="6"/>
+							<Point X="72" Y="72"/>
+							<Point X="6" Y="72"/>
+							<Point X="6" Y="6"/>
+							<Axis X="39" Y="9"/>
+						</Polyline>
+						<Shift>
+							<Value>(L:Point_X_ref_HUD, degrees)</Value>
+							<Nonlinearity>
+								<Item Value="0"  X="350"/>
+								<Item Value="10" X="-150"/>
+								<Item Value="90" X="-3820"/>
+							</Nonlinearity>
+						</Shift>
+						<Shift>
+							<Value>(L:Point_Y_ref_HUD, degrees)</Value>
+							<Nonlinearity>
+
+								<Item Value="-5" Y="70"/>
+								<Item Value="0" Y="285"/>
+								<Item Value="90"  Y="4400"/>
+							</Nonlinearity>
+						</Shift>
+					</Element>
+				</Element>
+				<Element Name="TD_Arrow">
+					<Visible>
+						(L:AAM_SEL, Enum) 0 ==
+						(L:RLST, bool) and
+						(L:BGOH, bool) ! and
+					</Visible>
+					<Position X="330" Y="195"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+							<Point X="0" Y="0"/>
+							<Point X="-10" Y="20"/>
+							<Point X="10" Y="20"/>
+							<Point X="0" Y="0"/>
+							<Point X="-8" Y="18"/>
+							<Point X="8" Y="18"/>
+							<Point X="0" Y="0"/>
+							<Point X="-6" Y="16"/>
+							<Point X="6" Y="16"/>
+							<Point X="0" Y="0"/>
+							<Point X="-4" Y="14"/>
+							<Point X="4" Y="14"/>
+							<Point X="0" Y="0"/>
+							<Point X="-2" Y="12"/>
+							<Point X="2" Y="12"/>
+							<Point X="0" Y="0"/>
+							<Point X="0" Y="0"/>
+							<Point X="0" Y="10"/>
+							<Point X="0" Y="10"/>
+							<Point X="0" Y="0"/>
+							<Point X="0" Y="60"/>
+
+							<Axis X="0" Y="91"/>
+						</Polyline>
+					<Rotate>
+						<Value>(A:PLANE BANK DEGREES, radians) (L:LAAG) -</Value>
+					</Rotate>
+				</Element>
+			</Element>
+		</Element>
+
+		<Element Name="SRM">
+			<Visible>(L:AAM_SEL, Enum) 1 == </Visible>
+			<Element Name="FOV Circle (With Scan)">
+				<Visible>(L:RLST, bool) 1 ==</Visible>
+				<Position X="330" Y="287"/>
+				<Arc Radius="150" StartAngle="360" EndAngle="0" LineWidth="5" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
+					<Axis X="150" Y="150"/>
+				</Arc>
+			</Element>
+			<Element Name="FOV Circle">
+				<Visible>(L:RLST, bool) 0 ==</Visible>
+				<Position X="330" Y="287"/>
+				<Arc Radius="50" StartAngle="360" EndAngle="0" LineWidth="5" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
+					<Axis X="50" Y="50"/>
+				</Arc>
+			</Element>
+			<Element Name="Rmin Bar">
+				<Visible>(L:RLST, bool) 1 ==</Visible>
+				<Position X="330" Y="287"/>
+				<Macro Name="srm_rng_deg">(L:LAAJ, feet) 60000 / 180 *</Macro>
+				<Element>
+					<Visible>@srm_rng_deg 180 &gt;</Visible>
+					<Arc StartAngle="90" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+						<Axis X="70" Y="70"/>
+					</Arc>
+					<Rotate>
+						<Value>@srm_rng_deg 180 - 180 min dgrd</Value>
+					</Rotate>
+				</Element>
+				<Element>
+					<Visible>@srm_rng_deg 90 &gt;</Visible>
+					<Arc StartAngle="0" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+						<Axis X="70" Y="70"/>
+					</Arc>
+					<Rotate>
+						<Value>@srm_rng_deg 90 - 90 min dgrd</Value>
+					</Rotate>
+				</Element>
+				<Element>
+					<Visible>@srm_rng_deg 45 &gt;</Visible>
+					<Arc StartAngle="-45" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+						<Axis X="70" Y="70"/>
+					</Arc>
+					<Rotate>
+						<Value>@srm_rng_deg 45 - 45 min dgrd</Value>
+					</Rotate>
+				</Element>
+				<Element>
+					<Visible>@srm_rng_deg 22.5 &gt;</Visible>
+					<Arc StartAngle="-67.5" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+						<Axis X="70" Y="70"/>
+					</Arc>
+					<Rotate>
+						<Value>@srm_rng_deg 22.5 - 22.5 min dgrd</Value>
+					</Rotate>
+				</Element>
+				<Element>
+					<Visible>@srm_rng_deg 11.25 &gt;</Visible>
+					<Arc StartAngle="-78.75" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+						<Axis X="70" Y="70"/>
+					</Arc>
+					<Rotate>
+						<Value>@srm_rng_deg 11.25 - 11.25 min dgrd</Value>
+					</Rotate>
+				</Element>
+				<Element>
+					<Visible>@srm_rng_deg 0 &gt;</Visible>
+					<Arc StartAngle="-80" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+						<Axis X="70" Y="70"/>
+					</Arc>
+				</Element>
+				<Element>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+						<Point X="70" Y="5"/>
+						<Point X="70" Y="20"/>
+						<Axis X="70" Y="70"/>
+					</Polyline>
+					<Rotate>
+						<Value>@srm_rng_deg 0 max 360 min dgrd</Value>
+					</Rotate>
+				</Element>
+			</Element>
+			<Element Name="Target Designator">
+				<Visible>(L:RLST, bool)</Visible>
+				<Element Name="TD BOX">
+					<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+						<Point X="6" Y="6"/>
+						<Point X="72" Y="6"/>
+						<Point X="72" Y="72"/>
+						<Point X="6" Y="72"/>
+						<Point X="6" Y="6"/>
+						<Axis X="39" Y="9"/>
+					</Polyline>
+				</Element>
+				<Element Name="Shot Cue">
+					<Visible>(L:SRM_SHOT) 1 ==</Visible>
+					<Position X="0" Y="80"/>
+					<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+						<Point X="16" Y="0"/>
+						<Point X="32" Y="32"/>
+						<Point X="0" Y="32"/>
+						<Point X="16" Y="0"/>
+						<Axis X="16" Y="16"/>
+					</Polyline>
+				</Element>
+				<Shift>
+					<Value>(L:Point_X_ref_HUD, degrees)</Value>
+					<Nonlinearity>
+						<Item Value="0"  X="350"/>
+						<Item Value="10" X="-150"/>
+						<Item Value="90" X="-3820"/>
+					</Nonlinearity>
+				</Shift>
+				<Shift>
+			 		<Value>(L:Point_Y_ref_HUD, degrees)</Value>
+					<Nonlinearity>
+						<Item Value="-5" Y="70"/>
+						<Item Value="0" Y="285"/>
+						<Item Value="90"  Y="4400"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+			<Element Name="Seeker Head Position Circle">
+				<Element>
+					<Arc Radius="30" StartAngle="360" EndAngle="0" LineWidth="5" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
+						<Axis X="30" Y="15"/>
+					</Arc>
+				</Element>
+				<Shift>
+					<Value>(L:Point_X_ref_HUD, degrees)</Value>
+					<Nonlinearity>
+						<Item Value="0"  X="350"/>
+						<Item Value="10" X="-150"/>
+						<Item Value="90" X="-3820"/>
+					</Nonlinearity>
+					<Delay ValuePerSecond="3"/>
+				</Shift>
+				<Shift>
+			 		<Value>(L:Point_Y_ref_HUD, degrees)</Value>
+					<Nonlinearity>
+						<Item Value="-5" Y="70"/>
+						<Item Value="0" Y="285"/>
+						<Item Value="90"  Y="4400"/>
+					</Nonlinearity>
+					<Delay ValuePerSecond="3"/>
+				</Shift>
+			</Element>
+		</Element>
+
+		<Element Name="MRM">
+			<Visible>(L:AAM_SEL, Enum) 2 ==</Visible>
+			<Element Name="Reference Circle">
+				<Visible>(L:HUD_MRM_BREAK) 0 ==</Visible>
+				<Position X="330" Y="287"/>
+				<Arc Radius="250" StartAngle="0" EndAngle="360" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="Yes">
+					<Axis X="250" Y="250"/>
+				</Arc>
+			</Element>
+			<Element Name="BreakAway">
+				<Visible>(L:HUD_MRM_BREAK) 1 ==</Visible>
+				<Element>
+					<Element>
+						<Position X="330" Y="287"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+							<Point X="-100" Y="-100"/>
+							<Point X="100" Y="100"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Position X="330" Y="287"/>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+							<Point X="100" Y="-100"/>
+							<Point X="-100" Y="100"/>
+						</Polyline>
+					</Element>
+				</Element>
+			</Element>
+			<Element Name="Target Designator">
+				<Visible>(L:RLST, bool)</Visible>
+				<Element Name="TD BOX">
+					<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+						<Point X="6" Y="6"/>
+						<Point X="72" Y="6"/>
+						<Point X="72" Y="72"/>
+						<Point X="6" Y="72"/>
+						<Point X="6" Y="6"/>
+						<Axis X="39" Y="9"/>
+					</Polyline>
+				</Element>
+				<Element Name="Shot Cue">
+					<Visible>
+						(L:MRM_SHOT) 2 ==
+						(P:absolute time, number) 0.5 % 0.25 &lt; and
+						(L:MRM_SHOT) 1 == or
+					</Visible>
+					<Position X="0" Y="80"/>
+					<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+						<Point X="16" Y="0"/>
+						<Point X="32" Y="32"/>
+						<Point X="0" Y="32"/>
+						<Point X="16" Y="0"/>
+						<Axis X="16" Y="16"/>
+					</Polyline>
+				</Element>
+				<Shift>
+					<Value>(L:Point_X_ref_HUD, degrees)</Value>
+					<Nonlinearity>
+						<Item Value="0"  X="350"/>
+						<Item Value="10" X="-150"/>
+						<Item Value="90" X="-3820"/>
+					</Nonlinearity>
+				</Shift>
+				<Shift>
+			 		<Value>(L:Point_Y_ref_HUD, degrees)</Value>
+					<Nonlinearity>
+						<Item Value="-5" Y="70"/>
+						<Item Value="0" Y="285"/>
+						<Item Value="90"  Y="4400"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+		</Element>
+	</Element>
+
+	<Element Name="A/G">
+	 	<Visible>(L:HUD_MASTER_MODE, enum) 3 ==</Visible>
+		<Element Name="LAG Line">
+			<Element>
+				<Macro Name="GAAA">(A:VELOCITY WORLD Y, m/s) (A:GROUND VELOCITY, m/s) atg2 rddg /-/</Macro>
+				<Macro Name="GAAB">(A:VELOCITY WORLD Y, m/s) sqr 2 9.81 * (A:PLANE ALT ABOVE GROUND, meter) * + sqrt (A:VELOCITY WORLD Y, m/s) + 9.81 /</Macro>
+				<Macro Name="GAAC">(A:GROUND VELOCITY, m/s) @GAAB * (L:GAAH) @GAAB sqr * 2 / -</Macro>
+				<Macro Name="GAAD">(A:PLANE ALT ABOVE GROUND, meter) 270 - (L:KNOB_FS_HUD_RTCL_DEPR) +  @GAAC atg2 rddg</Macro>
+				<Macro Name="GAAE">@GAAD @GAAA -</Macro>
+				<Macro Name="GAAF">@GAAC @GAAD dgrd cos /</Macro>
+				<Element>
+					<Select>
+						<Value>(L:GAAG) ! if{ 10 (&gt;L:GAAH) 1 (&gt;L:GAAG) }</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:HUD_MASTER_MODE, enum) 3 ==
+							if{
+								(L:DriftX, degrees) @GAAE (A:PLANE BANK DEGREES,radians) sin * + (&gt;L:GAAI)
+								(L:DriftY, degrees) @GAAE (A:PLANE BANK DEGREES,radians) cos * + (&gt;L:GAAJ)
+								@GAAF (&gt;L:GAAF, meters)
+							}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+			<Element>
+				<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+				<Rectangle Width="3" Height="2000" Color="%((L:HUD_COLOR_SYM))" FillColor="%((L:HUD_COLOR_SYM))" LineWidth="1" Bright="Yes">
+					<HeightCode>@GAAE 45.99 * 0 max</HeightCode>
+					<Axis X="1" Y="0"/>
+				</Rectangle>
+				<Rotate>
+					<Value>(A:PLANE BANK DEGREES,radians)</Value>
+				</Rotate>
+				<Shift>
+					<Value>(L:DriftX, degrees)</Value>
+						<Nonlinearity>
+						<Item Value="-90" X="4469"/>
+						<Item Value="90" X="-3809"/>
+					</Nonlinearity>
+					</Shift>
+				<Shift>
+					<Value>(L:DriftY, degrees)</Value>
+					<Nonlinearity>
+						<Item Value="0" Y="287"/>
+						<Item Value="90"  Y="4426"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+		</Element>
+		<Element Name="Reticle_Bomb">
+			<Element>
+				<Element Namr="Outer Arc">
+					<Arc Radius="70" StartAngle="360" EndAngle="0" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="Yes">
+						<Axis X="70" Y="70"/>
+					</Arc>
+				</Element>
+				<Element Name="Center Point">
+					<Arc Radius="2" StartAngle="0" EndAngle="360" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="Yes">
+						<Axis X="2" Y="2"/>
+					</Arc>
+				</Element>
+				<Element Name="Line">
+					<Element>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+							<Point X="80" Y="0"/>
+							<Point X="70" Y="0"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+							<Point X="-70" Y="0"/>
+							<Point X="-80" Y="0"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+							<Point X="0" Y="70"/>
+							<Point X="0" Y="80"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+							<Point X="0" Y="-70"/>
+							<Point X="0" Y="-80"/>
+						</Polyline>
+					</Element>
+
+					<Element>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+							<Point X="60" Y="35"/>
+							<Point X="70" Y="40"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+							<Point X="35" Y="60"/>
+							<Point X="40" Y="70"/>
+						</Polyline>
+					</Element>
+
+					<Element>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+							<Point X="-60" Y="-35"/>
+							<Point X="-70" Y="-40"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+							<Point X="-35" Y="-60"/>
+							<Point X="-40" Y="-70"/>
+						</Polyline>
+					</Element>
+
+					<Element>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+							<Point X="60" Y="-35"/>
+							<Point X="70" Y="-40"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+							<Point X="35" Y="-60"/>
+							<Point X="40" Y="-70"/>
+						</Polyline>
+					</Element>
+
+					<Element>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+							<Point X="-60" Y="35"/>
+							<Point X="-70" Y="40"/>
+						</Polyline>
+					</Element>
+					<Element>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
+							<Point X="-35" Y="60"/>
+							<Point X="-40" Y="70"/>
+						</Polyline>
+					</Element>
+				</Element>
+			</Element>
+			<Shift>
+			   	<Value>(L:GAAI)</Value>
+			      	<Nonlinearity>
+					<Item Value="-90" X="4469"/>
+					<Item Value="90" X="-3809"/>
+				</Nonlinearity>
+		    </Shift>
+			<Shift>
+		     	<Value>(L:GAAJ)</Value>
+				<Nonlinearity>
+					<Item Value="0" Y="287"/>
+					<Item Value="90"  Y="4426"/>
+				</Nonlinearity>
+			</Shift>
+		</Element>
+
+		<Element Name="Reticle Bar Tab">
+			<Macro Name="GAAK">(L:GAAF, feet) 6000 / 180 *</Macro>
+			<Element>
+				<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+	 			<Visible>@GAAK 180 &gt;</Visible>
+				<Arc StartAngle="90" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+					<Axis X="70" Y="70"/>
+				</Arc>
+				<Rotate>
+					<Value>@GAAK 180 - 180 min dgrd</Value>
+				</Rotate>
+				<Shift>
+			   		<Value>(L:GAAI)</Value>
+			      		<Nonlinearity>
+						<Item Value="-90" X="4469"/>
+						<Item Value="90" X="-3809"/>
+					</Nonlinearity>
+		    	</Shift>
+				<Shift>
+		     		<Value>(L:GAAJ)</Value>
+					<Nonlinearity>
+						<Item Value="0" Y="287"/>
+						<Item Value="90"  Y="4426"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+			<Element>
+	 			<Visible>@GAAK 90 &gt;</Visible>
+				<Arc StartAngle="0" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+					<Axis X="70" Y="70"/>
+				</Arc>
+				<Rotate>
+					<Value>@GAAK 90 - 90 min dgrd</Value>
+				</Rotate>
+				<Shift>
+			   		<Value>(L:GAAI)</Value>
+			      		<Nonlinearity>
+						<Item Value="-90" X="4469"/>
+						<Item Value="90" X="-3809"/>
+					</Nonlinearity>
+		    	</Shift>
+				<Shift>
+		     		<Value>(L:GAAJ)</Value>
+					<Nonlinearity>
+						<Item Value="0" Y="287"/>
+						<Item Value="90"  Y="4426"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+			<Element>
+	 			<Visible>@GAAK 45 &gt;</Visible>
+				<Arc StartAngle="-45" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+					<Axis X="70" Y="70"/>
+				</Arc>
+				<Rotate>
+					<Value>@GAAK 45 - 45 min dgrd</Value>
+				</Rotate>
+				<Shift>
+			   		<Value>(L:GAAI)</Value>
+			      		<Nonlinearity>
+						<Item Value="-90" X="4469"/>
+						<Item Value="90" X="-3809"/>
+					</Nonlinearity>
+		    		</Shift>
+				<Shift>
+		     	<Value>(L:GAAJ)</Value>
+					<Nonlinearity>
+						<Item Value="0" Y="287"/>
+						<Item Value="90"  Y="4426"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+			<Element>
+	 			<Visible>@GAAK 22.5 &gt;</Visible>
+				<Arc StartAngle="-67.5" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+					<Axis X="70" Y="70"/>
+				</Arc>
+				<Rotate>
+					<Value>@GAAK 22.5 - 22.5 min dgrd</Value>
+				</Rotate>
+				<Shift>
+			   		<Value>(L:GAAI)</Value>
+			      		<Nonlinearity>
+						<Item Value="-90" X="4469"/>
+						<Item Value="90" X="-3809"/>
+					</Nonlinearity>
+		    	</Shift>
+				<Shift>
+		     		<Value>(L:GAAJ)</Value>
+					<Nonlinearity>
+						<Item Value="0" Y="287"/>
+						<Item Value="90"  Y="4426"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+			<Element>
+	 			<Visible>@GAAK 11.25 &gt;</Visible>
+				<Arc StartAngle="-78.75" EndAngle="-90" Color="%((L:HUD_COLOR_SYM))" Bright="Yes" Radius="68" LineWidth="6">
+					<Axis X="70" Y="70"/>
+				</Arc>
+				<Rotate>
+					<Value>@GAAK 11.25 - 11.25 min dgrd</Value>
+				</Rotate>
+				<Shift>
+			   		<Value>(L:GAAI)</Value>
+			      		<Nonlinearity>
+						<Item Value="-90" X="4469"/>
+						<Item Value="90" X="-3809"/>
+					</Nonlinearity>
+		    	</Shift>
+				<Shift>
+		     		<Value>(L:GAAJ)</Value>
+					<Nonlinearity>
+						<Item Value="0" Y="287"/>
+						<Item Value="90"  Y="4426"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+			<Element>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
+					<Point X="70" Y="5"/>
+					<Point X="70" Y="20"/>
+					<Axis X="70" Y="70"/>
+				</Polyline>
+				<Rotate>
+					<Value>@GAAK 11.25 max 360 min dgrd</Value>
+				</Rotate>
+				<Shift>
+			   		<Value>(L:GAAI)</Value>
+			      		<Nonlinearity>
+						<Item Value="-90" X="4469"/>
+						<Item Value="90" X="-3809"/>
+					</Nonlinearity>
+		    	</Shift>
+				<Shift>
+		     		<Value>(L:GAAJ)</Value>
+					<Nonlinearity>
+						<Item Value="0" Y="287"/>
+						<Item Value="90"  Y="4426"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+		</Element>
+
+		<Element Name="Pull Up Cue">
+			<Element>
+				<Macro Name="RALT_VALID">
+					(A:PLANE PITCH DEGREES, degrees) abs 80 &lt;
+					(A:PLANE BANK DEGREES, degrees) abs 80 &lt; and
+					(A:Radio Height, feet) 50000 &lt; and
+					(A:GEAR CENTER POSITION, percent) 0 == and
+				</Macro>
+				<Visible>@RALT_VALID</Visible>
+				<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+						<Point X="-20" Y="0"/>
+						<Point X="-100" Y="0"/>
+						<Point X="-100" Y="-15"/>
+					</Polyline>
+					<Shift>
+						<Value>(A:Radio Height, feet) 500 -</Value>
+						<Scale Y="0.23"/>
+					</Shift>
+				<Rotate>
+					<Value>(A:PLANE BANK DEGREES,radians)</Value>
+				</Rotate>
+				<Shift>
+					<Value>(L:VVectX, degrees) @HUDX1 max @HUDX2 min</Value>
+					<Nonlinearity>
+						<Item Value="0" X="330"/>
+						<Item Value="90" X="-3809"/>
+					</Nonlinearity>
+				</Shift>
+				<Shift>
+					<Value>(L:VVectY, degrees) @HUDY1 max @HUDY2 min</Value>
+					<Nonlinearity>
+						<Item Value="0" Y="287"/>
+						<Item Value="90" Y="4426"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+			<Element>
+				<Visible>@RALT_VALID</Visible>
+				<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
+
+					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+						<Point X="20" Y="0"/>
+						<Point X="100" Y="0"/>
+						<Point X="100" Y="-15"/>
+					</Polyline>
+					<Shift>
+						<Value>(A:Radio Height, feet) 500 -</Value>
+						<Scale Y="0.23"/>
+					</Shift>
+				<Rotate>
+					<Value>(A:PLANE BANK DEGREES,radians)</Value>
+				</Rotate>
+				<Shift>
+					<Value>(L:VVectX, degrees) @HUDX1 max @HUDX2 min</Value>
+					<Nonlinearity>
+						<Item Value="0" X="330"/>
+						<Item Value="90" X="-3809"/>
+					</Nonlinearity>
+				</Shift>
+				<Shift>
+					<Value>(L:VVectY, degrees) @HUDY1 max @HUDY2 min</Value>
+					<Nonlinearity>
+						<Item Value="0" Y="287"/>
+						<Item Value="90" Y="4426"/>
+					</Nonlinearity>
+				</Shift>
+			</Element>
+		</Element>
+	</Element>
+</Element>
+
+<Keys>
+<On Event="DEC_COWL_FLAPS">(L:RDO_Counter) ++ (&gt;L:RDO_Counter)</On>
+</Keys>
+</Gauge>

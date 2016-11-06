@@ -1,0 +1,2902 @@
+<Gauge Name="F-15 SYSTEMS" Version="6.80">
+<Image Name="blank_back.bmp" ImageSizes="20,20"/>
+<!--
+Version 6.80
+	[EDT] ECS (Sound)
+Version 6.70
+	[EDT] Emergency Brake Controller
+Version 6.50
+	[ADD] COUNTERMEASURES SYSTEM
+	[DEL] Anti-Skid (moved : S_ELEC)
+Version 6.0
+	[ADD] Canopy Ejection Controller
+	[ADD] Emergency RF DOOR Controller
+	[ADD] INLET RAMP CONTROLLER
+	[ADD] FLAPS BLOW-IN CONTROLLER
+Version 5.0
+	[ADD] Master ARM (moved : S_ARMT)
+	[ADD] Emergency Jettion
+	[ADD] Emergency Vent (No Scripts)
+	[ADD] Weapon Jettion
+	[DEL] Gauge Needle Circuit / Gauge_BIT (moved : S_ELEC)
+-->
+	<Element Name="INIT">
+		<Select>
+      		<Value>
+			(L:SYS_INIT, bool) 0 ==
+				if{
+					1 (>L:SYS_INIT, bool)
+					0 (>L:ENG1_INIT)
+					0 (>L:ENG2_INIT)
+
+					1 (>L:SW1_FS_MISC_ROLL_RATIO)
+					1 (>L:SW1_FS_MISC_L_INLET_RAMP)
+					1 (>L:SW1_FS_MISC_R_INLET_RAMP)
+					2 (>L:SW2_FS_MISC_ANTI_SKID)
+					0 (>L:SW2_FS_MISC_LANDING_TAXI)
+
+					1 (>L:SW2_FS_FUEL_CTRL_WING)
+					1 (>L:SW2_FS_FUEL_CTRL_CTR)
+					1 (>L:SW2_FS_FUEL_CTRL_CONF)
+					0 (>L:SW1_FS_FUEL_DUMP)
+					1 (>L:SW2_FS_FUEL_EMERG_TX)
+					0 (>L:SW1_FS_FUEL_EXT_TX)
+					0 (>L:SW2_FS_FUEL_SLIP)
+
+					2 (>L:KNOB_FS_RDR_PWR)
+					4 (>L:KNOB_FS_RDR_STORE)
+					2 (>L:KNOB_FS_RDR_SPL_MODE)
+					1 (>L:SW1_FS_RDR_MODE_CONTR)
+					2 (>L:KNOB_FS_RDR_RANGE)
+					4 (>L:KNOB_FS_RDR_EL_SCAN)
+					2 (>L:KNOB_FS_RDR_AZ_SCAN)
+					1 (>L:KNOB_FS_RDR_MODE_SEL)
+					2 (>L:IND_FS_RDR_BAND)
+					3 (>L:IND_FS_RDR_CHAN)
+
+					1 (>L:SW2_FS_EW_RWR_ICS)
+					1 (>L:SW2_FS_EW_PODS)
+					1 (>L:SW2_FS_EW_ICS)
+
+					1 (>L:SW2_FS_IFF_ANTENNA_SEL)
+					1 (>L:SW2_FS_IFF_MODE_4)
+					1 (>L:SW2_FS_IFF_MODE)
+					1 (>L:SW2_FS_IFF_LIGHT_AUD)
+					1 (>L:SW2_FS_IFF_MASTER)
+					73 (>L:IND_FS_IFF_M1_CODE)
+					1 (>L:SW2_FS_IFF_M1)
+					1 (>L:SW2_FS_IFF_M2)
+					1 (>L:SW2_FS_IFF_M3)
+					1 (>L:SW2_FS_IFF_MC)
+
+					1 (>L:KNOB_FS_AAI_MASTER)
+					48 (>L:IND_FS_AAI_MODE)
+					7777 (>L:IND_FS_AAI_CODE)
+
+					0 (>L:SW2_FS_ICS_OVERRIDE)
+
+					0 (>L:SW1_BIT_RESET)
+					0 (>L:BTN_BIT_CC)
+					0 (>L:BTN_BIT_INITATE)
+					0 (>L:KNOB_BIT_MODE)
+
+					1 (>L:SW2_FS_GND_PWR_1)
+					0 (>L:SW1_FS_COOL_2)
+					0 (>L:SW1_FS_COOL_3)
+					0 (>L:SW1_FS_COOL_4)
+					1 (>L:SW2_FS_CC)
+
+					0 (>L:KNOB_FS_ILS_VOL)
+					0 (>L:SW1_FS_TCN_X_Y)
+					0 (>L:KNOB_FS_TCN_MODE)
+					0 (>L:KNOB_FS_TCN_VOL)
+
+					2 (>L:SW2_FS_CAS_YAW)
+					2 (>L:SW2_FS_CAS_PITCH)
+					2 (>L:SW2_FS_CAS_ROLL)
+					0 (>L:SW1_FS_CAS_ALT_HOLD)
+					0 (>L:SW1_FS_CAS_ATT_HOLD)
+
+					0 (>L:SW1_FS_THR_L_FING)
+					0 (>L:SW1_FS_THR_R_FING)
+					0 (>L:SW1_FS_THROT_L)
+					0 (>L:SW1_FS_THROT_R)
+
+					1 (>L:SW2_FS_THR_RUD_TRIM)
+					1 (>L:SW1_FLAPS)
+
+					0 (>L:KNOB_FS_LIGHT_FORM)
+					0 (>L:KNOB_FS_LIGHT_POS)
+					0 (>L:SW1_FS_LIGHT_ANTICOL)
+
+					6 (>L:KNOB_FS_RAD2_INT)
+					0 (>L:KNOB_FS_RAD2_CHAN)
+					1 (>L:SW2_FS_RAD2_SET)
+					1 (>L:SW2_FS_RAD2_DIS)
+					1 (>L:SW2_FS_RAD2_TRANS)
+					1 (>L:KNOB_FS_RAD2_MODE)
+
+					0 (>L:KNOB_FS_VOL_TEWS_CAUT)
+					0 (>L:KNOB_FS_VOL_TEWS_LAUNCH)
+					0 (>L:BTN_FS_VOL_TEWS_LAUNCH)
+					0 (>L:KNOB_FS_VOL_ICS)
+					0 (>L:KNOB_FS_VOL_WPN)
+					0 (>L:KNOB_FS_VOL_R2)
+					0 (>L:KNOB_FS_VOL_JTIDS)
+					1 (>L:SW2_FS_VOL_R2_ANT)
+					1 (>L:SW2_FS_VOL_R1_ANT)
+					1 (>L:SW2_FS_VOL_RAD1_GUARD_RECIVE)
+					1 (>L:SW2_FS_VOL_R1_ADF)
+
+					0 (>L:SW1_FS_KY58_ZEROIZE)
+					0 (>L:SW1_FS_KY58_DELAY)
+					0 (>L:KNOB_FS_KY58_PLAIN)
+					0 (>L:KNOB_FS_KY58_MODE)
+					0 (>L:KNOB_FS_KY58_FILL)
+					1 (>L:SW1_FS_KY58_POWER)
+
+					1 (>L:SW1_FS_EWWS)
+					0 (>L:SW1_FS_FLYUP)
+					0 (>L:SW1_FS_VMAX)
+					0 (>L:SW1_FS_ASO)
+					0 (>L:SW1_FS_EAR)
+
+					1 (>L:SW2_FS_OXY_EMER)
+					0 (>L:SW1_FS_OXY_DILUTER)
+					1 (>L:SW2_FS_OXY_SUPPLY)
+
+					1 (>L:SW1_FS_ENG_GEN_L)
+					1 (>L:SW1_FS_ENG_GEN_R)
+					0 (>L:SW2_FS_ENG_EMER_GEN)
+					1 (>L:SW1_FS_ENG_CONT_L)
+					1 (>L:SW1_FS_ENG_CONT_R)
+					0 (>L:SW2_FS_ENG_EXT_PWR)
+					1 (>L:SW1_FS_ENG_MASTER_L)
+					1 (>L:SW1_FS_ENG_MASTER_R)
+
+					1 (>L:KNOB_FS_NAV_DATA)
+					1 (>L:KNOB_FS_NAV_MODE)
+					1 (>L:KNOB_FS_NAV_INT)
+
+					1 (>L:SW1_FS_TEWS_ICS)
+					1 (>L:SW1_FS_TEWS_SET1)
+					1 (>L:SW1_FS_TEWS_SET2)
+					1 (>L:SW1_FS_TEWS_SET3)
+					1 (>L:SW1_FS_TEWS_RWR)
+					1 (>L:SW1_FS_TEWS_EWWS_PWR)
+					1 (>L:SW1_FS_TEWS_EWWS_AUD)
+
+					1 (>L:BTN_FS_COMPASS_ERECT)
+					1 (>L:SW1_FS_COMPASS_N_S)
+					1 (>L:BTN_FS_COMPASS_SYNC)
+					1 (>L:KNOB_FS_COMPASS_MODE)
+					1 (>L:KNOB_FS_COMPASS_LAT)
+
+
+					1 (>L:SW2_FS_ECS_ANTIFOG)
+					0 (>L:SW1_FS_ECS_WINDSHIELD)
+					1 (>L:SW1_FS_ECS_PITOT)
+					1 (>L:SW2_FS_ECS_ENG)
+
+					2 (>L:SW2_FS_AIRCON_MODE)
+					2 (>L:KNOB_FS_AIRCON_TEMP)
+					2 (>L:KNOB_FS_AIRCON_SOURCE)
+
+					0 (>L:KNOB_FS_INT_LT_L_CONSOLE)
+					0 (>L:KNOB_FS_INT_LT_R_CONSOLE)
+					0 (>L:SW1_FS_INT_LT_TEST)
+					0 (>L:KNOB_FS_INT_LT_INST_AUX)
+					0 (>L:SW1_FS_INT_LT_INST_STBY)
+					0 (>L:KNOB_FS_INT_LT_INST_FLT)
+					0 (>L:KNOB_FS_INT_LT_INST_ENG)
+					1 (>L:KNOB_FS_INT_LT_CAUTION)
+					0 (>L:KNOB_FS_INT_LT_STORM)
+
+					1 (>L:SW2_FS_CMD_DISP_SEL)
+					3 (>L:KNOB_FS_CMD_MODE)
+
+					2 (>L:KNOB_FS_ECM_MODE1)
+					2 (>L:KNOB_FS_ECM_MODE2)
+
+					1 (>L:SW2_FS_FIRE_DISCHARGE)
+
+					0 (>L:SW1_FS_VSD_CNT)
+					0 (>L:KNOB_FS_VSD_RDR)
+					6 (>L:KNOB_FS_VSD_SYM)
+					1 (>L:KNOB_FS_VSD_BRT)
+					1 (>L:KNOB_FS_VSD_CONT)
+
+					16 (>L:KNOB_FS_UHF_1_CHAN)
+					0 (>L:KNOB_FS_UHF_1_VOL)
+					1 (>L:KNOB_FS_UHF_1_MODE)
+					1 (>L:SW2_FS_UHF_1_MODE)
+
+					1 (>L:SW1_FS_HUD_BRT)
+					1 (>L:SW1_FS_HUD_SYM)
+					1 (>L:SW2_FS_HUD_RTCL)
+					1 (>L:SW2_FS_HUD_CAMERA)
+					6 (>L:KNOB_FS_HUD_SYM_BRT)
+					1 (>L:SW1_FS_HUD_DAY)
+					1 (>L:KNOB_FS_HUD_STBY_RTCL)
+					270 (>L:KNOB_FS_HUD_RTCL_DEPR)
+
+					99 (>L:IND_VTRS_REMAIN)
+					0 (>L:SW2_FS_VTRS_RECORD)
+					0 (>L:KNOB_FS_VTRS_RECORD)
+					1 (>L:SW2_FS_VTRS_CAMERA)
+					0 (>L:KNOB_VTRS_RESET)
+
+					6 (>L:KNOB_FS_TEWS_INT)
+
+					0 (>L:SW1_FS_EMER_CANOPY)
+					0 (>L:SW1_FS_HOOK)
+					0 (>L:SW1_FS_EMER_GEAR)
+
+					3 (>L:KNOB_FS_WEP_JETT_SEL)
+					2 (>L:KNOB_FS_MPCD_PWR)
+					0 (>L:SW1_FS_MASTER_ARM)
+
+					1 (>L:SW1_FS_PITCH_RATIO)
+
+					0 (>L:KNOB_FS_STEER_MODE)
+					0 (>L:SW1_FS_EMER_BRAKE)
+
+					1 (>L:KNOB_FUEL_SELECT)
+					3 (>L:KNOB_FUEL_BINGO)
+
+					0 (>L:SW1_FS_JFS_LEVER, enum)
+					0 (>L:JFS_LEVER_PULLED, bool)
+					7000 (>L:JFS_ACCUM)
+
+					0 (>L:SW1_FS_EMER_VENT)
+
+					200 (>L:Setting LAW, enum)
+				}
+			</Value>
+		</Select>
+	</Element>
+	<Element Name="ENGINE">
+ 		<Element Name="JET FUEL STARTER SYSTEM">
+			<Element Name="JFS STARTER for ACCUMULATOR 1">
+				<Select>
+					<Value>
+						(L:SW1_FS_JFS_LEVER, enum) 1 ==
+						(L:SW1_FS_ENG_JFS, bool) 1 == and
+						(L:JFS_ACCUM) 7000 == and
+						(L:JFS_START, bool) 0 == and
+						(L:ENG_AVAIL, bool) 0 == and
+						(A:APU PCT RPM, percent) 99 &lt; and
+							if{
+								(>K:APU_STARTER)
+								1 (>L:JFS_START, bool)
+								1 (>L:JFS_PWR, bool)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="JFS STARTER for ACCUMULATOR 2">
+				<Select>
+					<Value>
+					(L:SW1_FS_JFS_LEVER, enum) 2 ==
+					(L:SW1_FS_ENG_JFS, bool) 1 == and
+					(L:JFS_ACCUM) 4000 == and
+					(L:JFS_START, bool) 0 == and
+					(L:ENG_AVAIL, bool) 0 == and
+					(A:APU PCT RPM, percent) 99 &lt; and
+						if{
+							(>K:APU_STARTER)
+							1 (>L:JFS_START, bool)
+							1 (>L:JFS_PWR, bool)
+						}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="JFS STOP for ENGINE STARTED">
+				<Select>
+					<Value>
+						(A:TURB ENG1 N2, percent) 35 &gt;
+						(A:TURB ENG2 N2, percent) 35 &gt; and
+						(A:APU PCT RPM, percent) 50 &gt; and
+							if{
+								(>K:APU_OFF_SWITCH)
+								1 (>L:JFS_STOP, bool)
+								0 (>L:JFS_PWR, bool)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="JFS STOP for SWITCH or FAULT">
+				<Select>
+					<Value>
+					(L:SW1_FS_ENG_JFS, bool) 0 ==
+					(L:JFS_FAULT, bool) 1 == or
+					(A:APU PCT RPM, percent) 50 &gt; and
+						if{
+							(>K:APU_OFF_SWITCH)
+							1 (>L:JFS_STOP, bool)
+						}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="JFS GENERATOR ON">
+				<Select>
+					<Value>
+					(A:APU PCT RPM, percent) 90 &gt;
+					(L:APU_ON_INIT, enum) 0 == and
+						if{
+							1 (>K:APU_GENERATOR_SWITCH_SET, bool)
+							1 (>L:LIGHT_JFS_READY, bool)
+							1 (>L:APU_ON_INIT, enum)
+						}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="JFS GENERATOR OFF">
+				<Select>
+					<Value>
+					(A:APU PCT RPM, percent) 90 &lt;
+					(L:APU_ON_INIT, enum) 1 == and
+						if{
+							0 (>K:APU_GENERATOR_SWITCH_SET, bool)
+							0 (>L:LIGHT_JFS_READY, bool)
+							0 (>L:APU_ON_INIT, enum)
+						}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="JFS STARTED">
+				<Select>
+					<Value>
+					(A:APU PCT RPM, percent) 99 &gt;
+					(L:SW1_FS_ENG_JFS, bool) 1 == and
+					(L:JFS_RUN_INIT, bool) 0 == and
+						if{
+							2 (>L:JFS_RUN, bool)
+							1 (>L:JFS_RUN_INIT, bool)
+						}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="JFS STOPPED">
+				<Select>
+					<Value>
+					(A:APU PCT RPM, percent) 99 &lt;
+					(L:SW1_FS_ENG_JFS, bool) 0 == or
+					(L:JFS_RUN_INIT, bool) 1 == and
+						if{
+							0 (>L:JFS_RUN, bool)
+							0 (>L:JFS_RUN_INIT, bool)
+						}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="JFS HYDRAULIC ACCUMULATORS">
+				<Element Name="JFS ACCUMULATOR 1">
+					<Select>
+						<Value>
+						(L:SW1_FS_JFS_LEVER, enum) 1 ==
+						(L:SW1_FS_ENG_JFS, bool) 1 == and
+						(L:JFS_LEVER_PULLED, bool) 0 == and
+						(L:ENG_AVAIL, bool) 0 == and
+							if{ 1 (>L:JFS_LEVER_PULLED, bool) }
+
+						(L:JFS_LEVER_PULLED, bool) 1 ==
+						(L:JFS_ACCUM) 4000 &gt; and
+							if{	(L:JFS_ACCUM) 100 - (>L:JFS_ACCUM) }
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+						(L:JFS_LEVER_PULLED, bool) 1 ==
+						(L:JFS_ACCUM) 4000 == and
+							if{ 0 (>L:JFS_LEVER_PULLED, bool) }
+						</Value>
+					</Select>
+				</Element>
+
+				<Element Name="JFS ACCUMULATOR 2">
+					<Select>
+						<Value>
+						(L:SW1_FS_JFS_LEVER, enum) 2 ==
+						(L:SW1_FS_ENG_JFS, bool) 1 == and
+						(L:JFS_LEVER_PULLED, bool) 0 == and
+						(L:ENG_AVAIL, bool) 0 == and
+							if{ 2 (>L:JFS_LEVER_PULLED, bool) }
+
+						(L:JFS_LEVER_PULLED, bool) 2 ==
+						(L:JFS_ACCUM) 200 &gt; and
+							if{ (L:JFS_ACCUM) 100 - (>L:JFS_ACCUM) }
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+						(L:JFS_LEVER_PULLED, bool) 2 ==
+						(L:JFS_ACCUM) 200 == and
+							if{ 0 (>L:JFS_LEVER_PULLED, bool) }
+						</Value>
+					</Select>
+				</Element>
+
+				<Element Name="JFS ACCUMULATORS RECHARGE">
+					<Select>
+						<Value>
+							(L:JFS_ACCUM) 7000 &lt;
+							(A:TURB ENG1 N2, percent) 65 &gt; and
+							(A:TURB ENG2 N2, percent) 65 &gt; and
+								if{
+									(L:JFS_ACCUM) 10 + (>L:JFS_ACCUM)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+		</Element>
+
+		<Element Name="STARTER SYSTEM">
+			<Element Name="ENG1 STARTER">
+				<Select>
+					<Value>
+					(L:SW1_FS_ENG_MASTER_L, bool) 1 ==
+					(A:APU PCT RPM, percent) 90 &gt; and
+					(L:SW1_FS_THR_L_FING, bool) 1 == and
+					(L:AMAD_L_FAULT, bool) 0 == and
+					(A:GENERAL ENG1 COMBUSTION, bool) 0 == and
+					(L:ENG_L_STARTER_INIT, bool) 0 == and
+						if{ 1 (>L:AMAD_L_COUPLE, bool) 1 (>L:ENG_L_STARTER, bool) 1 (>L:ENG_L_STARTER_INIT, bool) }
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+					(L:SW1_FS_THR_L_FING, bool) 0 ==
+					(L:ENG_L_STARTER_INIT, bool) 1 == and
+						if{ 0 (>L:AMAD_L_COUPLE, bool) 0 (>L:ENG_L_STARTER, bool) 0 (>L:ENG_L_STARTER_INIT, bool) }
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+					(L:ENG_L_STARTER, bool) 1 ==
+							if{ (A:GENERAL ENG STARTER:1, bool) !
+								if{ (>K:TOGGLE_STARTER1)
+								}
+							}
+							els{ (A:GENERAL ENG STARTER:1, bool)
+								if{ (>K:TOGGLE_STARTER1)
+								}
+							}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="ENG1 FUEL FEED">
+				<Select>
+					<Value>
+					(L:SW1_FS_THROT_L, bool) 1 ==
+					(L:FUEL_L_INIT, enum) 0 == and
+						if{ 1000 (>K:MIXTURE1_SET) 1 (>L:FUEL_L_INIT, enum) }
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+					(L:SW1_FS_THROT_L, bool) 0 ==
+					(L:SW1_FS_ENG_MASTER_L, bool) 0 == or
+					(L:BTN_FS_FIRE_LENG_EXEC, bool) 1 == or
+					(L:FUEL_L_INIT, enum) 1 == and
+						if{ 0 (>K:MIXTURE1_SET) 0 (>L:FUEL_L_INIT, enum) 0 (>L:SW1_FS_THR_L_FING, bool) 0 (>L:BTN_FS_FIRE_LENG_EXEC, bool) }
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="ENG2 STARTER">
+				<Select>
+					<Value>
+					(L:SW1_FS_ENG_MASTER_R, bool) 1 ==
+					(A:APU PCT RPM, percent) 90 &gt; and
+					(L:SW1_FS_THR_R_FING, bool) 1 == and
+					(L:AMAD_R_FAULT, bool) 0 == and
+					(A:GENERAL ENG2 COMBUSTION, bool) 0 == and
+					(L:ENG_R_STARTER_INIT, bool) 0 == and
+						if{ 1 (>L:AMAD_R_COUPLE, bool) 1 (>L:ENG_R_STARTER, bool) 1 (>L:ENG_R_STARTER_INIT, bool) }
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+					(L:SW1_FS_THR_R_FING, bool) 0 ==
+					(L:ENG_R_STARTER_INIT, bool) 1 == and
+						if{ 0 (>L:AMAD_R_COUPLE, bool) 0 (>L:ENG_R_STARTER, bool) 0 (>L:ENG_R_STARTER_INIT, bool) }
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+					(L:ENG_R_STARTER, bool) 1 ==
+							if{ (A:GENERAL ENG STARTER:2, bool) !
+								if{ (>K:TOGGLE_STARTER2)
+								}
+							}
+							els{ (A:GENERAL ENG STARTER:2, bool)
+								if{ (>K:TOGGLE_STARTER2)
+								}
+							}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="ENG2 FUEL FEED">
+				<Select>
+					<Value>
+					(L:SW1_FS_THROT_R, bool) 1 ==
+					(L:FUEL_R_INIT, enum) 0 == and
+						if{ 1000 (>K:MIXTURE2_SET) 1 (>L:FUEL_R_INIT, enum) }
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+					(L:SW1_FS_THROT_R, bool) 0 ==
+					(L:SW1_FS_ENG_MASTER_R, bool) 0 == or
+					(L:BTN_FS_FIRE_RENG_EXEC, bool) 1 == or
+					(L:FUEL_R_INIT, enum) 1 == and
+						if{ 0 (>K:MIXTURE2_SET) 0 (>L:FUEL_R_INIT, enum) 0 (>L:SW1_FS_THR_R_FING, bool) 0 (>L:BTN_FS_FIRE_RENG_EXEC, bool) }
+					</Value>
+				</Select>
+			</Element>
+
+		</Element>
+
+		<Element Name="ENGINE CONTROL">
+			<Element Name="Finger">
+				<Select>
+					<Value>
+						(A:GENERAL ENG1 THROTTLE LEVER POSITION, percent) 1 &gt;
+							if{
+								1 (>L:SW1_FS_THR_L_FING)
+							}
+							els{
+								0 (>L:SW1_FS_THR_L_FING)
+							}
+
+						(A:GENERAL ENG2 THROTTLE LEVER POSITION, percent) 1 &gt;
+							if{
+								1 (>L:SW1_FS_THR_R_FING)
+							}
+							els{
+								0 (>L:SW1_FS_THR_R_FING)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="Throttle Lever Position">
+				<Select>
+					<Value>
+						(A:GENERAL ENG2 THROTTLE LEVER POSITION, percent) 20 &gt;
+							if{
+								1 (>L:SW1_FS_THROT_L)
+							}
+							els{
+								(A:TURB ENG1 N2, percent) 20 &lt;
+									if{
+										0 (>L:SW1_FS_THROT_L)
+									}
+							}
+
+						(A:GENERAL ENG2 THROTTLE LEVER POSITION, percent) 20 &gt;
+							if{
+								1 (>L:SW1_FS_THROT_R)
+							}
+							els{
+								(A:TURB ENG2 N2, percent) 20 &lt;
+									if{
+										0 (>L:SW1_FS_THROT_R)
+									}
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="Throttle Set">
+				<Select>
+					<Value>
+						(A:TURB ENG1 N2, percent) 35 &gt;
+						(A:GENERAL ENG1 THROTTLE LEVER POSITION, percent) 20 &lt; and
+							if{
+								3276 (>K:THROTTLE1_SET)
+							}
+						(A:TURB ENG2 N2, percent) 35 &gt;
+						(A:GENERAL ENG2 THROTTLE LEVER POSITION, percent) 20 &lt; and
+							if{
+								3276 (>K:THROTTLE2_SET)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="Engine Avaliavle">
+				<Select>
+					<Value>
+
+						(A:TURB ENG1 N2, percent) 35 &gt;
+							if{
+								1 (>L:ENG1_AVAIL, bool)
+							}
+							els{
+								0 (>L:ENG1_AVAIL, bool)
+							}
+
+						(A:TURB ENG2 N2, percent) 35 &gt;
+							if{
+								1 (>L:ENG2_AVAIL, bool)
+							}
+							els{
+								0 (>L:ENG2_AVAIL, bool)
+							}
+
+						(L:ENG1_AVAIL, bool) 1 ==
+						(L:ENG2_AVAIL, bool) 1 == and
+							if{
+								1 (>L:ENG_AVAIL, bool)
+							}
+							els{
+								0 (>L:ENG_AVAIL, bool)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+	</Element>
+
+	<Element Name="Switch">
+		<Element Name="Emergency Brake Controller">
+    		<Select>
+      			<Value>
+				(L:SW1_FS_EMER_BRAKE) 1 ==
+					if{
+						(A:ANTISKID BRAKES ACTIVE,bool) 1 ==
+							if{
+								(>K:ANTISKID_BRAKES_TOGGLE)
+							}
+						(L:JFS_ACCUM) 0 &gt;
+							if{
+								(L:JFS_ACCUM) (A:AIRSPEED INDICATED, knots) 0.01 * -  (>L:JFS_ACCUM)
+							}
+						(A:BRAKE PARKING INDICATOR, bool) 0 ==
+							if{
+								(>K:PARKING_BRAKES)
+							}
+					}
+      			</Value>
+    		</Select>
+		</Element>
+		<Element Name="Emergency Gear Controller">
+    		<Select>
+      			<Value>
+					(L:SW1_FS_EMER_GEAR,enum) 1 ==
+					(L:SW1_RS_EMER_GEAR,enum) 1 == or
+					(L:EMER_GEAR_INIT,enum) 0 == and
+						if{
+							1 (>K:GEAR_DOWN, number) 1 (>L:EMER_GEAR_INIT,enum)
+						}
+      			</Value>
+    		</Select>
+		</Element>
+		<Element Name="Emergency Jettion Controller">
+    		<Select>
+      			<Value>
+					(L:BTN_FS_EMER_JETT_EXEC) 1 ==
+					(L:EMER_JETT_BTN_INIT) 0 == and
+						if{
+							1 (>L:EMER_JETT_BTN_INIT)
+							(P:LOCAL TIME, seconds) (>L:EMER_JETT-TIME, seconds)
+						}
+
+					(P:LOCAL TIME, seconds) (L:EMER_JETT-TIME, seconds) - 1 &gt;
+					(L:EMER_JETT_BTN_INIT) 1 == and
+						if{
+							0 (>L:BTN_FS_EMER_JETT_EXEC)
+							0 (>L:EMER_JETT-TIME, seconds)
+							0 (>L:EMER_JETT_BTN_INIT)
+						}
+					(L:BTN_FS_EMER_JETT_EXEC) 0 ==
+					(L:EMER_JETT_BTN_INIT) 1 == and
+						if{
+							0 (>L:BTN_FS_EMER_JETT_EXEC)
+							0 (>L:EMER_JETT-TIME, seconds)
+							0 (>L:EMER_JETT_BTN_INIT)
+						}
+      			</Value>
+    		</Select>
+		</Element>
+		<Element Name="Emergency Vent Controller">
+    		<Select>
+      			<Value>
+					(L:SW1_FS_EMER_VENT) 1 ==
+						if{
+						}
+      			</Value>
+    		</Select>
+		</Element>
+		<Element Name="Canopy Ejection Controller">
+			<Element>
+				<Select>
+					<Value>
+					(L:SW1_FS_EMER_CANOPY,enum) 1 ==
+					(L:FS_SEAT_PIN, enum) 0 == and
+					(L:CANOPY_JETTISON_INIT,enum) 0 == and
+						if{
+							1 (>L:CANOPY_VIS, number) 1 (>L:CANOPY_JETTISON_SND,enum) 1 (>L:CANOPY_JETTISON_INIT,enum)
+						}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+					(L:SW1_FS_EMER_CANOPY,enum) 1 ==
+					(L:FS_SEAT_PIN, enum) 1 == and
+						if{
+							0 (>L:SW1_FS_EMER_CANOPY,enum)
+						}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element>
+				<Select>
+					<Value>
+					(L:SW1_RS_EMER_CANOPY,enum) 1 ==
+					(L:RS_SEAT_PIN, enum) 0 == and
+					(L:CANOPY_JETTISON_INIT,enum) 0 == and
+						if{
+							1 (>L:CANOPY_VIS, number) 1 (>L:CANOPY_JETTISON_SND,enum) 1 (>L:CANOPY_JETTISON_INIT,enum)
+						}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+					(L:SW1_RS_EMER_CANOPY,enum) 1 ==
+					(L:RS_SEAT_PIN, enum) 1 == and
+						if{
+							0 (>L:SW1_RS_EMER_CANOPY,enum)
+						}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		<Element Name="Emergency RF DOOR Controller">
+    		<Select>
+      			<Value>
+				(L:SW1_FS_EAR,enum) 1 ==
+				(L:EMER_EAR_INIT,enum) 0 == and
+					if{
+						1 (>L:RF_DOOR_VIS, number) 1 (>L:RF_DOOR_AUD, number) 1 (>L:EMER_EAR_INIT,enum)
+					}
+      			</Value>
+    		</Select>
+		</Element>
+
+		<Element Name="INLET RAMP CONTROLLER">
+    		<Select>
+      			<Value>
+				(L:SW1_FS_MISC_L_INLET_RAMP, enum) 0 ==
+					if{
+						1 (>L:L_RAMP_LOCKED,enum)
+					}
+					els{
+						0 (>L:L_RAMP_LOCKED,enum)
+					}
+				(L:SW1_FS_MISC_R_INLET_RAMP, enum) 0 ==
+					if{
+						1 (>L:R_RAMP_LOCKED,enum)
+					}
+					els{
+						0 (>L:R_RAMP_LOCKED,enum)
+					}
+      			</Value>
+    		</Select>
+		</Element>
+
+		<Element Name="FLAPS BLOW-IN CONTROLLER">
+			<Element>
+				<Select>
+					<Value>
+						(L:INTERNAL_POWER_AVAIL,enum) 1 ==
+						(L:GROUND_POWER_AVAIL,enum) 1 == or
+						(L:SW1_FLAPS,enum) 0 == and
+						(A:AIRSPEED INDICATED,knots) 250 &lt; and
+						(L:FLAPS_DOWN_INIT,enum) 0 == and
+							if{
+									(>K:FLAPS_DOWN)
+								0 	(>L:FLAPS_DOWN_INIT2,enum)
+								1 	(>L:FLAPS_DOWN_INIT,enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(L:INTERNAL_POWER_AVAIL,enum) 1 ==
+						(L:GROUND_POWER_AVAIL,enum) 1 == or
+						(L:SW1_FLAPS,enum) 1 == and
+						(L:FLAPS_DOWN_INIT,enum) 1 == and
+							if{
+									(>K:FLAPS_UP)
+								0 	(>L:FLAPS_DOWN_INIT,enum)
+								0 	(>L:FLAPS_DOWN_INIT2,enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element>
+				<Select>
+					<Value>
+						(L:INTERNAL_POWER_AVAIL,enum) 1 ==
+						(L:GROUND_POWER_AVAIL,enum) 1 == or
+						(L:SW1_FLAPS,enum) 0 == and
+						(A:AIRSPEED INDICATED,knots) 250 &gt; and
+						(L:FLAPS_DOWN_INIT2,enum) 0 == and
+							if{
+									(>K:FLAPS_UP)
+								1 	(>L:FLAPS_DOWN_INIT2,enum)
+								0 	(>L:FLAPS_DOWN_INIT,enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			</Element>
+		<Element Name="Weapon Jettion">
+    		<Select>
+      			<Value>
+					(L:BTN_FS_WEP_JETT_EXEC, enum) 1 ==
+					(L:JETT_BTN_INIT) 0 == and
+						if{
+							1 (>L:JETT_BTN_INIT)
+							(P:LOCAL TIME, seconds) (>L:WEP_JETT-TIME, seconds)
+
+							(A:SIM ON GROUND) !
+							(A:GEAR TOTAL PCT EXTENDED, percent) 0 == and
+								if{
+									1 (>L:JETT_EXEC, enum)
+								}
+						}
+
+
+					(P:LOCAL TIME, seconds) (L:WEP_JETT-TIME, seconds) - 1 &gt;
+					(L:JETT_BTN_INIT) 1 == and
+						if{
+							0 (>L:BTN_FS_EMER_JETT_EXEC)
+							0 (>L:WEP_JETT-TIME, seconds)
+							0 (>L:JETT_BTN_INIT)
+						}
+
+						(L:BTN_FS_EMER_JETT_EXEC) 0 ==
+						(L:JETT_BTN_INIT) 1 == and
+						if{
+							0 (>L:BTN_FS_WEP_JETT_EXEC, enum)
+							0 (>L:WEP_JETT-TIME, seconds)
+							0 (>L:JETT_BTN_INIT)
+						}
+
+
+
+					}
+      			</Value>
+    		</Select>
+		</Element>
+
+		<Element Name="Tailhook">
+    		<Select>
+      			<Value>
+				(L:SW1_FS_HOOK) 1 ==
+						if{
+							(A:TAILHOOK POSITION, percent) 0 ==
+							if{
+								(>K:TOGGLE_TAIL_HOOK_HANDLE)
+							}
+						}
+						els{
+							(A:TAILHOOK POSITION, percent) 100 ==
+							if{
+								(>K:TOGGLE_TAIL_HOOK_HANDLE)
+							}
+						}
+      			</Value>
+    		</Select>
+		</Element>
+
+		<Element Name="Armament Station Select">
+			<Element>
+				<Select>
+					<Value>
+					(L:BTN_FS_ARAM_STR2_SEL_EXEC) 1 ==
+						if{
+							0 (>L:BTN_FS_ARAM_STR2_SEL_EXEC)
+							(L:SELECTED_STA2) 0 ==
+							if{ 1 (>L:SELECTED_STA2) }
+							els{ 0 (>L:SELECTED_STA2) }
+						}
+					(L:BTN_FS_ARAM_STR5_SEL_EXEC) 1 ==
+						if{
+							0 (>L:BTN_FS_ARAM_STR5_SEL_EXEC)
+							(L:SELECTED_STA5) 0 ==
+							if{ 1 (>L:SELECTED_STA5) }
+							els{ 0 (>L:SELECTED_STA5) }
+						}
+					(L:BTN_FS_ARAM_STR8_SEL_EXEC) 1 ==
+						if{
+							0 (>L:BTN_FS_ARAM_STR8_SEL_EXEC)
+							(L:SELECTED_STA8) 0 ==
+							if{ 1 (>L:SELECTED_STA8) }
+							els{ 0 (>L:SELECTED_STA8) }
+						}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+					(L:SW1_FS_LASER, enum) 0 ==
+					(L:LASER_INIT, enum) 1 == and
+						if{
+							0 (>L:CAGE SWITCH, enum) 0 (>L:LASER_INIT, enum)
+						}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		<Element Name="Master ARM">
+			<Select>
+				<Value>
+				(L:SW1_FS_MASTER_ARM, bool) 1 ==
+				(L:SW1_FS_MASTER_ARM_INIT, bool) 0 == and
+				(A:SIM ON GROUND, Bool) ! and
+				(A:GEAR TOTAL PCT EXTENDED, percent) 0 == and
+					if{
+						1 (>L:MASTER_ARM, bool)
+						1 (>L:SW1_FS_MASTER_ARM_INIT, bool)
+						1 (>L:Arm Switch, enum)
+					}
+
+				(L:SW1_FS_MASTER_ARM, bool) 0 ==
+				(L:SW1_FS_MASTER_ARM_INIT, bool) 1 == and
+					if{
+						0 (>L:MASTER_ARM, bool)
+						0 (>L:SW1_FS_MASTER_ARM_INIT, bool)
+						0 (>L:Arm Switch, enum)
+					}
+				</Value>
+			</Select>
+		</Element>
+
+		<Element Name="HUD STEER MODE">
+			<Select>
+				<Value>
+					(L:KNOB_FS_STEER_MODE) 0 ==
+						if{
+							0 (>L:HSI_MODE, enum)
+						}
+					(L:KNOB_FS_STEER_MODE) 1 ==
+						if{
+							2 (>L:HSI_MODE, enum)
+						}
+					(L:KNOB_FS_STEER_MODE) 2 ==
+						if{
+							3 (>L:HSI_MODE, enum)
+						}
+					(L:KNOB_FS_STEER_MODE) 3 ==
+						if{
+							4 (>L:HSI_MODE, enum)
+						}
+				</Value>
+			</Select>
+		</Element>
+
+		<Element Name="JFS Lever">
+    		<Select>
+      			<Value>
+					(L:SW1_FS_JFS_LEVER, enum) 1 ==
+					(L:SW1_FS_JFS_LEVER, enum) 2 == or
+					(L:JFS_KNOB_INIT) 0 == and
+						if{
+							1 (>L:JFS_KNOB_INIT)
+							(P:LOCAL TIME, seconds) (>L:JFS_KNOB-TIME, seconds)
+						}
+
+
+					(P:LOCAL TIME, seconds) (L:JFS_KNOB-TIME, seconds) - 1 &gt;
+					(L:JFS_KNOB_INIT) 1 == and
+						if{
+							0 (>L:SW1_FS_JFS_LEVER, enum)
+							0 (>L:JFS_KNOB-TIME, seconds)
+							0 (>L:JFS_KNOB_INIT)
+						}
+
+						(L:SW1_FS_JFS_LEVER, enum) 0 ==
+						(L:JFS_KNOB_INIT) 1 == and
+						if{
+							0 (>L:SW1_FS_JFS_LEVER, enum)
+							0 (>L:JFS_KNOB-TIME, seconds)
+							0 (>L:JFS_KNOB_INIT)
+						}
+
+
+
+					}
+      			</Value>
+    		</Select>
+		</Element>
+
+ 		<Element Name="Trigger">
+			<Select>
+				<Value>
+				((L:IF15E_Trigger_Act, Bool)) 1 ==
+					if{
+						1 (>L:IF15E_Trigger_Press, Bool)
+					}
+				</Value>
+			</Select>
+		</Element>
+	</Element>
+
+	<Element Name="ETC">
+		<Element Name="Hydraulic Elevator">
+    		<Select>
+      			<Value>
+					(A:SIM ON GROUND, bool)
+					(A:AIRSPEED INDICATED, knots) 60 &lt; and
+					(A:ENG1 HYDRAULIC PRESSURE, psi)
+					(A:ENG2 HYDRAULIC PRESSURE, psi) + 2 / s5 1200 &lt; and
+						if{
+							l5 1600 - abs 13.6525 * s5 6000 &lt;
+								if{ 0 (>K:AXIS_ELEVATOR_SET) }
+								els{ l5 (>K:AXIS_ELEVATOR_SET) }
+						}
+      			</Value>
+    		</Select>
+		</Element>
+	</Element>
+	<Element Name="Annucator">
+		<Element Name="RUDDER LIMITTER">
+			<Element Name="RUDDER TRAVEL LIMIT ENGINE">
+				<Select>
+					<Value>
+						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							if{
+								1 (>L:RUD_TRAVEL_LMT_ENG)
+							}
+							els{
+								0 (>L:RUD_TRAVEL_LMT_ENG)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="RUDDER LIMITTER">
+				<Select>
+					<Value>
+						(A:AIRSPEED MACH, machs) 1.5 &gt;
+						(A:RUDDER POSITION, position) 0 ! and
+						(L:RUD_TRAVEL_LMT_ENG) 0 == or
+							if{
+								1 (>L:RUD_LMT, bool)
+							}
+							els{
+								0 (>L:RUD_LMT, bool)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		<Element Name="BOOST SYS MALFUNCTION">
+    		<Select>
+      			<Value>
+					(A:ENG FAILED:1) 1 ==
+					(A:ENG FAILED:2) 1 == and
+						if{
+							1 (>L:BST_SYS, bool)
+						}
+						els{
+							0 (>L:BST_SYS, bool)
+						}
+		      	</Value>
+    		</Select>
+		</Element>
+
+		<Element Name="TOTAL TEMP HI">
+    		<Select>
+      			<Value>
+					(A:AMBIENT TEMPERATURE, celsius) 30 &gt;
+					(A:Airspeed mach, machs) 1.5 &gt; and
+					(L:TOT_TEMP, enum) 0 == and
+						if{ (P:LOCAL TIME, seconds) (>L:inlet_overheated_time) 1 (>L:TOT_TEMP, enum) }
+
+
+					(L:TOT_TEMP, enum) 1 ==
+					(P:LOCAL TIME, seconds) (L:inlet_overheated_time) - 60 &gt; and
+						if{ 1 (>L:inlet_overheated, bool) }
+
+					(L:inlet_overheated, bool) 1 ==
+						if{ (>K:THROTTLE_CUT) }
+
+					(L:TOT_TEMP, enum) 1 ==
+					(A:Airspeed mach, machs) 1 &lt; and
+						if{ 0 (>L:inlet_overheated, bool) 0 (>L:inlet_overheated_time) 0 (>L:TOT_TEMP, enum) }
+
+					(A:AMBIENT TEMPERATURE, celsius) 30 &lt;
+					(A:Airspeed mach, machs) 1.5 &lt; or
+						if{ 0 (>L:inlet_overheated_time)  0 (>L:TOT_TEMP, enum)}
+      			</Value>
+    		</Select>
+		</Element>
+		<Element Name="FUEL LOW">
+    		<Select>
+      			<Value>
+				(A:FUEL TOTAL QUANTITY WEIGHT, pounds) 1500 &lt;
+					if{
+						1 (>L:FUEL_LOW_WARN, enum)
+					}
+					els{
+						0 (>L:FUEL_LOW_WARN, enum)
+					}
+      			</Value>
+    		</Select>
+		</Element>
+		<Element Name="FUEL HOT">
+    		<Select>
+      			<Value>
+
+					(A:AMBIENT TEMPERATURE, celsius) 30 &gt;
+					(A:TURB ENG1 FUEL FLOW PPH,pound per hour) 1200 &lt; and
+					(A:TURB ENG2 FUEL FLOW PPH,pound per hour) 1200 &lt; and
+						if{ 1 (>L:FUEL_TEMP, enum) }
+						els{ 0 (>L:FUEL_TEMP, enum) }
+      			</Value>
+    		</Select>
+		</Element>
+		<Element Name="ATTITUDE CAUTION">
+    		<Select>
+      			<Value>
+				(L:GAU_STBY_ATT_PITCH) (L:GAU_ATT_PITCH) - (>L:att_pitch, enum)
+				(L:GAU_STBY_ATT_BANK) (L:GAU_ATT_BANK) - (>L:att_bank, enum)
+
+				(L:att_pitch, enum) -2 &lt;
+				(L:att_pitch, enum) 2 &gt; or
+					if{
+						1 (>L:ATT_CAUT)
+					}
+
+				(L:att_bank, enum) -2 &lt;
+				(L:att_bank, enum) 2 &gt; or
+					if{
+						1 (>L:ATT_CAUT)
+					}
+
+				(L:att_pitch, enum) -2 &gt;
+				(L:att_pitch, enum) 2 &lt; and
+				(L:att_bank, enum) -2 &gt; and
+				(L:att_bank, enum) 2 &lt; and
+					if{
+						0 (>L:ATT_CAUT)
+					}
+		      	</Value>
+    		</Select>
+
+		</Element>
+		<Element Name="EMERGENCY BOOST PUMP ON">
+    		<Select>
+      			<Value>
+					(L:ENG1_AVAIL, bool) 0 ==
+					(L:ENG2_AVAIL, bool) 0 == or
+						if{
+							1 (>L:EMER_BST_ON, bool)
+						}
+						els{
+							0 (>L:EMER_BST_ON, bool)
+						}
+		      	</Value>
+    		</Select>
+		</Element>
+		<Element Name="INLET ICE">
+    		<Select>
+      			<Value>
+					(A:AMBIENT TEMPERATURE, celsius) 0 &lt;
+					(A:SIM ON GROUND,enum) 1 == and
+					(A:PITOT HEAT, bool) 0 == and
+					(L:SW2_FS_ECS_ENG, enum) 0 == and
+						if{
+							1 (>L:INLET_ICE, bool)
+						}
+						els{
+							0 (>L:INLET_ICE, bool)
+						}
+		      	</Value>
+    		</Select>
+		</Element>
+		<Element Name="WINDSHIELD HOT">
+    		<Select>
+      			<Value>
+					(A:TOTAL AIR TEMPERATURE, celsius) 300 &gt;
+					(L:SW1_FS_ECS_WINDSHIELD) 1 == and
+						if{
+							1 (>L:WINDSH_HOT, bool)
+						}
+						els{
+							0 (>L:WINDSH_HOT, bool)
+						}
+		      	</Value>
+    		</Select>
+		</Element>
+		<Element Name="Fire">
+			<Element Name="Left Engine">
+				<Element Name="Fire Init">
+					<Select>
+						<Value>
+							(A:TURB ENG ITT:1,celsius) 1000 &gt;
+							(L:leng_overheat_cutoff_time) 0 == and
+								if{
+									(P:LOCAL TIME, seconds) (>L:leng_overheat_cutoff_time)
+								}
+
+							(A:TURB ENG ITT:1, celsius) 1000 &lt;
+							(L:leng_overheat_cutoff_time) 0 &gt; and
+								if{
+									0 (>L:leng_overheat_cutoff_time)
+								}
+						</Value>
+					</Select>
+				</Element>
+
+				<Element Name="Fire Control">
+					<Select>
+						<Value>
+							(A:TURB ENG ITT:1, celsius) 1000 &gt;
+							(P:LOCAL TIME, seconds) (L:leng_overheat_cutoff_time) - 30 &gt; and
+								if{
+									1 (>L:L_ENG_FIRE, bool)
+								}
+
+						</Value>
+					</Select>
+				</Element>
+
+				<Element Name="Fire Extinguisher">
+					<Select>
+						<Value>
+						(L:BTN_FS_FIRE_LENG_EXEC, bool) 1 ==
+						(L:SW2_FS_FIRE_DISCHARGE, enum) 0 == and
+						(L:L_ENG_FIRE, bool) 1 == and
+							if{
+								0 (>L:L_ENG_FIRE, bool)
+								0 (>L:BTN_FS_FIRE_LENG_EXEC, bool)
+							}
+						</Value>
+					</Select>
+				</Element>
+
+				<Element Name="Engine Shutdown">
+					<Select>
+						<Value>
+						(L:L_ENG_FIRE, bool) 1 ==
+							if{
+								(A:ENG COMBUSTION:1, bool) 1 ==
+									if{
+										(>K:TOGGLE_ENGINE1_FAILURE)
+									}
+							}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+			<Element Name="Right Engine">
+				<Element Name="Fire Init">
+					<Select>
+						<Value>
+							(A:TURB ENG ITT:2, celsius) 1000 &gt;
+							(L:reng_overheat_cutoff_time) 0 == and
+								if{
+									(P:LOCAL TIME, seconds) (>L:reng_overheat_cutoff_time)
+								}
+
+							(A:TURB ENG ITT:2, celsius) 1000 &lt;
+							(L:reng_overheat_cutoff_time) 0 &gt; and
+								if{
+									0 (>L:reng_overheat_cutoff_time)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="Fire Control">
+					<Select>
+						<Value>
+							(A:TURB ENG ITT:2, celsius) 1000 &gt;
+							(P:LOCAL TIME, seconds) (L:reng_overheat_cutoff_time) - 30 &gt; and
+								if{
+									1 (>L:reng_overheated, bool)
+									1 (>L:R_ENG_FIRE)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="Fire Extinguisher">
+					<Select>
+						<Value>
+						(L:BTN_FS_FIRE_RENG_EXEC, bool) 1 ==
+						(L:SW2_FS_FIRE_DISCHARGE, enum) 0 ==	and
+						(L:R_ENG_FIRE, bool) 1 == and
+							if{
+								0 (>L:reng_overheated, bool)
+								0 (>L:R_ENG_FIRE, bool)
+								0 (>L:BTN_FS_FIRE_RENG_EXEC, bool)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="Engine Shutdown">
+					<Select>
+						<Value>
+						(L:R_ENG_FIRE, bool) 1 ==
+							if{
+								(A:ENG COMBUSTION:2, bool) 1 ==
+								if{
+									(>K:TOGGLE_ENGINE2_FAILURE)
+								}
+							}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+			<Element Name="AMAD">
+			<!--		APU Fire Init		-->
+				<Element>
+					<Select>
+						<Value>
+							(L:AMAD_L_COUPLE, bool) 0 ==
+							(L:AMAD_R_COUPLE, bool) 0 == and
+							(A:APU PCT RPM, percent) 99 &gt; and
+								if{
+									1 (>L:AMAD_WARN, bool)
+								}
+								els{
+									0 (>L:AMAD_WARN, bool)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:AMAD_WARN, bool) 1 ==
+							(L:apu_overheat_cutoff_time) 0 == and
+								if{
+									(P:LOCAL TIME, seconds) (>L:apu_overheat_cutoff_time)
+								}
+							(L:AMAD_WARN, bool) 0 ==
+							(L:apu_overheat_cutoff_time) 0 &gt; and
+								if{
+									0 (>L:apu_overheat_cutoff_time)
+								}
+						</Value>
+					</Select>
+				</Element>
+			<!--		APU Fire Control		-->
+				<Element>
+					<Select>
+						<Value>
+							(L:AMAD_WARN, bool) 1 ==
+							(P:LOCAL TIME, seconds) (L:apu_overheat_cutoff_time) - 60 &gt; and
+								if{
+									1 (>L:AMAD_FIRE)
+									1 (>L:JFS_FAULT, bool)
+								}
+
+						</Value>
+					</Select>
+				</Element>
+			<!--		APU Fire Extinguisher		-->
+				<Element>
+					<Select>
+						<Value>
+						(L:BTN_FS_FIRE_AMAD_EXEC, bool) 1 ==
+						(L:SW2_FS_FIRE_DISCHARGE, enum) 0 == and
+						(L:AMAD_FIRE, bool) 1 == and
+							if{
+								0 (>L:AMAD_FIRE, bool)
+								0 (>L:BTN_FS_FIRE_AMAD_EXEC, bool)
+							}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+		</Element>
+	</Element>
+
+   	<Element Name="Effects">
+		<Element Name="AFTERBURNER CONTROLLER">
+			<Select>
+				<Value>
+					(A:GENERAL ENG COMBUSTION:1, enum) 1 ==
+					(A:GENERAL ENG THROTTLE LEVER POSITION:1, percent) 83 &gt; and
+					(L:L_AB_INIT, enum) 0 == and
+							if{
+								(A:TURB ENG AFTERBURNER:1, enum) 0 ==
+								if{
+									(>K:TOGGLE_AFTERBURNER1)
+									1 (>L:L_AB_INIT, enum)
+								}
+							}
+
+					(A:GENERAL ENG COMBUSTION:1, enum) 0 ==
+					(A:GENERAL ENG THROTTLE LEVER POSITION:1, percent) 83 &lt; or
+					(L:L_AB_INIT, enum) 1 == and
+							if{
+								(A:TURB ENG AFTERBURNER:1, enum) 1 ==
+								if{
+									(>K:TOGGLE_AFTERBURNER1)
+									0 (>L:L_AB_INIT, enum)
+								}
+							}
+
+					(A:GENERAL ENG COMBUSTION:2, enum) 1 ==
+					(A:GENERAL ENG THROTTLE LEVER POSITION:2, percent) 83 &gt; and
+					(L:R_AB_INIT, enum) 0 == and
+							if{
+								(A:TURB ENG AFTERBURNER:2, enum) 0 ==
+								if{
+									(>K:TOGGLE_AFTERBURNER2)
+									1 (>L:R_AB_INIT, enum)
+								}
+							}
+
+					(A:GENERAL ENG COMBUSTION:2, enum) 0 ==
+					(A:GENERAL ENG THROTTLE LEVER POSITION:2, percent) 83 &lt; or
+					(L:R_AB_INIT, enum) 1 == and
+							if{
+								(A:TURB ENG AFTERBURNER:2, enum) 1 ==
+								if{
+									(>K:TOGGLE_AFTERBURNER2)
+									0 (>L:R_AB_INIT, enum)
+								}
+							}
+					</Value>
+			</Select>
+		</Element>
+
+		<Element Name="AFTERBURNER Effect">
+			<Select>
+				<Value>
+					(A:GENERAL ENG THROTTLE LEVER POSITION:1, percent) 80 &gt;
+					(A:TURB ENG N2:1, percent) 70 &gt; and
+
+						if{ (A:LIGHT RECOGNITION, bool) !
+							if{ (&gt;K:TOGGLE_RECOGNITION_LIGHTS) }
+						}
+						els{ (A:LIGHT RECOGNITION, bool)
+							if{ (&gt;K:TOGGLE_RECOGNITION_LIGHTS) }
+						}
+
+					(A:GENERAL ENG THROTTLE LEVER POSITION:2, percent) 80 &gt;
+					(A:TURB ENG N2:2, percent) 70 &gt; and
+
+						if{ (A:LIGHT WING, bool) !
+							if{ (&gt;K:TOGGLE_WING_LIGHTS) }
+						}
+						els{ (A:LIGHT WING, bool)
+							if{ (&gt;K:TOGGLE_WING_LIGHTS) }
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="COUNTERMEASURES SYSTEM">
+			<Element Name="CMS GO CONDITION">
+				<Select>
+					<Value>
+						(L:INTERNAL_POWER_AVAIL,enum) 1 ==
+						(L:GROUND_POWER_AVAIL,enum) 1 == or
+						(L:MASTER_ARM, Bool) 1 == and
+						(L:SW1_RS_CMD_FLARE_JETT,enum) 0 == and
+						(L:KNOB_RS_CMD_MODE,enum) 3 == and
+							if{
+								1 (>L:CMS_RDY,enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="CMS ACTIVE TIMER">
+				<Select>
+					<Value>
+						(L:CMS_GO,enum) 1 ==
+						(L:CMS_TIME,seconds) 0 == and
+							if{
+								(P:ABSOLUTE TIME, seconds) (>L:CMS_TIME,seconds)
+							}
+
+						(L:CMS_GO,enum) 1 ==
+						(P:ABSOLUTE TIME, seconds) (L:CMS_TIME,seconds) - 1.5 &gt; and
+							if{
+								0 (>L:CMS_RDY, enum) 0 (>L:CMS_GO, enum) 0 (>L:CMS_TIME,seconds)
+							}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="CMS FLARE LAUNCH">
+				<Select>
+					<Value>
+						(L:CMS_RDY,enum) 1 ==
+						(A:G FORCE,gforce) 2 &gt; and
+						(A:SMOKE ENABLE,bool) 0 == and
+						(L:CMS_GO_INIT,bool) 0 == and
+							if{
+								(>K:SMOKE_ON,enum)
+								1 (>L:CMS_GO,enum)
+								1 (>L:CMS_GO_INIT,bool)
+								(L:CHAFF_COUNT) + 4 - (>L:CHAFF_COUNT)
+								(L:FLARE_COUNT) + 2 - (>L:FLARE_COUNT)
+							}
+
+						(L:CMS_RDY,enum) 0 ==
+						(A:G FORCE,gforce) 2 &lt; or
+						(L:CMS_GO_INIT,bool) 1 == and
+							if{
+								(>K:SMOKE_OFF,enum)
+								0 (>L:CMS_GO_INIT,bool)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		<Element Name="GUN Effect">
+			<Select>
+				<Value>
+					(L:GUN_run) 2 ==
+						if{ (A:LIGHT LOGO, bool) !
+							if{ (&gt;K:TOGGLE_LOGO_LIGHTS) }
+						}
+						els{ (A:LIGHT LOGO, bool)
+							if{ (&gt;K:TOGGLE_LOGO_LIGHTS) }
+						}
+				</Value>
+			</Select>
+		</Element>
+	</Element>
+	<Element Name="AUDIO SYSTEM">
+		<Element Name="AVIONICS POWER AUDIO">
+			<Element>
+					<Select>
+						<Value>
+							(L:MPCD-POWER, enum) 1 ==
+							(L:AVIONICS_PWR_INIT, enum) 0 == and
+								if{ 2 (>L:AVIONICS_PWR, enum) 1 (>L:AVIONICS_PWR_INIT, enum) }
+						</Value>
+					</Select>
+			</Element>
+			<Element>
+					<Select>
+						<Value>
+							(L:MPCD-POWER, enum) 0 ==
+							(L:AVIONICS_PWR_INIT, enum) 1 == and
+								if{ 0 (>L:AVIONICS_PWR, enum) 0 (>L:AVIONICS_PWR_INIT, enum) }
+						</Value>
+					</Select>
+			</Element>
+		</Element>
+		<Element Name="GEAR WARN">
+			<Element>
+				<Select>
+					<Value>
+						(L:LIGHT_FLICKER, enum) 1 ==
+						(A:SIM ON GROUND, enum) 0 == and
+						(A:TRAILING EDGE FLAPS LEFT PERCENT, percent) 100 == and
+						(A:GEAR CENTER POSITION, percent) 100 != and
+						(L:GEAR_WARN_MUTE, enum) 0 == and
+							if{ 2 (>L:GEAR_WARN, enum) }
+							els{ 0 (>L:GEAR_WARN, enum) }
+					</Value>
+				</Select>
+			</Element>
+
+			<Element>
+				<Select>
+					<Value>
+					<!-- IF VM MUTE PRESSED, MUTE AUDIO -->
+						(L:BTN_FS_GEAR_WARN_EXEC, enum) 1 ==
+						(L:GEAR_WARN_TIME, seconds) 0 == and
+							if{
+								(P:ABSOLUTE TIME, seconds) (>L:GEAR_WARN_TIME, seconds) 1 (>L:GEAR_WARN_MUTE, enum) 0 (>L:BTN_FS_GEAR_WARN_EXEC, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+					<!-- IF VMS MUTED FOR 1 minutes then reset system   -->
+						(L:GEAR_WARN_MUTE, enum) 1 ==
+						(P:ABSOLUTE TIME, seconds) (L:GEAR_WARN_TIME, seconds) - 60 &gt; and
+							if{
+								0 (>L:GEAR_WARN_MUTE, enum) 0 (>L:GEAR_WARN_TIME, seconds)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		<Element Name="Marker">
+			<Element Name="OUTER MARKER">
+				<Select>
+					<Value>
+						(L:LIGHT_FLICKER, enum) 1 ==
+						(A:OUTER MARKER, enum) 1 == and
+						(L:OUTER_MARKER_INIT, enum) 0 == and
+							if{
+								2 (>L:OUTER_MARKER, enum) 1 (>L:OUTER_MARKER_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(A:OUTER MARKER, enum) 0 ==
+						(L:OUTER_MARKER_INIT, enum) 1 == and
+							if{
+								0 (>L:OUTER_MARKER, enum) 0 (>L:OUTER_MARKER_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="MIDDLE MARKER">
+				<Select>
+					<Value>
+						(L:LIGHT_FLICKER, enum) 1 ==
+						(A:MIDDLE MARKER, enum) 1 == and
+						(L:MIDDLE_MARKER_INIT, enum) 0 == and
+							if{
+								2 (>L:MIDDLE_MARKER, enum) 1 (>L:MIDDLE_MARKER_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(A:MIDDLE MARKER, enum) 0 ==
+						(L:MIDDLE_MARKER_INIT, enum) 1 == and
+							if{
+								0 (>L:MIDDLE_MARKER, enum) 0 (>L:MIDDLE_MARKER_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="INNER MARKER">
+				<Select>
+					<Value>
+						(L:LIGHT_FLICKER, enum) 1 ==
+						(A:INNER MARKER, enum) 1 == and
+						(L:INNER_MARKER_INIT, enum) 0 == and
+							if{
+								2 (>L:INNER_MARKER, enum) 1 (>L:INNER_MARKER_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(A:INNER MARKER, enum) 0 ==
+						(L:INNER_MARKER_INIT, enum) 1 == and
+							if{
+								0 (>L:INNER_MARKER, enum) 0 (>L:INNER_MARKER_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+
+		<Element Name="FIRE TEST">
+			<Element>
+				<Select>
+					<Value>
+						(L:LIGHT_FLICKER, enum) 1 ==
+						(L:SW2_FS_FIRE_DISCHARGE, enum) 2 == and
+						(L:FIRE_TEST_INIT, enum) 0 == and
+							if{ 1 (>L:FIRE_TEST) 1 (>L:FIRE_TEST_INIT, enum) }
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(L:SW2_FS_FIRE_DISCHARGE, enum) 2 !=
+						(L:FIRE_TEST_INIT, enum) 1 == and
+							if{ 0 (>L:FIRE_TEST) 0 (>L:FIRE_TEST_INIT, enum) }
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		<Element Name="AOA - 28 Degrees">
+			<Element>
+				<Select>
+					<Value>
+						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(A:INCIDENCE ALPHA, degrees) 28 &gt; and
+						(A:SIM ON GROUND, enum) 0 == and
+						(L:AOA_WARN_INIT, enum) 0 == and
+							if{
+								2 (>L:AOA_WARN, enum) 1 (>L:AOA_WARN_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(A:INCIDENCE ALPHA, degrees) 28 &lt;
+						(L:AOA_WARN_INIT, enum) 1 == and
+							if{
+								0 (>L:AOA_WARN, enum) 0 (>L:AOA_WARN_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+
+		<Element Name="Aircon">
+			<Element Name="Aircon Init">
+				<Select>
+					<Value>
+						(L:SUPPLY_ON) 1 ==
+						(L:SUPPLY_ON_TIME) 0 == and
+							if{
+								(P:LOCAL TIME, seconds) (>L:SUPPLY_ON_TIME)
+								1 (>L:SUPPLY_START)
+							}
+
+						(L:SUPPLY_ON) 0 ==
+						(L:SUPPLY_ON_TIME) 0 &gt; and
+							if{
+								0 (>L:SUPPLY_ON_TIME)
+								0 (>L:SUPPLY_START)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="Aircon Run">
+				<Select>
+					<Value>
+						(L:SUPPLY_ON) 1 ==
+						(P:LOCAL TIME, seconds) (L:SUPPLY_ON_TIME) - 1.5 &gt; and
+							if{
+								2 (>L:SUPPLY_RUN)
+								0 (>L:SUPPLY_START)
+							}
+
+						(L:SUPPLY_MAN_ON) 1 ==
+						(L:KNOB_FS_AIRCON_TEMP) 6 == and
+							if{
+								2 (>L:SUPPLY_MAX)
+							}
+							els{
+								0 (>L:SUPPLY_MAX)
+							}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="Aircon Off">
+					<Select>
+						<Value>
+						(L:SUPPLY_START, bool) 1 == (L:SUPPLY_RUN) 2 == or
+						(L:SUPPLY_ON, bool) 0 == and
+							if{
+								1 (>L:SUPPLY_STOP)
+								0 (>L:SUPPLY_RUN)
+							}
+						</Value>
+					</Select>
+			</Element>
+		</Element>
+		<Element Name="TEWS Control" >
+			<Element Name="GPS Mode (Fictional)">
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
+							(A:GPS WP DISTANCE,nmiles) 20 &lt; and
+							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 != and
+							(L:SW1_RS_TEWS_ICS, enum) 1 == and
+							(L:TEWS_30_INIT, enum) 0 == and
+							(L:SW2_RS_EW_ICS, enum) 0 != and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									2 (>L:TEWS_30, enum) 1 (>L:TEWS_30_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+							(A:GPS WP DISTANCE,nmiles) 20 &gt; or
+							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 == or
+							(L:SW1_RS_TEWS_ICS, enum) 0 == or
+							(L:SW2_RS_EW_ICS, enum) 0 == or
+							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 0 == or
+							(L:TEWS_30_INIT, enum) 1 == and
+								if{
+									0 (>L:TEWS_30, enum) 0 (>L:TEWS_30_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
+							(A:GPS WP DISTANCE,nmiles) 15 &lt; and
+							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 != and
+							(L:SW1_RS_TEWS_ICS, enum) 1 == and
+							(L:SW2_RS_EW_ICS, enum) 0 != and
+							(L:TEWS_10_INIT, enum) 0 == and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									1 (>L:TEWS_10, enum) 1 (>L:TEWS_10_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+							(A:GPS WP DISTANCE,nmiles) 15 &gt; or
+							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 == or
+							(L:SW1_RS_TEWS_ICS, enum) 0 == or
+							(L:SW2_RS_EW_ICS, enum) 0 == or
+							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 0 == or
+							(L:TEWS_10_INIT, enum) 1 == and
+								if{
+									0 (>L:TEWS_10_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
+							(A:GPS WP DISTANCE,nmiles) 10 &lt; and
+							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 != and
+							(L:SW1_RS_TEWS_ICS, enum) 1 == and
+							(L:SW2_RS_EW_ICS, enum) 0 != and
+							(L:TEWS_5_INIT, enum) 0 == and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									1 (>L:TEWS_5, enum) 1 (>L:TEWS_5_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+							(A:GPS WP DISTANCE,nmiles) 10 &gt; or
+							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 == or
+							(L:SW1_RS_TEWS_ICS, enum) 0 == or
+							(L:SW2_RS_EW_ICS, enum) 0 == or
+							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 0 == or
+							(L:TEWS_5_INIT, enum) 1 == and
+								if{
+									0 (>L:TEWS_5_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
+							(A:GPS WP DISTANCE,nmiles) 5 &lt; and
+							(A:GPS WP DISTANCE,nmiles) 4.5 &gt; and
+							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 != and
+							(L:SW1_RS_TEWS_ICS, enum) 1 == and
+							(L:SW2_RS_EW_ICS, enum) 0 != and
+							(L:TEWS_2_INIT, enum) 0 == and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									2 (>L:TEWS_2, enum) 1 (>L:TEWS_5, enum) 1 (>L:TEWS_2_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+							(A:GPS WP DISTANCE,nmiles) 5 &gt; or
+							(A:GPS WP DISTANCE,nmiles) 4.5 &lt; or
+							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 == or
+							(L:SW1_RS_TEWS_ICS, enum) 1 == or
+							(L:SW2_RS_EW_ICS, enum) 0 != or
+							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 0 == or
+							(L:TEWS_2_INIT, enum) 1 == and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									0 (>L:TEWS_2, enum) 0 (>L:TEWS_5, enum) 0 (>L:TEWS_2_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+			<Element Name="Air Intercept Mode">
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:INTERCEPT, enum) 1 == and
+							(L:RDR_TEWS_30_INIT, enum) 0 == and
+								if{
+									2 (>L:TEWS_30, enum) 1 (>L:RDR_TEWS_30_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+							(L:INTERCEPT, enum) 0 == or
+							(L:RDR_TEWS_30_INIT, enum) 1 == and
+								if{
+									0 (>L:TEWS_30, enum) 0 (>L:RDR_TEWS_30_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:INTERCEPT, enum) 1 == and
+							(L:RDR_TEWS_10_INIT, enum) 0 == and
+								if{
+									1 (>L:TEWS_10, enum) 1 (>L:RDR_TEWS_10_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+							(L:INTERCEPT, enum) 0 == or
+							(L:RDR_TEWS_10_INIT, enum) 1 == and
+								if{
+									0 (>L:RDR_TEWS_10_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:INTERCEPT_5, enum) 1 == and
+							(L:RDR_TEWS_5_INIT, enum) 0 == and
+								if{
+									1 (>L:TEWS_5, enum) 1 (>L:RDR_TEWS_5_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+							(L:INTERCEPT_5, enum) 0 == or
+							(L:RDR_TEWS_5_INIT, enum) 1 == and
+								if{
+									0 (>L:RDR_TEWS_5_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+		</Element>
+
+		<Element Name="Nozzle Control" >
+			<Element>
+				<Select>
+					<Value>
+						(L:LIGHT_FLICKER, enum) 1 ==
+						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
+						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(A:GENERAL ENG COMBUSTION:1, enum) 1 == and
+						(A:GENERAL ENG THROTTLE LEVER POSITION:1, percent) 80 &gt; and
+						(L:L_NOZZLE_INIT, enum) 0 == and
+							if{
+								1 (>L:NOZZLE, enum) 1 (>L:L_NOZZLE_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(A:GENERAL ENG THROTTLE LEVER POSITION:1, percent) 80 &lt;
+						(L:L_NOZZLE_INIT, enum) 1 == and
+							if{
+								0 (>L:L_NOZZLE_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element>
+				<Select>
+					<Value>
+						(L:LIGHT_FLICKER, enum) 1 ==
+						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
+						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(A:GENERAL ENG COMBUSTION:2, enum) 1 == and
+						(A:GENERAL ENG THROTTLE LEVER POSITION:2, percent) 80 &gt; and
+						(L:R_NOZZLE_INIT, enum) 0 == and
+							if{
+								1 (>L:NOZZLE, enum) 1 (>L:R_NOZZLE_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(A:GENERAL ENG THROTTLE LEVER POSITION:2, percent) 80 &lt;
+						(L:R_NOZZLE_INIT, enum) 1 == and
+							if{
+								0 (>L:R_NOZZLE_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		<Element Name="DEEQ Control">
+			<Element>
+				<Select>
+					<Value>
+						(L:LIGHT_FLICKER, enum) 1 ==
+						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
+						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(A:GENERAL ENG COMBUSTION:1, enum) 1 == and
+						(L:SW1_FS_ENG_CONT_L, enum) 1 == and
+						(L:L_DEEQ_INIT, enum) 0 == and
+							if{
+								1 (>L:NOZZLE, enum) 1 (>L:L_DEEQ_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(L:SW1_FS_ENG_CONT_L, enum) 0 ==
+						(L:L_DEEQ_INIT, enum) 1 == and
+							if{
+								0 (>L:L_DEEQ_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(L:LIGHT_FLICKER, enum) 1 ==
+						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
+						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(A:GENERAL ENG COMBUSTION:2, enum) 1 == and
+						(L:SW1_FS_ENG_CONT_R, enum) 1 == and
+						(L:R_DEEQ_INIT, enum) 0 == and
+							if{
+								1 (>L:NOZZLE, enum) 1 (>L:R_DEEQ_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(L:SW1_FS_ENG_CONT_R, enum) 0 ==
+						(L:R_DEEQ_INIT, enum) 1 == and
+							if{
+								0 (>L:R_DEEQ_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		<Element Name="RAMP Bang">
+			<Element>
+				<Select>
+					<Value>
+						(L:LIGHT_FLICKER, enum) 1 ==
+						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
+						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(A:GENERAL ENG COMBUSTION:1, enum) 1 == and
+						(A:SIM ON GROUND, enum) 1 == and
+						(L:L_RAMP_INIT, enum) 0 == and
+							if{
+								1 (>L:RAMP_BANG, enum) 1 (>L:L_RAMP_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(A:GENERAL ENG COMBUSTION:1, enum) 0 ==
+						(L:L_RAMP_INIT, enum) 1 == and
+							if{
+								0 (>L:L_RAMP_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(L:LIGHT_FLICKER, enum) 1 ==
+						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
+						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(A:GENERAL ENG COMBUSTION:2, enum) 1 == and
+						(A:SIM ON GROUND, enum) 1 == and
+						(L:R_RAMP_INIT, enum) 0 == and
+							if{
+								1 (>L:RAMP_BANG, enum) 1 (>L:R_RAMP_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(A:GENERAL ENG COMBUSTION:2, enum) 0 ==
+						(L:R_RAMP_INIT, enum) 1 == and
+							if{
+								0 (>L:R_RAMP_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+
+		<Element Name="UHF-2 Radio Chatter on 122.20">
+			<Element>
+				<Select>
+					<Value>
+						(L:LIGHT_FLICKER, enum) 1 ==
+						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
+						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(A:COM ACTIVE FREQUENCY:2,Frequency BCD16) 8736 == and
+						(L:CHATTER_INIT, enum) 0 == and
+							if{
+								2 (>L:CHATTER, enum) 1 (>L:CHATTER_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(A:COM ACTIVE FREQUENCY:2,Frequency BCD16) 8736 !=
+						(L:CHATTER_INIT, enum) 1 == and
+							if{
+								0 (>L:CHATTER, enum) 0 (>L:CHATTER_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		<Element Name="VMS">
+		<!--		VMS LVARS
+
+		(>L:VMS_AB_BURNTHRU_LEFT, enum)
+		(>L:VMS_AB_BURNTHRU_RIGHT, enum)
+		*(>L:VMS_AMAD_FIRE, enum)
+		*(>L:VMS_BINGO_FUEL, enum)
+		*(>L:VMS_ENGINE_FIRE_LEFT, enum)
+		*(>L:VMS_ENGINE_FIRE_RIGHT, enum)
+		*(>L:VMS_FUEL_LOW, enum)
+		*(>L:VMS_LOW_ALTITUDE, enum)
+		*(>L:VMS_OBSTACLE_AHEAD, enum)	* LOOPS
+		*(>L:VMS_OVER_G, enum) 			* LOOPS
+		*(>L:VMS_OVERTEMP_LEFT, enum)
+		*(>L:VMS_OVERTEMP_RIGHT, enum)
+		*(>L:VMS_TRANSFER_PUMP, enum) 	* LOOPS
+
+		-->
+			<Element Name="VMS Mute" >
+				<Element>
+					<Select>
+						<Value>
+						<!-- IF VM MUTE PRESSED, MUTE AUDIO -->
+							(L:BTN_FS_VOL_TEWS_LAUNCH) 1 ==
+							(L:VMS_TIME, seconds) 0 == and
+								if{
+									(P:ABSOLUTE TIME, seconds) (>L:VMS_TIME, seconds) 1 (>L:VMS_MUTE, enum) 0 (>L:BTN_FS_VOL_TEWS_LAUNCH)
+								}
+						</Value>
+				</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+						<!-- IF VMS MUTED FOR 1 minutes then reset system   -->
+							(L:VMS_MUTE, enum) 1 ==
+							(P:ABSOLUTE TIME, seconds) (L:VMS_TIME, seconds) - 60 &gt; and
+								if{
+									0 (>L:VMS_MUTE, enum) 0 (>L:VMS_TIME, seconds)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+			<Element Name="Bingo Fuel Warn" >
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:FUEL_INTERNAL, enum) (L:SETTING BNGO) &lt; and
+							(L:SW2_FS_EW_ICS, enum) 0 != and
+
+							(L:VMS_AMAD_FIRE, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_LEFT, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_RIGHT, enum) 0 == and
+							(L:VMS_FUEL_LOW, enum) 0 == and
+							(L:VMS_LOW_ALTITUDE, enum) 0 == and
+							(L:VMS_OBSTACLE_AHEAD, enum)	0 == and
+							(L:VMS_OVER_G, enum) 0 == and
+							(L:VMS_OVERTEMP_LEFT, enum) 0 == and
+							(L:VMS_OVERTEMP_RIGHT, enum) 0 == and
+							(L:VMS_TRANSFER_PUMP, enum) 	0 == and
+
+							(L:VMS_BINGO_FUEL_INIT, enum) 0 == and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									1 (>L:VMS_BINGO_FUEL, enum) 1 (>L:VMS_BINGO_FUEL_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:FUEL_INTERNAL, enum) (L:SETTING BNGO) &gt;
+							(L:SW2_FS_EW_ICS, enum) 0 == or
+							(L:VMS_BINGO_FUEL_INIT, enum) 1 == and
+								if{
+									0 (>L:VMS_BINGO_FUEL_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+			<Element Name="Fuel Low Warn">
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:FUEL_LOW_WARN, enum) 1 == and
+							(L:SW2_FS_EW_ICS, enum) 0 != and
+
+							(L:VMS_AMAD_FIRE, enum) 0 == and
+							(L:VMS_BINGO_FUEL, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_LEFT, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_RIGHT, enum) 0 == and
+							(L:VMS_LOW_ALTITUDE, enum) 0 == and
+							(L:VMS_OBSTACLE_AHEAD, enum)	0 == and
+							(L:VMS_OVER_G, enum) 0 == and
+							(L:VMS_OVERTEMP_LEFT, enum) 0 == and
+							(L:VMS_OVERTEMP_RIGHT, enum) 0 == and
+							(L:VMS_TRANSFER_PUMP, enum) 	0 == and
+
+							(L:VMS_FUEL_LOW_INIT, enum) 0 == and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									1 (>L:VMS_FUEL_LOW, enum) 1 (>L:VMS_FUEL_LOW_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:FUEL_LOW_WARN, enum) 0 ==
+							(L:SW2_FS_EW_ICS, enum) 0 == or
+							(L:VMS_FUEL_LOW_INIT, enum) 1 == and
+								if{
+									0 (>L:VMS_FUEL_LOW_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+
+			<Element Name="Overtemp Warn">
+			<!--		VMS Overtemp Left Warn		-->
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(A:TURB ENG ITT:1, celsius) 960 &gt; and
+							(L:SW2_FS_EW_ICS, enum) 0 != and
+
+							(L:VMS_AMAD_FIRE, enum) 0 == and
+							(L:VMS_BINGO_FUEL, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_LEFT, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_RIGHT, enum) 0 == and
+							(L:VMS_FUEL_LOW, enum) 0 == and
+							(L:VMS_LOW_ALTITUDE, enum) 0 == and
+							(L:VMS_OBSTACLE_AHEAD, enum)	0 == and
+							(L:VMS_OVER_G, enum) 0 == and
+							(L:VMS_OVERTEMP_RIGHT, enum) 0 == and
+							(L:VMS_TRANSFER_PUMP, enum) 	0 == and
+
+							(L:VMS_OVERTEMP_LEFT_INIT, enum) 0 == and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									1 (>L:VMS_OVERTEMP_LEFT, enum) 1 (>L:VMS_OVERTEMP_LEFT_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(A:TURB ENG ITT:1, celsius) 960 &lt;
+							(L:SW2_FS_EW_ICS, enum) 0 == or
+							(L:VMS_OVERTEMP_LEFT_INIT, enum) 1 == and
+								if{
+									0 (>L:VMS_OVERTEMP_LEFT_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+			<!--		VMS Overtemp Right Warn		-->
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(A:TURB ENG ITT:2, celsius) 960 &gt; and
+							(L:SW2_FS_EW_ICS, enum) 0 != and
+
+							(L:VMS_AMAD_FIRE, enum) 0 == and
+							(L:VMS_BINGO_FUEL, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_LEFT, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_RIGHT, enum) 0 == and
+							(L:VMS_FUEL_LOW, enum) 0 == and
+							(L:VMS_LOW_ALTITUDE, enum) 0 == and
+							(L:VMS_OBSTACLE_AHEAD, enum)	0 == and
+							(L:VMS_OVER_G, enum) 0 == and
+							(L:VMS_OVERTEMP_LEFT, enum) 0 == and
+							(L:VMS_TRANSFER_PUMP, enum) 	0 == and
+
+							(L:VMS_OVERTEMP_RIGHT_INIT, enum) 0 == and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									1 (>L:VMS_OVERTEMP_RIGHT, enum) 1 (>L:VMS_OVERTEMP_RIGHT_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(A:TURB ENG ITT:2, celsius) 960 &lt;
+							(L:SW2_FS_EW_ICS, enum) 0 == or
+							(L:VMS_OVERTEMP_RIGHT_INIT, enum) 1 == and
+								if{
+									0 (>L:VMS_OVERTEMP_RIGHT_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+
+			<Element Name="Obstacle Warn">
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:PULL_UP_WARNING, enum) 1 == and
+							(L:SW2_FS_EW_ICS, enum) 0 != and
+
+							(L:VMS_AMAD_FIRE, enum) 0 == and
+							(L:VMS_BINGO_FUEL, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_LEFT, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_RIGHT, enum) 0 == and
+							(L:VMS_FUEL_LOW, enum) 0 == and
+							(L:VMS_LOW_ALTITUDE, enum) 0 == and
+							(L:VMS_OVER_G, enum) 0 == and
+							(L:VMS_OVERTEMP_LEFT, enum) 0 == and
+							(L:VMS_OVERTEMP_RIGHT, enum) 0 == and
+							(L:VMS_TRANSFER_PUMP, enum) 	0 == and
+
+							(L:VMS_OBSTACLE_AHEAD_INIT, enum) 0 == and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									2 (>L:VMS_OBSTACLE_AHEAD, enum) 1 (>L:VMS_OBSTACLE_AHEAD_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:PULL_UP_WARNING, enum) 0 ==
+							(L:SW2_FS_EW_ICS, enum) 0 == or
+							(L:VMS_OBSTACLE_AHEAD_INIT, enum) 1 == and
+								if{
+									0 (>L:VMS_OBSTACLE_AHEAD, enum) 0 (>L:VMS_OBSTACLE_AHEAD_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+			<Element Name="Fire Warn">
+		<!--		VMS Left Engine Fire Warn		-->
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:L_ENG_FIRE) 1 == and
+							(L:SW2_FS_EW_ICS, enum) 0 != and
+
+							(L:VMS_AMAD_FIRE, enum) 0 == and
+							(L:VMS_BINGO_FUEL, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_RIGHT, enum) 0 == and
+							(L:VMS_FUEL_LOW, enum) 0 == and
+							(L:VMS_LOW_ALTITUDE, enum) 0 == and
+							(L:VMS_OBSTACLE_AHEAD, enum)	0 == and
+							(L:VMS_OVER_G, enum) 0 == and
+							(L:VMS_OVERTEMP_LEFT, enum) 0 == and
+							(L:VMS_OVERTEMP_RIGHT, enum) 0 == and
+							(L:VMS_TRANSFER_PUMP, enum) 	0 == and
+
+							(L:VMS_ENGINE_FIRE_LEFT_INIT, enum) 0 == and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									1 (>L:VMS_ENGINE_FIRE_LEFT, enum) 1 (>L:VMS_ENGINE_FIRE_LEFT_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:L_ENG_FIRE) 0 ==
+							(L:SW2_FS_EW_ICS, enum) 0 == or
+							(L:VMS_ENGINE_FIRE_LEFT_INIT, enum) 1 == and
+								if{
+									0 (>L:VMS_ENGINE_FIRE_LEFT_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+
+		<!--		VMS Right Engine Fire Warn		-->
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:R_ENG_FIRE) 1 == and
+							(L:SW2_FS_EW_ICS, enum) 0 != and
+
+							(L:VMS_AMAD_FIRE, enum) 0 == and
+							(L:VMS_BINGO_FUEL, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_LEFT, enum) 0 == and
+							(L:VMS_FUEL_LOW, enum) 0 == and
+							(L:VMS_LOW_ALTITUDE, enum) 0 == and
+							(L:VMS_OBSTACLE_AHEAD, enum)	0 == and
+							(L:VMS_OVER_G, enum) 0 == and
+							(L:VMS_OVERTEMP_LEFT, enum) 0 == and
+							(L:VMS_OVERTEMP_RIGHT, enum) 0 == and
+							(L:VMS_TRANSFER_PUMP, enum) 	0 == and
+
+							(L:VMS_ENGINE_FIRE_RIGHT_INIT, enum) 0 == and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									1 (>L:VMS_ENGINE_FIRE_RIGHT, enum) 1 (>L:VMS_ENGINE_FIRE_RIGHT_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:R_ENG_FIRE) 0 ==
+							(L:SW2_FS_EW_ICS, enum) 0 == or
+							(L:VMS_ENGINE_FIRE_RIGHT_INIT, enum) 1 == and
+								if{
+									0 (>L:VMS_ENGINE_FIRE_RIGHT_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+
+		<!--		VMS AMAD Fire Warn		-->
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:AMAD_FIRE) 1 == and
+							(L:SW2_FS_EW_ICS, enum) 0 != and
+
+							(L:VMS_BINGO_FUEL, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_LEFT, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_RIGHT, enum) 0 == and
+							(L:VMS_FUEL_LOW, enum) 0 == and
+							(L:VMS_LOW_ALTITUDE, enum) 0 == and
+							(L:VMS_OBSTACLE_AHEAD, enum)	0 == and
+							(L:VMS_OVER_G, enum) 0 == and
+							(L:VMS_OVERTEMP_LEFT, enum) 0 == and
+							(L:VMS_OVERTEMP_RIGHT, enum) 0 == and
+							(L:VMS_TRANSFER_PUMP, enum) 	0 == and
+
+							(L:VMS_AMAD_FIRE_INIT, enum) 0 == and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									1 (>L:VMS_AMAD_FIRE, enum) 1 (>L:VMS_AMAD_FIRE_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:AMAD_FIRE) 0 ==
+							(L:SW2_FS_EW_ICS, enum) 0 == or
+							(L:VMS_AMAD_FIRE_INIT, enum) 1 == and
+								if{
+									0 (>L:VMS_AMAD_FIRE_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+
+			<Element Name="Low Altitude Warn">
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(A:SIM ON GROUND, enum) 0 == and
+							(A:GEAR CENTER POSITION, percent) 0 == and
+							(A:PLANE ALT ABOVE GROUND, feet) (L:SETTING LAW, enum) &lt; and
+							(L:SW2_FS_EW_ICS, enum) 0 != and
+
+							(L:VMS_AMAD_FIRE, enum) 0 == and
+							(L:VMS_BINGO_FUEL, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_LEFT, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_RIGHT, enum) 0 == and
+							(L:VMS_FUEL_LOW, enum) 0 == and
+							(L:VMS_OBSTACLE_AHEAD, enum)	0 == and
+							(L:VMS_OVER_G, enum) 0 == and
+							(L:VMS_OVERTEMP_LEFT, enum) 0 == and
+							(L:VMS_OVERTEMP_RIGHT, enum) 0 == and
+							(L:VMS_TRANSFER_PUMP, enum) 	0 == and
+
+							(L:VMS_LOW_ALTITUDE_INIT, enum) 0 == and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									1 (>L:VMS_LOW_ALTITUDE, enum) 1 (>L:VMS_LOW_ALTITUDE_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(A:PLANE ALT ABOVE GROUND, feet) (L:SETTING LAW, enum) &gt;
+							(L:SW2_FS_EW_ICS, enum) 0 == or
+							(L:VMS_LOW_ALTITUDE_INIT, enum) 1 == and
+								if{
+									0 (>L:VMS_LOW_ALTITUDE_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+			<Element Name="Over-G Warn">
+				<Element>
+					<Select>
+						<Value>
+							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(A:SIM ON GROUND, enum) 0 == and
+							(A:G FORCE, enum) (L:OWS_OVER_G_LIMIT, enum) &gt; and
+							(L:SW2_FS_EW_ICS, enum) 0 != and
+
+							(L:VMS_AMAD_FIRE, enum) 0 == and
+							(L:VMS_BINGO_FUEL, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_LEFT, enum) 0 == and
+							(L:VMS_ENGINE_FIRE_RIGHT, enum) 0 == and
+							(L:VMS_FUEL_LOW, enum) 0 == and
+							(L:VMS_LOW_ALTITUDE, enum) 0 == and
+							(L:VMS_OBSTACLE_AHEAD, enum)	0 == and
+							(L:VMS_OVERTEMP_LEFT, enum) 0 == and
+							(L:VMS_OVERTEMP_RIGHT, enum) 0 == and
+							(L:VMS_TRANSFER_PUMP, enum) 	0 == and
+
+							(L:VMS_OVER_G_INIT, enum) 0 == and
+							(L:VMS_MUTE, enum) 0 == and
+								if{
+									0 (>L:OWS_FACTOR_2, enum) 2 (>L:VMS_OVER_G, enum) 1 (>L:VMS_OVER_G_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(A:G FORCE, enum) (L:OWS_OVER_G_LIMIT, enum) &lt;
+							(L:SW2_FS_EW_ICS, enum) 0 == or
+							(A:SIM ON GROUND, enum) 1 == or
+							(L:VMS_OVER_G_INIT, enum) 1 == and
+								if{
+									0 (>L:VMS_OVER_G, enum) 0 (>L:VMS_OVER_G_INIT, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+		</Element>	
+		<Element Name="OWS">
+			<Element Name="OWS Factor 1 Warn">
+				<Select>
+					<Value>
+						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(A:SIM ON GROUND, enum) 0 == and
+						(A:G FORCE, enum) (L:OWS_FACTOR_1_LIMIT, enum) &gt; and
+						(A:G FORCE, enum) (L:OWS_FACTOR_2_LIMIT, enum)  &lt; and
+						(L:SW2_FS_EW_ICS, enum) 0 != and
+
+						(L:OWS_FACTOR_1_INIT, enum) 0 == and
+						(L:VMS_MUTE, enum) 0 == and
+							if{
+								2 (>L:OWS_FACTOR_1, enum) 1 (>L:OWS_FACTOR_1_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(A:G FORCE, enum) (L:OWS_FACTOR_1_LIMIT, enum) &lt;
+						(A:G FORCE, enum) (L:OWS_FACTOR_2_LIMIT, enum)  &gt; or
+						(A:SIM ON GROUND, enum) 1 == or
+						(L:SW2_FS_EW_ICS, enum) 0 == or
+
+						(L:OWS_FACTOR_1_INIT, enum) 1 == and
+							if{
+								0 (>L:OWS_FACTOR_1, enum) 0 (>L:OWS_FACTOR_1_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="OWS Factor 2 Warn">
+				<Select>
+					<Value>
+						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(A:SIM ON GROUND, enum) 0 == and
+						(A:G FORCE, enum) (L:OWS_FACTOR_2_LIMIT, enum) &gt; and
+						(L:SW2_FS_EW_ICS, enum) 0 != and
+
+						(L:OWS_FACTOR_2_INIT, enum) 0 == and
+						(L:VMS_MUTE, enum) 0 == and
+							if{
+								2 (>L:OWS_FACTOR_2, enum) 1 (>L:OWS_FACTOR_2_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(A:G FORCE, enum) (L:OWS_FACTOR_2_LIMIT, enum) &lt;
+						(A:SIM ON GROUND, enum) 1 == or
+						(L:SW2_FS_EW_ICS, enum) 0 == or
+
+						(L:OWS_FACTOR_2_INIT, enum) 1 == and
+							if{
+								0 (>L:OWS_FACTOR_2, enum) 0 (>L:OWS_FACTOR_2_INIT, enum)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+
+		<Element Name="ACS">
+			<Element Name="GUN Control">
+				<Select>
+					<Value>
+						(L:HUD_MASTER_MODE, enum) 2 ==
+						(A:GEAR CENTER POSITION, percent) 0 == and
+						(A:BRAKE INDICATOR, bool) and
+						(L:AO_GUN_AMMO_COUNT, Number) 0 != and
+						(L:MASTER_ARM, enum) 1 == and
+							if{ 1 (>L:GUN_ON) }
+							els{ 0 (>L:GUN_ON) }
+					</Value>
+				</Select>
+			</Element>			
+			<Element Name="GUN Init">
+				<Select>
+					<Value>
+						(L:GUN_ON, bool) 1 == (L:GUN_on_time) 0 == and
+							if{ (P:LOCAL TIME, seconds) (>L:GUN_on_time) 1 (>L:GUN_start) }
+							els{ }
+						(L:GUN_ON, bool) 0 == (L:GUN_on_time) 0 &gt; and
+							if{ 0 (>L:GUN_on_time) 0 (>L:GUN_start) }
+							els{ }
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="GUN Run">
+				<Select>
+					<Value>
+						(L:GUN_START, bool) 1 ==
+						(P:LOCAL TIME, seconds) (L:GUN_on_time) - 0.5 &gt; and
+							if{ 2 (>L:GUN_run) 0 (>L:GUN_start) } els{ }
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="GUN Off">
+				<Select>
+					<Value>
+					(L:GUN_START, bool) 1 == (L:GUN_RUN, number) 2 == or
+					(L:GUN_ON, bool) 0 == and
+						if{ 1 (>L:GUN_STOP) 0 (>L:GUN_RUN) }
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="Bomb Drop">
+				<Select>
+					<Value>
+						(L:IF15E_BD, Number) 0 !=
+						(L:BOMB_AVAIL, enum) 1 == and
+						(L:IF15E_Trigger_Press, Bool) 1 == and
+						(L:HUD_MASTER_MODE, enum) 3 == and
+						(A:GEAR CENTER POSITION, percent) 0 == and
+						(L:MASTER_ARM, enum) 1 == and
+							if{ 1 (>L:bomb_drop) }
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="AIM-9 AVAIL">
+				<Element>
+					<Select>
+						<Value>
+						(L:AO_STA-2A_LType, Enum) 1 == (L:AO_STA-2A_LQty, Number) 1 == and
+							if{ 1 (>L:STA-2A_AIM9_AVAIL) }
+							els{ 0 (>L:STA-2A_AIM9_AVAIL) }
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+						(L:AO_STA-2B_LType, Enum) 1 == (L:AO_STA-2B_LQty, Number) 1 == and
+							if{ 1 (>L:STA-2B_AIM9_AVAIL) }
+							els{ 0 (>L:STA-2B_AIM9_AVAIL) }
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+						(L:AO_STA-8A_LType, Enum) 1 == (L:AO_STA-8A_LQty, Number) 1 == and
+							if{ 1 (>L:STA-8A_AIM9_AVAIL) }
+							els{ 0 (>L:STA-8A_AIM9_AVAIL) }
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+						(L:AO_STA-8B_LType, Enum) 1 == (L:AO_STA-8B_LQty, Number) 1 == and
+							if{ 1 (>L:STA-8B_AIM9_AVAIL) }
+							els{ 0 (>L:STA-8B_AIM9_AVAIL) }
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+						(L:STA-2A_AIM9_AVAIL) 1 ==
+						(L:STA-2B_AIM9_AVAIL) 1 == or
+						(L:STA-8A_AIM9_AVAIL) 1 == or
+						(L:STA-8B_AIM9_AVAIL) 1 == or
+							if{ 1 (>L:AIM9_AVAIL) }
+							els{ 0 (>L:AIM9_AVAIL) }
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+			<Element Name="AIM9 Seek">
+				<Select>
+					<Value>
+						(L:AAM_SEL, Enum) 1 ==
+						(L:AIM9_AVAIL, enum) 1 == and
+						(L:HUD_MASTER_MODE, enum) 2 == and
+						(A:GEAR CENTER POSITION, percent) 0 == and
+						(L:MASTER_ARM, enum) 1 == and
+						(L:LT_FS_LOCK, enum) 0 == and
+							if{ 2 (>L:AIM9_SEEK) }
+							els{ 0 (>L:AIM9_SEEK) }
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="AIM9 Lock">
+				<Select>
+					<Value>
+						(L:AAM_SEL, Enum) 1 ==
+						(L:AIM9_AVAIL, enum) 1 == and
+						(L:HUD_MASTER_MODE, enum) 2 == and
+						(A:GEAR CENTER POSITION, percent) 0 == and
+						(L:MASTER_ARM, enum) 1 == and
+						(L:LT_FS_LOCK, enum) 1 == and
+							if{ 2 (>L:AIM9_LOCK) }
+							els{ 0 (>L:AIM9_LOCK) }
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+	</Element>
+
+	<KeyMap id="KeyMap">
+		<Trigger id="Trigger">
+			<KeyboardKey>Ctrl+Shift+V</KeyboardKey>
+			<Script> 1 (&gt;L:IF15E_Trigger_Act, Bool)</Script>
+		</Trigger>
+	</KeyMap>
+
+</Gauge>

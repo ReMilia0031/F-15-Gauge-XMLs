@@ -1,0 +1,678 @@
+<Gauge Name="F-15 Aramament Control Panel" Version="2.0">
+	
+	<Element>
+		<Image Name="mpcd/ARAMAMENT.bmp" Bright="No"/>
+	
+		<Element Name="GUN RATE" Container="Yes">
+			<Position X="101" Y="52"/>
+			<Select>
+				<Value>(L:Rate Switch, bool)</Value>
+				<Case Value="0">
+					<Image Name="gunsw0.bmp" ImageSizes="26,27"/>
+				</Case>
+				<Case Value="1">
+					<Image Name="gunsw1.bmp" ImageSizes="26,27"/>
+				</Case>
+			</Select>
+		</Element>
+
+		<Element Name="ARM SW" Container="Yes">
+			<Position X="302" Y="45"/>
+			<Select>		
+				<Value>(L:SW1_FS_ARM_MASTER_ARM)</Value>
+				<Case Value="0">
+					<Image Name="SAFE_DN.bmp" ImageSizes="37,66"/>
+				</Case>
+				<Case Value="1">
+					<Image Name="SAFE_UP.bmp" ImageSizes="37,66"/>
+				</Case>
+			</Select>
+		</Element>
+
+		<Element Name="A/G SELECT" Container="Yes">
+			<Position X="37" Y="230"/>
+			<Select>		
+				<Value></Value>
+				<Case Value="0">
+					<Image Name="" ImageSizes="1,1"/>
+				</Case>
+	
+			</Select>
+		</Element>
+
+		<Element Name="INTERVAL" Container="Yes">
+			<Position X="152" Y="246"/>
+			<Select>		
+				<Value>(L:SW1_FS_ARAM_INTERVAL)</Value>
+				<Case Value="0">
+					<Image Name="hrds0.bmp" ImageSizes="24,24"/>
+				</Case>
+				<Case Value="1">
+					<Image Name="hrds1.bmp" ImageSizes="24,24"/>
+				</Case>
+			</Select>
+		</Element>
+
+		<Element Name="QUANTITY" Container="Yes">
+			<Position X="253" Y="246"/>
+			<Select>		
+				<Value>(L:SW1_FS_ARAM_QUANTITY)</Value>
+				<Case Value="0">
+					<Image Name="hrds0.bmp" ImageSizes="24,24"/>
+				</Case>
+				<Case Value="1">
+					<Image Name="hrds1.bmp" ImageSizes="24,24"/>
+				</Case>
+			</Select>
+		</Element>
+
+		<Element Name="LT" Container="Yes">
+			<Position X="353" Y="256"/>
+			<Select>		
+				<Value>(L:KBOB_FS_ARAM_BRT)</Value>
+				<Case Value="0">
+					<Image Name="mpcd/knob_9_1.bmp" ImageSizes="50,50"/>
+				</Case>
+				<Case Value="1">
+					<Image Name="mpcd/knob_9_2.bmp" ImageSizes="50,50"/>
+				</Case>
+				<Case Value="2">
+					<Image Name="mpcd/knob_9_3.bmp" ImageSizes="50,50"/>
+				</Case>
+				<Case Value="3">
+					<Image Name="mpcd/knob_9_4.bmp" ImageSizes="50,50"/>
+				</Case>
+				<Case Value="4">
+					<Image Name="mpcd/knob_9_5.bmp" ImageSizes="50,50"/>
+				</Case>
+				<Case Value="5">
+					<Image Name="mpcd/knob_9_6.bmp" ImageSizes="50,50"/>
+				</Case>
+				<Case Value="6">
+					<Image Name="mpcd/knob_9_7.bmp" ImageSizes="50,50"/>
+				</Case>
+			</Select>
+		</Element>
+
+		
+		<Element Name="WEAPON_AA" Container="Yes">
+
+			<Element Name="AAM 0" Container="Yes">
+				<Visible>(L:AAM_SEL, Enum) 0 ==</Visible>
+				<Element Name="WPN_1" Container="Yes">
+					<Position X="158" Y="49"/>
+					<Element>
+						<Text X="30" Y="9" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>MRM</String>
+						</Text>
+					</Element>
+		
+				</Element>
+				<Element Name="WPN_2" Container="Yes">
+					<Position X="233" Y="49"/>
+					<Element>
+						<Text X="30" Y="9" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>MRM</String>
+						</Text>
+					</Element>
+		
+				</Element>
+				<Element Name="WPN_3" Container="Yes">
+					<Position X="158" Y="182"/>
+					<Element>
+						<Text X="31" Y="9" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>MRM</String>
+						</Text>
+					</Element>
+		
+				</Element>
+				<Element Name="WPN_4" Container="Yes">
+					<Position X="233" Y="182"/>
+					<Element>
+						<Text X="30" Y="9" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>MRM</String>
+						</Text>
+					</Element>
+				</Element>
+				<Element Name="WPN_5" Container="Yes">
+					<Position X="34" Y="151"/>
+					<Element>
+						<Text X="31" Y="10" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>SW</String>
+						</Text>
+					</Element>
+				</Element>
+				<Element Name="WPN_6" Container="Yes">
+					<Position X="59" Y="151"/>
+					<Element>
+						<Text X="30" Y="10" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>SW</String>
+						</Text>
+					</Element>
+				</Element>
+				<Element Name="WPN_7" Container="Yes">
+					<Position X="306" Y="154"/>
+					<Element>
+						<Text X="30" Y="10" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>SW</String>
+						</Text>
+					</Element>
+				</Element>
+				<Element Name="WPN_8" Container="Yes">
+					<Position X="332" Y="154"/>
+					<Element>
+						<Text X="30" Y="10" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>SW</String>
+						</Text>
+					</Element>
+				</Element>
+			</Element>
+		
+			<Element Name="AAM 1" Container="Yes">
+				<Visible>(L:AAM_SEL, Enum) 1 ==</Visible>
+				<Element Name="WPN_1" Container="Yes">
+					<Position X="158" Y="49"/>
+					<Element>
+						<Text X="30" Y="9" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>MRM</String>
+						</Text>
+					</Element>
+		
+				</Element>
+				<Element Name="WPN_2" Container="Yes">
+					<Position X="233" Y="49"/>
+					<Element>
+						<Text X="30" Y="9" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>MRM</String>
+						</Text>
+					</Element>
+		
+				</Element>
+				<Element Name="WPN_3" Container="Yes">
+					<Position X="158" Y="182"/>
+					<Element>
+						<Text X="31" Y="9" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>MRM</String>
+						</Text>
+					</Element>
+		
+				</Element>
+				<Element Name="WPN_4" Container="Yes">
+					<Position X="233" Y="182"/>
+					<Element>
+						<Text X="30" Y="9" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>MRM</String>
+						</Text>
+					</Element>
+				</Element>
+
+				<Element Name="WPN_5" Container="Yes">
+					<Position X="34" Y="151"/>
+					<Element>
+						<Text X="31" Y="10" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:MSS_SEL, Enum) 0 ==)%{if}RDY%{else}SW%</String>
+						</Text>
+					</Element>
+				</Element>
+
+				<Element Name="WPN_6" Container="Yes">
+					<Position X="59" Y="151"/>
+					<Element>
+						<Text X="30" Y="10" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:MSS_SEL, Enum) 0 ==)%{if}RDY%{else}SW%</String>
+						</Text>
+					</Element>
+				</Element>
+
+				<Element Name="WPN_7" Container="Yes">
+					<Position X="306" Y="154"/>
+					<Element>
+						<Text X="30" Y="10" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:MSS_SEL, Enum) 0 ==)%{if}RDY%{else}SW%</String>
+						</Text>
+					</Element>
+				</Element>
+
+				<Element Name="WPN_8" Container="Yes">
+					<Position X="332" Y="154"/>
+					<Element>
+						<Text X="30" Y="10" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:MSS_SEL, Enum) 0 ==)%{if}RDY%{else}SW%</String>
+						</Text>
+					</Element>
+				</Element>
+			</Element>
+		
+			<Element Name="AAM 2" Container="Yes">			
+				<Visible>(L:AAM_SEL, Enum) 2 ==</Visible>
+				<Element Name="WPN_1" Container="Yes">
+					<Position X="158" Y="49"/>
+					<Element>
+						<Text X="30" Y="9" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:MSS_SEL, Enum) 0 ==)%{if}RDY%{else}MRM%</String>
+						</Text>
+					</Element>
+		
+				</Element>
+				
+				<Element Name="WPN_2" Container="Yes">
+					<Position X="233" Y="49"/>
+					<Element>
+						<Text X="30" Y="9" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:MSS_SEL, Enum) 1 ==)%{if}RDY%{else}MRM%</String>
+						</Text>
+					</Element>
+		
+				</Element>
+			
+				<Element Name="WPN_3" Container="Yes">
+					<Position X="158" Y="182"/>
+					<Element>
+						<Text X="31" Y="9" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:MSS_SEL, Enum) 2 ==)%{if}RDY%{else}MRM%</String>
+						</Text>
+					</Element>
+		
+				</Element>
+			
+				<Element Name="WPN_4" Container="Yes">
+					<Position X="233" Y="182"/>
+					<Element>
+						<Text X="30" Y="9" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:MSS_SEL, Enum) 3 ==)%{if}RDY%{else}MRM%</String>
+						</Text>
+					</Element>
+				</Element>
+
+				<Element Name="WPN_5" Container="Yes">
+					<Position X="34" Y="151"/>
+					<Element>
+						<Text X="31" Y="10" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>SW</String>
+						</Text>
+					</Element>
+				</Element>
+				<Element Name="WPN_6" Container="Yes">
+					<Position X="59" Y="151"/>
+					<Element>
+						<Text X="30" Y="10" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>SW</String>
+						</Text>
+					</Element>
+				</Element>
+				<Element Name="WPN_7" Container="Yes">
+					<Position X="306" Y="154"/>
+					<Element>
+						<Text X="30" Y="10" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>SW</String>
+						</Text>
+					</Element>
+				</Element>
+				<Element Name="WPN_8" Container="Yes">
+					<Position X="332" Y="154"/>
+					<Element>
+						<Text X="30" Y="10" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>SW</String>
+						</Text>
+					</Element>
+				</Element>
+
+			</Element>
+		
+		</Element>
+
+		<Element Name="WEAPON_AG_SELECT" Container="Yes">
+	
+			<Element Name="WPN_7" Container="Yes">
+				<Position X="122" Y="146"/>
+				<Element>
+					<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>%((L:SELECTED_STA2) 1==)%{if}SET%{else}---%</String>
+					</Text>
+				</Element>
+			</Element>
+			
+			<Element Name="WPN_8" Container="Yes">
+				<Position X="194" Y="146"/>
+				<Element>
+					<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>%((L:SELECTED_STA5) 1==)%{if}SET%{else}---%</String>
+					</Text>
+				</Element>
+			</Element>
+	
+			<Element Name="WPN_9" Container="Yes">
+				<Position X="268" Y="146"/>
+				<Element>
+					<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>%((L:SELECTED_STA8) 1==)%{if}SET%{else}---%</String>
+					</Text>
+				</Element>
+			</Element>
+		</Element>
+
+		<Element Name="STA COUNTER / LEGEND" Container="Yes">
+		<!-- 6-1 R P H - -->
+		<!-- FUEL EO IR MK 82 MK 82 R MK 84 MK 84 L CBU-58 CBU-42 CBU-52 CBU-71 MK-20 SUU-20 BLU-27F BLU-27U -->
+			<Element Name="STA2 INVENTORY COUNTER" Container="Yes">
+				<Position X="91" Y="107"/>
+				<Element>
+					<Text X="230" Y="15" Luminous="Yes" Length="20" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>
+							R
+						</String>
+					</Text>
+				</Element>
+			</Element>
+			<Element Name="STA2 LEGEND" Container="Yes">
+				<Position X="110" Y="107"/>
+				<Element>
+					<Text X="280" Y="15" Luminous="Yes" Length="20" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>
+							%((A:FUEL TANK LEFT AUX QUANTITY, gallons))%!04d!%
+						</String>
+					</Text>
+				</Element>
+			</Element>
+			
+			<Element Name="STA5 INVENTORY COUNTER" Container="Yes">
+				<Position X="165" Y="107"/>
+				<Element>
+					<Text X="230" Y="15" Luminous="Yes" Length="20" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>
+							R
+						</String>
+					</Text>
+				</Element>
+			</Element>
+			<Element Name="STA5 LEGEND" Container="Yes">
+				<Position X="180" Y="107"/>
+				<Element>
+					<Text X="230" Y="15" Luminous="Yes" Length="20" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>
+							%((A:FUEL TANK EXTERNAL1 QUANTITY, gallons))%!04d!%
+						</String>
+					</Text>
+				</Element>				
+			</Element>
+			
+			<Element Name="STA8 INVENTORY COUNTER" Container="Yes">
+				<Position X="235" Y="107"/>
+				<Element>
+					<Text X="230" Y="15" Luminous="Yes" Length="20" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>
+							R
+						</String>
+					</Text>
+				</Element>
+			</Element>
+			<Element Name="STA8 LEGEND" Container="Yes">
+				<Position X="250" Y="107"/>
+				<Element>
+					<Text X="230" Y="15" Luminous="Yes" Length="20" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>
+							%((A:FUEL TANK LEFT AUX QUANTITY, gallons))%!04d!%
+						</String>
+					</Text>
+				</Element>
+			</Element>
+		</Element>	
+
+		<Element Name="GUN_ROUNDS" Container="Yes">
+			<Position X="35" Y="69"/>
+			<Element>
+				<Text X="90" Y="18" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+					<String>%((L:RNRM, number))%!03d!</String>
+				</Text>
+			</Element>
+		</Element>	
+
+		<Element Name="INTERVAL" Container="Yes">
+			<Position X="208" Y="245"/>
+			<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+				<String>%((L:ARAM_INTERVAL))%!03d!%</String>
+			</Text>
+		</Element>	
+
+		<Element Name="QUANTITY" Container="Yes">
+			<Position X="308" Y="245"/>
+			<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+				<String>%((L:ARAM_QTY))%!02d!%</String>
+			</Text>
+		</Element>
+
+
+		<Element Name="MONITOR" Container="Yes">
+<!-- 	1 AUTO CDIP DIRECT - UNCAGE -
+		2 I/STA STEP RP-SGL RP/MTP PCO -
+		3 - - - - - - 
+		4 NOSE TAIL N/T - F/FAIL RETARD
+		5 RDY FAIL STBY - USED TIMING -->
+		
+		<!-- USED AUTOPILOT MODE -->
+			<Element>
+				<Position X="165" Y="310"/>
+				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+					<String>%((A:AUTOPILOT NAV1 LOCK, BOOL) 1 ==)%{if}CRS%{else} --- %</String>
+				</Text>
+			</Element>
+			<Element>
+				<Position X="215" Y="310"/>
+				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+					<String>%((A:AUTOPILOT HEADING LOCK, BOOL) 1 ==)%{if}HDG%{else} --- %</String>
+				</Text>
+			</Element>			
+			<Element>
+				<Position X="265" Y="310"/>
+				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+					<String>%((A:AUTOPILOT ALTITUDE LOCK, BOOL) 1 ==)%{if}ALT%{else} --- %</String>
+				</Text>
+			</Element>
+			<Element>
+				<Position X="310" Y="310"/>
+				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+					<String>%((A:AUTOPILOT AIRSPEED HOLD, BOOL) 1 ==)%{if}SPD%{else} --- %</String>
+				</Text>
+			</Element>
+			<Element>
+				<Position X="360" Y="310"/>
+				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+					<String>---</String>
+				</Text>
+			</Element>
+			
+		</Element>
+
+		<Element Name="OPTIONS" Container="Yes">
+<!-- 	1 CDIP - I/STA - - UNCAGE SOUIB NOSE F/FAIL
+		2 AUTO S RTCL STEP - - - - TAIL -
+		3 DIRECT - RP-SGL - - - - N/T -
+		4 - - RP/MTP SQTY S-INT - - - RETARD
+		5 - - - - - - - - -  -->
+		<!-- USERD AUTOPILOT NUMBER -->
+			<Element>
+				<Position X="170" Y="384"/>
+				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+					<String>%((A:AUTOPILOT NAV1 LOCK, BOOL) 1 ==)%{if}%((A:NAV1 OBS, degrees))%!03d!%{else} --- %</String>
+				</Text>
+			</Element>
+			<Element>
+				<Position X="220" Y="384"/>
+				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+					<String>%((A:AUTOPILOT HEADING LOCK, BOOL) 1 ==)%{if}%((A:Autopilot heading lock dir, degrees) flr 360 % d 0 == if{ 360 } )%!03d!%{else} --- %</String>
+				</Text>
+			</Element>			
+			<Element>
+				<Position X="270" Y="384"/>
+				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+					<String>%((A:AUTOPILOT ALTITUDE LOCK, BOOL) 1 ==)%{if}%((A:AUTOPILOT ALTITUDE LOCK VAR, feet) 100 / )%!03d!%{else} --- %</String>
+				</Text>
+			</Element>
+			<Element>
+				<Position X="315" Y="384"/>
+				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+					<String>%((A:AUTOPILOT AIRSPEED HOLD, BOOL) 1 ==)%{if}%((A:AUTOPILOT AIRSPEED HOLD VAR, knots))%!03d!%{else} --- %</String>
+				</Text>
+			</Element>
+			<Element>
+				<Position X="355" Y="384"/>
+				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+					<String>%((A:AUTOPILOT MASTER, enum) 1 ==)%{if}MAST%{else} --- %</String>
+				</Text>
+			</Element>
+			
+		</Element>
+	</Element>
+	
+	<Mouse>
+
+		<Area Left="105" Right="125" Top="57" Bottom="75">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">GUN RATE (HIGH/LOW)</Tooltip>
+			 <Click>
+				(L:Rate Switch, bool) ++ 2 % (>L:Rate Switch, bool)
+			</Click>	  
+		</Area>
+		
+		<Area Left="302" Right="339" Top="45" Bottom="111">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">Master Arm Switch (Arm/Safe)</Tooltip>
+			 <Click>
+				(L:SW1_FS_ARM_MASTER_ARM) ++ 2 % (>L:SW1_FS_ARM_MASTER_ARM)
+			</Click>	  
+		</Area>		
+
+		<Area Left="353" Right="385" Top="256" Bottom="288">
+			<Cursor Type="UpArrow"/>
+			<Tooltip ID="">Aramament Panel Light</Tooltip>
+			 <Click>
+				(L:KBOB_FS_ARAM_BRT) ++ (>L:KBOB_FS_ARAM_BRT)
+				(L:KBOB_FS_ARAM_BRT) 6 &gt;
+				if{
+					6 (>L:KBOB_FS_ARAM_BRT) 
+				}
+			</Click>
+		</Area>
+		<Area Left="353" Right="385" Top="256" Bottom="288">
+			<Cursor Type="DownArrow"/>
+			<Tooltip ID="">Aramament Panel Light</Tooltip>
+			 <Click>
+				(L:KBOB_FS_ARAM_BRT) -- (>L:KBOB_FS_ARAM_BRT)
+				(L:KBOB_FS_ARAM_BRT) 0 &lt;
+				if{
+					0 (>L:KBOB_FS_ARAM_BRT) 
+				}
+			</Click>	  
+		</Area>		
+		
+		
+		
+		<Area Left="115" Right="137" Top="179" Bottom="211">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">STR SELECT 1</Tooltip>
+			 <Click>
+				1 (>L:BTN_FS_ARAM_STR2_SEL_EXEC)
+			</Click>
+		</Area>
+		<Area Left="190" Right="223" Top="179" Bottom="211">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">STR SELECT 2</Tooltip>
+			 <Click>
+				1 (>L:BTN_FS_ARAM_STR5_SEL_EXEC)
+			</Click>	  
+		</Area>	
+		<Area Left="262" Right="295" Top="179" Bottom="211">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">STR SELECT 3</Tooltip>
+			 <Click>
+				1 (>L:BTN_FS_ARAM_STR8_SEL_EXEC)
+			</Click>	  
+		</Area>
+
+		<Area Left="147" Right="179" Top="240" Bottom="272">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">INTERVAL (HRDS/TENS)</Tooltip>
+			 <Click>
+				1 (>L:BTN_FS_ARAM_INTERVAL_HRDS)
+			</Click>	  
+		</Area>	
+
+		<Area Left="250" Right="282" Top="240" Bottom="272">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">QUANTITY (TENS/UNITS)</Tooltip>
+			 <Click>
+				1 (>L:BTN_FS_ARAM_QUANTITY_TENS)
+			</Click>	  
+		</Area>			
+
+		<Area Left="167" Right="196" Top="336" Bottom="367">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">MONITOR 1</Tooltip>
+			 <Click>
+				(L:BTN_FS_ARAM_MON_1_EXEC) ++ 2 % (>L:BTN_FS_ARAM_MON_1_EXEC)
+			</Click>
+		</Area>
+		<Area Left="215" Right="244" Top="336" Bottom="367">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">MONITOR 2</Tooltip>
+			 <Click>
+				(L:BTN_FS_ARAM_MON_2_EXEC) ++ 2 % (>L:BTN_FS_ARAM_MON_2_EXEC)
+			</Click>
+		</Area>
+		<Area Left="264" Right="293" Top="336" Bottom="367">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">MONITOR 3</Tooltip>
+			 <Click>
+				(L:BTN_FS_ARAM_MON_3_EXEC) ++ 2 %	(>L:BTN_FS_ARAM_MON_3_EXEC)
+			</Click>
+		</Area>
+		<Area Left="310" Right="339" Top="336" Bottom="367">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">MONITOR 4</Tooltip>
+			 <Click>
+				(L:BTN_FS_ARAM_MON_4_EXEC) ++ 2 % (>L:BTN_FS_ARAM_MON_4_EXEC)
+			</Click>
+		</Area>
+		
+				
+		<Area Left="167" Right="196" Top="411" Bottom="440">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">OPTIONS 1</Tooltip>
+			 <Click>
+				(L:BTN_FS_ARAM_OPT_1_EXEC) ++ 2 % (>L:BTN_FS_ARAM_OPT_1_EXEC)
+			</Click>
+		</Area>		
+		<Area Left="215" Right="244" Top="411" Bottom="440">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">OPTIONS 2</Tooltip>
+			 <Click>
+				(L:BTN_FS_ARAM_OPT_2_EXEC) ++ 2 % (>L:BTN_FS_ARAM_OPT_2_EXEC)
+			</Click>
+		</Area>
+		<Area Left="264" Right="293" Top="411" Bottom="440">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">OPTIONS 3</Tooltip>
+			 <Click>
+				(L:BTN_FS_ARAM_OPT_3_EXEC) ++ 2 % (>L:BTN_FS_ARAM_OPT_3_EXEC)
+			</Click>
+		</Area>
+		<Area Left="310" Right="339" Top="411" Bottom="440">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">OPTIONS 4</Tooltip>
+			 <Click>
+				(L:BTN_FS_ARAM_OPT_4_EXEC) ++ 2 % (>L:BTN_FS_ARAM_OPT_4_EXEC)
+			</Click>
+		</Area>
+		<Area Left="358" Right="387" Top="411" Bottom="440">
+			<Cursor Type="Hand"/>
+			<Tooltip ID="">OPTIONS 5</Tooltip>
+			 <Click>
+				(L:BTN_FS_ARAM_OPT_5_EXEC) ++ 2 % (>L:BTN_FS_ARAM_OPT_5_EXEC)
+			</Click>
+		</Area>		
+		
+		
+		
+		
+	</Mouse>
+</Gauge>

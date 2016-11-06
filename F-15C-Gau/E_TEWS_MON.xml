@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<SimBase.Document
+        Type="AceXML"
+        version="1,0"
+        id="TEWS">
+    <Descr>AceXML Document</Descr>
+    <Filename>TEWS.xml</Filename>
+    <SimGauge.Gauge id="TEWS Display Unit (65Z-J009)" ArtDirectory=".">
+		<Size>512,512</Size>
+        <Macro id="SymColor" Name="SymColor">
+            <MacroValue>
+				(L:TEWS_COLOR_SYM)
+			</MacroValue>
+        </Macro>
+		<Macro id="SymColorDark" Name="SymColorDark">
+            <MacroValue>
+				(L:TEWS_COLOR_SYM_DARK)
+			</MacroValue>
+        </Macro>
+		<Element id="STBY">
+            <FloatPosition>210.000,240.000</FloatPosition>
+            <Visibility>
+				(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+				(L:TEWS-POWER, bool) 0 == and
+				(L:SW1_FS_TEWS_ICS) 1 == and
+				(P:absolute time, number) 0.5 % 0.25 &lt; and
+			</Visibility>
+            <GaugeText id="GaugeText">
+                <BackgroundColorScript>@SymColor</BackgroundColorScript>
+                <Bold>True</Bold>
+                <Bright>True</Bright>
+                <FontColor>0x000000</FontColor>
+                <FontFace>Consolas</FontFace>
+                <FontHeight>22</FontHeight>
+                <GaugeString>STBY</GaugeString>
+                <HorizontalAlign>CENTER</HorizontalAlign>
+                <Size>100,24</Size>
+                <Transparent>True</Transparent>
+            </GaugeText>
+        </Element>
+		<Element id="TEWS">
+			<Visibility>(L:TEWS-POWER, bool) 1 ==</Visibility>
+			<Element id="DISPLAY">
+				<Element id="RWR">
+					<MaskImage id="TEWS/TEWS_MASK.bmp" Name="TEWS/TEWS_MASK.bmp"></MaskImage>
+					<CustomDraw id="CustomDraw" Name="fs9gps:1:map">
+						<Size>512,512</Size>
+						<Bright>True</Bright>
+						<CustomDrawParam id="Zoom" Name="Zoom">
+							<Value>(L:TEWS_RANGEStatic, number)</Value>
+						</CustomDrawParam>
+						<CustomDrawParam id="Latitude" Name="Latitude">
+							<Value>(A:PLANE LATITUDE, radians) </Value>
+						</CustomDrawParam>
+						<CustomDrawParam id="Longitude" Name="Longitude">
+							<Value>(A:PLANE LONGITUDE, radians)</Value>
+						</CustomDrawParam>
+						<CustomDrawParam id="Heading" Name="Heading">
+							<Value>(A:PLANE HEADING DEGREES TRUE, radians)</Value>
+						</CustomDrawParam>
+						<CustomDrawParam id="TrackUp" Name="TrackUp">
+							<Value>1</Value>
+						</CustomDrawParam>
+						<CustomDrawParam id="CenterX" Name="CenterX">
+							<Value>256</Value>
+						</CustomDrawParam>
+						<CustomDrawParam id="CenterY" Name="CenterY">
+							<Value>256</Value>
+						</CustomDrawParam>
+						<CustomDrawParam id="UpdateAlways" Name="UpdateAlways">
+							<Value>1</Value>
+						</CustomDrawParam>
+		
+		<!-- Vehicle -->
+						<CustomDrawParam id="LayerVehicles" Name="LayerVehicles">
+							<Value>1</Value>
+						</CustomDrawParam>
+						<CustomDrawParam id="DetailLayerVehicles" Name="DetailLayerVehicles">
+							<Value>1</Value>
+						</CustomDrawParam>
+						<CustomDrawParam id="TextDetailLayerVehicles" Name="TextDetailLayerVehicles">
+							<Value>0</Value>
+						</CustomDrawParam>
+						<CustomDrawParam id="ObjectDetailLayerVehicles" Name="ObjectDetailLayerVehicles">
+							<Value>4</Value>
+						</CustomDrawParam>
+						<CustomDrawParam id="ColorLayerVehicles" Name="ColorLayerVehicles">
+							<Value>@SymColor</Value>
+						</CustomDrawParam>
+						<CustomDrawParam id="ColorLayerVehiclesSelected" Name="ColorLayerVehiclesSelected">
+							<Value>@SymColorDark</Value>
+						</CustomDrawParam>
+					</CustomDraw>
+
+				</Element>
+				<Element id="ECM_ICON">
+				<Visibility>
+					(P:absolute time, number) 0.5 % 0.25 &lt;
+					(L:TEWS_ECM_INIT) 1 == and
+					(L:TEWS_ECM_POWER) 1 == or
+				</Visibility>
+					<FloatPosition>256.000,256.000</FloatPosition>
+
+					<Element id="ECM_ICON">
+						<PolyLine id="IND">
+                                <Bright>True</Bright>
+                                <LineWidth>5</LineWidth>
+                                <LineColorScript>@SymColor</LineColorScript>
+                                <Point id="Point">
+                                    <FloatPosition>0.000,0.000</FloatPosition>
+                                </Point>
+                                <Point id="Point">
+                                    <FloatPosition>20.000,20.000</FloatPosition>
+                                </Point>
+								<Axis>30,30</Axis>
+                            </PolyLine>
+					</Element>
+					<Element id="ECM_ICON">
+						<PolyLine id="IND">
+                                <Bright>True</Bright>
+                                <LineWidth>5</LineWidth>
+                                <LineColorScript>@SymColor</LineColorScript>
+                                <Point id="Point">
+                                    <FloatPosition>0.000,60.000</FloatPosition>
+                                </Point>
+                                <Point id="Point">
+                                    <FloatPosition>20.000,40.000</FloatPosition>
+                                </Point>
+								<Axis>30,30</Axis>
+                            </PolyLine>
+					</Element>
+					<Element id="ECM_ICON">
+						<PolyLine id="IND">
+                                <Bright>True</Bright>
+                                <LineWidth>5</LineWidth>
+                                <LineColorScript>@SymColor</LineColorScript>
+                                <Point id="Point">
+                                    <FloatPosition>60.000,0.000</FloatPosition>
+                                </Point>
+                                <Point id="Point">
+                                    <FloatPosition>40.000,20.000</FloatPosition>
+                                </Point>
+								<Axis>30,30</Axis>
+                            </PolyLine>
+					</Element>
+					<Element id="ECM_ICON">
+						<PolyLine id="IND">
+                                <Bright>True</Bright>
+                                <LineWidth>5</LineWidth>
+                                <LineColorScript>@SymColor</LineColorScript>
+                                <Point id="Point">
+                                    <FloatPosition>60.000,60.000</FloatPosition>
+                                </Point>
+                                <Point id="Point">
+                                    <FloatPosition>40.000,40.000</FloatPosition>
+                                </Point>
+								<Axis>30,30</Axis>
+                            </PolyLine>
+					</Element>
+				</Element>
+				<Element id="CENTER_ICON">
+					<FloatPosition>256.000,256.000</FloatPosition>
+						<Element id="CENTER_ICON">
+						<PolyLine id="IND">
+							<Bright>True</Bright>
+							<LineWidth>5</LineWidth>
+							<LineColorScript>@SymColor</LineColorScript>
+							<Point id="Point">
+								<FloatPosition>0.0,30.0</FloatPosition>
+							</Point>
+							<Point id="Point">
+								<FloatPosition>60.0,30.0</FloatPosition>
+							</Point>
+							<Axis>30,30</Axis>
+						</PolyLine>
+					</Element>
+					<Element id="CENTER_ICON">
+						<PolyLine id="IND">
+							<Bright>True</Bright>
+							<LineWidth>5</LineWidth>
+							<LineColorScript>@SymColor</LineColorScript>
+							<Point id="Point">
+								<FloatPosition>30.0,0.0</FloatPosition>
+							</Point>
+							<Point id="Point">
+								<FloatPosition>30.0,60.0</FloatPosition>
+							</Point>
+							<Axis>30,30</Axis>
+						</PolyLine>
+					</Element>
+				
+				</Element>
+				<Element id="TEWS_BACKGROUND">
+					<FloatPosition>0.000,0.000</FloatPosition>
+					<Image id="TEWS/TEWS_Background.bmp" Name="TEWS/TEWS_Background.bmp">
+						<Transparent>True</Transparent>
+						<Bright>True</Bright>
+					</Image>
+				</Element>	
+			</Element>
+		</Element>
+		<MouseArea id="TEWS_PANEL">
+				<CursorType>Hand</CursorType>
+                    <MouseClick id="MouseClick">
+                        <Script>150 (&gt;K:PANEL_ID_TOGGLE)</Script>
+                    </MouseClick>
+				<Tooltip id="Tooltip">
+					<DefaultScript>Tactical Electronic Warfare System</DefaultScript>
+				</Tooltip>
+			</MouseArea>
+	</SimGauge.Gauge>
+</SimBase.Document>
+

@@ -1,0 +1,27 @@
+<Gauge Name="F-15C TEWS Display Unit (65Z-J009)" Version="2.0">
+<Image Name="tews/blank_bg.bmp" Bright="No" ImageSizes="580,512"/>
+	<Mouse>
+		<Area Left="480" Right="540" Top="380" Bottom="480">
+			<Cursor Type="UpArrow"/>
+			<Tooltip>Intencity knob</Tooltip>
+			<Click>
+				(L:KNOB_FS_TEWS_INT) ++ (>L:KNOB_FS_TEWS_INT)
+				(L:KNOB_FS_TEWS_INT) 6 &gt;
+				if{
+					6 (>L:KNOB_FS_TEWS_INT) 
+				}
+			</Click>
+		</Area>
+		<Area Left="480" Right="540" Top="380" Bottom="480">
+			<Cursor Type="DownArrow"/>
+			<Tooltip>Intencity knob</Tooltip>
+			<Click>
+				(L:KNOB_FS_TEWS_INT) -- (>L:KNOB_FS_TEWS_INT)
+				(L:KNOB_FS_TEWS_INT) 0 &lt;
+				if{
+					0 (>L:KNOB_FS_TEWS_INT) 
+				}
+			</Click>
+		</Area>
+	</Mouse>
+</Gauge>

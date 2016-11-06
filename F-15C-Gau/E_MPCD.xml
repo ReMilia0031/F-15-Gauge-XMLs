@@ -1,0 +1,243 @@
+<Gauge Name="F-15 Multi-Purpose Color Display Panel (94-10-27)" Version="2.0">	
+	<Image Name="mpcd/MPCD_PNL_BLANK.bmp"/>
+
+	<Element Name="Master ARM Switch">
+		<Position X="415" Y="332"/>
+		<Select>		
+			<Value>(L:SW1_FS_MASTER_ARM)</Value>
+			<Case Value="0">
+				<Image Name="SAFE_DN.bmp"/>
+			</Case>
+			<Case Value="1">
+				<Image Name="SAFE_UP.bmp"/>
+			</Case>
+		</Select>
+	</Element>
+	<Element Name="Power Knob">
+		<Position X="245" Y="420"/>
+		<Image Name="mpcd/knob_9_0.bmp" PointsTo="South">
+			<Axis X="16" Y="16"/>
+		</Image>
+		<Rotate>
+			<Value>(L:KNOB_FS_MPCD_PWR, enum)</Value>
+			<Nonlinearity>
+				<Item Value="0" X="245" Y="405"/>
+				<Item Value="1" X="255" Y="410"/>
+				<Item Value="2" X="260" Y="420"/>
+			</Nonlinearity>
+			<Delay DegreesPerSecond="320"/>
+		</Rotate>
+	</Element>
+	
+	
+	<Mouse>
+<!-- Top -->
+		<Area Left="100" Right="120" Top="20" Bottom="40">
+			<Cursor Type="Hand"/>
+			<Tooltip>Left STA-2</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEYL_EXEC, Number)</Click>
+		</Area>
+		<Area Left="140" Right="180" Top="20" Bottom="40">
+			<Cursor Type="Hand"/>
+			<Tooltip>Left CFT</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEYLC_EXEC, Number)</Click>
+		</Area>
+		<Area Left="200" Right="230" Top="20" Bottom="40">
+			<Cursor Type="Hand"/>
+			<Tooltip>Center STA 5</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEYC_EXEC, Number)</Click>
+		</Area>
+		<Area Left="260" Right="280" Top="20" Bottom="40">
+			<Cursor Type="Hand"/>
+			<Tooltip>Right CFT</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEYRC_EXEC, Number)</Click>
+		</Area>
+		<Area Left="300" Right="330" Top="20" Bottom="40">
+			<Cursor Type="Hand"/>
+			<Tooltip>Right STA 8</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEYR_EXEC, Number)</Click>
+		</Area>
+
+<!-- Right -->
+		<Area Left="405" Right="425" Top="280" Bottom="305">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 11</Tooltip>
+			<Click>	1 (>L:BTN_FS_LMPD_KEY11_EXEC, Number)</Click>
+		</Area>
+		<Area Left="405" Right="425" Top="230" Bottom="250">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 12</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEY12_EXEC, Number)</Click>
+		</Area>
+		<Area Left="405" Right="425" Top="185" Bottom="205">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 13</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEY13_EXEC, Number)</Click>
+		</Area>
+		<Area Left="405" Right="425" Top="140" Bottom="160">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 14</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEY14_EXEC, Number)</Click>
+		</Area>
+		<Area Left="405" Right="425" Top="95" Bottom="120">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 15</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEY15_EXEC, Number)</Click>
+		</Area>
+
+<!-- Down -->
+		<Area Left="100" Right="120" Top="355" Bottom="380">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 6</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEY6_EXEC, Number)</Click>
+		</Area>
+		<Area Left="140" Right="180" Top="355" Bottom="380">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 7</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEY7_EXEC, Number)</Click>
+		</Area>
+		<Area Left="200" Right="230" Top="355" Bottom="380">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 8</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEY8_EXEC, Number)</Click>
+		</Area>
+		<Area Left="260" Right="280" Top="355" Bottom="380">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 9</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEY9_EXEC, Number)</Click>
+		</Area>
+		<Area Left="300" Right="330" Top="355" Bottom="380">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 10</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEY10_EXEC, Number)</Click>
+		</Area>
+
+<!-- Left -->
+		<Area Left="5" Right="25" Top="95" Bottom="115">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 1</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEY1_EXEC, Number)</Click>
+		</Area>	
+		<Area Left="5" Right="25" Top="140" Bottom="160">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 2</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEY2_EXEC, Number)</Click>
+		</Area>
+		<Area Left="5" Right="25" Top="185" Bottom="205">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 3</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEY3_EXEC, Number)</Click>
+		</Area>
+		<Area Left="5" Right="25" Top="230" Bottom="250">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 4</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEY4_EXEC, Number)</Click>
+		</Area>
+		<Area Left="5" Right="25" Top="275" Bottom="295">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Button 5</Tooltip>
+			<Click>1 (>L:BTN_FS_LMPD_KEY5_EXEC, Number)</Click>
+		</Area>
+
+<!-- Brightness	 -->
+		<Area Left="310" Right="340" Top="405" Bottom="430">
+			<Cursor Type="UpArrow"/>
+			<Tooltip>Brightness Up Switch</Tooltip>
+			<Click>
+				(L:MPCD_BRT, bool) 10 &lt;
+					if{
+						(L:MPCD_BRT, bool) ++ (>L:MPCD_BRT, bool)
+					}
+			</Click>
+		</Area>
+		<Area Left="305" Right="340" Top="430" Bottom="455">
+			<Cursor Type="DownArrow"/>
+			<Tooltip>Brightness Down Switch</Tooltip>
+			<Click>
+				(L:MPCD_BRT, bool) 0 &gt;
+					if{
+						(L:MPCD_BRT, bool) -- (>L:MPCD_BRT, bool)
+					}
+			</Click>
+		</Area>
+<!-- Contrast -->
+		<Area Left="370" Right="390" Top="405" Bottom="430">
+			<Cursor Type="UpArrow"/>
+			<Tooltip>Contrast Up Switch</Tooltip>
+			<Click>
+				(L:MPCD_CTRS, bool) 10 &lt;
+					if{
+						(L:MPCD_CTRS, bool) ++ (>L:MPCD_CTRS, bool)
+					}
+			</Click>
+		</Area>
+		<Area Left="365" Right="390" Top="430" Bottom="455">
+			<Cursor Type="DownArrow"/>
+			<Tooltip>Contrast Down Switch</Tooltip>
+			<Click>
+				(L:MPCD_CTRS, bool) 0 &gt;
+					if{
+						(L:MPCD_CTRS, bool) -- (>L:MPCD_CTRS, bool)
+					}
+			</Click>
+		</Area>
+<!-- Power -->
+		<Area Left="228" Right="270" Top="405" Bottom="435">
+			<Cursor Type="DownArrow"/>
+			<Tooltip>Power knob</Tooltip>
+			<Click>
+				(L:KNOB_FS_MPCD_PWR, enum) 0 ==
+				if{
+					0 (>L:KNOB_FS_MPCD_PWR, enum)
+				}
+				els{
+					(L:KNOB_FS_MPCD_PWR, enum) -- (>L:KNOB_FS_MPCD_PWR, enum)
+				}				
+			</Click>
+		</Area>
+		<Area Left="228" Right="270" Top="405" Bottom="435">
+			<Cursor Type="UpArrow"/>
+			<Tooltip>Power knob</Tooltip>
+			<Click>
+				(L:KNOB_FS_MPCD_PWR, enum) 2 ==
+				if{
+					2 (>L:KNOB_FS_MPCD_PWR, enum)
+				}
+				els{
+					(L:KNOB_FS_MPCD_PWR, enum) ++ (>L:KNOB_FS_MPCD_PWR, enum)
+				}				
+			</Click>
+		</Area>
+<!-- Master Arm -->
+		<Area Left="415" Right="450" Top="346" Bottom="383">
+			<Cursor Type="Hand"/>
+			<Tooltip>Master Arm Switch</Tooltip>
+			 <Click>
+				(L:SW1_FS_MASTER_ARM) ++ 2 % (>L:SW1_FS_MASTER_ARM)
+			</Click>	  
+		</Area>		
+<!-- Select Jettion -->
+		<Area Left="50" Right="150" Top="405" Bottom="485">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Jettion knob (%((L:KNOB_FS_WEP_JETT_SEL))%{case}%{:0}Manual FF%{:1}Manual RET%{:2}ALTN REL%{:3}OFF%{:4}Combat Jettison%{:5}Air to Air Jettison%{:6}Air to Ground Jettison%{end})
+			</Tooltip>
+			 <Click></Click>	  
+		</Area>
+		<Area Left="52" Right="90" Top="448" Bottom="485">
+			<Cursor Type="Hand"/>
+			<Tooltip>Select Jettion Button</Tooltip>
+			 <Click>
+				1 (>L:JETT_EXEC, enum)
+			</Click>	  
+		</Area>				
+<!-- BIT Status -->
+		<Area Left="425" Right="445" Top="430" Bottom="450">
+			<Cursor Type="Hand"/>
+			<Tooltip>BIT Status Indicator</Tooltip>
+			 <Click>
+				1 (>L:JETT_EXEC, enum)
+			</Click>	  
+		</Area>				
+	</Mouse>
+
+</Gauge>
