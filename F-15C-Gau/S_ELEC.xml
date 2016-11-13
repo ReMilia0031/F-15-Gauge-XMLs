@@ -1,6 +1,8 @@
-<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="6.80">
+<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="6.85">
 
 <!--
+Version 6.85
+	[ADD] Electrical System (WIP)
 Version 6.80
 	[EDT] ECS
 	[EDT] Nozzle Position Gauge
@@ -147,17 +149,76 @@ Version 5.0
 			</Element>
 		</Element>
 
-		<Element Name="GROUND POWER">
-			<Select>
-				<Value>
-				(L:SW2_FS_ENG_EXT_PWR, enum) 0 &gt;
-					if{ 1 (>L:GROUND_POWER_AVAIL, enum) }
-					els{ 0 (>L:GROUND_POWER_AVAIL, enum) }
-				</Value>
-			</Select>
-		</Element>
 
 		<Element Name="Internal POWER">
+			<Element Name="Left Generator">
+				<Select>
+					<Value>
+					(A:TURB ENG1 N2, percent) 44 &lt;
+						if{
+							(A:TURB ENG1 N2, percent) 115 * 44 / (>L:LGEN_VOLTAGE_AC)
+						}
+						els{
+							115 (>L:LGEN_VOLTAGE_AC)
+						}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="Right Generator">
+				<Select>
+					<Value>
+					(A:TURB ENG2 N2, percent) 44 &lt;
+						if{
+							(A:TURB ENG2 N2, percent) 115 * 44 / (>L:RGEN_VOLTAGE_AC)
+						}
+						els{
+							115 (>L:RGEN_VOLTAGE_AC)
+						}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="Left Generator Available">
+				<Select>
+					<Value>
+					(L:LGEN_BUS_VOLTAGE) 115 ==
+						if{ 1 (>L:LGEN_AVAIL, enum) }
+						els{ 0 (>L:LGEN_AVAIL, enum) }
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="Right Generator Available">
+				<Select>
+					<Value>
+					(L:RGEN_BUS_VOLTAGE) 115 ==
+						if{ 1 (>L:RGEN_AVAIL, enum) }
+						els{ 0 (>L:RGEN_AVAIL, enum) }
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="Emergency Generator">
+				<Select>
+					<Value>
+					(L:LGEN_AVAIL, enum) 0 ==
+					(L:RGEN_AVAIL, enum) 0 == or
+					(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
+						if{ 28 (>L:EMER_ESS_DC_BUS_VOLTAGE) }
+						els{ 0 (>L:EMER_ESS_DC_BUS_VOLTAGE) }
+
+					(L:LGEN_AVAIL, enum) 0 ==
+					(L:RGEN_AVAIL, enum) 0 == and
+					(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
+						if{
+							115 (>L:EMER_GEN_AC_BUS_VOLTAGE)
+							28 (>L:EMER_GEN_DC_BUS_VOLTAGE)
+						}
+						els{
+							0 (>L:EMER_GEN_AC_VOLTAGE)
+							0 (>L:EMER_GEN_DC_BUS_VOLTAGE)
+						}
+					</Value>
+				</Select>
+			</Element>
 
 			<Element Name="Emergency Generator Available">
 				<Select>
@@ -170,28 +231,200 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-
-			<Element Name="Left Generator Available">
-				<Select>
-					<Value>
-					(A:TURB ENG1 N2, percent) 22 &gt;
-					(L:SW1_FS_ENG_GEN_L, bool) 1 == and
-						if{ 1 (>L:LGEN_AVAIL, enum) }
-						els{ 0 (>L:LGEN_AVAIL, enum) }
-					</Value>
-				</Select>
+			<Element Name="Bus Line">
+			<!--
+				RIGHT_AC_BUS
+				RIGHT_26_AC_BUS
+				M_ARM_DC_BUS
+				ARAM_DC_BUS
+				RIGHT_DC_BUS
+				LEFT_AC_BUS
+				ESS_AC_BUS
+				ENG_INST_AC_BUS
+				LEFT_DC_BUS
+				ESS_DC_BUS	
+				EMER_ESS_DC_BUS
+				ENG_CONT_ESS_DC_BUS
+				JFS_ESS_DC_BUS
+				FIRE_EXT_BUS
+				-->
+				<Element Name="Generator Bus Line">
+					<Select>
+						<Value>
+							(L:LGEN_VOLTAGE_AC) 100 &gt;
+							(L:SW1_FS_ENG_GEN_L, bool) 1 == and
+								if{
+									(L:LGEN_VOLTAGE_AC) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+								}
+								els{
+									0 (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+								}
+	
+							(L:RGEN_VOLTAGE_AC) 100 &gt;
+							(L:SW1_FS_ENG_GEN_R, bool) 1 == and
+								if{
+									(L:RGEN_VOLTAGE_AC) (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
+								}
+								els{
+									0 (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
+								}
+	
+							(L:LEFT_AC_BUS_LINE_VOLTAGE) 0 ==
+							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 100 &gt; and
+							if{
+								(L:RIGHT_AC_BUS_LINE_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+							}
+							(L:LEFT_AC_BUS_LINE_VOLTAGE) 100 &gt;
+							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 0 == and
+							if{
+								(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
+							}
+	
+							(L:LEFT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:LEFT_XFMR_VOLTAGE)
+							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:RIGHT_XFMR_VOLTAGE)
+	
+							(L:RIGHT_XFMR_VOLTAGE) (>L:RIGHT_DC_BUS_VOLTAGE)
+								(L:RIGHT_DC_BUS_VOLTAGE) (>L:ARAM_DC_BUS_VOLTAGE)
+									(L:ARAM_DC_BUS_VOLTAGE) (>L:M_ARM_DC_BUS_VOLTAGE)
+	
+							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 26 * 115 / (>L:RIGHT_26_AC_BUS_VOLTAGE)
+	
+							(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:ESS_AC_BUS_VOLTAGE)
+	
+	
+							(L:LEFT_XFMR_VOLTAGE) (>L:LEFT_DC_BUS_VOLTAGE)
+							(L:LEFT_XFMR_VOLTAGE) (>L:ESS_DC_BUS_VOLTAGE)
+							(L:ENG_INST_AC_BUS_VOLTAGE)
+	
+	<!--
+							(L:RIGHT_AC_BUS_VOLTAGE)
+							(L:RIGHT_26_AC_BUS_VOLTAGE)
+							(L:M_ARM_DC_BUS_VOLTAGE)
+							(L:ARAM_DC_BUS_VOLTAGE)
+							(L:RIGHT_DC_BUS_VOLTAGE)
+							(L:LEFT_AC_BUS_VOLTAGE)
+							(L:ESS_AC_BUS_VOLTAGE)
+							(L:ENG_INST_AC_BUS_VOLTAGE)
+							(L:LEFT_DC_BUS_VOLTAGE)
+							(L:ESS_DC_BUS_VOLTAGE)
+	
+							(L:EMER_ESS_DC_BUS_VOLTAGE)
+								ENG_CONT_ESS_DC_BUS
+								JFS_ESS_DC_BUS
+								FIRE_EXT_BUS
+	-->
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="XFMR RECTIFIER">
+					<Select>
+						<Value>
+							(L:LEFT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:LEFT_XFMR_VOLTAGE)
+							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:RIGHT_XFMR_VOLTAGE)
+	
+							(L:LEFT_XFMR_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
+							(L:RIGHT_XFMR_VOLTAGE) (>L:RIGHT_XFMR_LINE_VOLTAGE)
+	
+							(L:LEFT_XFMR_LINE_VOLTAGE) 0 ==
+							(L:RIGHT_XFMR_LINE_VOLTAGE) 0 &gt; and
+								if{
+									(L:RIGHT_XFMR_LINE_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
+								}
+	
+							(L:LEFT_XFMR_LINE_VOLTAGE) 0 &gt;
+							(L:RIGHT_XFMR_LINE_VOLTAGE) 0 == and
+								if{
+									(L:LEFT_XFMR_LINE_VOLTAGE) (>L:RIGHT_XFMR_LINE_VOLTAGE)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="AC Line">
+					<Select>
+						<Value>
+							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 26 * 115 / (>L:RIGHT_26_AC_BUS_VOLTAGE)
+							(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:ESS_AC_BUS_VOLTAGE)
+	
+							(L:LEFT_AC_BUS_VOLTAGE) (>L:LEFT_AC_BUS_VOLTAGE)
+							(L:RIGHT_AC_BUS_LINE_VOLTAGE) (>L:RIGHT_AC_BUS_VOLTAGE)
+	
+						(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt;
+							if{
+								(L:EMER_GEN_AC_BUS_VOLTAGE) (>L:ESS_AC_BUS_VOLTAGE)
+							}
+	
+							(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:ENG_INST_AC_BUS_VOLTAGE)
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="AC Available">
+					<Select>
+						<Value>
+							(L:RIGHT_AC_BUS_VOLTAGE) 115 ==
+								if{ 1 (>L:RIGHT_AC_BUS_AVAIL) }
+	
+							(L:RIGHT_26_AC_BUS_VOLTAGE)
+								if{ 1 (>L:RIGHT_26_AC_BUS_AVAIL) }
+	
+							(L:LEFT_AC_BUS_VOLTAGE) 115 ==
+								if{ 1 (>L:LEFT_AC_BUS_AVAIL) }
+	
+							(L:ESS_AC_BUS_VOLTAGE) 115 ==
+								if{ 1 (>L:ESS_AC_BUS_AVAIL) }
+	
+							(L:ENG_INST_AC_BUS_VOLTAGE) 115 ==
+								if{ 1 (>L:ENG_INST_AC_BUS_AVAIL) }
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="DC Line">
+					<Select>
+						<Value>
+							(L:RIGHT_XFMR_LINE_VOLTAGE) (>L:RIGHT_DC_BUS_VOLTAGE)
+								(L:RIGHT_DC_BUS_VOLTAGE) (>L:ARAM_DC_BUS_VOLTAGE)
+									(L:ARAM_DC_BUS_VOLTAGE) (>L:M_ARM_DC_BUS_VOLTAGE)
+	
+							(L:LEFT_XFMR_LINE_VOLTAGE) (>L:LEFT_DC_BUS_VOLTAGE)
+							(L:LEFT_XFMR_LINE_VOLTAGE) (>L:ESS_DC_BUS_VOLTAGE)
+	
+	
+							(L:EMER_GEN_DC_BUS_VOLTAGE) (>L:ESS_DC_BUS_VOLTAGE)
+	
+	
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="DC Available">
+					<Select>
+						<Value>
+							(L:M_ARM_DC_BUS_VOLTAGE) 28 ==
+							if{ 1 (>L:M_ARM_DC_BUS_AVAIL) }
+	
+							(L:ARAM_DC_BUS_VOLTAGE) 28 ==
+							if{ 1 (>L:ARAM_DC_BUS_AVAIL) }
+	
+							(L:RIGHT_DC_BUS_VOLTAGE) 28 ==
+							if{ 1 (>L:RIGHT_DC_BUS_AVAIL) }
+	
+							(L:LEFT_DC_BUS_VOLTAGE) 28 ==
+							if{ 1 (>L:LEFT_DC_BUS_AVAIL) }
+	
+							(L:ESS_DC_BUS_VOLTAGE) 28 ==
+							if{ 1 (>L:ESS_DC_BUS_AVAIL) }
+	
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="EMER/ESS DC BUS">
+					<Select>
+						<Value>
+							(L:EMER_ESS_DC_BUS_VOLTAGE) (>L:ENG_CONT_ESS_DC_BUS_VOLTAGE)
+							(L:EMER_ESS_DC_BUS_VOLTAGE) (>L:JFS_ESS_DC_BUS_VOLTAGE)
+							(L:EMER_ESS_DC_BUS_VOLTAGE) (>L:FIRE_EXT_BUS_VOLTAGE)
+						</Value>
+					</Select>
+				</Element>
 			</Element>
-			<Element Name="Right Generator Available">
-				<Select>
-					<Value>
-					(A:TURB ENG2 N2, percent) 22 &gt;
-					(L:SW1_FS_ENG_GEN_R, bool) 1 == and
-						if{ 1 (>L:RGEN_AVAIL, enum) }
-						els{ 0 (>L:RGEN_AVAIL, enum) }
-					</Value>
-				</Select>
-			</Element>
-
 			<Element Name="Left or Right Generator or Emergency Generator Active">
 				<Select>
 					<Value>
@@ -203,6 +436,48 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
+
+			<Element Name="EMERGENCY BOOST PUMP ON">
+    		<Select>
+      			<Value>
+					(L:ENG1_AVAIL, bool) 0 ==
+					(L:ENG2_AVAIL, bool) 0 == or
+						if{
+							1 (>L:EMER_BST_ON, bool)
+						}
+						els{
+							0 (>L:EMER_BST_ON, bool)
+						}
+		      	</Value>
+    		</Select>
+		</Element>
+			<Element Name="BOOST SYS MALFUNCTION">
+				<Select>
+					<Value>
+
+						(L:LGEN_AVAIL, enum) 0 ==
+						(L:RGEN_AVAIL, enum) 0 == and
+						(L:SW2_FS_ENG_EMER_GEN, enum) 2 == and
+							if{
+								1 (>L:BST_SYS, bool)
+							}
+							els{
+								0 (>L:BST_SYS, bool)
+							}
+					</Value>
+				</Select>
+			</Element>
+
+		</Element>
+
+		<Element Name="Ground POWER">
+			<Select>
+				<Value>
+				(L:SW2_FS_ENG_EXT_PWR, enum) 0 &gt;
+					if{ 1 (>L:GROUND_POWER_AVAIL, enum) }
+					els{ 0 (>L:GROUND_POWER_AVAIL, enum) }
+				</Value>
+			</Select>
 		</Element>
 
 		<Element Name="AVIONICS INTERFACE UNIT NO.1">
@@ -646,7 +921,7 @@ Version 5.0
 							els{
 								(A:AIRSPEED INDICATED, knots) (>L:GAU_AIRSPEED_C)
 							}
-						
+
 						(A:AIRSPEED MACH, machs) (>L:GAU_AIRSPEED_MACH)
 						(A:GEAR HANDLE POSITION, bool) 0 &gt;
 						(A:FLAPS HANDLE PERCENT, percent) 0 ==  and
@@ -897,14 +1172,14 @@ Version 5.0
 						if{
 						(A:INDICATED ALTITUDE, feet) 70000 &gt;
 						if{
-							(A:INDICATED ALTITUDE, meter) (>L:GAU_ALTITUDE)							
+							(A:INDICATED ALTITUDE, meter) (>L:GAU_ALTITUDE)
 							(A:INDICATED ALTITUDE, meter) (>L:IND_ALTITUDE)
 						}
-						els{						
-							(A:INDICATED ALTITUDE, feet) (>L:GAU_ALTITUDE)							
+						els{
+							(A:INDICATED ALTITUDE, feet) (>L:GAU_ALTITUDE)
 							(A:INDICATED ALTITUDE, feet) (>L:IND_ALTITUDE)
 						}
-							
+
 							(A:PRESSURIZATION CABIN ALTITUDE, feet) (>L:GAU_CABINALT)
 							(A:KOHLSMAN SETTING HG, inHg) (>L:GAU_KOHLSMAN)
 						}
@@ -943,40 +1218,20 @@ Version 5.0
 		<Element Name="Engine Tachometers">
     		<Select>
       			<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-					(L:GROUND_POWER_AVAIL, enum) 1 == or
-						if{
-							(A:TURB ENG N2:1, percent) (>L:GAU_LENG_RPM)
-							(A:TURB ENG N2:2, percent) (>L:GAU_RENG_RPM)
-							(A:TURB ENG N2:1, percent) (>L:IND_LENG_RPM)
-							(A:TURB ENG N2:2, percent) (>L:IND_RENG_RPM)
-						}
-						els{
-							0 (>L:GAU_LENG_RPM)
-							0 (>L:GAU_RENG_RPM)
-							0 (>L:IND_LENG_RPM)
-							0 (>L:IND_RENG_RPM)
-						}
+					(A:TURB ENG N2:1, percent) (>L:GAU_LENG_RPM)
+					(A:TURB ENG N2:2, percent) (>L:GAU_RENG_RPM)
+					(A:TURB ENG N2:1, percent) (>L:IND_LENG_RPM)
+					(A:TURB ENG N2:2, percent) (>L:IND_RENG_RPM)
       			</Value>
     		</Select>
 		</Element>
 		<Element Name="Fan Turbine Inlet Temperature Indicators">
     		<Select>
       			<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-					(L:GROUND_POWER_AVAIL, enum) 1 == or
-						if{
-							(A:TURB ENG ITT:1, celsius) (>L:GAU_LENG_ITT)
-							(A:TURB ENG ITT:2, celsius) (>L:GAU_RENG_ITT)
-							(A:TURB ENG ITT:1, celsius) (>L:IND_LENG_ITT)
-							(A:TURB ENG ITT:2, celsius) (>L:IND_RENG_ITT)
-						}
-						els{
-							0 (>L:GAU_LENG_ITT)
-							0 (>L:GAU_RENG_ITT)
-							0 (>L:IND_LENG_ITT)
-							0 (>L:IND_RENG_ITT)
-						}
+					(A:TURB ENG ITT:1, celsius) (>L:GAU_LENG_ITT)
+					(A:TURB ENG ITT:2, celsius) (>L:GAU_RENG_ITT)
+					(A:TURB ENG ITT:1, celsius) (>L:IND_LENG_ITT)
+					(A:TURB ENG ITT:2, celsius) (>L:IND_RENG_ITT)
       			</Value>
     		</Select>
 		</Element>
@@ -3571,8 +3826,8 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-	</Element>	
-	
+	</Element>
+
 	<Element Name="Communications">
 		<Element Name="R1 Channel Selection">
 			<Select>
@@ -4142,10 +4397,10 @@ Version 5.0
 						if{
 							20 (>L:RDR_RMAX_1)
 							15 (>L:RDR_RMAX_2)
-							4 (>L:RDR_RMIN)							
+							4 (>L:RDR_RMIN)
 						}
-						 
-						
+
+
 						(L:RDR_RMAX_1) (L:RADAR_SCALE, nmiles) / 10 * (>L:RMAX_1)
 						(L:RDR_RMAX_2) (L:RADAR_SCALE, nmiles) / 10 * (>L:RMAX_2)
 						(L:RDR_RMIN) (L:RADAR_SCALE, nmiles) / 10 *  (>L:RMIN)
@@ -4363,10 +4618,10 @@ Version 5.0
 					(C:ITrafficInfo:S:PLANE LONGITUDE, radians) (>L:HTGT_LONG, radians)
 
 					(C:ITrafficInfo:S:VELOCITY WORLD Z, knots) (>L:HTGT_VELW_Z, knots)
-					(C:ITrafficInfo:S:VELOCITY WORLD X, knots) (>L:HTGT_VELW_X, knots)					
+					(C:ITrafficInfo:S:VELOCITY WORLD X, knots) (>L:HTGT_VELW_X, knots)
 					(C:ITrafficInfo:S:VELOCITY WORLD Y, knots) (>L:HTGT_VELW_Y, knots)
-					
-					(C:ITrafficInfo:S:PLANE ALTITUDE, nmiles) (>L:HTGT_ALT, nmiles)	
+
+					(C:ITrafficInfo:S:PLANE ALTITUDE, nmiles) (>L:HTGT_ALT, nmiles)
 					(C:ITrafficInfo:S:Wing Span, meters) (>L:HTGT_WSPAN, meters)
 					(C:ITrafficInfo:S:PLANE ALTITUDE, feet)	(>L:HTGT_ALT_FEET, feet)
 					(C:ITrafficInfo:S:PLANE HEADING DEGREES TRUE, radians) (>L:HTGT_HDG, radians)
@@ -4401,7 +4656,7 @@ Version 5.0
 								els{
 									0 (>L:MRM_BREAK)
 								}
-								
+
 							(L:LAAJ, nmiles) (L:RDR_RMIN) &gt;
 							(L:LAAJ, nmiles) (L:RDR_RMAX_2) &lt; and
 								if{
@@ -4413,7 +4668,7 @@ Version 5.0
 									2 (>L:MRM_SHOT)
 								}
 							}
-							
+
 							(L:LAAJ, nmiles) (L:RDR_RMIN) &lt;
 							(L:LAAJ, nmiles) (L:RDR_RMAX_1) &gt; or
 								if{
@@ -4435,9 +4690,9 @@ Version 5.0
 								els{
 									0 (>L:SRM_ASE_IN)
 								}
-							
-							
-							
+
+
+
 							(L:LAAJ, nmiles) (L:RDR_RMIN) &gt;
 							(L:LAAJ, nmiles) (L:RDR_RMAX_1) &lt; and
 							(L:SRM_ASE_IN) 1 == and
@@ -4445,7 +4700,7 @@ Version 5.0
 									1 (>L:SRM_SHOT)
 								}
 							}
-							
+
 							(L:LAAJ, nmiles) (L:RDR_RMIN) &lt;
 							(L:LAAJ, nmiles) (L:RDR_RMAX_1) &gt; or
 							(L:SRM_ASE_IN) 0 == or
@@ -4611,7 +4866,7 @@ Version 5.0
 							}
 							els{
 								(L:HUD_COLOR_SYM) 255 + (>L:HUD_COLOR_SYM)
-								
+
 								(P:LOCAL TIME, seconds) 0.5 % 0.25 &gt;
 									if{
 										(L:HUD_COLOR_SYM) 1 - (>L:HUD_COLOR_SYM)
@@ -4699,7 +4954,7 @@ Version 5.0
 									0x007E00 (>L:MPCD_COLOR)
 									0x003F00 (>L:MPCD_COLOR_DARK)
 								}
-						
+
 							(L:KNOB_FS_MPCD_PWR) 2 ==
 								if{
 									0x00FE00 (>L:MPCD_COLOR)
@@ -4715,7 +4970,7 @@ Version 5.0
 							(L:MPCD_DTM_SAM) 1 ==
 							if{ 6 (>L:MPCD_DTM_TRK) }
 							els{ 4 (>L:MPCD_DTM_TRK) }
-	
+
 					</Value>
 				</Select>
 			</Element>
@@ -4867,8 +5122,8 @@ Version 5.0
 					(C:ITrafficInfo:S:NAV1 ACTIVE FREQUENCY, MHz) (>L:RDR_TGT_NAV)
 					(C:ITrafficInfo:S:TRANSPONDER CODE, number) (>L:RDR_TGT_IFF)
 					(C:ITrafficInfo:SelectedFlightPlan) (>L:RDR_TGT_PLN)
-					
-					
+
+
 				</Value>
 			</Select>
 		</Element>
@@ -4993,8 +5248,8 @@ Version 5.0
 								if{ 80 (>L:VSD_RANGEFactor, number) }
 							(L:VSD_RNG, enum) 4 ==
 								if{ 160 (>L:VSD_RANGEFactor, number) }
-								
-								
+
+
 						(L:VSD_RANGEFactor, number) (>L:RADAR_SCALE, nmiles)
 						</Value>
 					</Select>

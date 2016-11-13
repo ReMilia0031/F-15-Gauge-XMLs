@@ -1,6 +1,9 @@
-<Gauge Name="F-15 SYSTEMS" Version="6.80">
+<Gauge Name="F-15 SYSTEMS" Version="6.90">
 <Image Name="blank_back.bmp" ImageSizes="20,20"/>
 <!--
+Version 6.90
+	[DEL]EMERGENCY BOOST PUMP ON CAUTION (moved : S_ELEC)
+	[DEL]BOOST SYS MALFUNCTION (moved : S_ELEC)
 Version 6.80
 	[EDT] ECS (Sound)
 Version 6.70
@@ -1104,20 +1107,6 @@ Version 5.0
 				</Select>
 			</Element>
 		</Element>
-		<Element Name="BOOST SYS MALFUNCTION">
-    		<Select>
-      			<Value>
-					(A:ENG FAILED:1) 1 ==
-					(A:ENG FAILED:2) 1 == and
-						if{
-							1 (>L:BST_SYS, bool)
-						}
-						els{
-							0 (>L:BST_SYS, bool)
-						}
-		      	</Value>
-    		</Select>
-		</Element>
 
 		<Element Name="TOTAL TEMP HI">
     		<Select>
@@ -1198,20 +1187,6 @@ Version 5.0
 		      	</Value>
     		</Select>
 
-		</Element>
-		<Element Name="EMERGENCY BOOST PUMP ON">
-    		<Select>
-      			<Value>
-					(L:ENG1_AVAIL, bool) 0 ==
-					(L:ENG2_AVAIL, bool) 0 == or
-						if{
-							1 (>L:EMER_BST_ON, bool)
-						}
-						els{
-							0 (>L:EMER_BST_ON, bool)
-						}
-		      	</Value>
-    		</Select>
 		</Element>
 		<Element Name="INLET ICE">
     		<Select>
