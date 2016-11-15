@@ -1,6 +1,9 @@
-<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="6.85">
+<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="7.00">
 
 <!--
+Version 7.00
+	[ADD] Electrical System
+	[DEL] Gauge BIT
 Version 6.85
 	[ADD] Electrical System (WIP)
 Version 6.80
@@ -67,16 +70,16 @@ Version 5.0
 			<Element Name="MASTER BATTERY">
 				<Select>
 					<Value>
-					(L:GROUND_POWER_AVAIL, enum) 1 ==
-					(L:INTERNAL_POWER_AVAIL, enum) 1 == or
+					(L:EXTARNAL_AC_VOLTS) 0 &gt;
+					(L:ESS_DC_BUS_AVAIL) 1 == or
 						if{
 							(A:ELECTRICAL MASTER BATTERY, enum) 0 ==
 								if{
 									(>K:TOGGLE_MASTER_BATTERY)
 								}
 						}
-					(L:GROUND_POWER_AVAIL, enum) 0 ==
-					(L:INTERNAL_POWER_AVAIL, enum) 0 == and
+					(L:EXTARNAL_AC_VOLTS) 0 ==
+					(L:ESS_DC_BUS_AVAIL) 0 == and
 						if{
 							(A:ELECTRICAL MASTER BATTERY, enum) 1 ==
 								if{
@@ -90,7 +93,7 @@ Version 5.0
 			<Element Name="Avionics Master">
 				<Select>
 					<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+					(L:ESS_AC_BUS_AVAIL) 1 ==
 						if{
 							(A:AVIONICS MASTER SWITCH, bool) 0 ==
 								if{
@@ -98,7 +101,7 @@ Version 5.0
 								}
 						}
 
-					(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+					(L:ESS_AC_BUS_AVAIL) 0 ==
 						if{
 							(A:AVIONICS MASTER SWITCH, bool) 1 ==
 								if{
@@ -149,7 +152,6 @@ Version 5.0
 			</Element>
 		</Element>
 
-
 		<Element Name="Internal POWER">
 			<Element Name="Left Generator">
 				<Select>
@@ -180,7 +182,8 @@ Version 5.0
 			<Element Name="Left Generator Available">
 				<Select>
 					<Value>
-					(L:LGEN_BUS_VOLTAGE) 115 ==
+					(L:LGEN_VOLTAGE_AC) 115 ==
+					(L:SW1_FS_ENG_GEN_L, bool) 1 == and
 						if{ 1 (>L:LGEN_AVAIL, enum) }
 						els{ 0 (>L:LGEN_AVAIL, enum) }
 					</Value>
@@ -189,7 +192,8 @@ Version 5.0
 			<Element Name="Right Generator Available">
 				<Select>
 					<Value>
-					(L:RGEN_BUS_VOLTAGE) 115 ==
+					(L:RGEN_VOLTAGE_AC) 115 ==
+					(L:SW1_FS_ENG_GEN_R, bool) 1 == and
 						if{ 1 (>L:RGEN_AVAIL, enum) }
 						els{ 0 (>L:RGEN_AVAIL, enum) }
 					</Value>
@@ -200,22 +204,18 @@ Version 5.0
 				<Select>
 					<Value>
 					(L:LGEN_AVAIL, enum) 0 ==
-					(L:RGEN_AVAIL, enum) 0 == or
-					(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
-						if{ 28 (>L:EMER_ESS_DC_BUS_VOLTAGE) }
-						els{ 0 (>L:EMER_ESS_DC_BUS_VOLTAGE) }
-
-					(L:LGEN_AVAIL, enum) 0 ==
 					(L:RGEN_AVAIL, enum) 0 == and
 					(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
 						if{
-							115 (>L:EMER_GEN_AC_BUS_VOLTAGE)
-							28 (>L:EMER_GEN_DC_BUS_VOLTAGE)
+							115 (>L:EMER_GEN_AC_VOLTAGE)
+							28 (>L:EMER_GEN_DC_VOLTAGE)
 						}
 						els{
 							0 (>L:EMER_GEN_AC_VOLTAGE)
-							0 (>L:EMER_GEN_DC_BUS_VOLTAGE)
+							0 (>L:EMER_GEN_DC_VOLTAGE)
 						}
+					(L:EMER_GEN_AC_VOLTAGE) (>L:EMER_GEN_AC_BUS_VOLTAGE)
+					(L:EMER_GEN_DC_VOLTAGE) (>L:EMER_GEN_DC_BUS_VOLTAGE)
 					</Value>
 				</Select>
 			</Element>
@@ -226,8 +226,19 @@ Version 5.0
 					(L:LGEN_AVAIL, enum) 0 ==
 					(L:RGEN_AVAIL, enum) 0 == or
 					(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
-						if{ 1 (>L:EMER_GEN_AVAIL, enum) }
-						els{ 0 (>L:EMER_GEN_AVAIL, enum) }
+						if{ 1 (>L:EMER_GEN_AVAIL) }
+						els{ 0 (>L:EMER_GEN_AVAIL) }
+
+
+					(L:EMER_GEN_AC_VOLTAGE) 115 ==
+						if{ 1 (>L:EMER_GEN_AC_AVAIL) }
+						els{ 0 (>L:EMER_GEN_AC_AVAIL) }
+
+					(L:EMER_GEN_DC_VOLTAGE) 28 ==
+						if{ 1 (>L:EMER_GEN_DC_AVAIL) }
+						els{ 0 (>L:EMER_GEN_DC_AVAIL) }
+
+
 					</Value>
 				</Select>
 			</Element>
@@ -242,7 +253,7 @@ Version 5.0
 				ESS_AC_BUS
 				ENG_INST_AC_BUS
 				LEFT_DC_BUS
-				ESS_DC_BUS	
+				ESS_DC_BUS
 				EMER_ESS_DC_BUS
 				ENG_CONT_ESS_DC_BUS
 				JFS_ESS_DC_BUS
@@ -251,68 +262,53 @@ Version 5.0
 				<Element Name="Generator Bus Line">
 					<Select>
 						<Value>
-							(L:LGEN_VOLTAGE_AC) 100 &gt;
-							(L:SW1_FS_ENG_GEN_L, bool) 1 == and
+						<!-- LMAIN GEN ENABLED , EMER GEN DISABLED -->
+							(L:SW1_FS_ENG_GEN_L, bool) 1 ==
+							(L:EMER_GEN_AC_AVAIL) 0 == and
 								if{
 									(L:LGEN_VOLTAGE_AC) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
 								}
-								els{
+						<!-- LMAIN GEN DISABLED , EMER GEN DISABLED		 -->
+							(L:SW1_FS_ENG_GEN_L, bool) 0 ==
+							(L:EMER_GEN_AC_AVAIL) 0 == and
+								if{
 									0 (>L:LEFT_AC_BUS_LINE_VOLTAGE)
 								}
-	
-							(L:RGEN_VOLTAGE_AC) 100 &gt;
-							(L:SW1_FS_ENG_GEN_R, bool) 1 == and
+						<!-- LMAIN GEN DISABLED , EMER GEN ENABLED -->
+							(L:LGEN_VOLTAGE_AC) 100 &lt;
+							(L:SW1_FS_ENG_GEN_L, bool) 0 == or
+							(L:EMER_GEN_AC_AVAIL) 0 &gt; and
+								if{
+									(L:EMER_GEN_AC_BUS_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+								}
+						<!-- RMAIN GEN -->
+							(L:SW1_FS_ENG_GEN_R, bool) 1 ==
 								if{
 									(L:RGEN_VOLTAGE_AC) (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
 								}
 								els{
 									0 (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
 								}
-	
+
+						<!--  EXTERNAL POWER ENABLED -->
 							(L:LEFT_AC_BUS_LINE_VOLTAGE) 0 ==
-							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 100 &gt; and
-							if{
-								(L:RIGHT_AC_BUS_LINE_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
-							}
-							(L:LEFT_AC_BUS_LINE_VOLTAGE) 100 &gt;
 							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 0 == and
-							if{
-								(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
-							}
-	
-							(L:LEFT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:LEFT_XFMR_VOLTAGE)
-							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:RIGHT_XFMR_VOLTAGE)
-	
-							(L:RIGHT_XFMR_VOLTAGE) (>L:RIGHT_DC_BUS_VOLTAGE)
-								(L:RIGHT_DC_BUS_VOLTAGE) (>L:ARAM_DC_BUS_VOLTAGE)
-									(L:ARAM_DC_BUS_VOLTAGE) (>L:M_ARM_DC_BUS_VOLTAGE)
-	
-							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 26 * 115 / (>L:RIGHT_26_AC_BUS_VOLTAGE)
-	
-							(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:ESS_AC_BUS_VOLTAGE)
-	
-	
-							(L:LEFT_XFMR_VOLTAGE) (>L:LEFT_DC_BUS_VOLTAGE)
-							(L:LEFT_XFMR_VOLTAGE) (>L:ESS_DC_BUS_VOLTAGE)
-							(L:ENG_INST_AC_BUS_VOLTAGE)
-	
-	<!--
-							(L:RIGHT_AC_BUS_VOLTAGE)
-							(L:RIGHT_26_AC_BUS_VOLTAGE)
-							(L:M_ARM_DC_BUS_VOLTAGE)
-							(L:ARAM_DC_BUS_VOLTAGE)
-							(L:RIGHT_DC_BUS_VOLTAGE)
-							(L:LEFT_AC_BUS_VOLTAGE)
-							(L:ESS_AC_BUS_VOLTAGE)
-							(L:ENG_INST_AC_BUS_VOLTAGE)
-							(L:LEFT_DC_BUS_VOLTAGE)
-							(L:ESS_DC_BUS_VOLTAGE)
-	
-							(L:EMER_ESS_DC_BUS_VOLTAGE)
-								ENG_CONT_ESS_DC_BUS
-								JFS_ESS_DC_BUS
-								FIRE_EXT_BUS
-	-->
+							(L:SW2_FS_ENG_EXT_PWR, enum) 0 &gt; and
+								if{
+									(L:EXTARNAL_AC_VOLTS) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+								}
+
+							(L:LEFT_AC_BUS_LINE_VOLTAGE) 100 &lt;
+							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 100 &gt; and
+								if{
+									(L:RIGHT_AC_BUS_LINE_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+								}
+
+							(L:LEFT_AC_BUS_LINE_VOLTAGE) 100 &gt;
+							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 100 &lt;
+								if{
+									(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
+								}
 						</Value>
 					</Select>
 				</Element>
@@ -321,18 +317,35 @@ Version 5.0
 						<Value>
 							(L:LEFT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:LEFT_XFMR_VOLTAGE)
 							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:RIGHT_XFMR_VOLTAGE)
-	
-							(L:LEFT_XFMR_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
+
+
+							(L:EMER_GEN_DC_AVAIL) 0 ==
+								if{
+									(L:LEFT_XFMR_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
+								}
+							(L:EMER_GEN_DC_AVAIL) 0 &gt;
+								if{
+									(L:EMER_GEN_DC_BUS_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
+								}
+
+							(L:LEFT_XFMR_VOLTAGE) 28 &lt;
+							(L:SW2_FS_ENG_EXT_PWR, enum) 0 &gt; and
+								if{
+									(L:EXTARNAL_AC_VOLTS) (>L:LEFT_XFMR_LINE_VOLTAGE)
+								}
+								
+
+
 							(L:RIGHT_XFMR_VOLTAGE) (>L:RIGHT_XFMR_LINE_VOLTAGE)
-	
-							(L:LEFT_XFMR_LINE_VOLTAGE) 0 ==
-							(L:RIGHT_XFMR_LINE_VOLTAGE) 0 &gt; and
+
+							(L:LEFT_XFMR_LINE_VOLTAGE) 20 &lt;
+							(L:RIGHT_XFMR_LINE_VOLTAGE) 25 &gt; and
 								if{
 									(L:RIGHT_XFMR_LINE_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
 								}
-	
-							(L:LEFT_XFMR_LINE_VOLTAGE) 0 &gt;
-							(L:RIGHT_XFMR_LINE_VOLTAGE) 0 == and
+
+							(L:LEFT_XFMR_LINE_VOLTAGE) 25 &gt;
+							(L:RIGHT_XFMR_LINE_VOLTAGE) 20 &lt;
 								if{
 									(L:LEFT_XFMR_LINE_VOLTAGE) (>L:RIGHT_XFMR_LINE_VOLTAGE)
 								}
@@ -344,16 +357,13 @@ Version 5.0
 						<Value>
 							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 26 * 115 / (>L:RIGHT_26_AC_BUS_VOLTAGE)
 							(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:ESS_AC_BUS_VOLTAGE)
-	
-							(L:LEFT_AC_BUS_VOLTAGE) (>L:LEFT_AC_BUS_VOLTAGE)
+
+							(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:LEFT_AC_BUS_VOLTAGE)
 							(L:RIGHT_AC_BUS_LINE_VOLTAGE) (>L:RIGHT_AC_BUS_VOLTAGE)
-	
-						(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt;
-							if{
-								(L:EMER_GEN_AC_BUS_VOLTAGE) (>L:ESS_AC_BUS_VOLTAGE)
-							}
-	
-							(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:ENG_INST_AC_BUS_VOLTAGE)
+
+
+							(L:ESS_AC_BUS_VOLTAGE) (>L:ENG_INST_AC_BUS_VOLTAGE)
+							(L:ESS_AC_BUS_VOLTAGE) (>L:AUTO_XMFR_VOLTAGE)
 						</Value>
 					</Select>
 				</Element>
@@ -362,18 +372,23 @@ Version 5.0
 						<Value>
 							(L:RIGHT_AC_BUS_VOLTAGE) 115 ==
 								if{ 1 (>L:RIGHT_AC_BUS_AVAIL) }
-	
-							(L:RIGHT_26_AC_BUS_VOLTAGE)
+								els{ 0 (>L:RIGHT_AC_BUS_AVAIL) }
+
+							(L:RIGHT_26_AC_BUS_VOLTAGE) 26 ==
 								if{ 1 (>L:RIGHT_26_AC_BUS_AVAIL) }
-	
+								els{ 0 (>L:RIGHT_26_AC_BUS_AVAIL) }
+
 							(L:LEFT_AC_BUS_VOLTAGE) 115 ==
 								if{ 1 (>L:LEFT_AC_BUS_AVAIL) }
-	
+								els{ 0 (>L:LEFT_AC_BUS_AVAIL) }
+
 							(L:ESS_AC_BUS_VOLTAGE) 115 ==
 								if{ 1 (>L:ESS_AC_BUS_AVAIL) }
-	
+								els{ 0 (>L:ESS_AC_BUS_AVAIL) }
+
 							(L:ENG_INST_AC_BUS_VOLTAGE) 115 ==
 								if{ 1 (>L:ENG_INST_AC_BUS_AVAIL) }
+								els{ 0 (>L:ENG_INST_AC_BUS_AVAIL) }
 						</Value>
 					</Select>
 				</Element>
@@ -381,16 +396,16 @@ Version 5.0
 					<Select>
 						<Value>
 							(L:RIGHT_XFMR_LINE_VOLTAGE) (>L:RIGHT_DC_BUS_VOLTAGE)
-								(L:RIGHT_DC_BUS_VOLTAGE) (>L:ARAM_DC_BUS_VOLTAGE)
-									(L:ARAM_DC_BUS_VOLTAGE) (>L:M_ARM_DC_BUS_VOLTAGE)
-	
+							(L:RIGHT_DC_BUS_VOLTAGE) (>L:ARAM_DC_BUS_VOLTAGE)
+							(L:ARAM_DC_BUS_VOLTAGE) (>L:M_ARM_DC_BUS_VOLTAGE)
+
 							(L:LEFT_XFMR_LINE_VOLTAGE) (>L:LEFT_DC_BUS_VOLTAGE)
 							(L:LEFT_XFMR_LINE_VOLTAGE) (>L:ESS_DC_BUS_VOLTAGE)
-	
-	
-							(L:EMER_GEN_DC_BUS_VOLTAGE) (>L:ESS_DC_BUS_VOLTAGE)
-	
-	
+
+							(L:ESS_DC_BUS_VOLTAGE) (>L:ENG_CONT_ESS_DC_BUS_VOLTAGE)
+							(L:LEFT_XFMR_LINE_VOLTAGE) (>L:JFS_ESS_DC_BUS_VOLTAGE)
+							(L:LEFT_XFMR_LINE_VOLTAGE) (>L:FIRE_EXT_BUS_VOLTAGE)
+
 						</Value>
 					</Select>
 				</Element>
@@ -398,55 +413,54 @@ Version 5.0
 					<Select>
 						<Value>
 							(L:M_ARM_DC_BUS_VOLTAGE) 28 ==
-							if{ 1 (>L:M_ARM_DC_BUS_AVAIL) }
-	
+								if{ 1 (>L:M_ARM_DC_BUS_AVAIL) }
+								els{ 0 (>L:M_ARM_DC_BUS_AVAIL) }
+
 							(L:ARAM_DC_BUS_VOLTAGE) 28 ==
-							if{ 1 (>L:ARAM_DC_BUS_AVAIL) }
-	
+								if{ 1 (>L:ARAM_DC_BUS_AVAIL) }
+								els{ 0 (>L:ARAM_DC_BUS_AVAIL) }
+
 							(L:RIGHT_DC_BUS_VOLTAGE) 28 ==
-							if{ 1 (>L:RIGHT_DC_BUS_AVAIL) }
-	
+								if{ 1 (>L:RIGHT_DC_BUS_AVAIL) }
+								els{ 0 (>L:RIGHT_DC_BUS_AVAIL) }
+
 							(L:LEFT_DC_BUS_VOLTAGE) 28 ==
-							if{ 1 (>L:LEFT_DC_BUS_AVAIL) }
-	
+								if{ 1 (>L:LEFT_DC_BUS_AVAIL) }
+								els{ 0 (>L:LEFT_DC_BUS_AVAIL) }
+
 							(L:ESS_DC_BUS_VOLTAGE) 28 ==
-							if{ 1 (>L:ESS_DC_BUS_AVAIL) }
-	
+								if{ 1 (>L:ESS_DC_BUS_AVAIL) }
+								els{ 0 (>L:ESS_DC_BUS_AVAIL) }
+
+							(L:ENG_CONT_ESS_DC_BUS_VOLTAGE) 28 ==
+								if{ 1 (>L:ENG_CONT_ESS_DC_BUS_AVAIL) }
+								els{ 0 (>L:ENG_CONT_ESS_DC_BUS_AVAIL) }
+
+							(L:JFS_ESS_DC_BUS_VOLTAGE) 28 ==
+								if{ 1 (>L:JFS_ESS_DC_BUS_AVAIL) }
+								els{ 0 (>L:JFS_ESS_DC_BUS_AVAIL) }
+
+							(L:FIRE_EXT_BUS_VOLTAGE) 28 ==
+								if{ 1 (>L:FIRE_EXT_BUS_AVAIL) }
+								els{ 0 (>L:FIRE_EXT_BUS_AVAIL) }
 						</Value>
 					</Select>
 				</Element>
-				<Element Name="EMER/ESS DC BUS">
-					<Select>
-						<Value>
-							(L:EMER_ESS_DC_BUS_VOLTAGE) (>L:ENG_CONT_ESS_DC_BUS_VOLTAGE)
-							(L:EMER_ESS_DC_BUS_VOLTAGE) (>L:JFS_ESS_DC_BUS_VOLTAGE)
-							(L:EMER_ESS_DC_BUS_VOLTAGE) (>L:FIRE_EXT_BUS_VOLTAGE)
-						</Value>
-					</Select>
-				</Element>
-			</Element>
-			<Element Name="Left or Right Generator or Emergency Generator Active">
-				<Select>
-					<Value>
-					(L:LGEN_AVAIL, enum) 1 ==
-					(L:RGEN_AVAIL, enum) 1 == or
-					(L:EMER_GEN_AVAIL, enum) 1 == or
-						if{ 1 (>L:INTERNAL_POWER_AVAIL, enum) }
-						els{ 0 (>L:INTERNAL_POWER_AVAIL, enum) }
-					</Value>
-				</Select>
 			</Element>
 
 			<Element Name="EMERGENCY BOOST PUMP ON">
     		<Select>
       			<Value>
-					(L:ENG1_AVAIL, bool) 0 ==
-					(L:ENG2_AVAIL, bool) 0 == or
+					(L:LGEN_AVAIL, enum) 0 ==
+					(L:RGEN_AVAIL, enum) 0 == or
 						if{
-							1 (>L:EMER_BST_ON, bool)
-						}
-						els{
-							0 (>L:EMER_BST_ON, bool)
+							(L:SW2_FS_ENG_EMER_GEN, enum) 2 ==
+								if{
+									1 (>L:EMER_BST_ON, bool)
+								}
+								els{
+									0 (>L:EMER_BST_ON, bool)
+								}
 						}
 		      	</Value>
     		</Select>
@@ -454,7 +468,6 @@ Version 5.0
 			<Element Name="BOOST SYS MALFUNCTION">
 				<Select>
 					<Value>
-
 						(L:LGEN_AVAIL, enum) 0 ==
 						(L:RGEN_AVAIL, enum) 0 == and
 						(L:SW2_FS_ENG_EMER_GEN, enum) 2 == and
@@ -467,327 +480,880 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-
 		</Element>
 
-		<Element Name="Ground POWER">
+		<Element Name="INT PWR SYSTEM">
+			<Element Name="RIGHT AC BUS">
+				<Select>
+					<Value>
+						(L:RIGHT_AC_BUS_AVAIL) 1 ==
+							if{
+								1 (>L:AIM-7_STA_PWR)
+								1 (>L:AIM-9_STA_PWR)
+								1 (>L:AIR_INLET_CONT_PWR)
+								1 (>L:ENG_ANTI_ICE_AC_PWR)
+								1 (>L:EXCEEDANCE_COUNTER)
+								1 (>L:GUN_PWR)
+								1 (>L:ICS_PWR)
+								1 (>L:WING_XFR_PUMP_PWR)
+								1 (>L:MK-84_STA_PWR)
+								1 (>L:OXY_GAGING_PWR)
+								1 (>L:R_AOA_PROBR_HTR_PWR)
+								1 (>L:R_BST_PUMP_PWR)
+								1 (>L:RH_TEWS_POD_AC_PWR)
+								1 (>L:R_DUCT_PITOT_HTR_PWR)
+								1 (>L:R_ENG_FUEL_FLOW_IND_PWR)
+								1 (>L:R_TOTAL_TEMP_PROBE_HTR_PWR)
+								1 (>L:R_XMFR/RECTIFIER_PWR)
+								1 (>L:RDR_WARN_RCVR_POD_PWR)
+								1 (>L:RWR_AC_PWR)
+								1 (>L:SEAT_ADJ_PWR)
+								1 (>L:UTIL_PWR_RECEP)
+								1 (>L:26_VAC_AUTO_XFMR_PWR)
+							}
+							els{
+								0 (>L:AIM-7_STA_PWR)
+								0 (>L:AIM-9_STA_PWR)
+								0 (>L:AIR_INLET_CONT_PWR)
+								0 (>L:ENG_ANTI_ICE_AC_PWR)
+								0 (>L:EXCEEDANCE_COUNTER)
+								0 (>L:GUN_PWR)
+								0 (>L:ICS_PWR)
+								0 (>L:WING_XFR_PUMP_PWR)
+								0 (>L:MK-84_STA_PWR)
+								0 (>L:OXY_GAGING_PWR)
+								0 (>L:R_AOA_PROBR_HTR_PWR)
+								0 (>L:R_BST_PUMP_PWR)
+								0 (>L:RH_TEWS_POD_AC_PWR)
+								0 (>L:R_DUCT_PITOT_HTR_PWR)
+								0 (>L:R_ENG_FUEL_FLOW_IND_PWR)
+								0 (>L:R_TOTAL_TEMP_PROBE_HTR_PWR)
+								0 (>L:R_XMFR/RECTIFIER_PWR)
+								0 (>L:RDR_WARN_RCVR_POD_PWR)
+								0 (>L:RWR_AC_PWR)
+								0 (>L:SEAT_ADJ_PWR)
+								0 (>L:UTIL_PWR_RECEP)
+								0 (>L:26_VAC_AUTO_XFMR_PWR)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="RIGHT 26V AC BUS">
+				<Select>
+					<Value>
+						(L:RIGHT_26_AC_BUS_AVAIL) 1 ==
+							if{
+								1 (>L:ENG_ENP_IND_PWR)
+								1 (>L:ENG_OIL_PRESS_IND_PWR)
+								1 (>L:HYDR_PRESS_IND_PWR)
+								1 (>L:PRAD_PWR)
+							}
+							els{
+								0 (>L:ENG_ENP_IND_PWR)
+								0 (>L:ENG_OIL_PRESS_IND_PWR)
+								0 (>L:HYDR_PRESS_IND_PWR)
+								0 (>L:PRAD_PWR)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="MASTER ARM DC BUS">
+				<Select>
+					<Value>
+						(L:M_ARM_DC_BUS_AVAIL) 1 ==
+							if{
+								1 (>L:AIM-7_BATTERY_ACTIVE_PWR)
+								1 (>L:AIM-7_MOTOR_FIRE_RWR)
+								1 (>L:AIM-9_LAUNCHER_PWR)
+								1 (>L:AIM-9_STATION_PWR)
+								1 (>L:GUN_CONT_PWR)
+								1 (>L:LOGIC_PWR)
+								1 (>L:STATION_ARMING_PWR)
+							}
+							els{
+								0 (>L:AIM-7_BATTERY_ACTIVE_PWR)
+								0 (>L:AIM-7_MOTOR_FIRE_RWR)
+								0 (>L:AIM-9_LAUNCHER_PWR)
+								0 (>L:AIM-9_STATION_PWR)
+								0 (>L:GUN_CONT_PWR)
+								0 (>L:LOGIC_PWR)
+								0 (>L:STATION_ARMING_PWR)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="ARMAMENT DC BUS">
+				<Select>
+					<Value>
+						(L:ARAM_DC_BUS_AVAIL) 1 ==
+							if{
+								1 (>L:A/G_JETT_PWR)
+								1 (>L:AIM-7_JETT_PWR)
+								1 (>L:AIM-9_JETT_PWR)
+								1 (>L:MASTER_ARM_BUS_PWR)
+								1 (>L:MASTER_ARM_CONT_PWR)
+							}
+							els{
+								0 (>L:A/G_JETT_PWR)
+								0 (>L:AIM-7_JETT_PWR)
+								0 (>L:AIM-9_JETT_PWR)
+								0 (>L:MASTER_ARM_BUS_PWR)
+								0 (>L:MASTER_ARM_CONT_PWR)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="RIGHT DC BUS">
+				<Select>
+					<Value>
+						(L:RIGHT_DC_BUS_AVAIL) 1 ==
+							if{
+								1 (>L:AIM-9_STA_PWR)
+								1 (>L:ARM_BUS_CONT_PWR)
+								1 (>L:CSBPC_HYD_BYPASS_PWR)
+								1 (>L:ENG_ANTI_ICE_DC_PWR)
+								1 (>L:GRD_FUEL_CONT_CK_PWR)
+								1 (>L:GUN_CLEAR_PWR)
+								1 (>L:HYD_PRESS_PWR)
+								1 (>L:LANDING_LT_PWR)
+								1 (>L:LANDING_TAXY_LT_CONT_PWR)
+								1 (>L:LWING_XFR_PUMP_RLY_PWR)
+								1 (>L:MK-84_STA_PWR)
+								1 (>L:MODE_SELECT_PWR)
+								1 (>L:RH_IDLE_NOZZLE_RESET_PWR)
+								1 (>L:R_AIC_PWR)
+								1 (>L:R_BST_PUMP_RLY_PWR)
+								1 (>L:RH_TEWS_POD_DC_PWR)
+								1 (>L:RUDDER_TRAVEL_LMTR_PWR)
+								1 (>L:RWING_XFR_PUMP_RLY_PWR)
+								1 (>L:R_XMFR_RECT_PWR)
+								1 (>L:RDR_WARN_RCVR_PWR)
+								1 (>L:RWR_DC_PWR)
+								1 (>L:SEAT_ADJ_CONT_PWR)
+								1 (>L:TAXY_LT_PWR)
+								1 (>L:TEWS_POD_CONT_PWR)
+								1 (>L:UTIL_PWR_RCPT_PWR)
+								1 (>L:WSHLD_ANTI-ICE_PWR)
+							}
+							els{
+								0 (>L:AIM-9_STA_PWR)
+								0 (>L:ARM_BUS_CONT_PWR)
+								0 (>L:CSBPC_HYD_BYPASS_PWR)
+								0 (>L:ENG_ANTI_ICE_DC_PWR)
+								0 (>L:GRD_FUEL_CONT_CK_PWR)
+								0 (>L:GUN_CLEAR_PWR)
+								0 (>L:HYD_PRESS_PWR)
+								0 (>L:LANDING_LT_PWR)
+								0 (>L:LANDING_TAXY_LT_CONT_PWR)
+								0 (>L:LWING_XFR_PUMP_RLY_PWR)
+								0 (>L:MK-84_STA_PWR)
+								0 (>L:MODE_SELECT_PWR)
+								0 (>L:RH_IDLE_NOZZLE_RESET_PWR)
+								0 (>L:R_AIC_PWR)
+								0 (>L:R_BST_PUMP_RLY_PWR)
+								0 (>L:RH_TEWS_POD_DC_PWR)
+								0 (>L:RUDDER_TRAVEL_LMTR_PWR)
+								0 (>L:RWING_XFR_PUMP_RLY_PWR)
+								0 (>L:R_XMFR_RECT_PWR)
+								0 (>L:RDR_WARN_RCVR_PWR)
+								0 (>L:RWR_DC_PWR)
+								0 (>L:SEAT_ADJ_CONT_PWR)
+								0 (>L:TAXY_LT_PWR)
+								0 (>L:TEWS_POD_CONT_PWR)
+								0 (>L:UTIL_PWR_RCPT_PWR)
+								0 (>L:WSHLD_ANTI-ICE_PWR)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="LEFT AC BUS">
+				<Select>
+					<Value>
+						(L:LEFT_AC_BUS_AVAIL) 1 ==
+							if{
+								1 (>L:AC_PRESENT_RLY_PWR)
+								1 (>L:ACS_PWR)
+								1 (>L:ADC_PWR)
+								1 (>L:AIC_PWR)
+								1 (>L:AIR_MACH_IND_PWR)
+								1 (>L:ALTMTR_IND_PWR)
+								1 (>L:AOA_IND_PWR)
+								1 (>L:CCC_PWR)
+								1 (>L:EWWSS_PWR)
+								1 (>L:FORM_LT_AVIONICS_DIM_CONT_PWR)
+								1 (>L:HUD_AC_PWR)
+								1 (>L:INTRL_NAV_SET_MEAS_UNIT_PWR)
+								1 (>L:INTRG_RCVR_XMTR_PWR)
+								1 (>L:INTRL_NAV_SET_DSPL_UNIT_PWR)
+								1 (>L:INT_LT_PWR)
+								1 (>L:INTR_BLANER_PWR)
+								1 (>L:IRE_PWR)
+								1 (>L:KIR_PWR)
+								1 (>L:KIT_PWR)
+								1 (>L:L_AOA_PROVE_HTR_PWR)
+								1 (>L:L_BST_PUMP_PWR)
+								1 (>L:MPCD_AC_PWR)
+								1 (>L:PITOT_MAST_HTR_PWR)
+								1 (>L:LEAD_COMP_GYRO_PWR)
+								1 (>L:L_ENG_FUEL_FLOW_IND_PWR)
+								1 (>L:LH_TEWS_POD_AC_PWR)
+								1 (>L:L_TOTAL_TEMP_SNSR_HTR_PWR)
+								1 (>L:L_XMFR_RECT_PWR)
+								1 (>L:PSN_ANTI_COL_LT_PWR)
+								1 (>L:RDR_COOLANT_PUMP_AC_PWR)
+								1 (>L:RDR_XMTR_LVPS_PWR)
+								1 (>L:SIGNAL_DATA_RCDR_PWR)
+								1 (>L:TACAN_RCVR_XMTR_PWR)
+								1 (>L:TANK_XFR_PMP_AC_PWR)
+								1 (>L:UHF_AUX_RCVR_PWR)
+								1 (>L:VS_IND_PWR)
+								1 (>L:VSD_PWR)
+							}
+							els{
+								0 (>L:AC_PRESENT_RLY_PWR)
+								0 (>L:ACS_PWR)
+								0 (>L:ADC_PWR)
+								0 (>L:AIC_PWR)
+								0 (>L:AIR_MACH_IND_PWR)
+								0 (>L:ALTMTR_IND_PWR)
+								0 (>L:AOA_IND_PWR)
+								0 (>L:CCC_PWR)
+								0 (>L:EWWSS_PWR)
+								0 (>L:FORM_LT_AVIONICS_DIM_CONT_PWR)
+								0 (>L:HUD_AC_PWR)
+								0 (>L:INTRL_NAV_SET_MEAS_UNIT_PWR)
+								0 (>L:INTRG_RCVR_XMTR_PWR)
+								0 (>L:INTRL_NAV_SET_DSPL_UNIT_PWR)
+								0 (>L:INT_LT_PWR)
+								0 (>L:INTR_BLANER_PWR)
+								0 (>L:IRE_PWR)
+								0 (>L:KIR_PWR)
+								0 (>L:KIT_PWR)
+								0 (>L:L_AOA_PROVE_HTR_PWR)
+								0 (>L:L_BST_PUMP_PWR)
+								0 (>L:MPCD_AC_PWR)
+								0 (>L:PITOT_MAST_HTR_PWR)
+								0 (>L:LEAD_COMP_GYRO_PWR)
+								0 (>L:L_ENG_FUEL_FLOW_IND_PWR)
+								0 (>L:LH_TEWS_POD_AC_PWR)
+								0 (>L:L_TOTAL_TEMP_SNSR_HTR_PWR)
+								0 (>L:L_XMFR_RECT_PWR)
+								0 (>L:PSN_ANTI_COL_LT_PWR)
+								0 (>L:RDR_COOLANT_PUMP_AC_PWR)
+								0 (>L:RDR_XMTR_LVPS_PWR)
+								0 (>L:SIGNAL_DATA_RCDR_PWR)
+								0 (>L:TACAN_RCVR_XMTR_PWR)
+								0 (>L:TANK_XFR_PMP_AC_PWR)
+								0 (>L:UHF_AUX_RCVR_PWR)
+								0 (>L:VS_IND_PWR)
+								0 (>L:VSD_PWR)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="ESS AC BUS">
+				<Select>
+					<Value>
+						(L:ESS_AC_BUS_AVAIL) 1 ==
+							if{
+								1 (>L:AFCS_AC_PWR)
+								1 (>L:ARR_FLOOD_LT_PWR)
+								1 (>L:ATTD_IND_PWR)
+								1 (>L:ATTD_HDG_REF_PWR)
+								1 (>L:BLEED_AIR_LEAK_DET_PWR)
+								1 (>L:CAUT_WRN_ADVY_LTS_PWR)
+								1 (>L:ENG_INSTR_ESS_AC_PWR)
+								1 (>L:FLAPS_PWR)
+								1 (>L:FUEL_QTY_IND_PWR)
+								1 (>L:HSI_IND_PWR)
+								1 (>L:PITOT_HEAD_HEAT_PWR)
+								1 (>L:L_DUCT_PITOT_HTR_PWR)
+								1 (>L:POS_ANTI_COL_LT_CONT_PWR)
+								1 (>L:RDR_CONT_LVPS_AC_PWR)
+								1 (>L:STBY_ATTD_IND_PWR)
+								1 (>L:STORM_FLOOD_LT_PWR)
+								1 (>L:UHF_RCVR_XMTR_PWR)
+							}
+							els{
+								0 (>L:AFCS_AC_PWR)
+								0 (>L:ARR_FLOOD_LT_PWR)
+								0 (>L:ATTD_IND_PWR)
+								0 (>L:ATTD_HDG_REF_PWR)
+								0 (>L:BLEED_AIR_LEAK_DET_PWR)
+								0 (>L:CAUT_WRN_ADVY_LTS_PWR)
+								0 (>L:ENG_INSTR_ESS_AC_PWR)
+								0 (>L:FLAPS_PWR)
+								0 (>L:FUEL_QTY_IND_PWR)
+								0 (>L:HSI_IND_PWR)
+								0 (>L:PITOT_HEAD_HEAT_PWR)
+								0 (>L:L_DUCT_PITOT_HTR_PWR)
+								0 (>L:POS_ANTI_COL_LT_CONT_PWR)
+								0 (>L:RDR_CONT_LVPS_AC_PWR)
+								0 (>L:STBY_ATTD_IND_PWR)
+								0 (>L:STORM_FLOOD_LT_PWR)
+								0 (>L:UHF_RCVR_XMTR_PWR)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="ENG INST AC BUS">
+				<Select>
+					<Value>
+					1 (>L:ENG_RPM_TACH_IND_PWR)
+					1 (>L:ENG_FTIT_IND_PWR)
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="LEFT DC BUS">
+				<Select>
+					<Value>
+						(L:LEFT_DC_BUS_AVAIL) 1 ==
+							if{
+								1 (>L:ASP_BIT_CONT_PNL_PWR)
+								1 (>L:ECS_TEMP_CONT_PWR)
+								1 (>L:EMER_BST_PUMP_CONT_PWR)
+								1 (>L:EMER_GEN_HYD_SOL_PWR)
+								1 (>L:CRD_PWR_RUD_TRAVEL_CAUT_PWR)
+								1 (>L:CONTROL_PWR)
+								1 (>L:HUD_DC_PWR)
+								1 (>L:ILS_PWR)
+								1 (>L:ILE_PWR)
+								1 (>L:KY-28_PWR)
+								1 (>L:LEAD_COM_GYRO_PWR)
+								1 (>L:L_AIC_PWR)
+								1 (>L:L_BST_PUMP_RLY_PWR)
+								1 (>L:LH_IDLE_NOZZLE_PWR)
+								1 (>L:LH_TEWS_POD_DC_PWR)
+								1 (>L:MLG_WHEEL_ANTI_SPIN_PWR)
+								1 (>L:MPCD_DC_PWR)
+								1 (>L:POS_ANTI_COL_LT_CONT_PWR)
+								1 (>L:RDR_CONT_LVPS_DC_PWR)
+								1 (>L:RDR_COOLANT_PUMP_DC_PWR)
+								1 (>L:RDR_LVPS_PWR)
+								1 (>L:TACAN_ADI_TCN_ILS_PNL_PWR)
+								1 (>L:TANK_XFR_PMP_DC_PWR)
+							}
+							els{
+								0 (>L:ASP_BIT_CONT_PNL_PWR)
+								0 (>L:ECS_TEMP_CONT_PWR)
+								0 (>L:EMER_BST_PUMP_CONT_PWR)
+								0 (>L:EMER_GEN_HYD_SOL_PWR)
+								0 (>L:CRD_PWR_RUD_TRAVEL_CAUT_PWR)
+								0 (>L:CONTROL_PWR)
+								0 (>L:HUD_DC_PWR)
+								0 (>L:ILS_PWR)
+								0 (>L:ILE_PWR)
+								0 (>L:KY-28_PWR)
+								0 (>L:LEAD_COM_GYRO_PWR)
+								0 (>L:L_AIC_PWR)
+								0 (>L:L_BST_PUMP_RLY_PWR)
+								0 (>L:LH_IDLE_NOZZLE_PWR)
+								0 (>L:LH_TEWS_POD_DC_PWR)
+								0 (>L:MLG_WHEEL_ANTI_SPIN_PWR)
+								0 (>L:MPCD_DC_PWR)
+								0 (>L:POS_ANTI_COL_LT_CONT_PWR)
+								0 (>L:RDR_CONT_LVPS_DC_PWR)
+								0 (>L:RDR_COOLANT_PUMP_DC_PWR)
+								0 (>L:RDR_LVPS_PWR)
+								0 (>L:TACAN_ADI_TCN_ILS_PNL_PWR)
+								0 (>L:TANK_XFR_PMP_DC_PWR)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="ESS DC BUS">
+				<Select>
+					<Value>
+						(L:ESS_DC_BUS_AVAIL) 1 ==
+							if{
+								1 (>L:AERIAL_REFUELING_PWR)
+								1 (>L:AFCS_DC_PWR)
+								1 (>L:AIM-7_EJECT_PWR)
+								1 (>L:ANT_SEL_PWR)
+								1 (>L:ARI_SHUTOFF_ANTI-SKID_CONT_PWR)
+								1 (>L:ADF_PWR)
+								1 (>L:BLEED_AIR_LEAK_DET_PWR)
+								1 (>L:CABIN_AIR_DUMP_SOL_PWR)
+								1 (>L:ECS_HEAT_EXCANGER_PWR)
+								1 (>L:EMER_JETT_PWR)
+								1 (>L:ENG_CONT_ESS_BUS_PWR)
+								1 (>L:ENV_CONT_SYS_PWR)
+								1 (>L:FLAP_PWR)
+								1 (>L:FUEL_DUMP_PWR)
+								1 (>L:FUEL_LEVEL_SENS_UNIT_PWR)
+								1 (>L:FUEL_PRESS_REGULATORS_PWR)
+								1 (>L:HOT_FUEL_GRD_REFUEL_PWR)
+								1 (>L:IFF_PWR)
+								1 (>L:INT_LTS_TEST_PWR)
+								1 (>L:LG_PWR)
+								1 (>L:LGS_POS_IND_PWR)
+								1 (>L:LDG_GEAR_WOW_PWR)
+								1 (>L:NWS_PWR)
+								1 (>L:PRAD_CONT_PWR)
+								1 (>L:SPD_BRK_PWR)
+								1 (>L:STORE_RELEASE_PWR)
+								1 (>L:WRN_ADV_CAUT_LTS_PWR)
+							}
+							els{
+								0 (>L:AERIAL_REFUELING_PWR)
+								0 (>L:AFCS_DC_PWR)
+								0 (>L:AIM-7_EJECT_PWR)
+								0 (>L:ANT_SEL_PWR)
+								0 (>L:ARI_SHUTOFF_ANTI-SKID_CONT_PWR)
+								0 (>L:ADF_PWR)
+								0 (>L:BLEED_AIR_LEAK_DET_PWR)
+								0 (>L:CABIN_AIR_DUMP_SOL_PWR)
+								0 (>L:ECS_HEAT_EXCANGER_PWR)
+								0 (>L:EMER_JETT_PWR)
+								0 (>L:ENG_CONT_ESS_BUS_PWR)
+								0 (>L:ENV_CONT_SYS_PWR)
+								0 (>L:FLAP_PWR)
+								0 (>L:FUEL_DUMP_PWR)
+								0 (>L:FUEL_LEVEL_SENS_UNIT_PWR)
+								0 (>L:FUEL_PRESS_REGULATORS_PWR)
+								0 (>L:HOT_FUEL_GRD_REFUEL_PWR)
+								0 (>L:IFF_PWR)
+								0 (>L:INT_LTS_TEST_PWR)
+								0 (>L:LG_PWR)
+								0 (>L:LGS_POS_IND_PWR)
+								0 (>L:LDG_GEAR_WOW_PWR)
+								0 (>L:NWS_PWR)
+								0 (>L:PRAD_CONT_PWR)
+								0 (>L:SPD_BRK_PWR)
+								0 (>L:STORE_RELEASE_PWR)
+								0 (>L:WRN_ADV_CAUT_LTS_PWR)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="ENG CONT ESS DC BUS">
+				<Select>
+					<Value>
+						(L:ENG_CONT_ESS_DC_BUS_AVAIL) 1 ==
+							if{
+								1 (>L:ENG_EHR_START_BYP_PWR)
+								1 (>L:ENG_FUEL_SOV_PWR)
+								1 (>L:EMER_GEN_CAUT_LT_RST_PWR)
+								1 (>L:ENG_FE_SYS_PWR)
+								1 (>L:ENG_FIRE_OVHT_DET_SYS_PWR)
+							}
+							els{
+								0 (>L:ENG_EHR_START_BYP_PWR)
+								0 (>L:ENG_FUEL_SOV_PWR)
+								0 (>L:EMER_GEN_CAUT_LT_RST_PWR)
+								0 (>L:ENG_FE_SYS_PWR)
+								0 (>L:ENG_FIRE_OVHT_DET_SYS_PWR)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="JFS ESS DC BUS">
+				<Select>
+					<Value>
+						(L:JFS_ESS_DC_BUS_AVAIL) 1 ==
+							if{
+								1 (>L:AMAD_FIRE_DET_SYS_PWR)
+								1 (>L:INTERCOM_PWR)
+								1 (>L:AMAD_SEL_PWR)
+								1 (>L:UTIL_FLOOD_LT_PWR)
+							}
+							els{
+								0 (>L:AMAD_FIRE_DET_SYS_PWR)
+								0 (>L:INTERCOM_PWR)
+								0 (>L:AMAD_SEL_PWR)
+								0 (>L:UTIL_FLOOD_LT_PWR)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="FIRE EXT BUS">
+				<Select>
+					<Value>
+						(L:FIRE_EXT_BUS_AVAIL) 1 ==
+						(A:SIM ON GROUND, enum) 1 == and
+							if{
+								1 (>L:AMAD_F_EXT_SYS_PWR)
+							}
+							els{
+								1 (>L:AMAD_F_EXT_SYS_PWR)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		<Element Name="EXTERNAL POWER">
 			<Select>
 				<Value>
 				(L:SW2_FS_ENG_EXT_PWR, enum) 0 &gt;
-					if{ 1 (>L:GROUND_POWER_AVAIL, enum) }
-					els{ 0 (>L:GROUND_POWER_AVAIL, enum) }
+				(A:AIRSPEED INDICATED, knots) 10 &lt; and
+				(A:SIM ON GROUND, enum) 1 == and
+					if{ 28 (>L:EXTARNAL_AC_VOLTS) }
+					els{ 0 (>L:EXTARNAL_AC_VOLTS) }
 				</Value>
 			</Select>
 		</Element>
 
-		<Element Name="AVIONICS INTERFACE UNIT NO.1">
-    		<Select>
-      			<Value>
-				(L:INTERNAL_POWER_AVAIL, enum) 0 ==
-					if{
-						0 (>L:MPDP_AIU_1_PWR, enum)
-					}
-
-				(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-					if{
-						1 (>L:MPDP_AIU_1_PWR, enum)
-					}
-      			</Value>
-    		</Select>
-		</Element>
-
-		<Element Name="GROUND POWER">
-		<!-- HYD , OIL.P , FF , NOZ Gauge / LDG / Excdnce Center / A+ / CSBPC / FLAPS / SpeedBrake / AFCS -->
-			<Element Name="SWITCH 1 FEED POSITION A">
-					<Select>
-						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-							(L:GROUND_POWER_AVAIL, enum) 1 == or
-							(L:SW2_FS_GND_PWR_1, enum) 0 == and
-								if{
-									1 (>L:HYDRAULIC_GAUGE_PWR, enum)
-									1 (>L:OIL_PRESS_GAUGE_PWR, enum)
-									1 (>L:LDG_GEAR_PWR, enum)
-									1 (>L:FUEL_FLOW_GAUGE_PWR, enum)
-									1 (>L:EXC_CNTR_PWR, enum)
-
-									0 (>L:A_PLUS_PWR, enum)
-									0 (>L:CSBPC_PWR, enum)
-									0 (>L:FUEL_GAUGE_PWR, enum)
-									0 (>L:NOZZLE_GAUGE_PWR, enum)
-									0 (>L:FLAPS_GAUGE_PWR, enum)
-									0 (>L:SPEED_BRAKE_PWR, enum)
-									0 (>L:AFCS_PWR, enum)
-								}
-						</Value>
-					</Select>
-			</Element>
-			<Element Name="SWITCH 1 FEED POSITION AUTO (POWER FEED FROM GENERATOR POWER) ">
-					<Select>
-						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-							(L:GROUND_POWER_AVAIL, enum) 1 == or
-							(L:SW2_FS_GND_PWR_1, enum) 1 == and
-								if{
-									1 (>L:HYDRAULIC_GAUGE_PWR, enum)
-									1 (>L:OIL_PRESS_GAUGE_PWR, enum)
-									1 (>L:LDG_GEAR_PWR, enum)
-									1 (>L:FUEL_FLOW_GAUGE_PWR, enum)
-									1 (>L:EXC_CNTR_PWR, enum)
-
-									1 (>L:A_PLUS_PWR, enum)
-									1 (>L:CSBPC_PWR, enum)
-									1 (>L:FUEL_GAUGE_PWR, enum)
-									1 (>L:NOZZLE_GAUGE_PWR, enum)
-									1 (>L:FLAPS_GAUGE_PWR, enum)
-									1 (>L:SPEED_BRAKE_PWR, enum)
-									1 (>L:AFCS_PWR, enum)
-								}
-						</Value>
-					</Select>
-			</Element>
-			<Element>
-				<Select>
-					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 0 ==
-						(L:GROUND_POWER_AVAIL, enum) 0 == and
-						(L:SW2_FS_GND_PWR_1, enum) 1 == and
-							if{
-								0 (>L:HYDRAULIC_GAUGE_PWR, enum)
-								0 (>L:OIL_PRESS_GAUGE_PWR, enum)
-								0 (>L:LDG_GEAR_PWR, enum)
-								0 (>L:FUEL_FLOW_GAUGE_PWR, enum)
-								0 (>L:EXC_CNTR_PWR, enum)
-
-								0 (>L:A_PLUS_PWR, enum)
-								0 (>L:CSBPC_PWR, enum)
-								0 (>L:FUEL_GAUGE_PWR, enum)
-								0 (>L:NOZZLE_GAUGE_PWR, enum)
-								0 (>L:FLAPS_GAUGE_PWR, enum)
-								0 (>L:SPEED_BRAKE_PWR, enum)
-								0 (>L:AFCS_PWR, enum)
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element Name="SWITCH 1 FEED POSITION B (POWER FEED FROM EITHER ENGINES OR EXTERNAL POWER)">
-				<Select>
-					<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-					(L:GROUND_POWER_AVAIL, enum) 1 == or
-					(L:SW2_FS_GND_PWR_1, enum) 2 == and
+		<Element Name="GAUGE POWER">
+			<Select>
+				<Value>
+					(L:GND_AMI_PWR, enum) 1 ==
+					(L:AIR_MACH_IND_PWR) 1 == and
 						if{
-							0 (>L:HYDRAULIC_GAUGE_PWR, enum)
-							0 (>L:OIL_PRESS_GAUGE_PWR, enum)
-							0 (>L:LDG_GEAR_PWR, enum)
-							0 (>L:FUEL_FLOW_GAUGE_PWR, enum)
-							0 (>L:EXC_CNTR_PWR, enum)
-
-							1 (>L:A_PLUS_PWR, enum)
-							1 (>L:CSBPC_PWR, enum)
-							1 (>L:FUEL_GAUGE_PWR, enum)
-							1 (>L:NOZZLE_GAUGE_PWR, enum)
-							1 (>L:FLAPS_GAUGE_PWR, enum)
-							1 (>L:SPEED_BRAKE_PWR, enum)
-							1 (>L:AFCS_PWR, enum)
+							1 (>L:AMI_PWR, enum)
 						}
-					</Value>
-				</Select>
-			</Element>
-		<!-- STBY ATT , ADI , HSI Gauge / AHRS -->
-			<Element Name="SWITCH 2 FEED POSITION AUTO (POWER FEED FROM EITHER ENGINES)">
-				<Select>
-					<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-					(L:GROUND_POWER_AVAIL, enum) 1 == or
-					(L:SW1_FS_COOL_2, enum) 0 == and
+						els{
+							0 (>L:AMI_PWR, enum)
+						}
+
+					(L:GND_AOA_PWR, enum) 1 ==
+					(L:AOA_IND_PWR) 1 == and
 						if{
-							1 (>L:AHRS_PWR, enum)
-							1 (>L:STBY_ATT_PWR, enum)
-							1 (>L:ADI_PWR, enum)
+							1 (>L:AOA_PWR, enum)
+						}
+						els{
+							0 (>L:AOA_PWR, enum)
+						}
+
+					1 (>L:ACC_PWR, enum)
+
+					(L:GND_ADI_PWR, enum) 1 ==
+					(L:ATTD_IND_PWR) 1 == and
+						if{
+							1 (>L:ATTD_PWR, enum)
+						}
+						els{
+							0 (>L:ATTD_PWR, enum)
+						}
+
+					(L:GND_HSI_PWR, enum) 1 ==
+					(L:HSI_IND_PWR) 1 == and
+						if{
 							1 (>L:HSI_PWR, enum)
 						}
-					</Value>
-				</Select>
-			</Element>
-			<Element>
-				<Select>
-					<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 0 ==
-					(L:GROUND_POWER_AVAIL, enum) 0 == and
-					(L:SW1_FS_COOL_2, enum) 0 == and
-						if{
-							0 (>L:AHRS_PWR, enum)
-							0 (>L:STBY_ATT_PWR, enum)
-							0 (>L:ADI_PWR, enum)
+						els{
 							0 (>L:HSI_PWR, enum)
 						}
-					</Value>
-				</Select>
-			</Element>
-			<Element Name="SWITCH 2 FEED POSITION ON (POWER FEED FROM EXTERNAL POWER)">
-				<Select>
-					<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-					(L:GROUND_POWER_AVAIL, enum) 1 == or
-					(L:SW1_FS_COOL_2, enum) 1 == and
-						if{
-							1 (>L:AHRS_PWR, enum)
-							1 (>L:STBY_ATT_PWR, enum)
-							1 (>L:ADI_PWR, enum)
-							1 (>L:HSI_PWR, enum)
-						}
-					</Value>
-				</Select>
-			</Element>
-		<!-- AOA , ALTMTR , VSI , AMI Gauge / ADC / AMI -->
-			<Element Name="SWITCH 3 FEED POSITION AUTO (POWER FEED FROM EITHER ENGINES)">
-					<Select>
-						<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
-						(L:SW1_FS_COOL_3, enum) 0 == and
-							if{
-								1 (>L:ADC_PWR, enum)
-								1 (>L:AOA_PWR, enum)
-								1 (>L:ALTMTR_PWR, enum)
-								1 (>L:VSI_PWR, enum)
-								1 (>L:AMI_PWR, enum)
-								1 (>L:AIC_PWR, enum)
-							}
-						</Value>
-					</Select>
-			</Element>
-			<Element>
-					<Select>
-						<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 0 ==
-						(L:GROUND_POWER_AVAIL, enum) 0 == and
-						(L:SW1_FS_COOL_3, enum) 0 == and
-							if{
-								0 (>L:ADC_PWR, enum)
-								0 (>L:AOA_PWR, enum)
-								0 (>L:ALTMTR_PWR, enum)
-								0 (>L:VSI_PWR, enum)
-								0 (>L:AMI_PWR, enum)
-								0 (>L:AIC_PWR, enum)
-							}
-						</Value>
-					</Select>
-			</Element>
-			<Element Name="SWITCH 3 FEED POSITION ON (POWER FEED FROM EXTERNAL POWER)">
-					<Select>
-						<Value>
-						(L:GROUND_POWER_AVAIL, enum) 1 ==
-						(L:SW1_FS_COOL_3, enum) 1 == and
-							if{
-								1 (>L:ADC_PWR, enum)
-								1 (>L:AOA_PWR, enum)
-								1 (>L:ALTMTR_PWR, enum)
-								1 (>L:VSI_PWR, enum)
-								1 (>L:AMI_PWR, enum)
-								1 (>L:AIC_PWR, enum)
-							}
-						</Value>
-					</Select>
-			</Element>
-		<!-- ICS / ACS / IBS / PSDP -->
-			<Element Name="SWITCH 4 FEED POSITION AUTO (POWER FEED FROM EITHER ENGINES)">
-				<Select>
-					<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-					(L:GROUND_POWER_AVAIL, enum) 1 == or
-					(L:SW1_FS_COOL_4, enum) 0 == and
-						if{
-							1 (>L:ICS_PWR, enum)
-							1 (>L:ACS_PWR, enum)
-							1 (>L:IBS_PWR, enum)
-							1 (>L:PSDP_PWR, enum)
-						}
-					</Value>
-				</Select>
-			</Element>
-			<Element>
-				<Select>
-					<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 0 ==
-					(L:GROUND_POWER_AVAIL, enum) 0 == and
-					(L:SW1_FS_COOL_4, enum) 0 == and
-						if{
-							0 (>L:ICS_PWR, enum)
-							0 (>L:ACS_PWR, enum)
-							0 (>L:IBS_PWR, enum)
-							0 (>L:PSDP_PWR, enum)
-						}
-					</Value>
-				</Select>
-			</Element>
-			<Element Name="SWITCH 4 FEED POSITION ON (POWER FEED FROM EXTERNAL POWER)">
-				<Select>
-					<Value>
-					(L:GROUND_POWER_AVAIL, enum) 1 ==
-					(L:SW1_FS_COOL_4, enum) 1 == and
-						if{
-							0 (>L:ICS_PWR, enum)
-							0 (>L:ACS_PWR, enum)
-							0 (>L:IBS_PWR, enum)
-							0 (>L:PSDP_PWR, enum)
-						}
-					</Value>
-				</Select>
-			</Element>
 
-			<Element Name="SWITCH CC (CENTRAL COMPUTER) FEED {POSITION AUTO)">
-				<Select>
-					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 0 ==
-						(L:GROUND_POWER_AVAIL, enum) 0 == and
-						(L:SW2_FS_CC, enum) 1 == and
-							if{
-								0 (>L:CC_PWR, enum)
-							}
-					</Value>
-				</Select>
+
+					(L:GND_ALTMTR_PWR, enum) 1 ==
+					(L:ALTMTR_IND_PWR) 1 == and
+						if{
+							1 (>L:ALTMTR_PWR, enum)
+						}
+						els{
+							0 (>L:ALTMTR_PWR, enum)
+						}
+
+					(L:GND_VSI_PWR, enum) 1 ==
+					(L:VS_IND_PWR) 1 == and
+						if{
+							1 (>L:VSI_PWR, enum)
+						}
+						els{
+							0 (>L:VSI_PWR, enum)
+						}
+					(L:CC_PWR, enum) 1 ==
+						if{
+							1 (>L:CLK_PWR, enum)
+						}
+						els{
+							0 (>L:CLK_PWR, enum)
+						}
+
+					(L:ENG_RPM_TACH_IND_PWR) 1 ==
+						if{
+							1 (>L:TACH_GAUGE_PWR, enum)
+						}
+						els{
+							0 (>L:TACH_GAUGE_PWR, enum)
+						}
+
+					(L:ENG_FTIT_IND_PWR) 1 ==
+						if{
+							1 (>L:FTIT_GAUGE_PWR, enum)
+						}
+						els{
+							0 (>L:FTIT_GAUGE_PWR, enum)
+						}
+
+					(L:GND_FUEL_FLOW_GAUGE_PWR, enum) 1 ==
+					(L:L_ENG_FUEL_FLOW_IND_PWR) 1 == and
+						if{
+							1 (>L:L_FF_GAUGE_PWR, enum)
+						}
+						els{
+							0 (>L:L_FF_GAUGE_PWR, enum)
+						}
+
+					(L:GND_FUEL_FLOW_GAUGE_PWR, enum) 1 ==
+					(L:R_ENG_FUEL_FLOW_IND_PWR) 1 == and
+						if{
+							1 (>L:R_FF_GAUGE_PWR, enum)
+						}
+						els{
+							0 (>L:R_FF_GAUGE_PWR, enum)
+						}
+
+					(L:GND_NOZZLE_GAUGE_PWR, enum) 1 ==
+					(L:ENG_ENP_IND_PWR) 1 ==
+						if{
+							1 (>L:ENP_GAUGE_PWR, enum)
+						}
+						els{
+							0 (>L:ENP_GAUGE_PWR, enum)
+						}
+
+					(L:GND_HYDRAULIC_GAUGE_PWR, enum) 1 ==
+					(L:HYDR_PRESS_IND_PWR) 1 == and
+						if{
+							1 (>L:HYDRAULIC_GAUGE_PWR, enum)
+						}
+						els{
+							0 (>L:HYDRAULIC_GAUGE_PWR, enum)
+						}
+
+					(L:GND_OIL_PRESS_GAUGE_PWR, enum) 1 ==
+					(L:ENG_OIL_PRESS_IND_PWR) 1 == and
+						if{
+							1 (>L:OIL_PRESS_GAUGE_PWR, enum)
+						}
+						els{
+							0 (>L:OIL_PRESS_GAUGE_PWR, enum)
+						}
+
+					(L:GND_STBY_ATT_PWR, enum) 1 ==
+					(L:STBY_ATTD_IND_PWR) 1 == and
+						if{
+							1 (>L:STBY_ATTD_PWR, enum)
+						}
+						els{
+							0 (>L:STBY_ATTD_PWR, enum)
+						}
+
+					(L:GND_FUEL_GAUGE_PWR, enum) 1 ==
+					(L:FUEL_QTY_IND_PWR) 1 == and
+						if{
+							1 (>L:FUEL_GAUGE_PWR, enum)
+						}
+						els{
+							0 (>L:FUEL_GAUGE_PWR, enum)
+						}
+
+					(L:PRAD_PWR) 1 ==
+						if{
+							1 (>L:PRAD_GAUGE_PWR, enum)
+						}
+						els{
+							0 (>L:PRAD_GAUGE_PWR, enum)
+						}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="GROUND POWER">
+			<Element Name="SWITCH 1">
+			<!-- HYD , OIL.P , FF , NOZ Gauge / LDG / Excdnce Center / A+ / CSBPC / FLAPS / SpeedBrake / AFCS -->
+				<Element Name="POSITION A">
+					<Select>
+						<Value>
+							(L:SW2_FS_GND_PWR_1, enum) 0 ==
+								if{
+									1 (>L:GND_HYDRAULIC_GAUGE_PWR, enum)
+									1 (>L:GND_OIL_PRESS_GAUGE_PWR, enum)
+									1 (>L:GND_LDG_GEAR_PWR, enum)
+									1 (>L:GND_FUEL_FLOW_GAUGE_PWR, enum)
+									1 (>L:GND_EXC_CNTR_PWR, enum)
+
+									0 (>L:GND_A_PLUS_PWR, enum)
+									0 (>L:GND_CSBPC_PWR, enum)
+									0 (>L:GND_FUEL_GAUGE_PWR, enum)
+									0 (>L:GND_NOZZLE_GAUGE_PWR, enum)
+									0 (>L:GND_FLAPS_GAUGE_PWR, enum)
+									0 (>L:GND_SPEED_BRAKE_PWR, enum)
+									0 (>L:GND_AFCS_PWR, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="POSITION AUTO">
+					<Select>
+						<Value>
+							(L:SW2_FS_GND_PWR_1, enum) 1 ==
+								if{
+									1 (>L:GND_HYDRAULIC_GAUGE_PWR, enum)
+									1 (>L:GND_OIL_PRESS_GAUGE_PWR, enum)
+									1 (>L:GND_LDG_GEAR_PWR, enum)
+									1 (>L:GND_FUEL_FLOW_GAUGE_PWR, enum)
+									1 (>L:GND_EXC_CNTR_PWR, enum)
+
+									1 (>L:GND_A_PLUS_PWR, enum)
+									1 (>L:GND_CSBPC_PWR, enum)
+									1 (>L:GND_FUEL_GAUGE_PWR, enum)
+									1 (>L:GND_NOZZLE_GAUGE_PWR, enum)
+									1 (>L:GND_FLAPS_GAUGE_PWR, enum)
+									1 (>L:GND_SPEED_BRAKE_PWR, enum)
+									1 (>L:GND_AFCS_PWR, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="POSITION B">
+					<Select>
+						<Value>
+							(L:SW2_FS_GND_PWR_1, enum) 2 ==
+								if{
+									0 (>L:GND_HYDRAULIC_GAUGE_PWR, enum)
+									0 (>L:GND_OIL_PRESS_GAUGE_PWR, enum)
+									0 (>L:GND_LDG_GEAR_PWR, enum)
+									0 (>L:GND_FUEL_FLOW_GAUGE_PWR, enum)
+									0 (>L:GND_EXC_CNTR_PWR, enum)
+
+									1 (>L:GND_A_PLUS_PWR, enum)
+									1 (>L:GND_CSBPC_PWR, enum)
+									1 (>L:GND_FUEL_GAUGE_PWR, enum)
+									1 (>L:GND_NOZZLE_GAUGE_PWR, enum)
+									1 (>L:GND_FLAPS_GAUGE_PWR, enum)
+									1 (>L:GND_SPEED_BRAKE_PWR, enum)
+									1 (>L:GND_AFCS_PWR, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
 			</Element>
-			<Element Name="SWITCH CC (CENTRAL COMPUTER) FEED {POSITION AUTO)">
-				<Select>
-					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
-						(L:SW2_FS_CC, enum) 1 == and
-							if{
-								1 (>L:CC_PWR, enum)
-							}
-					</Value>
-				</Select>
+			<Element Name="SWITCH 2">
+			<!-- STBY ATT , ADI , HSI Gauge / AHRS -->
+				<Element Name="POSITION AUTO">
+					<Select>
+						<Value>
+							(L:SW1_FS_COOL_2, enum) 0 ==
+								if{
+									1 (>L:GND_AHRS_PWR, enum)
+									1 (>L:GND_STBY_ATT_PWR, enum)
+									1 (>L:GND_ADI_PWR, enum)
+									1 (>L:GND_HSI_PWR, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="POSITION ON">
+					<Select>
+						<Value>
+							(L:SW1_FS_COOL_2, enum) 1 ==
+								if{
+									1 (>L:GND_AHRS_PWR, enum)
+									1 (>L:GND_STBY_ATT_PWR, enum)
+									1 (>L:GND_ADI_PWR, enum)
+									1 (>L:GND_HSI_PWR, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
 			</Element>
-			<Element Name="SWITCH CC (CENTRAL COMPUTER) FEED {POSITION ON)">
-				<Select>
-					<Value>
-						(L:GROUND_POWER_AVAIL, enum) 1 ==
-						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
-						(L:SW2_FS_CC, enum) 2 == and
-							if{
-								1 (>L:CC_PWR, enum)
-							}
-					</Value>
-				</Select>
+			<Element Name="SWITCH 3">
+				<!-- AOA , ALTMTR , VSI , AMI / ADC / AIC -->
+				<Element Name="POSITION AUTO">
+					<Select>
+						<Value>
+							(L:SW1_FS_COOL_3, enum) 0 ==
+								if{
+									1 (>L:GND_ADC_PWR, enum)
+									1 (>L:GND_AOA_PWR, enum)
+									1 (>L:GND_ALTMTR_PWR, enum)
+									1 (>L:GND_VSI_PWR, enum)
+									1 (>L:GND_AMI_PWR, enum)
+									1 (>L:GND_AIC_PWR, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="POSITION ON">
+					<Select>
+						<Value>
+							(L:SW1_FS_COOL_3, enum) 1 ==
+								if{
+									1 (>L:GND_ADC_PWR, enum)
+									1 (>L:GND_AOA_PWR, enum)
+									1 (>L:GND_ALTMTR_PWR, enum)
+									1 (>L:GND_VSI_PWR, enum)
+									1 (>L:GND_AMI_PWR, enum)
+									1 (>L:GND_AIC_PWR, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
 			</Element>
-			<Element Name="SWITCH CC (CENTRAL COMPUTER) FEED {POSITION OFF)">
-				<Select>
-					<Value>
-						(L:SW2_FS_CC, enum) 0 ==
-							if{
-								0 (>L:CC_PWR, enum)
-							}
-					</Value>
-				</Select>
+			<Element Name="SWITCH 4">
+				<!-- ICS / ACS / IBS / PSDP -->
+				<Element Name="POSITION AUTO">
+					<Select>
+						<Value>
+							(L:SW1_FS_COOL_4, enum) 0 ==
+								if{
+									1 (>L:GND_ICS_PWR, enum)
+									1 (>L:GND_ACS_PWR, enum)
+									1 (>L:GND_IBS_PWR, enum)
+									1 (>L:GND_PSDP_PWR, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="POSITION ON">
+					<Select>
+						<Value>
+							(L:SW1_FS_COOL_4, enum) 1 ==
+								if{
+									0 (>L:GND_ICS_PWR, enum)
+									0 (>L:GND_ACS_PWR, enum)
+									0 (>L:GND_IBS_PWR, enum)
+									0 (>L:GND_PSDP_PWR, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+			<Element Name="SWITCH CC">
+				<Element Name="POSITION AUTO">
+					<Select>
+						<Value>
+							(L:SW2_FS_CC, enum) 1 ==
+								if{
+									1 (>L:GND_CC_PWR, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="POSITION ON">
+					<Select>
+						<Value>
+							(L:SW2_FS_CC, enum) 2 ==
+								if{
+									1 (>L:GND_CC_PWR, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="POSITION OFF">
+					<Select>
+						<Value>
+							(L:SW2_FS_CC, enum) 0 ==
+								if{
+									0 (>L:GND_CC_PWR, enum)
+								}
+						</Value>
+					</Select>
+				</Element>
 			</Element>
 		</Element>
-		<Element Name="SYSTEM">
+		<Element Name="GND PWR SYSTEM">
 			<Element Name="Central Computer (CC)">
 				<Select>
 					<Value>
+						(L:GND_CC_PWR, enum) 1 ==
+						(L:LEFT_AC_BUS_AVAIL) 1 == and
+						if{ 1 (>L:CC_PWR, enum) }
+						els{ 0 (>L:CC_PWR, enum) }
+
+
+
 						(L:CC_PWR, enum) 1 ==
 							if{
 								1 (>L:INS_GC_RDY, enum)
@@ -803,33 +1369,37 @@ Version 5.0
 			<Element Name="Air Data Computer (ADC)">
 				<Select>
 					<Value>
-						(L:ADC_PWR, enum) 1 ==
-							if{}
-							els{}
+						(L:GND_ADC_PWR, enum) 1 ==
+						(L:ADC_PWR) 1 ==
+							if{ 1 (>L:ADC_POWER) }
+							els{ 0 (>L:ADC_POWER) }
 					</Value>
 				</Select>
 			</Element>
 			<Element Name="Speed Brake">
 				<Select>
 					<Value>
-					(L:SPEED_BRAKE_PWR, enum) 1 ==
-						if{}
+						(L:GNG_SPEED_BRAKE_PWR, enum) 1 ==
+						(L:ESS_DC_BUS_AVAIL) 1 == and
+							if{}
 					</Value>
 				</Select>
 			</Element>
 			<Element Name="Automatic Flight Control System (AFCS)">
 				<Select>
 					<Value>
-					(L:AFCS_PWR, enum) 0 ==
-						if{}
+						(L:AFCS_PWR, enum) 0 ==
+						(L:ESS_AC_BUS_AVAIL) 1 == and
+							if{}
 					</Value>
 				</Select>
 			</Element>
 			<Element Name="Flaps">
 				<Select>
 					<Value>
-					(L:FLAPS_GAUGE_PWR, enum) 1 ==
-						if{}
+						(L:FLAPS_GAUGE_PWR, enum) 1 ==
+						(L:ESS_DC_BUS_AVAIL) 1 == and
+							if{}
 
 					</Value>
 				</Select>
@@ -846,6 +1416,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:CSBPC_PWR, enum) 1 ==
+						(L:RIGHT_DC_BUS_AVAIL) 1 == and
 							if{}
 					</Value>
 				</Select>
@@ -862,6 +1433,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:AIC_PWR, enum) 1 ==
+						(L:LEFT_AC_BUS_AVAIL) 1 == and
 							if{}
 					</Value>
 				</Select>
@@ -870,6 +1442,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:ICS_PWR, enum) 1 ==
+						(L:RIGHT_AC_BUS_AVAIL) 1 == and
 							if{}
 					</Value>
 				</Select>
@@ -878,6 +1451,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:ACS_PWR, enum) 1 ==
+						(L:LEFT_AC_BUS_AVAIL) 1 == and
 							if{}
 					</Value>
 				</Select>
@@ -887,6 +1461,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:IBS_PWR, enum) 1 ==
+						(L:LEFT_AC_BUS_AVAIL) 1 == and
 							if{}
 					</Value>
 				</Select>
@@ -899,8 +1474,6 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-
-
 		</Element>
 	</Element>
 
@@ -910,8 +1483,7 @@ Version 5.0
       			<Value>
  					(A:AIRSPEED SELECT INDICATED OR TRUE:2, knots) (>L:GAU_STBY_AIRSPEED)
 
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-					(L:GROUND_POWER_AVAIL, enum) 1 == or
+					(L:AMI_PWR, enum) 1 ==
 					if{
 
 						(A:INDICATED ALTITUDE, feet) 70000 &gt;
@@ -962,15 +1534,13 @@ Version 5.0
 		<Element Name="Accelerometer">
     		<Select>
       			<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-					(L:GROUND_POWER_AVAIL, enum) 1 == or
+					(L:ACC_PWR, enum) 1 ==
 						if{
 							(A:G FORCE, G Force) (>L:GAU_G_FORCE)
 							(A:MAX G FORCE, G Force) (>L:MAX_G_FORCE)
 							(A:MIN G FORCE, G Force) (>L:MIN_G_FORCE)
 						}
 						els{
-							(>K:RESET_G_FORCE_INDICATOR)
 							0 (>L:GAU_G_FORCE)
 							0 (>L:MAX_G_FORCE)
 							0 (>L:MIN_G_FORCE)
@@ -981,43 +1551,22 @@ Version 5.0
 		<Element Name="ILS Steering Bar">
     		<Select>
       			<Value>
- 					(A:NAV2 RADIAL ERROR, degrees) 5 * (>L:GAU_ILS_LC)
-					(A:NAV2 GLIDE SLOPE ERROR, degrees) 5 * (>L:GAU_ILS_GS)
+				(L:TACAN_ADI_TCN_ILS_PNL_PWR) 1 ==
+					if{
+						(A:NAV2 RADIAL ERROR, degrees) 5 * (>L:GAU_ILS_LC)
+						(A:NAV2 GLIDE SLOPE ERROR, degrees) 5 * (>L:GAU_ILS_GS)
+					}
+					els{
+						0 (>L:GAU_ILS_LC)
+						0 (>L:GAU_ILS_GS)
+					}
       			</Value>
     		</Select>
 		</Element>
 		<Element Name="Attitude Director Indicator">
     		<Select>
       			<Value>
-					(A:ATTITUDE BARS POSITION, degrees) -57 &gt;
-					(A:ATTITUDE BARS POSITION, degrees) -38 &lt; and
-						if{ 0 (>L:ADI_BAR_POS) }
-
-					(A:ATTITUDE BARS POSITION, degrees) -38 &gt;
-					(A:ATTITUDE BARS POSITION, degrees) -19 &lt; and
-						if{ 1 (>L:ADI_BAR_POS) }
-
-					(A:ATTITUDE BARS POSITION, degrees) -19 &gt;
-					(A:ATTITUDE BARS POSITION, degrees) -2 &lt; and
-						if{ 2 (>L:ADI_BAR_POS) }
-
-					(A:ATTITUDE BARS POSITION, degrees) -2 &gt;
-					(A:ATTITUDE BARS POSITION, degrees) 2 &lt; and
-						if{ 3 (>L:ADI_BAR_POS) }
-
-					(A:ATTITUDE BARS POSITION, degrees) 2 &gt;
-					(A:ATTITUDE BARS POSITION, degrees) 19 &lt; and
-						if{ 4 (>L:ADI_BAR_POS) }
-
-					(A:ATTITUDE BARS POSITION, degrees) 19 &gt;
-					(A:ATTITUDE BARS POSITION, degrees) 38 &lt; and
-						if{ 5 (>L:ADI_BAR_POS) }
-
-					(A:ATTITUDE BARS POSITION, degrees) 38 &gt;
-					(A:ATTITUDE BARS POSITION, degrees) 57 &lt; and
-						if{ 6 (>L:ADI_BAR_POS) }
-
-					(L:ADI_PWR, enum) 1 ==
+					(L:ATTD_PWR, enum) 1 ==
 						if{
 							(L:ADI_REF_SELECT) 0 ==
 								if{
@@ -1070,7 +1619,36 @@ Version 5.0
 							0 (>L:GAU_ATT_BARS)
 						}
 
-					(L:STBY_ATT_PWR, enum) 1 ==
+					(A:ATTITUDE BARS POSITION, degrees) -57 &gt;
+					(A:ATTITUDE BARS POSITION, degrees) -38 &lt; and
+						if{ 0 (>L:ADI_BAR_POS) }
+
+					(A:ATTITUDE BARS POSITION, degrees) -38 &gt;
+					(A:ATTITUDE BARS POSITION, degrees) -19 &lt; and
+						if{ 1 (>L:ADI_BAR_POS) }
+
+					(A:ATTITUDE BARS POSITION, degrees) -19 &gt;
+					(A:ATTITUDE BARS POSITION, degrees) -2 &lt; and
+						if{ 2 (>L:ADI_BAR_POS) }
+
+					(A:ATTITUDE BARS POSITION, degrees) -2 &gt;
+					(A:ATTITUDE BARS POSITION, degrees) 2 &lt; and
+						if{ 3 (>L:ADI_BAR_POS) }
+
+					(A:ATTITUDE BARS POSITION, degrees) 2 &gt;
+					(A:ATTITUDE BARS POSITION, degrees) 19 &lt; and
+						if{ 4 (>L:ADI_BAR_POS) }
+
+					(A:ATTITUDE BARS POSITION, degrees) 19 &gt;
+					(A:ATTITUDE BARS POSITION, degrees) 38 &lt; and
+						if{ 5 (>L:ADI_BAR_POS) }
+
+					(A:ATTITUDE BARS POSITION, degrees) 38 &gt;
+					(A:ATTITUDE BARS POSITION, degrees) 57 &lt; and
+						if{ 6 (>L:ADI_BAR_POS) }
+
+
+					(L:STBY_ATTD_PWR, enum) 1 ==
 						if{
 							(A:PLANE PITCH DEGREES, degrees) (>L:GAU_STBY_ATT_PITCH)
 							(A:PLANE BANK DEGREES, degrees) (>L:GAU_STBY_ATT_BANK)
@@ -1170,15 +1748,15 @@ Version 5.0
 
 					(L:ALTMTR_PWR, enum) 1 ==
 						if{
-						(A:INDICATED ALTITUDE, feet) 70000 &gt;
-						if{
-							(A:INDICATED ALTITUDE, meter) (>L:GAU_ALTITUDE)
-							(A:INDICATED ALTITUDE, meter) (>L:IND_ALTITUDE)
-						}
-						els{
-							(A:INDICATED ALTITUDE, feet) (>L:GAU_ALTITUDE)
-							(A:INDICATED ALTITUDE, feet) (>L:IND_ALTITUDE)
-						}
+							(A:INDICATED ALTITUDE, feet) 70000 &gt;
+							if{
+								(A:INDICATED ALTITUDE, meter) (>L:GAU_ALTITUDE)
+								(A:INDICATED ALTITUDE, meter) (>L:IND_ALTITUDE)
+							}
+							els{
+								(A:INDICATED ALTITUDE, feet) (>L:GAU_ALTITUDE)
+								(A:INDICATED ALTITUDE, feet) (>L:IND_ALTITUDE)
+							}
 
 							(A:PRESSURIZATION CABIN ALTITUDE, feet) (>L:GAU_CABINALT)
 							(A:KOHLSMAN SETTING HG, inHg) (>L:GAU_KOHLSMAN)
@@ -1208,9 +1786,27 @@ Version 5.0
 		<Element Name="Eight Day Clock">
     		<Select>
       			<Value>
-					(P:Local time, hours) (>L:GAU_CLK_HUR)
-					(P:Local time, minutes) (>L:GAU_CLK_MIN)
-					(P:Local time, seconds) (>L:GAU_CLK_SEC)
+				(L:CLK_PWR, enum) 1 ==
+					if{
+						0 (>L:CLK_INIT, enum)
+						(P:Local time, hours) (>L:GAU_CLK_HUR)
+						(P:Local time, minutes) (>L:GAU_CLK_MIN)
+						(P:Local time, seconds) (>L:GAU_CLK_SEC)
+					}
+					els{
+						(L:CLK_INIT, enum) 0 ==
+							if{
+								1 (>L:CLK_INIT, enum)
+								(P:Local time, hours) (>L:GAU_CLK_HUR)
+								(P:Local time, minutes) (>L:GAU_CLK_MIN)
+								(P:Local time, seconds) (>L:GAU_CLK_SEC)
+							}
+							els{
+								(L:GAU_CLK_HUR) (>L:GAU_CLK_HUR)
+								(L:GAU_CLK_MIN) (>L:GAU_CLK_MIN)
+								(L:GAU_CLK_SEC) (>L:GAU_CLK_SEC)
+							}
+					}
       			</Value>
     		</Select>
 		</Element>
@@ -1218,37 +1814,61 @@ Version 5.0
 		<Element Name="Engine Tachometers">
     		<Select>
       			<Value>
-					(A:TURB ENG N2:1, percent) (>L:GAU_LENG_RPM)
-					(A:TURB ENG N2:2, percent) (>L:GAU_RENG_RPM)
-					(A:TURB ENG N2:1, percent) (>L:IND_LENG_RPM)
-					(A:TURB ENG N2:2, percent) (>L:IND_RENG_RPM)
+					(L:TACH_GAUGE_PWR, enum) 1 ==
+						if{
+							(A:TURB ENG N2:1, percent) (>L:GAU_LENG_RPM)
+							(A:TURB ENG N2:2, percent) (>L:GAU_RENG_RPM)
+							(A:TURB ENG N2:1, percent) (>L:IND_LENG_RPM)
+							(A:TURB ENG N2:2, percent) (>L:IND_RENG_RPM)
+						}
+						els{
+							0 (>L:GAU_LENG_RPM)
+							0 (>L:GAU_RENG_RPM)
+							0 (>L:IND_LENG_RPM)
+							0 (>L:IND_RENG_RPM)
+						}
       			</Value>
     		</Select>
 		</Element>
 		<Element Name="Fan Turbine Inlet Temperature Indicators">
     		<Select>
       			<Value>
-					(A:TURB ENG ITT:1, celsius) (>L:GAU_LENG_ITT)
-					(A:TURB ENG ITT:2, celsius) (>L:GAU_RENG_ITT)
-					(A:TURB ENG ITT:1, celsius) (>L:IND_LENG_ITT)
-					(A:TURB ENG ITT:2, celsius) (>L:IND_RENG_ITT)
+					(L:FTIT_GAUGE_PWR, enum) 1 ==
+						if{
+							(A:TURB ENG ITT:1, celsius) (>L:GAU_LENG_ITT)
+							(A:TURB ENG ITT:2, celsius) (>L:GAU_RENG_ITT)
+							(A:TURB ENG ITT:1, celsius) (>L:IND_LENG_ITT)
+							(A:TURB ENG ITT:2, celsius) (>L:IND_RENG_ITT)
+						}
+						els{
+							0 (>L:GAU_LENG_ITT)
+							0 (>L:GAU_RENG_ITT)
+							0 (>L:IND_LENG_ITT)
+							0 (>L:IND_RENG_ITT)
+						}
       			</Value>
     		</Select>
 		</Element>
 		<Element Name="Fuel Flow Indicators">
     		<Select>
       			<Value>
-					(L:FUEL_FLOW_GAUGE_PWR, enum) 1 ==
+					(L:L_FF_GAUGE_PWR, enum) 1 ==
 						if{
 							(A:TURB ENG FUEL FLOW PPH:1, pound per hour) (>L:GAU_LENG_FF)
-							(A:TURB ENG FUEL FLOW PPH:2, pound per hour) (>L:GAU_RENG_FF)
 							(A:TURB ENG FUEL FLOW PPH:1, pound per hour) (>L:IND_LENG_FF)
-							(A:TURB ENG FUEL FLOW PPH:2, pound per hour) (>L:IND_RENG_FF)
 						}
 						els{
 							0 (>L:GAU_LENG_FF)
-							0 (>L:GAU_RENG_FF)
 							0 (>L:IND_LENG_FF)
+						}
+
+					(L:R_FF_GAUGE_PWR, enum) 1 ==
+						if{
+							(A:TURB ENG FUEL FLOW PPH:2, pound per hour) (>L:GAU_RENG_FF)
+							(A:TURB ENG FUEL FLOW PPH:2, pound per hour) (>L:IND_RENG_FF)
+						}
+						els{
+							0 (>L:GAU_RENG_FF)
 							0 (>L:IND_RENG_FF)
 						}
       			</Value>
@@ -1257,7 +1877,7 @@ Version 5.0
 		<Element Name="Exhaust Nozzle Position Indicators">
 			<Select>
 				<Value>
-					(L:NOZZLE_GAUGE_PWR, enum) 1 ==
+					(L:ENP_GAUGE_PWR, enum) 1 ==
 						if{
 							(L:SW1_FS_ENG_CONT_L, enum) 1 ==
 							(L:ENG1_AVAIL, bool) 1 ==
@@ -1291,8 +1911,7 @@ Version 5.0
 									0 (>L:ENG2_NOZZLE, enum))
 								}
 						}
-					(L:NOZZLE_GAUGE_PWR, enum) 0 ==
-						if{
+						els{
 							0 (>L:ENG1_NOZZLE, enum)
 							0 (>L:ENG2_NOZZLE, enum)
 						}
@@ -1302,19 +1921,20 @@ Version 5.0
 		<Element Name="Hydraulic Pressure Indicators">
     		<Select>
       			<Value>
+					(A:HYDRAULIC PRESSURE:1, psi)
+					(A:HYDRAULIC PRESSURE:2, psi) + 2 / (>L:PX_HYD)
+
 					(L:HYDRAULIC_GAUGE_PWR, enum) 1 ==
 						if{
-							(A:HYDRAULIC PRESSURE:1, psi)
-							(A:HYDRAULIC PRESSURE:2, psi) + 2 / (>L:PX_HYD, enum)
-
 							(A:HYDRAULIC PRESSURE:1, psi) (>L:GAU_LENG_HYD_PRESS)
 							(A:HYDRAULIC PRESSURE:2, psi) (>L:GAU_RENG_HYD_PRESS)
+							(L:PX_HYD) (>L:GAU_UTIL_HYD_PRESS)
 						}
 						els{
-							0 (>L:PX_HYD, enum)
 
 							0 (>L:GAU_LENG_HYD_PRESS)
 							0 (>L:GAU_RENG_HYD_PRESS)
+							0 (>L:GAU_UTIL_HYD_PRESS)
 						}
       			</Value>
     		</Select>
@@ -1322,17 +1942,15 @@ Version 5.0
 		<Element Name="Oil Pressure Indicators">
     		<Select>
       			<Value>
+					(A:ENG OIL PRESSURE:1, psi)
+					(A:ENG OIL PRESSURE:2, psi) + 2 / (>L:PX_OIL, enum)
+
 					(L:OIL_PRESS_GAUGE_PWR, enum) 1 ==
 						if{
-							(A:ENG OIL PRESSURE:1, psi)
-							(A:ENG OIL PRESSURE:2, psi) + 2 / (>L:PX_OIL, enum)
-
 							(A:ENG OIL PRESSURE:1, psi) (>L:GAU_LENG_OIL_PRESS)
 							(A:ENG OIL PRESSURE:2, psi) (>L:GAU_RENG_OIL_PRESS)
 						}
 						els{
-							0 (>L:PX_OIL, enum)
-
 							0 (>L:GAU_LENG_OIL_PRESS)
 							0 (>L:GAU_RENG_OIL_PRESS)
 						}
@@ -1345,71 +1963,71 @@ Version 5.0
       			<Value>
 					(L:FUEL_GAUGE_PWR, enum) 1 ==
 						if{
-						(L:KNOB_FUEL_BINGO, enum) 1100 * (>L:SETTING BNGO, enum)
-							(L:KNOB_FUEL_SELECT) 0 ==
-								if{
-									6000 (>L:FUEL_INTERNAL, enum)
-									6000 (>L:FUEL_TOTAL, enum)
-									600 (>L:FUEL_LEFT, enum)
-									600 (>L:FUEL_RIGHT, enum)
-								}
-							(L:KNOB_FUEL_SELECT) 1 ==
-								if{
-									(L:FUEL_INTERNAL, enum) (>L:FUEL_TOTAL, enum)
-									(A:FUEL TANK CENTER2 QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_LEFT, enum)
-									(A:FUEL TANK CENTER3 QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_RIGHT, enum)
-								}
+							(L:KNOB_FUEL_BINGO, enum) 1100 * (>L:SETTING BNGO, enum)
+								(L:KNOB_FUEL_SELECT) 0 ==
+									if{
+										6000 (>L:FUEL_INTERNAL, enum)
+										6000 (>L:FUEL_TOTAL, enum)
+										600 (>L:FUEL_LEFT, enum)
+										600 (>L:FUEL_RIGHT, enum)
+									}
+								(L:KNOB_FUEL_SELECT) 1 ==
+									if{
+										(L:FUEL_INTERNAL, enum) (>L:FUEL_TOTAL, enum)
+										(A:FUEL TANK CENTER2 QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_LEFT, enum)
+										(A:FUEL TANK CENTER3 QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_RIGHT, enum)
+									}
 
-							(L:KNOB_FUEL_SELECT) 2 ==
-								if{
-									(L:FUEL_INTERNAL, enum) (>L:FUEL_TOTAL, enum)
-									(A:FUEL TANK LEFT MAIN QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_LEFT, enum)
-									(A:FUEL TANK RIGHT MAIN QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_RIGHT, enum)
-								}
+								(L:KNOB_FUEL_SELECT) 2 ==
+									if{
+										(L:FUEL_INTERNAL, enum) (>L:FUEL_TOTAL, enum)
+										(A:FUEL TANK LEFT MAIN QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_LEFT, enum)
+										(A:FUEL TANK RIGHT MAIN QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_RIGHT, enum)
+									}
 
-							(L:KNOB_FUEL_SELECT) 3 ==
-								if{
-									(L:FUEL_INTERNAL, enum) (>L:FUEL_TOTAL, enum)
-									(A:FUEL TANK CENTER QUANTITY, gallons)  (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_LEFT, enum)
-									0 (>L:FUEL_RIGHT, enum)
-								}
+								(L:KNOB_FUEL_SELECT) 3 ==
+									if{
+										(L:FUEL_INTERNAL, enum) (>L:FUEL_TOTAL, enum)
+										(A:FUEL TANK CENTER QUANTITY, gallons)  (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_LEFT, enum)
+										0 (>L:FUEL_RIGHT, enum)
+									}
 
-							(L:KNOB_FUEL_SELECT) 4 ==
-								if{
-									(L:FUEL_INTERNAL, enum) (>L:FUEL_TOTAL, enum)
-									(A:FUEL TANK LEFT AUX QUANTITY, gallons)   (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_LEFT, enum)
-									(A:FUEL TANK RIGHT AUX QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_RIGHT, enum)
-								}
+								(L:KNOB_FUEL_SELECT) 4 ==
+									if{
+										(L:FUEL_INTERNAL, enum) (>L:FUEL_TOTAL, enum)
+										(A:FUEL TANK LEFT AUX QUANTITY, gallons)   (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_LEFT, enum)
+										(A:FUEL TANK RIGHT AUX QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_RIGHT, enum)
+									}
 
-							(L:KNOB_FUEL_SELECT) 5 ==
-								if{
-									(L:FUEL_INTERNAL, enum) (>L:FUEL_TOTAL, enum)
-									(A:FUEL TANK EXTERNAL1 QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_LEFT, enum)
-									0 (>L:FUEL_RIGHT, enum)
-								}
-							(L:KNOB_FUEL_SELECT) 6 ==
-								if{
-									(L:FUEL_INTERNAL, enum) (>L:FUEL_TOTAL, enum)
-									(A:FUEL TANK LEFT TIP QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_LEFT, enum)
-									(A:FUEL TANK RIGHT TIP QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_RIGHT, enum)
-								}
+								(L:KNOB_FUEL_SELECT) 5 ==
+									if{
+										(L:FUEL_INTERNAL, enum) (>L:FUEL_TOTAL, enum)
+										(A:FUEL TANK EXTERNAL1 QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_LEFT, enum)
+										0 (>L:FUEL_RIGHT, enum)
+									}
+								(L:KNOB_FUEL_SELECT) 6 ==
+									if{
+										(L:FUEL_INTERNAL, enum) (>L:FUEL_TOTAL, enum)
+										(A:FUEL TANK LEFT TIP QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_LEFT, enum)
+										(A:FUEL TANK RIGHT TIP QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * (>L:FUEL_RIGHT, enum)
+									}
 
-							(L:KNOB_FUEL_SELECT) 0 &gt;
-								if{
-									(A:FUEL TANK CENTER QUANTITY, gallons)
-									(A:FUEL TANK CENTER2 QUANTITY, gallons) +
-									(A:FUEL TANK CENTER3 QUANTITY, gallons) +
-									(A:FUEL TANK LEFT MAIN QUANTITY, gallons) +
-									(A:FUEL TANK RIGHT MAIN QUANTITY, gallons) +
-									(A:FUEL TANK LEFT AUX QUANTITY, gallons) +
-									(A:FUEL TANK RIGHT AUX QUANTITY, gallons) +
-									(A:FUEL TANK LEFT TIP QUANTITY, gallons) +
-									(A:FUEL TANK RIGHT TIP QUANTITY, gallons) +
-									(A:FUEL TANK EXTARNAL1 QUANTITY, gallons) +
-									(A:FUEL TANK EXTARNAL2 QUANTITY, gallons) +
-									(A:FUEL WEIGHT PER GALLON, pounds) *
-									(>L:FUEL_INTERNAL, enum)
-								}
+								(L:KNOB_FUEL_SELECT) 0 &gt;
+									if{
+										(A:FUEL TANK CENTER QUANTITY, gallons)
+										(A:FUEL TANK CENTER2 QUANTITY, gallons) +
+										(A:FUEL TANK CENTER3 QUANTITY, gallons) +
+										(A:FUEL TANK LEFT MAIN QUANTITY, gallons) +
+										(A:FUEL TANK RIGHT MAIN QUANTITY, gallons) +
+										(A:FUEL TANK LEFT AUX QUANTITY, gallons) +
+										(A:FUEL TANK RIGHT AUX QUANTITY, gallons) +
+										(A:FUEL TANK LEFT TIP QUANTITY, gallons) +
+										(A:FUEL TANK RIGHT TIP QUANTITY, gallons) +
+										(A:FUEL TANK EXTARNAL1 QUANTITY, gallons) +
+										(A:FUEL TANK EXTARNAL2 QUANTITY, gallons) +
+										(A:FUEL WEIGHT PER GALLON, pounds) *
+										(>L:FUEL_INTERNAL, enum)
+									}
 						}
 						els{
 							0 (>L:FUEL_INTERNAL, enum)
@@ -1426,22 +2044,21 @@ Version 5.0
 		<Element Name="Pitch Ratio Indicator">
     		<Select>
       			<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-					(L:GROUND_POWER_AVAIL, enum) 1 == or
-					if{
-						(A:HYDRAULIC PRESSURE:1, psi) 2000 &lt;
-						(A:HYDRAULIC PRESSURE:2, psi) 2000 &lt; and
-						(L:SW1_FS_PITCH_RATIO, enum) 0 == or
-							if{
-								40 (>L:NEEDLE_PITCH_RATIO)
-							}
-							els{
-								(A:AIRSPEED MACH,mach) 100 * (>L:NEEDLE_PITCH_RATIO)
-							}
-					}
-					els{
-						0 (>L:NEEDLE_PITCH_RATIO)
-					}
+					(L:PRAD_GAUGE_PWR) 1 ==
+						if{
+							(A:HYDRAULIC PRESSURE:1, psi) 2000 &lt;
+							(A:HYDRAULIC PRESSURE:2, psi) 2000 &lt; and
+							(L:SW1_FS_PITCH_RATIO, enum) 0 == or
+								if{
+									40 (>L:NEEDLE_PITCH_RATIO)
+								}
+								els{
+									(A:AIRSPEED MACH,mach) 100 * (>L:NEEDLE_PITCH_RATIO)
+								}
+						}
+						els{
+							0 (>L:NEEDLE_PITCH_RATIO)
+						}
       			</Value>
     		</Select>
 		</Element>
@@ -1454,235 +2071,30 @@ Version 5.0
     		</Select>
 		</Element>
 	</Element>
-	<Element Name="Gauge_BIT">
-		<Element>
-			<Select>
-				<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-					(L:GROUND_POWER_AVAIL, enum) 1 == or
-					(L:BIT-TIME, seconds) 0 == and
-						if{
-							(P:LOCAL TIME, seconds) (>L:BIT-TIME, seconds)
-							1 (>L:BIT_INIT)
-						}
-				</Value>
-			</Select>
-		</Element>
-		<Element>
-			<Select>
-				<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 0 ==
-					(L:GROUND_POWER_AVAIL, enum) 0 == and
-					(L:BIT-TIME, seconds) 0 &gt; and
-						if{
-							0 (>L:BIT-TIME, seconds)
-							0 (>L:BIT_INIT)
-						}
-				</Value>
-			</Select>
-		</Element>
-		<Element>
-			<Select>
-				<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-					(L:GROUND_POWER_AVAIL, enum) 1 == or
-					(P:LOCAL TIME, seconds) (L:BIT-TIME, seconds) - 1 &gt; and
-						if{
-							1 (>L:BIT_INIT)
-						}
-				</Value>
-			</Select>
-		</Element>
-		<Element>
-			<Select>
-				<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-					(L:GROUND_POWER_AVAIL, enum) 1 == or
-					(P:LOCAL TIME, seconds) (L:BIT-TIME, seconds) - 2 &gt; and
-						if{
-							2 (>L:BIT_INIT)
-						}
-				</Value>
-			</Select>
-		</Element>
-		<Element>
-			<Select>
-				<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-					(L:GROUND_POWER_AVAIL, enum) 1 == or
-					(P:LOCAL TIME, seconds) (L:BIT-TIME, seconds) - 4 &gt; and
-						if{
-							0 (>L:BIT_INIT)
-						}
-				</Value>
-			</Select>
-		</Element>
-		<Element>
-    		<Select>
-      			<Value>
-					(L:BIT_INIT) 1 ==
-						if{
- 							250 (>L:GAU_AIRSPEED_C)
-							0.465 (>L:GAU_AIRSPEED_MACH)
-							11500 (>L:GAU_ALTITUDE)
-							11500 (>L:IND_ALTITUDE)
-							29.92 (>L:GAU_KOHLSMAN)
-							500 (>L:GAU_VSI)
-
-							20 dgrg (>L:HSI_COMPASS)
-							40 dgrg (>L:HSI_CRS_ALLOW)
-							40 dgrg (>L:HSI_PTR1)
-							60 dgrg (>L:HSI_PTR2)
-							1234 (>L:HSI_RANGE)
-							40 (>L:HSI_CRS_SELECT)
-							45 (>L:HSI_DEVIATION)
-							1 (>L:HSI_TO_FROM)
-
-							7.5 (>L:GAU_ATT_STR_PITCH)
-							45 (>L:GAU_ATT_STR_BANK)
-
-							6000 (>L:FUEL_INTERNAL, enum)
-							5500 (>L:SETTING BNGO, enum)
-							6000 (>L:FUEL_TOTAL, enum)
-							600 (>L:FUEL_LEFT, enum)
-							600 (>L:FUEL_RIGHT, enum)
-
-							<!-- fictional -->
-
-							1000 (>L:GAU_AIRSPEED_INDEX)
-							80 dgrg (>L:HSI_HDG)
-
-							50 (>L:GAU_AOA)
-
-							0 (>L:GAU_G_FORCE)
-							10 (>L:MAX_G_FORCE)
-							-5 (>L:MIN_G_FORCE)
-
-							45 (>L:GAU_ATT_PITCH)
-							-45 (>L:GAU_ATT_BANK)
-							1 (>L:GAU_ATT_BALL)
-							-1 (>L:GAU_ATT_HEADING_RATE)
-							-60 (>L:GAU_ATT_BARS)
-
-							50000 (>L:GAU_CABINALT)
-
-							110 (>L:GAU_LENG_RPM)
-							110 (>L:GAU_RENG_RPM)
-							999 (>L:IND_LENG_RPM)
-							999 (>L:IND_RENG_RPM)
-
-							1400 (>L:GAU_LENG_ITT)
-							1400 (>L:GAU_RENG_ITT)
-							9999 (>L:IND_LENG_ITT)
-							9999 (>L:IND_RENG_ITT)
-
-							100000 (>L:GAU_LENG_FF)
-							100000 (>L:GAU_RENG_FF)
-							99999 (>L:IND_LENG_FF)
-							99999 (>L:IND_RENG_FF)
-
-							100 (>L:ENG1_NOZZLE, enum)
-							100 (>L:ENG2_NOZZLE, enum)
-
-							4000 (>L:GAU_LENG_HYD_PRESS)
-							4000 (>L:GAU_RENG_HYD_PRESS)
-							4000 (>L:PX_HYD, enum)
-
-							100 (>L:GAU_LENG_OIL_PRESS)
-							100 (>L:GAU_RENG_OIL_PRESS)
-
-							100 (>L:NEEDLE_PITCH_RATIO)
-						}
-      			</Value>
-    		</Select>
-		</Element>
-		<Element>
-    		<Select>
-      			<Value>
-					(L:BIT_INIT) 2 ==
-						if{
- 							0 (>L:GAU_AIRSPEED_C)
-							0 (>L:GAU_AIRSPEED_MACH)
-							0 (>L:GAU_AIRSPEED_INDEX)
-
-							0 (>L:HSI_COMPASS)
-							0 (>L:HSI_CRS_ALLOW)
-							0 (>L:HSI_PTR1)
-							0 (>L:HSI_PTR2)
-							0 (>L:HSI_HDG)
-							0 (>L:HSI_RANGE)
-							0 (>L:HSI_CRS_SELECT)
-							0 (>L:HSI_DEVIATION)
-							0 (>L:HSI_TO_FROM)
-
-							0 (>L:GAU_ATT_STR_PITCH)
-							0 (>L:GAU_ATT_STR_BANK)
-
-							0 (>L:GAU_AOA)
-
-							0 (>L:GAU_G_FORCE)
-							0 (>L:MAX_G_FORCE)
-							0 (>L:MIN_G_FORCE)
-
-							0 (>L:GAU_ATT_PITCH)
-							0 (>L:GAU_ATT_BANK)
-							0 (>L:GAU_ATT_BALL)
-							0 (>L:GAU_ATT_HEADING_RATE)
-							0 (>L:GAU_ATT_BARS)
-
-							0 (>L:GAU_ALTITUDE)
-							0 (>L:IND_ALTITUDE)
-							0 (>L:GAU_KOHLSMAN)
-							0 (>L:GAU_CABINALT)
-
-							0 (>L:GAU_VSI)
-
-							0 (>L:GAU_LENG_RPM)
-							0 (>L:GAU_RENG_RPM)
-							0 (>L:IND_LENG_RPM)
-							0 (>L:IND_RENG_RPM)
-
-							0 (>L:GAU_LENG_ITT)
-							0 (>L:GAU_RENG_ITT)
-							0 (>L:IND_LENG_ITT)
-							0 (>L:IND_RENG_ITT)
-
-							0 (>L:GAU_LENG_FF)
-							0 (>L:GAU_RENG_FF)
-							0 (>L:IND_LENG_FF)
-							0 (>L:IND_RENG_FF)
-
-							0 (>L:ENG1_NOZZLE, enum)
-							0 (>L:ENG2_NOZZLE, enum)
-
-							0 (>L:GAU_LENG_HYD_PRESS)
-							0 (>L:GAU_RENG_HYD_PRESS)
-							0 (>L:PX_HYD, enum)
-
-							0 (>L:GAU_LENG_OIL_PRESS)
-							0 (>L:GAU_RENG_OIL_PRESS)
-
-							0 (>L:FUEL_INTERNAL, enum)
-							0 (>L:SETTING BNGO, enum)
-							0 (>L:FUEL_TOTAL, enum)
-							0 (>L:FUEL_LEFT, enum)
-							0 (>L:FUEL_RIGHT, enum)
-
-							0 (>L:NEEDLE_PITCH_RATIO)
-						}
-      			</Value>
-    		</Select>
-		</Element>
-
-	</Element>
 
 	<Element Name="LIGHT">
+		<Element Name="LIGHT FLICKER">
+			<Select>
+				<Value>
+					(L:WRN_ADV_CAUT_LTS_PWR) 1 ==
+					(L:WARN_CAUT_LTS) 0 &gt;
+						if{ 1 (>L:LIGHT_FLICKER, enum) }
+						els{ 0 (>L:LIGHT_FLICKER, enum) }
+
+					(L:WARN_CAUT_LTS) 0 ==
+						if{ (L:AUTO_XMFR_VOLTAGE) 14 * 115 / (>L:LTS_BUS_VOLTAGE) }
+
+					(L:WARN_CAUT_LTS) 1 ==
+						els{ (L:AUTO_XMFR_VOLTAGE) 28 * 115 / (>L:LTS_BUS_VOLTAGE) }
+
+				</Value>
+			</Select>
+		</Element>
 		<Element Name="LT INIT">
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(WRN_ADV_CAUT_LTS_PWR) 1 ==
 						(L:LT-TIME, seconds) 0 == and
 							if{
 								(P:LOCAL TIME, seconds) (>L:LT-TIME, seconds)
@@ -1694,8 +2106,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 0 ==
-						(L:GROUND_POWER_AVAIL, enum) 0 == and
+						(WRN_ADV_CAUT_LTS_PWR) 1 ==
 						(L:LT-TIME, seconds) 0 &gt; and
 							if{
 								0 (>L:LT-TIME, seconds)
@@ -1707,9 +2118,8 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
-						(P:LOCAL TIME, seconds) (L:LT-TIME, seconds) - 3 &gt; and
+						(WRN_ADV_CAUT_LTS_PWR) 1 ==
+						(P:LOCAL TIME, seconds) (L:LT-TIME, seconds) - 2 &gt; and
 							if{
 								0 (>L:SW1_FS_INT_LT_TEST)
 							}
@@ -1723,7 +2133,8 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:SW2_FS_EW_ICS, enum) 0 !
+							(L:RWR_AC_PWR) 1 ==
+							(L:SW2_FS_EW_ICS, enum) 0 ! and
 							(L:SW1_FS_TEWS_ICS) 1 == and
 							(L:SW1_FS_TEWS_EWWS_PWR) 1 == and
 							(L:RDR_TGT_DIS) 10 &lt;  and
@@ -1736,7 +2147,8 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:SW2_FS_EW_ICS, enum) 0 !
+							(L:RWR_AC_PWR) 1 ==
+							(L:SW2_FS_EW_ICS, enum) 0 ! and
 							(L:SW1_FS_TEWS_ICS) 1 == and
 							(L:SW1_FS_TEWS_EWWS_PWR) 1 == and
 							(L:RDR_TGT_DIS) 5 &lt;  and
@@ -1766,7 +2178,8 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:RDR_TGT_DIS) 10 &lt;
+							(L:RWR_AC_PWR) 1 ==
+							(L:RDR_TGT_DIS) 10 &lt; and
 							(L:TGT_ALTITUDE) 1000 &lt; and
 								if{ 1 (>L:SAM, enum)  }
 								els{ 0 (>L:SAM, enum) }
@@ -1945,7 +2358,9 @@ Version 5.0
 			<Element Name="ACS LOCKED">
 				<Select>
 					<Value>
-						(L:HUD_MASTER_MODE, enum) 2 ==
+						(L:LIGHT_FLICKER, enum) 1 ==
+						(L:HUD_MASTER_MODE, enum) 2 == and
+						(L:LEAD_COM_GYRO_PWR) 1 == and
 						(L:RLST, bool) and
 						(L:GAcq Switch, bool) and
 						(L:BGOH, bool) and
@@ -2167,7 +2582,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:DUMMY, enum) 1 == and
+						(L:L_BST_PUMP_PWR) 0 == and
 							if{ 1 (>L:LT_FS_BIT_L_PUMP, enum)  }
 							els{ 0 (>L:LT_FS_BIT_L_PUMP, enum) }
 					</Value>
@@ -2177,7 +2592,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:DUMMY, enum) 1 == and
+						(L:R_BST_PUMP_PWR) 0 == and
 							if{ 1 (>L:LT_FS_BIT_R_PUMP, enum)  }
 							els{ 0 (>L:LT_FS_BIT_R_PUMP, enum) }
 					</Value>
@@ -2262,7 +2677,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_SYS_RWR, enum) 1 == and
+						(L:RWR_DC_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_RWR, enum)  }
 							els{ 0 (>L:LT_FS_BIT_RWR, enum) }
@@ -2273,7 +2688,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_ELEC_MPCD, enum) 1 == and
+						(L:MPCD_DC_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_MPCD, enum)  }
 							els{ 0 (>L:LT_FS_BIT_MPCD, enum) }
@@ -2284,7 +2699,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_ELEC_CC, enum) 1 == and
+						(L:CCC_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_CC, enum)  }
 							els{ 0 (>L:LT_FS_BIT_CC, enum) }
@@ -2295,7 +2710,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_SYS_AAI, enum) 1 == and
+						(L:IFF_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_AAI, enum)  }
 							els{ 0 (>L:LT_FS_BIT_AAI, enum) }
@@ -2306,7 +2721,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_SYS_RDR, enum) 1 == and
+						(L:RDR_LVPS_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_RDR, enum)  }
 							els{ 0 (>L:LT_FS_BIT_RDR, enum) }
@@ -2317,7 +2732,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_ELEC_HUD, enum) 1 == and
+						(L:HUD_DC_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_HUD, enum)  }
 							els{ 0 (>L:LT_FS_BIT_HUD, enum) }
@@ -2340,7 +2755,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_SYS_EWW, enum) 1 == and
+						(L:EWWSS_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_EWW, enum)  }
 							els{ 0 (>L:LT_FS_BIT_EWW, enum) }
@@ -2351,7 +2766,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_ELEC_VSD, enum) 1 == and
+						(L:VSD_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_VSD, enum)  }
 							els{ 0 (>L:LT_FS_BIT_VSD, enum) }
@@ -2362,7 +2777,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_ELEC_ADC, enum) 1 == and
+						(L:ADC_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_ADC, enum)  }
 							els{ 0 (>L:LT_FS_BIT_ADC, enum) }
@@ -2373,7 +2788,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_SYS_IFF, enum) 1 == and
+						(L:IFF_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_IFF, enum)  }
 							els{ 0 (>L:LT_FS_BIT_IFF, enum) }
@@ -2395,7 +2810,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_ELEC_LCG, enum) 1 == and
+						(L:LEAD_COM_GYRO_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_LCG, enum)  }
 							els{ 0 (>L:LT_FS_BIT_LCG, enum) }
@@ -2407,7 +2822,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_SYS_M4, enum) 1 == and
+						(L:IFF_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_M4, enum)  }
 							els{ 0 (>L:LT_FS_BIT_M4, enum) }
@@ -2418,7 +2833,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_SYS_ICS, enum) 1 == and
+						(L:ICS_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_ICS, enum)  }
 							els{ 0 (>L:LT_FS_BIT_ICS, enum) }
@@ -2440,7 +2855,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_SYS_PACS, enum) 1 == and
+						(L:ARM_BUS_CONT_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_PACS, enum)  }
 							els{ 0 (>L:LT_FS_BIT_PACS, enum) }
@@ -2451,7 +2866,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_SYS_IBS, enum) 1 == and
+						(L:INTR_BLANER_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_IBS, enum)  }
 							els{ 0 (>L:LT_FS_BIT_IBS, enum) }
@@ -2462,7 +2877,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_SYS_INS, enum) 1 == and
+						(L:INTRL_NAV_SET_MEAS_UNIT_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_INS, enum)  }
 							els{ 0 (>L:LT_FS_BIT_INS, enum) }
@@ -2473,7 +2888,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(A:PARTIAL PANEL HEADING, enum) 1 == and
+						(L:HSI_IND_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_HSI, enum)  }
 							els{ 0 (>L:LT_FS_BIT_HSI, enum) }
@@ -2485,7 +2900,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_SYS_AIM, enum) 1 == and
+						(L:ARM_BUS_CONT_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_AIM, enum)  }
 							els{ 0 (>L:LT_FS_BIT_AIM, enum) }
@@ -2496,7 +2911,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(A:PARTIAL PANEL ADF, enum) 1 ==	and
+						(L:ADF_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_ADF, enum)  }
 							els{ 0 (>L:LT_FS_BIT_ADF, enum) }
@@ -2518,7 +2933,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(A:PARTIAL PANEL COMM, enum) 1 == and
+						(L:UHF_RCVR_XMTR_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_COMM, enum)  }
 							els{ 0 (>L:LT_FS_BIT_COMM, enum) }
@@ -2540,7 +2955,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PARTIAL_SYS_AHR, enum) 1 == and
+						(L:ATTD_HDG_REF_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_AHR, enum)  }
 							els{ 0 (>L:LT_FS_BIT_AHR, enum) }
@@ -2551,14 +2966,13 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(A:PARTIAL PANEL NAV, enum) 1 ==	and
+						(L:TACAN_RCVR_XMTR_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BIT_TCN, enum)  }
 							els{ 0 (>L:LT_FS_BIT_TCN, enum) }
 					</Value>
 				</Select>
 			</Element>
-
 		</Element>
 		<Element Name="Annucator Panel">
 
@@ -2593,7 +3007,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:PX_HYD, enum) 2000 &lt; and
+						(L:BST_SYS, bool) 1 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_BST_SYS_MAL, enum)  }
 							els{ 0 (>L:LT_FS_BST_SYS_MAL, enum) }
@@ -2645,7 +3059,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:IFF_PWR) 0 == and
+						(L:IFF_MAIN_PWR) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_IFF, enum)  }
 							els{ 0 (>L:LT_FS_IFF, enum) }
@@ -3049,8 +3463,7 @@ Version 5.0
 <!--  			<Element Name="LANDING / TAXI" >
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(L:LANDING_TAXY_LT_CONT_PWR) 1 ==
 						(L:SW2_FS_MISC_LANDING_TAXI, enum) 1 == and
 						(A:GEAR CENTER POSITION, percent) 100 == and
 							if{
@@ -3071,14 +3484,12 @@ Version 5.0
 <!--			<Element Name="L/R CONSOLE / INST (Panel Light [LIGHT LANDING])">
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
-						(L:KNOB_FS_INT_LT_L_CONSOLE) 1 &gt; and
+						(L:KNOB_FS_INT_LT_L_CONSOLE) 1 &gt;
 						(L:KNOB_FS_INT_LT_R_CONSOLE) 1 &gt; or
 						(L:KNOB_FS_INT_LT_INST_AUX) 1 &gt; or
 						(L:KNOB_FS_INT_LT_INST_FLT) 1 &gt; or
 						(L:KNOB_FS_INT_LT_INST_ENG) 1 &gt; or
-						(A:GEAR CENTER POSITION, percent) 100 == and
+						(L:INT_LT_PWR) 1 == and
 							if{
 								(A:LIGHT LANDING, bool) 0 ==
 								if{
@@ -3107,19 +3518,14 @@ Version 5.0
 			<Element Name="WARNING CAUTION">
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
-						(L:KNOB_FS_INT_LT_CAUTION) 1 == and
-							if{ 1 (>L:LIGHT_FLICKER, enum) }
-							els{ 0 (>L:LIGHT_FLICKER, enum) }
+						(L:KNOB_FS_INT_LT_CAUTION) (>L:WARN_CAUT_LTS)
 					</Value>
 				</Select>
 			</Element>
   			<Element Name="STORM FLOOD (Cabin Light)" >
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(L:STORM_FLOOD_LT_PWR) 1 ==
 						(L:KNOB_FS_INT_LT_STORM) 1 &gt; and
 							if{
 								(A:LIGHT CABIN, bool) 0 ==
@@ -3141,8 +3547,7 @@ Version 5.0
 <!-- 			<Element Name="FORMATION (INOP)" >
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(FORM_LT_AVIONICS_DIM_CONT_PWR) 1 ==
 						(L:KNOB_FS_LIGHT_FORM) 1 &gt; and
 							if{
 								(L:LIGHT FORM, bool) 0 ==
@@ -3162,8 +3567,7 @@ Version 5.0
 <!-- 			<Element Name="ANTI COLLISION (Beacon)" >
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(POS_ANTI_COL_LT_CONT_PWR) 1 ==
 						(L:KNOB_FS_LIGHT_FORM) 1 &gt; and
 							if{
 								(A:LIGHT BEACON, bool) 0 ==
@@ -3183,8 +3587,7 @@ Version 5.0
 <!--  			<Element Name="POSITION (Navigation)" >
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(L:POS_ANTI_COL_LT_CONT_PWR) 1 ==
 						(L:KNOB_FS_LIGHT_FORM) 1 &gt; and
 							if{
 								(L:LIGHT STROBE, bool) 0 ==
@@ -3256,7 +3659,6 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-
 		<Element Name="TAKEOFF TRIM LIGHT">
 			<Select>
 				<Value>
@@ -3534,7 +3936,7 @@ Version 5.0
 	<Element Name="ROLL RATIO CONTROLER">
  		<Select>
    			<Value>
-				(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+				(L:AFCS_DC_PWR) 1 ==
 				(L:SW1_FS_MISC_ROLL_RATIO) 0 == and
 					if{
 						1 (>L:ROLL_RATIO_EMERG)
@@ -3548,7 +3950,8 @@ Version 5.0
 	<Element Name="INLET CONTROLER">
  		<Select>
    			<Value>
-				(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+				(L:AIR_INLET_CONT_PWR) 1 ==
+				(L:AIC_PWR) 1 == and
 				(L:SW1_FS_ENG_CONT_L, enum) 1 == and
 				(L:SW1_FS_MISC_L_INLET_RAMP) 1 == and
 				(A:TURB ENG1 N2, percent) 28 &gt; and
@@ -3559,7 +3962,8 @@ Version 5.0
 						0 (>L:LINLET_ENABLED, enum)
 						}
 
-				(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+				(L:AIR_INLET_CONT_PWR) 1 ==
+				(L:AIC_PWR) 1 == and
 				(L:SW1_FS_ENG_CONT_R, enum) 1 == and
 				(L:SW1_FS_MISC_R_INLET_RAMP) 1 == and
 				(A:TURB ENG2 N2, percent) 28 &gt; and
@@ -3575,6 +3979,7 @@ Version 5.0
 	<Element Name="ANTI SKID CONTROLER">
  		<Select>
    			<Value>
+				(L:ARI_SHUTOFF_ANTI-SKID_CONT_PWR) 1 ==
 				(L:SW2_FS_MISC_ANTI_SKID, enum) 2 ==
 				(L:SW1_FS_EMER_BRAKE) 0 == and
 					if{
@@ -3622,27 +4027,25 @@ Version 5.0
 		<Select>
 			<Value>
 				(L:SW2_FS_IFF_MODE, enum) 0 &gt;
-				(L:SW2_FS_IFF_LIGHT_AUD, enum) 0 &gt; and
-				(L:MPDP_AIU_1_PWR, enum) 1 == and
-				(L:EMIS_LIMIT, enum) 0 == and
+				(L:IFF_PWR) 1 ==
 					if{
-						1 (>L:IFF_PWR)
+						1 (>L:IFF_MAIN_PWR)
 					}
 					els{
-						0 (>L:IFF_PWR)
+						0 (>L:IFF_MAIN_PWR)
 					}
 
-				(L:IFF_PWR, enum) 0 ==
-				(L:IFF_PWR_INIT, enum) 0 == and
+				(L:IFF_MAIN_PWR) 0 ==
+				(L:IFF_MAIN_PWR_INIT) 0 == and
 					if{
 						0 (>K:XPNDR_SET)
-						1 (>L:IFF_PWR_INIT, enum)
+						1 (>L:IFF_MAIN_PWR_INIT)
 					}
 
-				(L:IFF_PWR, enum) 1 ==
-				(L:IFF_PWR_INIT, enum) 1 == and
+				(L:IFF_MAIN_PWR) 1 ==
+				(L:IFF_MAIN_PWR_INIT) 1 == and
 					if{
-						0 (>L:IFF_PWR_INIT, enum)
+						0 (>L:IFF_MAIN_PWR_INIT)
 					}
 			</Value>
 		</Select>
@@ -3651,7 +4054,8 @@ Version 5.0
 	<Element Name="CAS CONTROLER">
  		<Select>
    			<Value>
-			(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+			(L:AFCS_AC_PWR) 1 ==
+			(L:AFCS_DC_PWR) 1 == and
 				if{
 					1 (>L:PITCH_RATIO_RDY, enum)
 					1 (>L:ROLL_RATIO_RDY, enum)
@@ -3709,7 +4113,7 @@ Version 5.0
 					(L:ILS_FREQ, MHz) 100 * (>L:ILS_FREQ_I, MHz)
 
 					(L:ILS_FREQ, MHz) (L:ILS_FREQ_Slave, MHz) - 0 !
-					(L:INTERNAL_POWER_AVAIL, enum) 1 == and
+					(L:ILS_PWR) 1 == and
 						if{
 							(L:ILS_FREQ, MHz) (>L:ILS_FREQ_Slave, MHz)
 							(L:ILS_FREQ, Frequency BCD16) (>K:NAV2_RADIO_SET)
@@ -3720,7 +4124,7 @@ Version 5.0
 		<Element Name="ILS RADIO VOLUME">
 			<Select>
 				<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+					(L:ILS_PWR) 1 ==
 					(L:KNOB_FS_ILS_VOL) 0 &gt; and
 					(L:ILSV_CNG) 0 == and
 						if{
@@ -3764,7 +4168,7 @@ Version 5.0
 					(L:TCN_FREQ_100) (L:TCN_FREQ_1) + (>L:TCN_FREQ)
 
 					(L:TCN_FREQ) (L:TCN_FREQ_Slave, MHz) - 0 !
-					(L:INTERNAL_POWER_AVAIL, enum) 1 == and
+					(L:TACAN_RCVR_XMTR_PWR) 1 == and
 						if{
 							(L:TCN_FREQ) (>L:TCN_FREQ_Slave, MHz)
 
@@ -3809,7 +4213,7 @@ Version 5.0
 		<Element Name="TCN RADIO VOLUME">
 			<Select>
 				<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+					(L:TACAN_RCVR_XMTR_PWR) 1 ==
 					(L:KNOB_FS_TCN_VOL) 0 &gt; and
 					(L:TCNV_CNG) 0 == and
 						if{
@@ -3886,7 +4290,7 @@ Version 5.0
 		<Element Name="R1 COMM VOLUME">
 			<Select>
 				<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+					(L:UHF_RCVR_XMTR_PWR) 1 ==
 					(L:KNOB_FS_UHF_1_VOL) 0 &gt; and
 					(L:R1V_INIT) 0 == and
 						if{
@@ -3963,7 +4367,7 @@ Version 5.0
 		<Element Name="R2 COMM VOLUME">
 			<Select>
 				<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+					(L:UHF_AUX_RCVR_PWR) 1 ==
 					(L:SW2_FS_RAD2_TRANS) 2 == and
 					(L:R2V_INIT) 0 == and
 						if{
@@ -4021,7 +4425,7 @@ Version 5.0
 	<Element Name="EEC CONTROLER">
  		<Select>
    			<Value>
-				(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+				(L:ENG_CONT_ESS_BUS_PWR) 1 ==
 				(L:SW1_FS_ENG_CONT_L, enum) 1 == and
 					if{
 						1 (>L:LEEC_ENABLED, enum)
@@ -4030,7 +4434,7 @@ Version 5.0
 						0 (>L:LEEC_ENABLED, enum)
 					}
 
-				(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+				(L:ENG_CONT_ESS_BUS_PWR) 1 ==
 				(L:SW1_FS_ENG_CONT_R, enum) 1 == and
 					if{
 						1 (>L:REEC_ENABLED, enum)
@@ -4046,8 +4450,7 @@ Version 5.0
 		<Element Name="ANTI FOG CONTROLLER">
 			<Select>
 				<Value>
-				(L:INTERNAL_POWER_AVAIL,enum) 1 ==
-				(L:GROUND_POWER_AVAIL,enum) 1 == or
+				(L:ECS_HEAT_EXCANGER_PWR) 1 ==
 				(L:SW2_FS_ECS_ANTIFOG) 1 == and
 						if{
 						}
@@ -4059,8 +4462,7 @@ Version 5.0
 		<Element Name="PITOT HEAT CONTROLLER">
 			<Select>
 				<Value>
-				(L:INTERNAL_POWER_AVAIL,enum) 1 ==
-				(L:GROUND_POWER_AVAIL,enum) 1 == or
+				(L:PITOT_MAST_HTR_PWR) 1 ==
 				(L:SW1_FS_ECS_PITOT) 1 == and
 				(A:AMBIENT TEMPERATURE, celsius) 0 &lt; and
 						if{
@@ -4081,8 +4483,7 @@ Version 5.0
 		<Element Name="WINDSHLD CONTROLLER">
 			<Select>
 				<Value>
-				(L:INTERNAL_POWER_AVAIL,enum) 1 ==
-				(L:GROUND_POWER_AVAIL,enum) 1 == or
+				(L:WSHLD_ANTI-ICE_PWR) 1 ==
 				(L:SW1_FS_ECS_WINDSHIELD) 1 == and
 						if{
 							(A:STRUCTURAL DEICE SWITCH, bool) 0 ==
@@ -4102,8 +4503,7 @@ Version 5.0
 		<Element Name="ENG HEAT CONTROLLER">
 			<Select>
 				<Value>
-				(L:INTERNAL_POWER_AVAIL,enum) 1 ==
-				(L:GROUND_POWER_AVAIL,enum) 1 == or
+				(L:L:ENG_ANTI_ICE_AC_PWR) 1 ==
 				(L:SW2_FS_ECS_ENG) 1 == and
 				(A:AMBIENT TEMPERATURE, celsius) 0 &lt; and
 						if{
@@ -4126,7 +4526,7 @@ Version 5.0
 		<Element Name="Cabin Temp Controler">
 			<Select>
 				<Value>
-					(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+					(L:ECS_TEMP_CONT_PWR) 1 ==
 					(L:KNOB_FS_AIRCON_SOURCE, enum) 0 != and
 					(L:SW2_FS_AIRCON_MODE) 0 != and
 						if{
@@ -4190,7 +4590,7 @@ Version 5.0
 					}
 
 				(L:VTRS_RUN) 1 ==
-				(L:INTERNAL_POWER_AVAIL, enum) 1 == and
+				(L:HUD_DC_PWR) 1 == and
 				(P:absolute time, minutes) 1 % 0.996 &gt; and
 					if{
 						(L:IND_VTRS_REMAIN) + 1 - (>L:IND_VTRS_REMAIN)
@@ -4225,30 +4625,34 @@ Version 5.0
 		<Element Name="ARMT SYS">
 			<Select>
 				<Value>
-					0 (>L:RDR_TRK_MEM_ENABLE)
-					0 (>L:RDR_JAM_ENABLE)
-					1 (>L:RDR_JAM_CODES)
-					0 (>L:RDR_HOLD_ALT_ENABLE)
+						0 (>L:RDR_TRK_MEM_ENABLE)
+						0 (>L:RDR_JAM_ENABLE)
+						1 (>L:RDR_JAM_CODES)
+						0 (>L:RDR_HOLD_ALT_ENABLE)
 
-					(L:TO_ALT_DIFF) -100 &lt;
-						if{ 0 (>L:RDR_HOLD_ALT_ENABLE) }
-
-					(L:TO_ALT_DIFF) 100 &gt;
-						if{ 0 (>L:RDR_HOLD_ALT_ENABLE) }
-
-					(L:TO_ALT_DIFF) -100 &gt;
-					(L:TO_ALT_DIFF) 100 &lt; and
-						if{ 1 (>L:RDR_HOLD_ALT_ENABLE) }
-
-
-						(L:MASTER_ARM, Bool)
-						(L:HUD_MASTER_MODE, Enum) 2 == and
+						(L:RDR_XMTR_LVPS_PWR) 1 ==
 							if{
-								0 (>L:SW1_RS_CMD_FLARE_JETT,enum)
-								3 (>L:KNOB_RS_CMD_MODE,enum)
+								(L:TO_ALT_DIFF) -100 &lt;
+									if{ 0 (>L:RDR_HOLD_ALT_ENABLE) }
+
+								(L:TO_ALT_DIFF) 100 &gt;
+									if{ 0 (>L:RDR_HOLD_ALT_ENABLE) }
+
+								(L:TO_ALT_DIFF) -100 &gt;
+								(L:TO_ALT_DIFF) 100 &lt; and
+									if{ 1 (>L:RDR_HOLD_ALT_ENABLE) }
+
+								(L:LAAJ, nmiles) (A:GROUND VELOCITY, knots) / 3600 * (>L:MRM_TTG)
 							}
 
-							(L:LAAJ, nmiles) (A:GROUND VELOCITY, knots) / 3600 * (>L:MRM_TTG)
+							(L:MASTER_ARM, Bool)
+							(L:HUD_MASTER_MODE, Enum) 2 == and
+								if{
+									0 (>L:SW1_RS_CMD_FLARE_JETT,enum)
+									3 (>L:KNOB_RS_CMD_MODE,enum)
+								}
+
+
 				</Value>
 			</Select>
 		</Element>
@@ -4258,12 +4662,15 @@ Version 5.0
 				<Value>
 				(L:Rate Switch, enum)
 				if{ 4000 (>L:GUN_RATE) } els{ 6000 (>L:GUN_RATE) }
-
-				 (L:GUN_run) 2 ==
-				 (L:AO_GUN_AMMO_COUNT, Number) 0 != and
+				(L:GUN_PWR) 1 ==
 					if{
-						(L:AO_GUN_AMMO_COUNT, Number) (L:GUN_RATE) 1000 / - (>L:AO_GUN_AMMO_COUNT, Number)
+						(L:GUN_run) 2 ==
+						(L:AO_GUN_AMMO_COUNT, Number) 0 != and
+							if{
+								(L:AO_GUN_AMMO_COUNT, Number) (L:GUN_RATE) 1000 / - (>L:AO_GUN_AMMO_COUNT, Number)
+							}
 					}
+
 				</Value>
 			</Select>
 		</Element>
@@ -4410,7 +4817,10 @@ Version 5.0
 		<Element Name="TGT/OWN_ALT">
 			<Select>
 				<Value>
-					(L:TGT_ALTITUDE) (A:Indicated Altitude, feet) - (>L:TO_ALT_DIFF)
+					(L:RDR_XMTR_LVPS_PWR) 1 ==
+						if{
+							(L:TGT_ALTITUDE) (A:Indicated Altitude, feet) - (>L:TO_ALT_DIFF)
+						}
 				</Value>
 			</Select>
 		</Element>
@@ -4584,7 +4994,7 @@ Version 5.0
 		<Element Name="POWER">
     		<Select>
       			<Value>
-					(L:MPDP_AIU_1_PWR, enum) 1 ==
+					(L:HUD_AC_PWR) 1 ==
 						if{ 0 (>L:HUD Power, bool) }
 	    				els{ 1 (>L:HUD Power, bool) }
       			</Value>
@@ -4595,14 +5005,14 @@ Version 5.0
       			<Value>
 					(L:HUD Power, bool) 1 ==
 						if{
-							(L:F15_HUD_Init, bool) 0 ==
+							(L:HUD_Init, bool) 0 ==
 							if{
 								0 (>L:Cage Switch, enum)
 								0 (>L:HUD Reject Mode, enum)
 								0 (>L:ILS Switch, enum)
 								400 (>L:Setting LAW, enum)
 								2000 (>L:Setting BNGO, enum)
-								1 (>L:F15_HUD_Init, bool)
+								1 (>L:HUD_Init, bool)
 							}
 						}
       			</Value>
@@ -4611,20 +5021,23 @@ Version 5.0
 		<Element Name="ITrafficInfo">
 			<Select>
 				<Value>
-					(L:KNOB_FS_VSD_RDR) 1 + (>C:ITrafficInfo:CurrentVehicle)
-					(L:KNOB_FS_VSD_RDR) 1 + (>C:ITrafficInfo:SelectedVehicle)
+				(L:RDR_LVPS_PWR) 1 ==
+					if{
+						(L:KNOB_FS_VSD_RDR) 1 + (>C:ITrafficInfo:CurrentVehicle)
+						(L:KNOB_FS_VSD_RDR) 1 + (>C:ITrafficInfo:SelectedVehicle)
 
-					(C:ITrafficInfo:C:PLANE LATITUDE, radians) (>L:HTGT_LAT, radians)
-					(C:ITrafficInfo:S:PLANE LONGITUDE, radians) (>L:HTGT_LONG, radians)
+						(C:ITrafficInfo:C:PLANE LATITUDE, radians) (>L:HTGT_LAT, radians)
+						(C:ITrafficInfo:S:PLANE LONGITUDE, radians) (>L:HTGT_LONG, radians)
 
-					(C:ITrafficInfo:S:VELOCITY WORLD Z, knots) (>L:HTGT_VELW_Z, knots)
-					(C:ITrafficInfo:S:VELOCITY WORLD X, knots) (>L:HTGT_VELW_X, knots)
-					(C:ITrafficInfo:S:VELOCITY WORLD Y, knots) (>L:HTGT_VELW_Y, knots)
+						(C:ITrafficInfo:S:VELOCITY WORLD Z, knots) (>L:HTGT_VELW_Z, knots)
+						(C:ITrafficInfo:S:VELOCITY WORLD X, knots) (>L:HTGT_VELW_X, knots)
+						(C:ITrafficInfo:S:VELOCITY WORLD Y, knots) (>L:HTGT_VELW_Y, knots)
 
-					(C:ITrafficInfo:S:PLANE ALTITUDE, nmiles) (>L:HTGT_ALT, nmiles)
-					(C:ITrafficInfo:S:Wing Span, meters) (>L:HTGT_WSPAN, meters)
-					(C:ITrafficInfo:S:PLANE ALTITUDE, feet)	(>L:HTGT_ALT_FEET, feet)
-					(C:ITrafficInfo:S:PLANE HEADING DEGREES TRUE, radians) (>L:HTGT_HDG, radians)
+						(C:ITrafficInfo:S:PLANE ALTITUDE, nmiles) (>L:HTGT_ALT, nmiles)
+						(C:ITrafficInfo:S:Wing Span, meters) (>L:HTGT_WSPAN, meters)
+						(C:ITrafficInfo:S:PLANE ALTITUDE, feet)	(>L:HTGT_ALT_FEET, feet)
+						(C:ITrafficInfo:S:PLANE HEADING DEGREES TRUE, radians) (>L:HTGT_HDG, radians)
+					}
 				</Value>
 			</Select>
 		</Element>
@@ -4632,15 +5045,18 @@ Version 5.0
 			<Element Name="ILS Glide Slope">
 				<Select>
 					<Value>
-						(A:NAV2 GLIDE SLOPE ERROR, degrees) -0.25 &lt;
-							if{ 1 (>L:HUD_GLDSLP) }
+						(L:ILS_PWR) 1 ==
+						if{
+							(A:NAV2 GLIDE SLOPE ERROR, degrees) -0.25 &lt;
+								if{ 1 (>L:HUD_GLDSLP) }
 
-						(A:NAV2 GLIDE SLOPE ERROR, degrees) 0.25 &gt;
-							if{ 2 (>L:HUD_GLDSLP) }
+							(A:NAV2 GLIDE SLOPE ERROR, degrees) 0.25 &gt;
+								if{ 2 (>L:HUD_GLDSLP) }
 
-						(A:NAV2 GLIDE SLOPE ERROR, degrees) -0.25 &gt;
-						(A:NAV2 GLIDE SLOPE ERROR, degrees) 0.25 &lt; and
-							if{ 0 (>L:HUD_GLDSLP) }
+							(A:NAV2 GLIDE SLOPE ERROR, degrees) -0.25 &gt;
+							(A:NAV2 GLIDE SLOPE ERROR, degrees) 0.25 &lt; and
+								if{ 0 (>L:HUD_GLDSLP) }
+						}
 					</Value>
 				</Select>
 			</Element>
@@ -4890,7 +5306,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+						(L:MPCD_AC_PWR) 1 ==
 						(L:KNOB_FS_MPCD_PWR, enum) 0 &gt; and
 						(L:MPCD-POWER, enum) 0 == and
 						(L:MPCD-TIME, seconds) 0 == and
@@ -4904,7 +5320,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+						(L:MPCD_AC_PWR) 0 ==
 						(L:MPCD-TIME, seconds) 0 &gt; and
 							if{
 								0 (>L:MPCD-TIME, seconds)
@@ -4915,7 +5331,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1==
+						(L:MPCD_AC_PWR) 1==
 						(P:LOCAL TIME, seconds) (L:MPCD-TIME, seconds) - 8 &gt; and
 							if{
 								1 (>L:MPCD-POWER, enum)
@@ -4928,7 +5344,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+						(L:MPCD_AC_PWR) 0 ==
 						(L:KNOB_FS_MPCD_PWR, enum) 0 == or
 							if{
 								0 (>L:MPCD-POWER, enum)
@@ -4982,7 +5398,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+						(L:VSD_PWR) 1 ==
 						(L:KNOB_FS_RDR_PWR) 0 &gt; and
 						(L:VSD-POWER, bool) 0 == and
 						(L:VSD-TIME, seconds) 0 == and
@@ -4996,7 +5412,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+						(L:VSD_PWR) 0 ==
 						(L:VSD-TIME, seconds) 0 &gt; and
 							if{
 								0 (>L:VSD-TIME, seconds)
@@ -5007,7 +5423,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+						(L:VSD_PWR) 1 ==
 						(L:VSD-POWER, bool) 0 == and
 						(L:VSD-BIT, enum) 0 == and
 						(L:KNOB_FS_RDR_PWR) 1 &gt; and
@@ -5020,7 +5436,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+						(L:VSD_PWR) 1 ==
 						(L:KNOB_FS_RDR_PWR) 1 &gt; and
 						(P:LOCAL TIME, seconds) (L:VSD-TIME, seconds) - 2 &gt; and
 							if{
@@ -5032,7 +5448,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+						(L:VSD_PWR) 1 ==
 						(P:LOCAL TIME, seconds) (L:VSD-TIME, seconds) - 5 &gt; and
 							if{
 								0 (>L:VSD-BIT, enum)
@@ -5046,7 +5462,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+						(L:VSD_PWR) 0 ==
 						(L:KNOB_FS_RDR_PWR) 0 == or
 							if{
 								0 (>L:VSD-TIME, seconds)
@@ -5062,387 +5478,388 @@ Version 5.0
 		<Element Name="ITrafficInfo">
 			<Select>
 				<Value>
-					(L:KNOB_FS_VSD_RDR) 1 + (>C:ITrafficInfo:CurrentVehicle)
-					(L:KNOB_FS_VSD_RDR) 1 + (>C:ITrafficInfo:SelectedVehicle)
-					(L:KNOB_FS_VSD_RDR) 1 + (>C:fs9gps:1:SelectedVehicle)
+					(L:RDR_LVPS_PWR) 1 ==
+						if{
+							(L:KNOB_FS_VSD_RDR) 1 + (>C:ITrafficInfo:CurrentVehicle)
+							(L:KNOB_FS_VSD_RDR) 1 + (>C:ITrafficInfo:SelectedVehicle)
+							(L:KNOB_FS_VSD_RDR) 1 + (>C:fs9gps:1:SelectedVehicle)
 
-					(C:ITrafficInfo:S:AIRSPEED INDICATED,knots) (>L:TGT_AIRSPEED_C)
-					(C:ITrafficInfo:S:AIRSPEED MACH, machs) (>L:TGT_AIRSPEED_MACH)
+							(C:ITrafficInfo:S:AIRSPEED INDICATED,knots) (>L:TGT_AIRSPEED_C)
+							(C:ITrafficInfo:S:AIRSPEED MACH, machs) (>L:TGT_AIRSPEED_MACH)
 
-					(C:ITrafficInfo:S:Indicated Altitude, feet) (>L:TGT_ALTITUDE)
-					(C:ITrafficInfo:S:PRESSURIZATION CABIN ALTITUDE, feet) (>L:TGT_CABINALT)
-					(C:ITrafficInfo:S:KOHLSMAN SETTING HG,inHg) (>L:TGT_KOHLSMAN)
+							(C:ITrafficInfo:S:Indicated Altitude, feet) (>L:TGT_ALTITUDE)
+							(C:ITrafficInfo:S:PRESSURIZATION CABIN ALTITUDE, feet) (>L:TGT_CABINALT)
+							(C:ITrafficInfo:S:KOHLSMAN SETTING HG,inHg) (>L:TGT_KOHLSMAN)
 
-					(C:ITrafficInfo:S:ATTITUDE INDICATOR PITCH DEGREES, degrees) (>L:TGT_ATT_PITCH)
-					(C:ITrafficInfo:S:ATTITUDE INDICATOR BANK DEGREES, degrees) (>L:TGT_ATT_BANK)
-					(C:ITrafficInfo:S:Turn coordinator ball,position) (>L:TGT_ATT_BALL)
-					(C:ITrafficInfo:S:Delta heading rate,rpm) (>L:TGT_ATT_HEADING_RATE)
+							(C:ITrafficInfo:S:ATTITUDE INDICATOR PITCH DEGREES, degrees) (>L:TGT_ATT_PITCH)
+							(C:ITrafficInfo:S:ATTITUDE INDICATOR BANK DEGREES, degrees) (>L:TGT_ATT_BANK)
+							(C:ITrafficInfo:S:Turn coordinator ball,position) (>L:TGT_ATT_BALL)
+							(C:ITrafficInfo:S:Delta heading rate,rpm) (>L:TGT_ATT_HEADING_RATE)
 
-					(C:ITrafficInfo:S:PLANE HEADING DEGREES GYRO, degrees) (>L:TGT_HDG)
+							(C:ITrafficInfo:S:PLANE HEADING DEGREES GYRO, degrees) (>L:TGT_HDG)
 
-					(C:ITrafficInfo:S:G FORCE, G Force) (>L:TGT_G_FORCE)
+							(C:ITrafficInfo:S:G FORCE, G Force) (>L:TGT_G_FORCE)
 
-					(C:ITrafficInfo:S:Vertical speed,feet per minute) 100 / (>L:TGT_VSI)
+							(C:ITrafficInfo:S:Vertical speed,feet per minute) 100 / (>L:TGT_VSI)
 
-					(C:ITrafficInfo:S:INCIDENCE ALPHA, degrees) (>L:TGT_AOA)
+							(C:ITrafficInfo:S:INCIDENCE ALPHA, degrees) (>L:TGT_AOA)
 
-					(C:ITrafficInfo:S:TURB ENG1 N2, percent) (>L:TGT_LENG_RPM)
-					(C:ITrafficInfo:S:TURB ENG2 N2, percent) (>L:TGT_RENG_RPM)
+							(C:ITrafficInfo:S:TURB ENG1 N2, percent) (>L:TGT_LENG_RPM)
+							(C:ITrafficInfo:S:TURB ENG2 N2, percent) (>L:TGT_RENG_RPM)
 
-					(C:ITrafficInfo:S:TURB ENG ITT:1,celsius) (>L:TGT_LENG_ITT)
-					(C:ITrafficInfo:S:TURB ENG ITT:2,celsius) (>L:TGT_RENG_ITT)
+							(C:ITrafficInfo:S:TURB ENG ITT:1,celsius) (>L:TGT_LENG_ITT)
+							(C:ITrafficInfo:S:TURB ENG ITT:2,celsius) (>L:TGT_RENG_ITT)
 
-					(C:ITrafficInfo:S:TURB ENG1 FUEL FLOW PPH,pound per hour) (>L:TGT_LENG_FF)
-					(C:ITrafficInfo:S:TURB ENG2 FUEL FLOW PPH,pound per hour) (>L:TGT_RENG_FF)
+							(C:ITrafficInfo:S:TURB ENG1 FUEL FLOW PPH,pound per hour) (>L:TGT_LENG_FF)
+							(C:ITrafficInfo:S:TURB ENG2 FUEL FLOW PPH,pound per hour) (>L:TGT_RENG_FF)
 
-					(C:ITrafficInfo:S:HYDRAULIC PRESSURE:1, psi) (>L:TGT_LENG_HYD_PRESS)
-					(C:ITrafficInfo:S:HYDRAULIC PRESSURE:2, psi) (>L:TGT_RENG_HYD_PRESS)
+							(C:ITrafficInfo:S:HYDRAULIC PRESSURE:1, psi) (>L:TGT_LENG_HYD_PRESS)
+							(C:ITrafficInfo:S:HYDRAULIC PRESSURE:2, psi) (>L:TGT_RENG_HYD_PRESS)
 
-					(C:ITrafficInfo:S:GENERAL ENG1 OIL PRESSURE, psi) (>L:TGT_LENG_OIL_PRESS)
-					(C:ITrafficInfo:S:GENERAL ENG2 OIL PRESSURE, psi) (>L:TGT_RENG_OIL_PRESS)
+							(C:ITrafficInfo:S:GENERAL ENG1 OIL PRESSURE, psi) (>L:TGT_LENG_OIL_PRESS)
+							(C:ITrafficInfo:S:GENERAL ENG2 OIL PRESSURE, psi) (>L:TGT_RENG_OIL_PRESS)
 
-					(C:ITrafficInfo:S:FUEL TANK CENTER QUANTITY, gallons)
-					(C:ITrafficInfo:S:FUEL TANK CENTER2 QUANTITY, gallons)
-					(C:ITrafficInfo:S:FUEL TANK CENTER3 QUANTITY, gallons)
-					(C:ITrafficInfo:S:FUEL TANK LEFT MAIN QUANTITY, gallons)
-					(C:ITrafficInfo:S:FUEL TANK RIGHT MAIN QUANTITY, gallons)
-					(C:ITrafficInfo:S:FUEL TANK LEFT AUX QUANTITY, gallons)
-					(C:ITrafficInfo:S:FUEL TANK RIGHT AUX QUANTITY, gallons)
-					(C:ITrafficInfo:S:FUEL TANK LEFT TIP QUANTITY, gallons)
-					(C:ITrafficInfo:S:FUEL TANK RIGHT TIP QUANTITY, gallons)
-					(C:ITrafficInfo:S:FUEL TANK EXTARNAL1 QUANTITY, gallons)
-					(C:ITrafficInfo:S:FUEL TANK EXTARNAL2 QUANTITY, gallons)
+							(C:ITrafficInfo:S:FUEL TANK CENTER QUANTITY, gallons)
+							(C:ITrafficInfo:S:FUEL TANK CENTER2 QUANTITY, gallons)
+							(C:ITrafficInfo:S:FUEL TANK CENTER3 QUANTITY, gallons)
+							(C:ITrafficInfo:S:FUEL TANK LEFT MAIN QUANTITY, gallons)
+							(C:ITrafficInfo:S:FUEL TANK RIGHT MAIN QUANTITY, gallons)
+							(C:ITrafficInfo:S:FUEL TANK LEFT AUX QUANTITY, gallons)
+							(C:ITrafficInfo:S:FUEL TANK RIGHT AUX QUANTITY, gallons)
+							(C:ITrafficInfo:S:FUEL TANK LEFT TIP QUANTITY, gallons)
+							(C:ITrafficInfo:S:FUEL TANK RIGHT TIP QUANTITY, gallons)
+							(C:ITrafficInfo:S:FUEL TANK EXTARNAL1 QUANTITY, gallons)
+							(C:ITrafficInfo:S:FUEL TANK EXTARNAL2 QUANTITY, gallons)
 
-					(C:ITrafficInfo:S:FUEL WEIGHT PER GALLON, pounds)
-
-
-					(C:ITrafficInfo:CurrentDistance, nmiles) (>L:RDR_TGT_DIS)
-					(C:ITrafficInfo:S:ATC MODEL, string) (>L:RDR_TGT_MDL)
-					(C:ITrafficInfo:S:COM1 ACTIVE FREQUENCY, MHz) (>L:RDR_TGT_COM)
-					(C:ITrafficInfo:S:NAV1 ACTIVE FREQUENCY, MHz) (>L:RDR_TGT_NAV)
-					(C:ITrafficInfo:S:TRANSPONDER CODE, number) (>L:RDR_TGT_IFF)
-					(C:ITrafficInfo:SelectedFlightPlan) (>L:RDR_TGT_PLN)
+							(C:ITrafficInfo:S:FUEL WEIGHT PER GALLON, pounds)
 
 
+							(C:ITrafficInfo:CurrentDistance, nmiles) (>L:RDR_TGT_DIS)
+							(C:ITrafficInfo:S:ATC MODEL, string) (>L:RDR_TGT_MDL)
+							(C:ITrafficInfo:S:COM1 ACTIVE FREQUENCY, MHz) (>L:RDR_TGT_COM)
+							(C:ITrafficInfo:S:NAV1 ACTIVE FREQUENCY, MHz) (>L:RDR_TGT_NAV)
+							(C:ITrafficInfo:S:TRANSPONDER CODE, number) (>L:RDR_TGT_IFF)
+							(C:ITrafficInfo:SelectedFlightPlan) (>L:RDR_TGT_PLN)
+						}
 				</Value>
 			</Select>
 		</Element>
 		<Element Name="Systems">
-				<Element Name="MODEs">
-					<Select>
-						<Value>
-						(L:RDR_INIT) 0 ==
+			<Element Name="MODEs">
+				<Select>
+					<Value>
+					(L:RDR_INIT) 0 ==
+						if{
+							1 (>L:RDR_INIT)
+							2 (>L:RDR_BAND)
+							3 (>L:RDR_CHAN)
+						}
+
+						(L:SW1_FS_RDR_MODE_CONTR) 0 ==
 							if{
-								1 (>L:RDR_INIT)
-								2 (>L:RDR_BAND)
-								3 (>L:RDR_CHAN)
+								(L:KNOB_FS_RDR_MODE_SEL) (>L:VSD_MODE)
+							}
+						(L:SW1_FS_RDR_MODE_CONTR) 1 ==
+							if{
+								(L:HUD_MASTER_MODE, Enum) 0 ==
+									if{	1 (>L:VSD_MODE) }
+
+								(L:HUD_MASTER_MODE, Enum) 1 ==
+									if{	3 (>L:VSD_MODE) }
+
+								(L:HUD_MASTER_MODE, enum) 2 ==
+									if{
+										(L:AAM_SEL, Enum) 0 ==
+											if{ 4 (>L:VSD_MODE) }
+
+
+										(L:AAM_SEL, Enum) 1 ==
+											if{ 2 (>L:VSD_MODE) }
+
+										(L:AAM_SEL, Enum) 2 ==
+											if{	4 (>L:VSD_MODE) }
+									}
+								(L:HUD_MASTER_MODE, Enum) 3 ==
+									if{	7 (>L:VSD_MODE) }
 							}
 
-							(L:SW1_FS_RDR_MODE_CONTR) 0 ==
-								if{
-									(L:KNOB_FS_RDR_MODE_SEL) (>L:VSD_MODE)
-								}
-							(L:SW1_FS_RDR_MODE_CONTR) 1 ==
-								if{
-									(L:HUD_MASTER_MODE, Enum) 0 ==
-										if{	1 (>L:VSD_MODE) }
-
-									(L:HUD_MASTER_MODE, Enum) 1 ==
-										if{	3 (>L:VSD_MODE) }
-
-									(L:HUD_MASTER_MODE, enum) 2 ==
-										if{
-											(L:AAM_SEL, Enum) 0 ==
-												if{ 4 (>L:VSD_MODE) }
-
-
-											(L:AAM_SEL, Enum) 1 ==
-												if{ 2 (>L:VSD_MODE) }
-
-											(L:AAM_SEL, Enum) 2 ==
-												if{	4 (>L:VSD_MODE) }
-										}
-									(L:HUD_MASTER_MODE, Enum) 3 ==
-										if{	7 (>L:VSD_MODE) }
-								}
-
-							(L:VSD_MODE) 1 ==
-								if{  1 (>L:VSD_MAP) 6 (>L:VSD_TRACK_MODE) }
-								els{ 0 (>L:VSD_MAP) }
-							(L:VSD_MODE) 1 &gt; (L:VSD_MODE) 5 &lt; and
-								if{  1 (>L:VSD_AtoA) 4 (>L:VSD_TRACK_MODE) }
-								els{ 0 (>L:VSD_AtoA) }
-							(L:VSD_MODE) 7 ==
-								if{  1 (>L:VSD_AtoG) 2 (>L:VSD_TRACK_MODE) }
-								els{ 0 (>L:VSD_AtoG) }
-						</Value>
-					</Select>
-				</Element>
-				<Element Name="Range">
-					<Select>
-						<Value>
-							(P:Local time, seconds) 20 % (>L:VSD_time)
-
-							(L:VSD_time) 0 &gt;
-							(L:VSD_time) 10 &lt; and
-								if{
-									800.00 (>L:VSD_RANGEStatic, number)
-									16000.00 (>L:TEWS_RANGEStatic, number)
-								}
-							(L:VSD_time) 10 &gt;
-								if{
-									800.01 (>L:VSD_RANGEStatic, number)
-									16000.01 (>L:TEWS_RANGEStatic, number)
-								}
-
-							(L:SW1_FS_RDR_MODE_CONTR) 0 ==
-								if{ (L:KNOB_FS_RDR_RANGE) (>L:VSD_RNG, enum) }
-							(L:SW1_FS_RDR_MODE_CONTR) 1 ==
-								if{
-									(L:HUD_MASTER_MODE, Enum) 0 ==
-										if{ 2 (>L:VSD_RNG, enum) }
-									(L:HUD_MASTER_MODE, Enum) 2 ==
-										if{
-											(L:AAM_SEL, Enum) 0 ==
-												if{
-													0 (>L:VSD_RNG, enum)
-												}
-											(L:AAM_SEL, Enum) 1 ==
-												if{
-													(L:RDR_TGT_DIS) 150 &gt;
-													(L:TGT_ALTITUDE) 1000 &gt; and
-														if{ 4 (>L:VSD_RNG, enum) }
-
-													(L:RDR_TGT_DIS) 70 &lt;
-													(L:RDR_TGT_DIS) 35 &gt; and
-													(L:TGT_ALTITUDE) 1000 &gt; and
-														if{ 3 (>L:VSD_RNG, enum)  }
-
-													(L:RDR_TGT_DIS) 35 &lt;
-													(L:RDR_TGT_DIS) 15 &gt; and
-													(L:TGT_ALTITUDE) 1000 &gt; and
-														if{ 2 (>L:VSD_RNG, enum)  }
-
-													(L:RDR_TGT_DIS) 15 &lt;
-													(L:RDR_TGT_DIS) 8 &gt; and
-													(L:TGT_ALTITUDE) 1000 &gt; and
-														if{ 1 (>L:VSD_RNG, enum)  }
-
-													(L:RDR_TGT_DIS) 8 &lt;
-													(L:TGT_ALTITUDE) 1000 &gt; and
-														if{ 0 (>L:VSD_RNG, enum)  }
-												}
-											(L:AAM_SEL, Enum) 2 ==
-												if{
-													2 (>L:VSD_RNG, enum)
-												}
-										}
-								}
-							(L:VSD_RNG, enum) 0 ==
-								if{ 10 (>L:VSD_RANGEFactor, number) }
-							(L:VSD_RNG, enum) 1 ==
-								if{ 20 (>L:VSD_RANGEFactor, number) }
-							(L:VSD_RNG, enum) 2 ==
-								if{ 40 (>L:VSD_RANGEFactor, number) }
-							(L:VSD_RNG, enum) 3 ==
-								if{ 80 (>L:VSD_RANGEFactor, number) }
-							(L:VSD_RNG, enum) 4 ==
-								if{ 160 (>L:VSD_RANGEFactor, number) }
-
-
-						(L:VSD_RANGEFactor, number) (>L:RADAR_SCALE, nmiles)
-						</Value>
-					</Select>
-				</Element>
-				<Element Name="Scan">
-					<Select>
-						<Value>
-							(L:SW1_FS_RDR_MODE_CONTR) 0 ==
-								if{
-									(L:KNOB_FS_RDR_EL_SCAN) (>L:VSD_EL_SCAN)
-									(L:KNOB_FS_RDR_AZ_SCAN)	(>L:VSD_AZ_SCAN)
-								}
-								els{
-									(L:AAM_SEL, Enum) 0 ==
-										if{
-											4 (>L:VSD_EL_SCAN)
-											2 (>L:VSD_AZ_SCAN)
-										}
-									(L:AAM_SEL, Enum) 1 ==
-										if{
-											3 (>L:VSD_EL_SCAN)
-											1 (>L:VSD_AZ_SCAN)
-										}
-									(L:AAM_SEL, Enum) 2 ==
-										if{
-											3 (>L:VSD_EL_SCAN)
-											1 (>L:VSD_AZ_SCAN)
-										}
-								}
 						(L:VSD_MODE) 1 ==
+							if{  1 (>L:VSD_MAP) 6 (>L:VSD_TRACK_MODE) }
+							els{ 0 (>L:VSD_MAP) }
+						(L:VSD_MODE) 1 &gt; (L:VSD_MODE) 5 &lt; and
+							if{  1 (>L:VSD_AtoA) 4 (>L:VSD_TRACK_MODE) }
+							els{ 0 (>L:VSD_AtoA) }
+						(L:VSD_MODE) 7 ==
+							if{  1 (>L:VSD_AtoG) 2 (>L:VSD_TRACK_MODE) }
+							els{ 0 (>L:VSD_AtoG) }
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="Range">
+				<Select>
+					<Value>
+						(P:Local time, seconds) 20 % (>L:VSD_time)
+
+						(L:VSD_time) 0 &gt;
+						(L:VSD_time) 10 &lt; and
 							if{
-								(A:PLANE PITCH DEGREES, Degrees) /-/ (>L:VSD_EL_SCAN)
-								(A:PLANE BANK DEGREES, Degrees) /-/ (>L:VSD_AZ_SCAN)
+								800.00 (>L:VSD_RANGEStatic, number)
+								16000.00 (>L:TEWS_RANGEStatic, number)
 							}
-
-							(L:VSD_MODE) 2 ==
-							(L:VSD_MODE) 4 == or
+						(L:VSD_time) 10 &gt;
 							if{
-								110 70 50 30 20 5 (L:VSD_EL_SCAN) case (>L:EL_SCAN)
-								2 4 6 8 10 5 (L:VSD_EL_SCAN) case (>L:EL_SCAN_TIME)
-
-								200 100 50 3 (L:VSD_AZ_SCAN) case (>L:AZ_SCAN)
-								2 4 8 3 (L:VSD_AZ_SCAN) case (>L:AZ_SCAN_TIME)
-
-
-								(P:Local time, seconds) (L:EL_SCAN_TIME) * 4 % 2 - abs + 1 - (L:EL_SCAN) * 10 / int 10 * (>L:VSD_EL_SCAN)
-								(P:Local time, seconds) (L:AZ_SCAN_TIME) * 4 % 2 - abs + 1 - (L:AZ_SCAN) * (>L:VSD_AZ_SCAN)
-								(P:Local time, seconds) 4 % (>L:PX_time)
+								800.01 (>L:VSD_RANGEStatic, number)
+								16000.01 (>L:TEWS_RANGEStatic, number)
 							}
-							(L:VSD_MODE) 3 ==
+
+						(L:SW1_FS_RDR_MODE_CONTR) 0 ==
+							if{ (L:KNOB_FS_RDR_RANGE) (>L:VSD_RNG, enum) }
+						(L:SW1_FS_RDR_MODE_CONTR) 1 ==
 							if{
-								(L:RDR_TGT_DIS) 2 * (>L:VSD_EL_SCAN)
-								(L:TGT_HDG) (A:Plane heading degrees gyro, radians) - (>L:VSD_AZ_SCAN)
+								(L:HUD_MASTER_MODE, Enum) 0 ==
+									if{ 2 (>L:VSD_RNG, enum) }
+								(L:HUD_MASTER_MODE, Enum) 2 ==
+									if{
+										(L:AAM_SEL, Enum) 0 ==
+											if{
+												0 (>L:VSD_RNG, enum)
+											}
+										(L:AAM_SEL, Enum) 1 ==
+											if{
+												(L:RDR_TGT_DIS) 150 &gt;
+												(L:TGT_ALTITUDE) 1000 &gt; and
+													if{ 4 (>L:VSD_RNG, enum) }
+
+												(L:RDR_TGT_DIS) 70 &lt;
+												(L:RDR_TGT_DIS) 35 &gt; and
+												(L:TGT_ALTITUDE) 1000 &gt; and
+													if{ 3 (>L:VSD_RNG, enum)  }
+
+												(L:RDR_TGT_DIS) 35 &lt;
+												(L:RDR_TGT_DIS) 15 &gt; and
+												(L:TGT_ALTITUDE) 1000 &gt; and
+													if{ 2 (>L:VSD_RNG, enum)  }
+
+												(L:RDR_TGT_DIS) 15 &lt;
+												(L:RDR_TGT_DIS) 8 &gt; and
+												(L:TGT_ALTITUDE) 1000 &gt; and
+													if{ 1 (>L:VSD_RNG, enum)  }
+
+												(L:RDR_TGT_DIS) 8 &lt;
+												(L:TGT_ALTITUDE) 1000 &gt; and
+													if{ 0 (>L:VSD_RNG, enum)  }
+											}
+										(L:AAM_SEL, Enum) 2 ==
+											if{
+												2 (>L:VSD_RNG, enum)
+											}
+									}
 							}
-						</Value>
-					</Select>
-				</Element>
-				<Element Name="Brightness">
-					<Select>
-						<Value>
-							(L:KNOB_FS_VSD_BRT) 1 ==
-								if{
-									0x00FE00 (>L:VSD_COLOR)
-									0x007E00 (>L:VSD_COLOR_DARK)
-									0xFE0000 (>L:VSD_COLOR_R)
-									0x0000FE (>L:VSD_COLOR_B)
+						(L:VSD_RNG, enum) 0 ==
+							if{ 10 (>L:VSD_RANGEFactor, number) }
+						(L:VSD_RNG, enum) 1 ==
+							if{ 20 (>L:VSD_RANGEFactor, number) }
+						(L:VSD_RNG, enum) 2 ==
+							if{ 40 (>L:VSD_RANGEFactor, number) }
+						(L:VSD_RNG, enum) 3 ==
+							if{ 80 (>L:VSD_RANGEFactor, number) }
+						(L:VSD_RNG, enum) 4 ==
+							if{ 160 (>L:VSD_RANGEFactor, number) }
 
-									(L:KNOB_FS_VSD_SYM) 0 ==
-										if{
-											0x001000 (>L:VSD_COLOR_SYM)
-											0x000800 (>L:VSD_COLOR_SYM_DARK)
-										}
-									(L:KNOB_FS_VSD_SYM) 1 ==
-										if{
-											0x002000 (>L:VSD_COLOR_SYM)
-											0x001000 (>L:VSD_COLOR_SYM_DARK)
-										}
-									(L:KNOB_FS_VSD_SYM) 2 ==
-										if{
-											0x004000 (>L:VSD_COLOR_SYM)
-											0x002000 (>L:VSD_COLOR_SYM_DARK)
-										}
-									(L:KNOB_FS_VSD_SYM) 3 ==
-										if{
-											0x008000 (>L:VSD_COLOR_SYM)
-											0x004000 (>L:VSD_COLOR_SYM_DARK)
-										}
-									(L:KNOB_FS_VSD_SYM) 4 ==
-										if{
-											0x00A000 (>L:VSD_COLOR_SYM)
-											0x005000 (>L:VSD_COLOR_SYM_DARK)
-										}
-									(L:KNOB_FS_VSD_SYM) 5 ==
-										if{
-											0x00C000 (>L:VSD_COLOR_SYM)
-											0x006000 (>L:VSD_COLOR_SYM_DARK)
-										}
-									(L:KNOB_FS_VSD_SYM) 6 ==
-										if{
-											0x00FE00 (>L:VSD_COLOR_SYM)
-											0x007E00 (>L:VSD_COLOR_SYM_DARK)
-										}
-								}
 
-								(P:Local time, hours) 5 &lt;
-								(P:Local time, hours) 16 &gt; or
-								(L:SW1_FS_VSD_CNT) 0 == and
-								if{
-									(L:VSD_COLOR) 2 / (>L:VSD_COLOR)
-									(L:VSD_COLOR_DARK) 2 / (>L:VSD_COLOR_DARK)
-									(L:VSD_COLOR_R) 2 / (>L:VSD_COLOR_R)
-									(L:VSD_COLOR_B) 2 / (>L:VSD_COLOR_B)
-									(L:VSD_COLOR_SYM) 2 / (>L:VSD_COLOR_SYM)
-									(L:VSD_COLOR_SYM_DARK) 2 / (>L:VSD_COLOR_SYM_DARK)
-								}
-						</Value>
-					</Select>
-				</Element>
-				<Element Name="VSD_RANGE">
-					<Select>
-						<Value>
-							(L:SW1_FS_RDR_MODE_CONTR) 0 == if{
-								(L:KNOB_FS_RDR_RANGE) 0 ==
-									if{ 10 (>L:VSD_RANGE, Number) }
-								(L:KNOB_FS_RDR_RANGE) 1 ==
-									if{ 20 (>L:VSD_RANGE, Number) }
-								(L:KNOB_FS_RDR_RANGE) 2 ==
-									if{ 40 (>L:VSD_RANGE, Number) }
-								(L:KNOB_FS_RDR_RANGE) 3 ==
-									if{ 80 (>L:VSD_RANGE, Number) }
-								(L:KNOB_FS_RDR_RANGE) 4 ==
-									if{ 160 (>L:VSD_RANGE, Number) }
+					(L:VSD_RANGEFactor, number) (>L:RADAR_SCALE, nmiles)
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="Scan">
+				<Select>
+					<Value>
+					(L:RDR_CONT_LVPS_AC_PWR) 1 ==
+					if{
+						(L:SW1_FS_RDR_MODE_CONTR) 0 ==
+							if{
+								(L:KNOB_FS_RDR_EL_SCAN) (>L:VSD_EL_SCAN)
+								(L:KNOB_FS_RDR_AZ_SCAN)	(>L:VSD_AZ_SCAN)
 							}
-							(L:SW1_FS_RDR_MODE_CONTR) 1 == if{
-								(L:VSD_AUTO_RANGE, enum) 10 ==
-									if{ 10 (>L:VSD_RANGE, Number) }
-								(L:VSD_AUTO_RANGE, enum) 20 ==
-									if{ 20 (>L:VSD_RANGE, Number) }
-								(L:VSD_AUTO_RANGE, enum) 40 ==
-									if{ 40 (>L:VSD_RANGE, Number) }
-								(L:VSD_AUTO_RANGE, enum) 80 ==
-									if{ 80 (>L:VSD_RANGE, Number) }
-								(L:VSD_AUTO_RANGE, enum) 160 ==
-									if{ 160 (>L:VSD_RANGE, Number) }
+							els{
+								(L:AAM_SEL, Enum) 0 ==
+									if{
+										4 (>L:VSD_EL_SCAN)
+										2 (>L:VSD_AZ_SCAN)
+									}
+								(L:AAM_SEL, Enum) 1 ==
+									if{
+										3 (>L:VSD_EL_SCAN)
+										1 (>L:VSD_AZ_SCAN)
+									}
+								(L:AAM_SEL, Enum) 2 ==
+									if{
+										3 (>L:VSD_EL_SCAN)
+										1 (>L:VSD_AZ_SCAN)
+									}
 							}
-						</Value>
-					</Select>
-				</Element>
+					(L:VSD_MODE) 1 ==
+						if{
+							(A:PLANE PITCH DEGREES, Degrees) /-/ (>L:VSD_EL_SCAN)
+							(A:PLANE BANK DEGREES, Degrees) /-/ (>L:VSD_AZ_SCAN)
+						}
 
-				<Element Name="AAM Mode">
-					<Select>
-						<Value>
-							(L:HUD_MASTER_MODE, Enum) 0 ==
-								if{
-									0 (>L:VSD_AAM)
-									0 (>L:VSD_AA_GUN)
-								}
+						(L:VSD_MODE) 2 ==
+						(L:VSD_MODE) 4 == or
+						if{
+							110 70 50 30 20 5 (L:VSD_EL_SCAN) case (>L:EL_SCAN)
+							2 4 6 8 10 5 (L:VSD_EL_SCAN) case (>L:EL_SCAN_TIME)
 
-							(L:HUD_MASTER_MODE, Enum) 2 ==
-							(L:AAM_SEL, Enum) 0 == and <!-- GUN -->
-								if{
-									0 (>L:VSD_AAM)
-									0 (>L:VSD_AA_BREAK)
-								}
-							(L:AAM_SEL, Enum) 1 ==
-							(L:RDR_TGT_DIS) 2 &lt; and
-								if{  1 (>L:VSD_AA_BREAK) }
-								els{ 0 (>L:VSD_AA_BREAK) }
+							200 100 50 3 (L:VSD_AZ_SCAN) case (>L:AZ_SCAN)
+							2 4 8 3 (L:VSD_AZ_SCAN) case (>L:AZ_SCAN_TIME)
 
 
-							(L:AAM_SEL, Enum) 1 ==
-							(L:VSD_AA_BREAK) 0 == and
-								if{
-									1 (>L:VSD_AA_SRM)
-								}
-								els{
-									0 (>L:VSD_AA_SRM)
-								}
+							(P:Local time, seconds) (L:EL_SCAN_TIME) * 4 % 2 - abs + 1 - (L:EL_SCAN) * 10 / int 10 * (>L:VSD_EL_SCAN)
+							(P:Local time, seconds) (L:AZ_SCAN_TIME) * 4 % 2 - abs + 1 - (L:AZ_SCAN) * (>L:VSD_AZ_SCAN)
+							(P:Local time, seconds) 4 % (>L:PX_time)
+						}
+						(L:VSD_MODE) 3 ==
+						if{
+							(L:RDR_TGT_DIS) 2 * (>L:VSD_EL_SCAN)
+							(L:TGT_HDG) (A:Plane heading degrees gyro, radians) - (>L:VSD_AZ_SCAN)
+						}
+					}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="Brightness">
+				<Select>
+					<Value>
+						(L:KNOB_FS_VSD_BRT) 1 ==
+							if{
+								0x00FE00 (>L:VSD_COLOR)
+								0x007E00 (>L:VSD_COLOR_DARK)
+								0xFE0000 (>L:VSD_COLOR_R)
+								0x0000FE (>L:VSD_COLOR_B)
 
-							(L:AAM_SEL, Enum) 2 ==
-							(L:VSD_AA_BREAK) 0 == and
-								if{
-									1 (>L:VSD_AA_MRM)
-								}
-								els{
-									0 (>L:VSD_AA_MRM)
-								}
-						</Value>
-					</Select>
-				</Element>
+								(L:KNOB_FS_VSD_SYM) 0 ==
+									if{
+										0x001000 (>L:VSD_COLOR_SYM)
+										0x000800 (>L:VSD_COLOR_SYM_DARK)
+									}
+								(L:KNOB_FS_VSD_SYM) 1 ==
+									if{
+										0x002000 (>L:VSD_COLOR_SYM)
+										0x001000 (>L:VSD_COLOR_SYM_DARK)
+									}
+								(L:KNOB_FS_VSD_SYM) 2 ==
+									if{
+										0x004000 (>L:VSD_COLOR_SYM)
+										0x002000 (>L:VSD_COLOR_SYM_DARK)
+									}
+								(L:KNOB_FS_VSD_SYM) 3 ==
+									if{
+										0x008000 (>L:VSD_COLOR_SYM)
+										0x004000 (>L:VSD_COLOR_SYM_DARK)
+									}
+								(L:KNOB_FS_VSD_SYM) 4 ==
+									if{
+										0x00A000 (>L:VSD_COLOR_SYM)
+										0x005000 (>L:VSD_COLOR_SYM_DARK)
+									}
+								(L:KNOB_FS_VSD_SYM) 5 ==
+									if{
+										0x00C000 (>L:VSD_COLOR_SYM)
+										0x006000 (>L:VSD_COLOR_SYM_DARK)
+									}
+								(L:KNOB_FS_VSD_SYM) 6 ==
+									if{
+										0x00FE00 (>L:VSD_COLOR_SYM)
+										0x007E00 (>L:VSD_COLOR_SYM_DARK)
+									}
+							}
 
+							(P:Local time, hours) 5 &lt;
+							(P:Local time, hours) 16 &gt; or
+							(L:SW1_FS_VSD_CNT) 0 == and
+							if{
+								(L:VSD_COLOR) 2 / (>L:VSD_COLOR)
+								(L:VSD_COLOR_DARK) 2 / (>L:VSD_COLOR_DARK)
+								(L:VSD_COLOR_R) 2 / (>L:VSD_COLOR_R)
+								(L:VSD_COLOR_B) 2 / (>L:VSD_COLOR_B)
+								(L:VSD_COLOR_SYM) 2 / (>L:VSD_COLOR_SYM)
+								(L:VSD_COLOR_SYM_DARK) 2 / (>L:VSD_COLOR_SYM_DARK)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="VSD_RANGE">
+				<Select>
+					<Value>
+						(L:SW1_FS_RDR_MODE_CONTR) 0 == if{
+							(L:KNOB_FS_RDR_RANGE) 0 ==
+								if{ 10 (>L:VSD_RANGE, Number) }
+							(L:KNOB_FS_RDR_RANGE) 1 ==
+								if{ 20 (>L:VSD_RANGE, Number) }
+							(L:KNOB_FS_RDR_RANGE) 2 ==
+								if{ 40 (>L:VSD_RANGE, Number) }
+							(L:KNOB_FS_RDR_RANGE) 3 ==
+								if{ 80 (>L:VSD_RANGE, Number) }
+							(L:KNOB_FS_RDR_RANGE) 4 ==
+								if{ 160 (>L:VSD_RANGE, Number) }
+						}
+						(L:SW1_FS_RDR_MODE_CONTR) 1 == if{
+							(L:VSD_AUTO_RANGE, enum) 10 ==
+								if{ 10 (>L:VSD_RANGE, Number) }
+							(L:VSD_AUTO_RANGE, enum) 20 ==
+								if{ 20 (>L:VSD_RANGE, Number) }
+							(L:VSD_AUTO_RANGE, enum) 40 ==
+								if{ 40 (>L:VSD_RANGE, Number) }
+							(L:VSD_AUTO_RANGE, enum) 80 ==
+								if{ 80 (>L:VSD_RANGE, Number) }
+							(L:VSD_AUTO_RANGE, enum) 160 ==
+								if{ 160 (>L:VSD_RANGE, Number) }
+						}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="AAM Mode">
+				<Select>
+					<Value>
+						(L:HUD_MASTER_MODE, Enum) 0 ==
+							if{
+								0 (>L:VSD_AAM)
+								0 (>L:VSD_AA_GUN)
+							}
+
+						(L:HUD_MASTER_MODE, Enum) 2 ==
+						(L:AAM_SEL, Enum) 0 == and <!-- GUN -->
+							if{
+								0 (>L:VSD_AAM)
+								0 (>L:VSD_AA_BREAK)
+							}
+						(L:AAM_SEL, Enum) 1 ==
+						(L:RDR_TGT_DIS) 2 &lt; and
+							if{  1 (>L:VSD_AA_BREAK) }
+							els{ 0 (>L:VSD_AA_BREAK) }
+
+
+						(L:AAM_SEL, Enum) 1 ==
+						(L:VSD_AA_BREAK) 0 == and
+							if{
+								1 (>L:VSD_AA_SRM)
+							}
+							els{
+								0 (>L:VSD_AA_SRM)
+							}
+
+						(L:AAM_SEL, Enum) 2 ==
+						(L:VSD_AA_BREAK) 0 == and
+							if{
+								1 (>L:VSD_AA_MRM)
+							}
+							els{
+								0 (>L:VSD_AA_MRM)
+							}
+					</Value>
+				</Select>
+			</Element>
 		</Element>
-
 	</Element>
 
 	<Element Name="TEWS">
@@ -5450,7 +5867,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+						(L:TEWS_POD_CONT_PWR) 1 ==
 						(L:CC_PWR, enum) 1 == and
 						(L:SW1_FS_TEWS_ICS) 1 == and
 						(L:TEWS-TIME, seconds) 0 == and
@@ -5464,7 +5881,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+						(L:TEWS_POD_CONT_PWR) 0 ==
 						(L:CC_PWR, enum) 1 == and
 						(L:SW1_FS_TEWS_ICS) 1 == and
 						(L:TEWS-TIME, seconds) 0 &gt; and
@@ -5477,7 +5894,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+						(L:TEWS_POD_CONT_PWR) 1 ==
 						(L:CC_PWR, enum) 1 == and
 						(L:SW1_FS_TEWS_ICS) 1 == and
 						(P:LOCAL TIME, seconds) (L:TEWS-TIME, seconds) - 6 &gt; and
@@ -5492,7 +5909,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+						(L:TEWS_POD_CONT_PWR) 0 ==
 						(L:CC_PWR, enum) 0 == or
 						(L:SW1_FS_TEWS_ICS) 0 == or
 							if{

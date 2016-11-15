@@ -46,7 +46,7 @@
 		<Element id="STBY">
             <FloatPosition>210.000,240.000</FloatPosition>
             <Visibility>
-				(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+				(L:VSD_PWR) 1 ==
 				(L:KNOB_FS_RDR_PWR) 1 == and
 			</Visibility>
             <GaugeText id="GaugeText">

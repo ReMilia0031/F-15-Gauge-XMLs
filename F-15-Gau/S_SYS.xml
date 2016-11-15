@@ -1,6 +1,8 @@
-<Gauge Name="F-15 SYSTEMS" Version="6.90">
+<Gauge Name="F-15 SYSTEMS" Version="7.00">
 <Image Name="blank_back.bmp" ImageSizes="20,20"/>
 <!--
+Version 7.00
+	[EDT] INTERNAL_POWER > Electrical System
 Version 6.90
 	[DEL]EMERGENCY BOOST PUMP ON CAUTION (moved : S_ELEC)
 	[DEL]BOOST SYS MALFUNCTION (moved : S_ELEC)
@@ -819,8 +821,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL,enum) 1 ==
-						(L:GROUND_POWER_AVAIL,enum) 1 == or
+						(L:FLAPS_PWR) 1 ==
 						(L:SW1_FLAPS,enum) 0 == and
 						(A:AIRSPEED INDICATED,knots) 250 &lt; and
 						(L:FLAPS_DOWN_INIT,enum) 0 == and
@@ -835,8 +836,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL,enum) 1 ==
-						(L:GROUND_POWER_AVAIL,enum) 1 == or
+						(L:FLAPS_PWR)1 ==
 						(L:SW1_FLAPS,enum) 1 == and
 						(L:FLAPS_DOWN_INIT,enum) 1 == and
 							if{
@@ -851,8 +851,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL,enum) 1 ==
-						(L:GROUND_POWER_AVAIL,enum) 1 == or
+						(L:FLAPS_PWR)1 ==
 						(L:SW1_FLAPS,enum) 0 == and
 						(A:AIRSPEED INDICATED,knots) 250 &gt; and
 						(L:FLAPS_DOWN_INIT2,enum) 0 == and
@@ -1081,7 +1080,7 @@ Version 5.0
 			<Element Name="RUDDER TRAVEL LIMIT ENGINE">
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+						(L:RUDDER_TRAVEL_LMTR_PWR) 1 ==
 							if{
 								1 (>L:RUD_TRAVEL_LMT_ENG)
 							}
@@ -1481,8 +1480,7 @@ Version 5.0
 			<Element Name="CMS GO CONDITION">
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL,enum) 1 ==
-						(L:GROUND_POWER_AVAIL,enum) 1 == or
+						(L:LOGIC_PWR) 1 ==
 						(L:MASTER_ARM, Bool) 1 == and
 						(L:SW1_RS_CMD_FLARE_JETT,enum) 0 == and
 						(L:KNOB_RS_CMD_MODE,enum) 3 == and
@@ -1711,8 +1709,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(L:ADC_POWER) 1 ==
 						(A:INCIDENCE ALPHA, degrees) 28 &gt; and
 						(A:SIM ON GROUND, enum) 0 == and
 						(L:AOA_WARN_INIT, enum) 0 == and
@@ -1795,7 +1792,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:TEWS_POD_CONT_PWR) 1 ==
 							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
 							(A:GPS WP DISTANCE,nmiles) 20 &lt; and
 							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 != and
@@ -1812,7 +1809,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+							(L:TEWS_POD_CONT_PWR) 0 ==
 							(A:GPS WP DISTANCE,nmiles) 20 &gt; or
 							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 == or
 							(L:SW1_RS_TEWS_ICS, enum) 0 == or
@@ -1828,7 +1825,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:TEWS_POD_CONT_PWR) 1 ==
 							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
 							(A:GPS WP DISTANCE,nmiles) 15 &lt; and
 							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 != and
@@ -1845,7 +1842,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+							(L:TEWS_POD_CONT_PWR) 0 ==
 							(A:GPS WP DISTANCE,nmiles) 15 &gt; or
 							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 == or
 							(L:SW1_RS_TEWS_ICS, enum) 0 == or
@@ -1861,7 +1858,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:TEWS_POD_CONT_PWR) 1 ==
 							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
 							(A:GPS WP DISTANCE,nmiles) 10 &lt; and
 							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 != and
@@ -1878,7 +1875,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+							(L:TEWS_POD_CONT_PWR) 0 ==
 							(A:GPS WP DISTANCE,nmiles) 10 &gt; or
 							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 == or
 							(L:SW1_RS_TEWS_ICS, enum) 0 == or
@@ -1894,7 +1891,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:TEWS_POD_CONT_PWR) 1 ==
 							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
 							(A:GPS WP DISTANCE,nmiles) 5 &lt; and
 							(A:GPS WP DISTANCE,nmiles) 4.5 &gt; and
@@ -1912,7 +1909,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+							(L:TEWS_POD_CONT_PWR) 0 ==
 							(A:GPS WP DISTANCE,nmiles) 5 &gt; or
 							(A:GPS WP DISTANCE,nmiles) 4.5 &lt; or
 							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 == or
@@ -1932,7 +1929,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:TEWS_POD_CONT_PWR) 1 ==
 							(L:INTERCEPT, enum) 1 == and
 							(L:RDR_TEWS_30_INIT, enum) 0 == and
 								if{
@@ -1943,8 +1940,8 @@ Version 5.0
 				</Element>
 				<Element>
 					<Select>
-						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+						<Value>							
+							(L:TEWS_POD_CONT_PWR) 0 ==
 							(L:INTERCEPT, enum) 0 == or
 							(L:RDR_TEWS_30_INIT, enum) 1 == and
 								if{
@@ -1956,7 +1953,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:TEWS_POD_CONT_PWR) 1 ==
 							(L:INTERCEPT, enum) 1 == and
 							(L:RDR_TEWS_10_INIT, enum) 0 == and
 								if{
@@ -1968,7 +1965,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+							(L:TEWS_POD_CONT_PWR) 0 ==
 							(L:INTERCEPT, enum) 0 == or
 							(L:RDR_TEWS_10_INIT, enum) 1 == and
 								if{
@@ -1980,7 +1977,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
+							(L:TEWS_POD_CONT_PWR) 1 ==
 							(L:INTERCEPT_5, enum) 1 == and
 							(L:RDR_TEWS_5_INIT, enum) 0 == and
 								if{
@@ -1992,7 +1989,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 0 ==
+							(L:TEWS_POD_CONT_PWR) 0 ==
 							(L:INTERCEPT_5, enum) 0 == or
 							(L:RDR_TEWS_5_INIT, enum) 1 == and
 								if{
@@ -2008,9 +2005,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(L:ENG_CONT_ESS_BUS_PWR) 1 ==
 						(A:GENERAL ENG COMBUSTION:1, enum) 1 == and
 						(A:GENERAL ENG THROTTLE LEVER POSITION:1, percent) 80 &gt; and
 						(L:L_NOZZLE_INIT, enum) 0 == and
@@ -2035,9 +2030,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(L:ENG_CONT_ESS_BUS_PWR) 1 ==
 						(A:GENERAL ENG COMBUSTION:2, enum) 1 == and
 						(A:GENERAL ENG THROTTLE LEVER POSITION:2, percent) 80 &gt; and
 						(L:R_NOZZLE_INIT, enum) 0 == and
@@ -2063,9 +2056,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(L:ENG_CONT_ESS_BUS_PWR) 1 ==
 						(A:GENERAL ENG COMBUSTION:1, enum) 1 == and
 						(L:SW1_FS_ENG_CONT_L, enum) 1 == and
 						(L:L_DEEQ_INIT, enum) 0 == and
@@ -2089,9 +2080,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(L:ENG_CONT_ESS_BUS_PWR) 1 ==
 						(A:GENERAL ENG COMBUSTION:2, enum) 1 == and
 						(L:SW1_FS_ENG_CONT_R, enum) 1 == and
 						(L:R_DEEQ_INIT, enum) 0 == and
@@ -2117,9 +2106,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(L:AIR_INLET_CONT_PWR) 1 ==
 						(A:GENERAL ENG COMBUSTION:1, enum) 1 == and
 						(A:SIM ON GROUND, enum) 1 == and
 						(L:L_RAMP_INIT, enum) 0 == and
@@ -2143,9 +2130,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(L:AIR_INLET_CONT_PWR) 1 ==
 						(A:GENERAL ENG COMBUSTION:2, enum) 1 == and
 						(A:SIM ON GROUND, enum) 1 == and
 						(L:R_RAMP_INIT, enum) 0 == and
@@ -2172,9 +2157,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:INTERNAL_POWER_AVAIL, enum) 1 == or
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+						(L:UHF_AUX_RCVR_PWR) 1 ==
 						(A:COM ACTIVE FREQUENCY:2,Frequency BCD16) 8736 == and
 						(L:CHATTER_INIT, enum) 0 == and
 							if{
@@ -2238,13 +2221,27 @@ Version 5.0
 						</Value>
 					</Select>
 				</Element>
+				<Element>
+					<Select>
+						<Value>
+						<!-- VMS  system   -->
+							
+							(L:UTIL_PWR_RCPT_PWR) 1 ==
+								if{
+									1 (>L:VMS_ENABLE)
+								}
+								els{
+									0 (>L:VMS_ENABLE)
+								}
+						</Value>
+					</Select>
+				</Element>
 			</Element>
 			<Element Name="Bingo Fuel Warn" >
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:VMS_ENABLE) 1 ==
 							(L:FUEL_INTERNAL, enum) (L:SETTING BNGO) &lt; and
 							(L:SW2_FS_EW_ICS, enum) 0 != and
 
@@ -2284,8 +2281,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:VMS_ENABLE) 1 ==
 							(L:FUEL_LOW_WARN, enum) 1 == and
 							(L:SW2_FS_EW_ICS, enum) 0 != and
 
@@ -2327,8 +2323,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:VMS_ENABLE) 1 ==
 							(A:TURB ENG ITT:1, celsius) 960 &gt; and
 							(L:SW2_FS_EW_ICS, enum) 0 != and
 
@@ -2367,8 +2362,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:VMS_ENABLE) 1 ==
 							(A:TURB ENG ITT:2, celsius) 960 &gt; and
 							(L:SW2_FS_EW_ICS, enum) 0 != and
 
@@ -2409,8 +2403,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:VMS_ENABLE) 1 ==
 							(L:PULL_UP_WARNING, enum) 1 == and
 							(L:SW2_FS_EW_ICS, enum) 0 != and
 
@@ -2451,8 +2444,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:VMS_ENABLE) 1 ==
 							(L:L_ENG_FIRE) 1 == and
 							(L:SW2_FS_EW_ICS, enum) 0 != and
 
@@ -2492,8 +2484,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:VMS_ENABLE) 1 ==
 							(L:R_ENG_FIRE) 1 == and
 							(L:SW2_FS_EW_ICS, enum) 0 != and
 
@@ -2533,8 +2524,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:VMS_ENABLE) 1 ==
 							(L:AMAD_FIRE) 1 == and
 							(L:SW2_FS_EW_ICS, enum) 0 != and
 
@@ -2575,8 +2565,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:VMS_ENABLE) 1 ==
 							(A:SIM ON GROUND, enum) 0 == and
 							(A:GEAR CENTER POSITION, percent) 0 == and
 							(A:PLANE ALT ABOVE GROUND, feet) (L:SETTING LAW, enum) &lt; and
@@ -2618,8 +2607,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-							(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:VMS_ENABLE) 1 ==
 							(A:SIM ON GROUND, enum) 0 == and
 							(A:G FORCE, enum) (L:OWS_OVER_G_LIMIT, enum) &gt; and
 							(L:SW2_FS_EW_ICS, enum) 0 != and
@@ -2662,8 +2650,7 @@ Version 5.0
 			<Element Name="OWS Factor 1 Warn">
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:VMS_ENABLE) 1 ==
 						(A:SIM ON GROUND, enum) 0 == and
 						(A:G FORCE, enum) (L:OWS_FACTOR_1_LIMIT, enum) &gt; and
 						(A:G FORCE, enum) (L:OWS_FACTOR_2_LIMIT, enum)  &lt; and
@@ -2696,8 +2683,7 @@ Version 5.0
 			<Element Name="OWS Factor 2 Warn">
 				<Select>
 					<Value>
-						(L:INTERNAL_POWER_AVAIL, enum) 1 ==
-						(L:GROUND_POWER_AVAIL, enum) 1 == or
+							(L:VMS_ENABLE) 1 ==
 						(A:SIM ON GROUND, enum) 0 == and
 						(A:G FORCE, enum) (L:OWS_FACTOR_2_LIMIT, enum) &gt; and
 						(L:SW2_FS_EW_ICS, enum) 0 != and
