@@ -4897,8 +4897,29 @@
 							<FontHeight>22</FontHeight>
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
-%{:0}
-%{:1}PYLON
+	%{:0}
+	%{:1}%((L:AO_STA-2_LType, Enum))
+	%{case}
+	%{:0}PYLON
+	%{:1}AAM-7
+	%{:2}AAM-4
+	%{:3}AIM-9L
+	%{:4}AIM-120C
+	%{:5}FUEL
+	%{:6}EO
+	%{:7}IR
+	%{:8}1 \t MK-82
+	%{:9}1 \t MK-82 R
+	%{:10}1 \t MK-84
+	%{:11}1 \t MK-84 L
+	%{:12}1 \t GBU-58
+	%{:13}1 \t GBU-42
+	%{:14}1 \t GBU-52
+	%{:15}1 \t GBU-71
+	%{:16}1 \t SUU-20
+	%{:17}1 \t BLU-27F
+	%{:18}1 \t BLU-27U
+	%{end}
 %{end}
 </GaugeString>
 							<HorizontalAlign>CENTER</HorizontalAlign>
@@ -4961,7 +4982,27 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}
-%{:1}FUEL
+%{:1}%((L:AO_STA-5_LType, Enum))%{case}
+	%{:0}PYLON
+	%{:1}AAM-7
+	%{:2}AAM-4
+	%{:3}AIM-9L
+	%{:4}AIM-120C
+	%{:5}FUEL
+	%{:6}EO
+	%{:7}IR
+	%{:8}MK-82
+	%{:9}MK-82 R
+	%{:10}MK-84
+	%{:11}MK-84 L
+	%{:12}GBU-58
+	%{:13}GBU-42
+	%{:14}GBU-52
+	%{:15}GBU-71
+	%{:16}SUU-20
+	%{:17}BLU-27F
+	%{:18}BLU-27U
+	%{end}	
 %{end}
 </GaugeString>
 							<HorizontalAlign>CENTER</HorizontalAlign>
@@ -5010,7 +5051,27 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}
-%{:1}PYLON
+%{:1}%((L:AO_STA-8_LType, Enum))%{case}
+	%{:0}PYLON
+	%{:1}AAM-7
+	%{:2}AAM-4
+	%{:3}AIM-9L
+	%{:4}AIM-120C
+	%{:5}FUEL
+	%{:6}EO
+	%{:7}IR
+	%{:8}MK-82
+	%{:9}MK-82 R
+	%{:10}MK-84
+	%{:11}MK-84 L
+	%{:12}GBU-58
+	%{:13}GBU-42
+	%{:14}GBU-52
+	%{:15}GBU-71
+	%{:16}SUU-20
+	%{:17}BLU-27F
+	%{:18}BLU-27U
+	%{end}
 %{end}
 </GaugeString>
 							<HorizontalAlign>CENTER</HorizontalAlign>

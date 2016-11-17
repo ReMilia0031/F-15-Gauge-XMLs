@@ -1,6 +1,10 @@
-<Gauge Name="F-15 SYSTEMS" Version="7.00">
+<Gauge Name="F-15 SYSTEMS" Version="7.80">
 <Image Name="blank_back.bmp" ImageSizes="20,20"/>
 <!--
+Version 7.80
+	[***]
+Version 7.50
+	[DEL] INLET RAMP CONTROLLER > (moved : S_ELEC)
 Version 7.00
 	[EDT] INTERNAL_POWER > Electrical System
 Version 6.90
@@ -56,7 +60,7 @@ Version 5.0
 					4 (>L:KNOB_FS_RDR_EL_SCAN)
 					2 (>L:KNOB_FS_RDR_AZ_SCAN)
 					1 (>L:KNOB_FS_RDR_MODE_SEL)
-					2 (>L:IND_FS_RDR_BAND)
+					1 (>L:IND_FS_RDR_BAND)
 					3 (>L:IND_FS_RDR_CHAN)
 
 					1 (>L:SW2_FS_EW_RWR_ICS)
@@ -107,8 +111,8 @@ Version 5.0
 					0 (>L:SW1_FS_THROT_L)
 					0 (>L:SW1_FS_THROT_R)
 
-					1 (>L:SW2_FS_THR_RUD_TRIM)
-					1 (>L:SW1_FLAPS)
+					0 (>L:SW2_FS_THR_RUD_TRIM)
+					0 (>L:SW1_FLAPS)
 
 					0 (>L:KNOB_FS_LIGHT_FORM)
 					0 (>L:KNOB_FS_LIGHT_POS)
@@ -143,7 +147,7 @@ Version 5.0
 					1 (>L:SW1_FS_EWWS)
 					0 (>L:SW1_FS_FLYUP)
 					0 (>L:SW1_FS_VMAX)
-					0 (>L:SW1_FS_ASO)
+					1 (>L:SW1_FS_ASO)
 					0 (>L:SW1_FS_EAR)
 
 					1 (>L:SW2_FS_OXY_EMER)
@@ -152,7 +156,7 @@ Version 5.0
 
 					1 (>L:SW1_FS_ENG_GEN_L)
 					1 (>L:SW1_FS_ENG_GEN_R)
-					0 (>L:SW2_FS_ENG_EMER_GEN)
+					2 (>L:SW2_FS_ENG_EMER_GEN)
 					1 (>L:SW1_FS_ENG_CONT_L)
 					1 (>L:SW1_FS_ENG_CONT_R)
 					0 (>L:SW2_FS_ENG_EXT_PWR)
@@ -570,7 +574,8 @@ Version 5.0
 			<Element Name="Finger">
 				<Select>
 					<Value>
-						(A:GENERAL ENG1 THROTTLE LEVER POSITION, percent) 1 &gt;
+						(A:TURB ENG2 N2, percent) 20 &gt;
+						(A:GENERAL ENG1 THROTTLE LEVER POSITION, percent) 1 &gt; and
 							if{
 								1 (>L:SW1_FS_THR_L_FING)
 							}
@@ -591,7 +596,7 @@ Version 5.0
 			<Element Name="Throttle Lever Position">
 				<Select>
 					<Value>
-						(A:GENERAL ENG2 THROTTLE LEVER POSITION, percent) 20 &gt;
+						(A:GENERAL ENG1 THROTTLE LEVER POSITION, percent) 20 &gt;
 							if{
 								1 (>L:SW1_FS_THROT_L)
 							}
@@ -618,13 +623,14 @@ Version 5.0
 			<Element Name="Throttle Set">
 				<Select>
 					<Value>
-						(A:TURB ENG1 N2, percent) 35 &gt;
-						(A:GENERAL ENG1 THROTTLE LEVER POSITION, percent) 20 &lt; and
+						(A:GENERAL ENG1 THROTTLE LEVER POSITION, percent) 20 &lt;
+ 						(A:TURB ENG1 N2, percent) 35 &gt; and
 							if{
 								3276 (>K:THROTTLE1_SET)
 							}
-						(A:TURB ENG2 N2, percent) 35 &gt;
-						(A:GENERAL ENG2 THROTTLE LEVER POSITION, percent) 20 &lt; and
+					
+						(A:GENERAL ENG2 THROTTLE LEVER POSITION, percent) 20 &lt;
+						(A:TURB ENG2 N2, percent) 35 &gt; and
 							if{
 								3276 (>K:THROTTLE2_SET)
 							}
@@ -635,7 +641,7 @@ Version 5.0
 				<Select>
 					<Value>
 
-						(A:TURB ENG1 N2, percent) 35 &gt;
+						(A:TURB ENG1 N2, percent) 25 &gt;
 							if{
 								1 (>L:ENG1_AVAIL, bool)
 							}
@@ -643,7 +649,7 @@ Version 5.0
 								0 (>L:ENG1_AVAIL, bool)
 							}
 
-						(A:TURB ENG2 N2, percent) 35 &gt;
+						(A:TURB ENG2 N2, percent) 25 &gt;
 							if{
 								1 (>L:ENG2_AVAIL, bool)
 							}
@@ -796,27 +802,6 @@ Version 5.0
     		</Select>
 		</Element>
 
-		<Element Name="INLET RAMP CONTROLLER">
-    		<Select>
-      			<Value>
-				(L:SW1_FS_MISC_L_INLET_RAMP, enum) 0 ==
-					if{
-						1 (>L:L_RAMP_LOCKED,enum)
-					}
-					els{
-						0 (>L:L_RAMP_LOCKED,enum)
-					}
-				(L:SW1_FS_MISC_R_INLET_RAMP, enum) 0 ==
-					if{
-						1 (>L:R_RAMP_LOCKED,enum)
-					}
-					els{
-						0 (>L:R_RAMP_LOCKED,enum)
-					}
-      			</Value>
-    		</Select>
-		</Element>
-
 		<Element Name="FLAPS BLOW-IN CONTROLLER">
 			<Element>
 				<Select>
@@ -836,7 +821,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:FLAPS_PWR)1 ==
+						(L:FLAPS_PWR) 1 ==
 						(L:SW1_FLAPS,enum) 1 == and
 						(L:FLAPS_DOWN_INIT,enum) 1 == and
 							if{
@@ -851,7 +836,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:FLAPS_PWR)1 ==
+						(L:FLAPS_PWR) 1 ==
 						(L:SW1_FLAPS,enum) 0 == and
 						(A:AIRSPEED INDICATED,knots) 250 &gt; and
 						(L:FLAPS_DOWN_INIT2,enum) 0 == and
@@ -1059,7 +1044,7 @@ Version 5.0
 	</Element>
 
 	<Element Name="ETC">
-		<Element Name="Hydraulic Elevator">
+ 		<Element Name="Hydraulic Elevator">
     		<Select>
       			<Value>
 					(A:SIM ON GROUND, bool)
@@ -1161,25 +1146,25 @@ Version 5.0
 		<Element Name="ATTITUDE CAUTION">
     		<Select>
       			<Value>
-				(L:GAU_STBY_ATT_PITCH) (L:GAU_ATT_PITCH) - (>L:att_pitch, enum)
-				(L:GAU_STBY_ATT_BANK) (L:GAU_ATT_BANK) - (>L:att_bank, enum)
+				(L:GAU_STBY_ATT_PITCH) (L:GAU_ATT_PITCH) - (>L:ATT_PITCH, enum)
+				(L:GAU_STBY_ATT_BANK) (L:GAU_ATT_BANK) - (>L:ATT_BANK, enum)
 
-				(L:att_pitch, enum) -2 &lt;
-				(L:att_pitch, enum) 2 &gt; or
+				(L:ATT_PITCH, enum) -2 &lt;
+				(L:ATT_PITCH, enum) 2 &gt; or
 					if{
 						1 (>L:ATT_CAUT)
 					}
 
-				(L:att_bank, enum) -2 &lt;
-				(L:att_bank, enum) 2 &gt; or
+				(L:ATT_BANK, enum) -2 &lt;
+				(L:ATT_BANK, enum) 2 &gt; or
 					if{
 						1 (>L:ATT_CAUT)
 					}
 
-				(L:att_pitch, enum) -2 &gt;
-				(L:att_pitch, enum) 2 &lt; and
-				(L:att_bank, enum) -2 &gt; and
-				(L:att_bank, enum) 2 &lt; and
+				(L:ATT_PITCH, enum) -2 &gt;
+				(L:ATT_PITCH, enum) 2 &lt; and
+				(L:ATT_BANK, enum) -2 &gt; and
+				(L:ATT_BANK, enum) 2 &lt; and
 					if{
 						0 (>L:ATT_CAUT)
 					}
@@ -1191,7 +1176,7 @@ Version 5.0
     		<Select>
       			<Value>
 					(A:AMBIENT TEMPERATURE, celsius) 0 &lt;
-					(A:SIM ON GROUND,enum) 1 == and
+					(A:SIM ON GROUND, enum) 1 == and
 					(A:PITOT HEAT, bool) 0 == and
 					(L:SW2_FS_ECS_ENG, enum) 0 == and
 						if{
@@ -1222,7 +1207,7 @@ Version 5.0
 				<Element Name="Fire Init">
 					<Select>
 						<Value>
-							(A:TURB ENG ITT:1,celsius) 1000 &gt;
+							(A:TURB ENG ITT:1, celsius) 1000 &gt;
 							(L:leng_overheat_cutoff_time) 0 == and
 								if{
 									(P:LOCAL TIME, seconds) (>L:leng_overheat_cutoff_time)
@@ -1337,8 +1322,7 @@ Version 5.0
 				</Element>
 			</Element>
 			<Element Name="AMAD">
-			<!--		APU Fire Init		-->
-				<Element>
+				<Element Name="APU Fire Init">
 					<Select>
 						<Value>
 							(L:AMAD_L_COUPLE, bool) 0 ==
@@ -1369,8 +1353,8 @@ Version 5.0
 						</Value>
 					</Select>
 				</Element>
-			<!--		APU Fire Control		-->
-				<Element>
+
+				<Element Name="APU Fire Control">
 					<Select>
 						<Value>
 							(L:AMAD_WARN, bool) 1 ==
@@ -1383,8 +1367,8 @@ Version 5.0
 						</Value>
 					</Select>
 				</Element>
-			<!--		APU Fire Extinguisher		-->
-				<Element>
+
+				<Element Name="APU Fire Extinguisher">
 					<Select>
 						<Value>
 						(L:BTN_FS_FIRE_AMAD_EXEC, bool) 1 ==
@@ -1585,10 +1569,9 @@ Version 5.0
 				</Select>
 			</Element>
 
-			<Element>
+			<Element Name="MUTE AUDIO">
 				<Select>
 					<Value>
-					<!-- IF VM MUTE PRESSED, MUTE AUDIO -->
 						(L:BTN_FS_GEAR_WARN_EXEC, enum) 1 ==
 						(L:GEAR_WARN_TIME, seconds) 0 == and
 							if{
@@ -1597,10 +1580,9 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element>
+			<Element Name="MUTED FOR 1 minutes then reset system">
 				<Select>
 					<Value>
-					<!-- IF VMS MUTED FOR 1 minutes then reset system   -->
 						(L:GEAR_WARN_MUTE, enum) 1 ==
 						(P:ABSOLUTE TIME, seconds) (L:GEAR_WARN_TIME, seconds) - 60 &gt; and
 							if{
@@ -1792,7 +1774,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:TEWS_POD_CONT_PWR) 1 ==
+							(L:TEWS-POWER) 1 ==
 							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
 							(A:GPS WP DISTANCE,nmiles) 20 &lt; and
 							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 != and
@@ -1809,7 +1791,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:TEWS_POD_CONT_PWR) 0 ==
+							(L:TEWS-POWER) 0 ==
 							(A:GPS WP DISTANCE,nmiles) 20 &gt; or
 							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 == or
 							(L:SW1_RS_TEWS_ICS, enum) 0 == or
@@ -1825,7 +1807,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:TEWS_POD_CONT_PWR) 1 ==
+							(L:TEWS-POWER) 1 ==
 							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
 							(A:GPS WP DISTANCE,nmiles) 15 &lt; and
 							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 != and
@@ -1842,7 +1824,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:TEWS_POD_CONT_PWR) 0 ==
+							(L:TEWS-POWER) 0 ==
 							(A:GPS WP DISTANCE,nmiles) 15 &gt; or
 							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 == or
 							(L:SW1_RS_TEWS_ICS, enum) 0 == or
@@ -1858,7 +1840,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:TEWS_POD_CONT_PWR) 1 ==
+							(L:TEWS-POWER) 1 ==
 							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
 							(A:GPS WP DISTANCE,nmiles) 10 &lt; and
 							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 != and
@@ -1875,7 +1857,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:TEWS_POD_CONT_PWR) 0 ==
+							(L:TEWS-POWER) 0 ==
 							(A:GPS WP DISTANCE,nmiles) 10 &gt; or
 							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 == or
 							(L:SW1_RS_TEWS_ICS, enum) 0 == or
@@ -1891,7 +1873,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:TEWS_POD_CONT_PWR) 1 ==
+							(L:TEWS-POWER) 1 ==
 							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
 							(A:GPS WP DISTANCE,nmiles) 5 &lt; and
 							(A:GPS WP DISTANCE,nmiles) 4.5 &gt; and
@@ -1909,7 +1891,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:TEWS_POD_CONT_PWR) 0 ==
+							(L:TEWS-POWER) 0 ==
 							(A:GPS WP DISTANCE,nmiles) 5 &gt; or
 							(A:GPS WP DISTANCE,nmiles) 4.5 &lt; or
 							(L:KNOB_FS_AUD_TEWS_CAUT, enum) 0 == or
@@ -1929,7 +1911,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:TEWS_POD_CONT_PWR) 1 ==
+							(L:TEWS-POWER) 1 ==
 							(L:INTERCEPT, enum) 1 == and
 							(L:RDR_TEWS_30_INIT, enum) 0 == and
 								if{
@@ -1940,8 +1922,8 @@ Version 5.0
 				</Element>
 				<Element>
 					<Select>
-						<Value>							
-							(L:TEWS_POD_CONT_PWR) 0 ==
+						<Value>
+							(L:TEWS-POWER) 0 ==
 							(L:INTERCEPT, enum) 0 == or
 							(L:RDR_TEWS_30_INIT, enum) 1 == and
 								if{
@@ -1953,7 +1935,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:TEWS_POD_CONT_PWR) 1 ==
+							(L:TEWS-POWER) 1 ==
 							(L:INTERCEPT, enum) 1 == and
 							(L:RDR_TEWS_10_INIT, enum) 0 == and
 								if{
@@ -1965,7 +1947,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:TEWS_POD_CONT_PWR) 0 ==
+							(L:TEWS-POWER) 0 ==
 							(L:INTERCEPT, enum) 0 == or
 							(L:RDR_TEWS_10_INIT, enum) 1 == and
 								if{
@@ -1977,7 +1959,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:TEWS_POD_CONT_PWR) 1 ==
+							(L:TEWS-POWER) 1 ==
 							(L:INTERCEPT_5, enum) 1 == and
 							(L:RDR_TEWS_5_INIT, enum) 0 == and
 								if{
@@ -1989,7 +1971,7 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-							(L:TEWS_POD_CONT_PWR) 0 ==
+							(L:TEWS-POWER) 0 ==
 							(L:INTERCEPT_5, enum) 0 == or
 							(L:RDR_TEWS_5_INIT, enum) 1 == and
 								if{
@@ -2200,7 +2182,6 @@ Version 5.0
 				<Element>
 					<Select>
 						<Value>
-						<!-- IF VM MUTE PRESSED, MUTE AUDIO -->
 							(L:BTN_FS_VOL_TEWS_LAUNCH) 1 ==
 							(L:VMS_TIME, seconds) 0 == and
 								if{
@@ -2209,10 +2190,9 @@ Version 5.0
 						</Value>
 				</Select>
 				</Element>
-				<Element>
+				<Element Name="IF VMS MUTED FOR 1 minutes then reset system">
 					<Select>
 						<Value>
-						<!-- IF VMS MUTED FOR 1 minutes then reset system   -->
 							(L:VMS_MUTE, enum) 1 ==
 							(P:ABSOLUTE TIME, seconds) (L:VMS_TIME, seconds) - 60 &gt; and
 								if{
@@ -2221,11 +2201,9 @@ Version 5.0
 						</Value>
 					</Select>
 				</Element>
-				<Element>
+				<Element Name="VMS System PWR">
 					<Select>
 						<Value>
-						<!-- VMS  system   -->
-							
 							(L:UTIL_PWR_RCPT_PWR) 1 ==
 								if{
 									1 (>L:VMS_ENABLE)
@@ -2319,8 +2297,7 @@ Version 5.0
 			</Element>
 
 			<Element Name="Overtemp Warn">
-			<!--		VMS Overtemp Left Warn		-->
-				<Element>
+				<Element Name="Left Warn">
 					<Select>
 						<Value>
 							(L:VMS_ENABLE) 1 ==
@@ -2358,8 +2335,8 @@ Version 5.0
 						</Value>
 					</Select>
 				</Element>
-			<!--		VMS Overtemp Right Warn		-->
-				<Element>
+
+				<Element Name="Right Warn">
 					<Select>
 						<Value>
 							(L:VMS_ENABLE) 1 ==
@@ -2440,8 +2417,7 @@ Version 5.0
 				</Element>
 			</Element>
 			<Element Name="Fire Warn">
-		<!--		VMS Left Engine Fire Warn		-->
-				<Element>
+				<Element Name="Left ENG">
 					<Select>
 						<Value>
 							(L:VMS_ENABLE) 1 ==
@@ -2480,8 +2456,7 @@ Version 5.0
 					</Select>
 				</Element>
 
-		<!--		VMS Right Engine Fire Warn		-->
-				<Element>
+				<Element Name="Right ENG">
 					<Select>
 						<Value>
 							(L:VMS_ENABLE) 1 ==
@@ -2520,8 +2495,7 @@ Version 5.0
 					</Select>
 				</Element>
 
-		<!--		VMS AMAD Fire Warn		-->
-				<Element>
+				<Element Name="AMAD Fire">
 					<Select>
 						<Value>
 							(L:VMS_ENABLE) 1 ==
@@ -2645,7 +2619,7 @@ Version 5.0
 					</Select>
 				</Element>
 			</Element>
-		</Element>	
+		</Element>
 		<Element Name="OWS">
 			<Element Name="OWS Factor 1 Warn">
 				<Select>
@@ -2725,7 +2699,7 @@ Version 5.0
 							els{ 0 (>L:GUN_ON) }
 					</Value>
 				</Select>
-			</Element>			
+			</Element>
 			<Element Name="GUN Init">
 				<Select>
 					<Value>
