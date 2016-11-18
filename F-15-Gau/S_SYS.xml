@@ -103,8 +103,8 @@ Version 5.0
 					2 (>L:SW2_FS_CAS_YAW)
 					2 (>L:SW2_FS_CAS_PITCH)
 					2 (>L:SW2_FS_CAS_ROLL)
-					0 (>L:SW1_FS_CAS_ALT_HOLD)
-					0 (>L:SW1_FS_CAS_ATT_HOLD)
+					1 (>L:SW1_FS_CAS_ALT_HOLD)
+					1 (>L:SW1_FS_CAS_ATT_HOLD)
 
 					0 (>L:SW1_FS_THR_L_FING)
 					0 (>L:SW1_FS_THR_R_FING)

@@ -3435,7 +3435,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(A:AUTOPILOT MASTER, bool) 1 == and
+						(A:AUTOPILOT MASTER, bool) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_FLT_CONTR, enum)  }
 							els{ 0 (>L:LT_FS_FLT_CONTR, enum) }
@@ -4172,18 +4172,35 @@ Version 5.0
 
 	</Element>
 	<Element Name="AFCS CONTROLER">
-		<Element Name="CAS Main">
+		<Element Name="CAS RDY">
 			<Select>
 				<Value>
 				(L:AFCS_AC_PWR) 1 ==
-				(L:AFCS_DC_PWR) 1 == and
 					if{
 						1 (>L:PITCH_RATIO_RDY, enum)
 						1 (>L:ROLL_RATIO_RDY, enum)
-
-						1 (>L:CAS_YAW_RDY, enum)
-						1 (>L:CAS_ROLL_RDY, enum)
-						1 (>L:CAS_PITCH_RDY, enum)
+						
+						(L:SW2_FS_CAS_PITCH) 2 ==
+							if{							
+								1 (>L:CAS_PITCH_RDY, enum)
+							}
+							els{							
+								0 (>L:CAS_PITCH_RDY, enum)
+							}
+						(L:SW2_FS_CAS_ROLL) 2 ==
+							if{							
+								1 (>L:CAS_ROLL_RDY, enum)
+							}
+							els{							
+								0 (>L:CAS_ROLL_RDY, enum)
+							}
+						(L:SW2_FS_CAS_YAW) 2 ==
+							if{							
+								1 (>L:CAS_YAW_RDY, enum)
+							}
+							els{							
+								0 (>L:CAS_YAW_RDY, enum)
+							}
 					}
 					els{
 						0 (>L:PITCH_RATIO_RDY, enum)
@@ -4196,6 +4213,189 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
+
+		<Element Name="CAS ALT HOLD RDY">
+			<Select>
+				<Value>
+					(L:SW1_FS_CAS_ALT_HOLD, enum) 1 ==
+					 if{
+						1 (>L:CAS_ALT_HOLD_RDY, enum)
+					}
+					els{
+						0 (>L:CAS_ALT_HOLD_RDY, enum)
+					}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="CAS ATT HOLD RDY">
+			<Select>
+				<Value>
+					(L:SW1_FS_CAS_ATT_HOLD, enum) 1 ==
+					if{
+						1 (>L:CAS_ATT_HOLD_RDY, enum)
+					}
+					els{
+						0 (>L:CAS_ATT_HOLD_RDY, enum)
+					}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="AFCS MASTER">
+			<Select>
+				<Value>
+				(L:AFCS_DC_PWR) 1 ==
+				(A:GEAR HANDLE POSITION, bool) 0 == and
+					if{
+						(>K:AUTOPILOT_ON)
+					}
+					
+				(L:AFCS_DC_PWR) 0 ==
+				(A:GEAR HANDLE POSITION, bool) 0 &gt; or
+					if{
+						(>K:AUTOPILOT_OFF)
+					}					
+
+				<!-- (A:SIM ON GROUND, bool) 0 == and -->
+				(A:NAV HAS LOCALIZER:2, bool)
+				(A:NAV SIGNAL:2, bool) and
+				(A:YOKE X POSITION, Position) 0 == and
+				(A:YOKE Y POSITION, Position) 0 == and
+					if{
+						(L:KNOB_FS_STEER_MODE) 2 ==
+						(L:KNOB_FS_STEER_MODE) 3 == or
+							if{							
+								(>K:AP_HDG_HOLD_ON)
+								(>K:AP_APR_HOLD_ON)
+								(>K:AP_ALT_HOLD_ON)
+							}
+							els{
+								(>K:AP_APR_HOLD_OFF)
+							}
+					}
+					els{
+						(>K:AP_APR_HOLD_OFF)
+					}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="CAS PITCH">
+			<Select>
+				<Value>
+					(A:YOKE Y POSITION, Position) 0 ==
+					(L:CAS_PITCH_RDY, enum) 1 == and
+					<!-- (A:SIM ON GROUND, bool) 0 == and -->
+					(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
+						if{
+							(A:VERTICAL SPEED, Feet per minute) -2000 &lt;
+							(A:VERTICAL SPEED, Feet per minute) 2000 &gt; or
+							(L:CAS_ATT_HOLD_RDY, enum) 1 == and
+							(A:AUTOPILOT ATTITUDE HOLD) 0 == and
+								if{
+									(>K:AP_ATT_HOLD_ON)
+								}
+								
+							(A:VERTICAL SPEED, Feet per minute) -2000 &gt;
+							(A:VERTICAL SPEED, Feet per minute) 2000 &lt; and
+							(L:CAS_ALT_HOLD_RDY, enum) 1 == and
+							(A:AUTOPILOT ALTITUDE LOCK) 0 == and
+								if{
+									(>K:AP_ALT_HOLD_ON)
+									(A:INDICATED ALTITUDE, feet) (>K:AP_ALT_VAR_SET_ENGLISH)
+								}
+						}
+						
+					(A:YOKE Y POSITION, Position) 0 !=
+					(L:CAS_PITCH_RDY, enum) 0 == or
+					<!-- (A:SIM ON GROUND, bool) 1 == or -->
+						if{
+							(>K:AP_ATT_HOLD_OFF)
+							(>K:AP_ALT_HOLD_OFF)
+							(A:ELEVATOR POSITION, Position) (>K:AXIS_ELEV_TRIM_SET)
+						}
+					(L:CAS_ALT_HOLD_RDY, enum) 0 ==
+						if{
+							(>K:AP_ALT_HOLD_OFF)
+						}
+					(L:CAS_ATT_HOLD_RDY, enum) 0 ==
+						if{
+							(>K:AP_ATT_HOLD_OFF)
+						}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="CAS ROLL">
+			<Select>
+				<Value>
+					(A:YOKE X POSITION, Position) 0 ==
+					<!-- (A:SIM ON GROUND, bool) 0 == and -->
+					(L:CAS_ROLL_RDY, enum) 1 == and
+					(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
+						if{
+							(A:VERTICAL SPEED, Feet per minute) -2000 &lt;
+							(A:VERTICAL SPEED, Feet per minute) 2000 &gt; or
+							(A:AUTOPILOT WING LEVELER) 0 == and
+								if{
+									(>K:AP_WING_LEVELER_ON)
+								}
+
+							(A:VERTICAL SPEED, Feet per minute) -2000 &gt;
+							(A:VERTICAL SPEED, Feet per minute) 2000 &lt; and
+								if{
+									(L:KNOB_FS_STEER_MODE) 1 ==
+									(L:KNOB_FS_STEER_MODE) 2 == or
+									(A:NAV SIGNAL:1, bool) and
+										if{
+											(L:KNOB_FS_STEER_MODE) 0 ==
+											(L:KNOB_FS_STEER_MODE) 1 == or
+											(A:AUTOPILOT NAV1 LOCK) 0 == and
+												if{
+													(>K:AP_NAV1_HOLD_ON)
+												}
+										}
+										els{
+											(A:AUTOPILOT HEADING LOCK) 0 ==
+												if{
+													(>K:AP_HDG_HOLD_ON)
+													(A:PLANE HEADING DEGREES MAGNETIC,degrees) (>K:HEADING_BUG_SET)
+												}
+										}
+									
+								
+								}
+							
+							
+						}
+
+					(A:YOKE X POSITION, Position) 0 !=
+					(L:CAS_ROLL_RDY, enum) 0 == or
+					<!-- (A:SIM ON GROUND, bool) 1 == or -->
+						if{
+							(>K:AP_HDG_HOLD_OFF)
+							(>K:AP_NAV1_HOLD_OFF)
+							(>K:AP_WING_LEVELER_OFF)
+						}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="CAS YAW">
+			<Select>
+				<Value>
+					(A:RUDDER POSITION, Position) 0 ==
+					(L:CAS_YAW_RDY, enum) 1 == and
+						if{
+							(>K:YAW_DAMPER_ON)
+						}
+						
+					(A:RUDDER POSITION, Position) 0 !=
+					(L:CAS_YAW_RDY, enum) 0 == or
+						if{
+							(>K:YAW_DAMPER_OFF)
+						}
+				</Value>
+			</Select>
+		</Element>
+
+						
 		<Element Name="ROLL RATIO CONTROLER">
 			<Select>
 				<Value>

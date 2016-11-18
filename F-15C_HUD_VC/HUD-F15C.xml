@@ -2507,13 +2507,11 @@ Version 2.0
 		<Element Name="Bank Steering (CDI)">
 			<Visible>(L:HUD_MASTER_MODE, enum) 2 &lt;</Visible>
 			<Macro Name="NAV1_CDI">(A:NAV1 CDI, number) 127 / 10 *</Macro>
-			<Macro Name="TCN_CDI">(L:TCN CDI, degrees)</Macro>
 			<Macro Name="GPS_CDI">@radnor90_h( (A:GPS WP BEARING, radians) (A:GPS WP DESIRED TRACK, radians) - ) rddg</Macro>
-			<Macro Name="Current_CDI">@TCN_CDI @TCN_CDI @NAV1_CDI @GPS_CDI 4 (L:HUD_STEER_MODE) case</Macro>
+			<Macro Name="Current_CDI">@NAV1_CDI @GPS_CDI @NAV1_CDI @GPS_CDI 4 (L:HUD_STEER_MODE) case</Macro>
 			<Macro Name="NAV1_Course">(A:NAV1 OBS, radians) (A:Plane heading degrees gyro, radians) -</Macro>
-			<Macro Name="TCN_Course">(L:CSEL Carrier, radians) (A:Plane heading degrees true, radians) -</Macro>
 			<Macro Name="GPS_Course">(A:GPS WP DESIRED TRACK, radians) (A:Plane heading degrees gyro, radians) -</Macro>
-			<Macro Name="Selected_Course">@TCN_Course @TCN_Course @NAV1_Course @GPS_Course 4 (L:HUD_STEER_MODE) case</Macro>
+			<Macro Name="Selected_Course">@NAV1_Course @GPS_Course @NAV1_Course @GPS_Course 4 (L:HUD_STEER_MODE) case</Macro>
 			<Element>
 				<Visible>
 					(L:HUD_STEER_MODE) 1 ==
@@ -2619,14 +2617,12 @@ Version 2.0
 			<Element>
 				<Macro Name="round_point25">@1 0.25 / near 0.25 *</Macro>
 				<Macro Name="GPS_Bearing180">(A:GPS WP BEARING, degrees) 180 + (A:GPS GROUND MAGNETIC TRACK, degrees) - dnor</Macro>
-				<Macro Name="TCN_Bearing180">@round_point25( (L:TCN Radial, degrees) 180 + (A:PLANE HEADING DEGREES TRUE, degrees) - dnor )</Macro>
-				<Macro Name="PDGT_Bearing180">@round_point25( (L:PDGT_Radial, degrees) 180 + (A:PLANE HEADING DEGREES TRUE, degrees) - dnor )</Macro>
 				<Macro Name="NAV_Bearing180">
 					(A:NAV1 HAS LOCALIZER, bool) !
 					if{ @round_point25( (A:NAV1 RADIAL, degrees) (A:NAV1 MAGVAR, degrees) - (A:PLANE HEADING DEGREES TRUE, degrees) - dnor ) }
 					els{ @round_point25( (A:NAV1 LOCALIZER, degrees) 180 + (A:PLANE HEADING DEGREES TRUE, degrees) - dnor ) }
 				</Macro>
-				<Macro Name="Marker_Bearing180">@PDGT_Bearing180 @TCN_Bearing180 @NAV_Bearing180 @GPS_Bearing180 4 (L:HUD_STEER_MODE) case</Macro>
+				<Macro Name="Marker_Bearing180">@NAV_Bearing180 @GPS_Bearing180 @NAV_Bearing180 @GPS_Bearing180 4 (L:HUD_STEER_MODE) case</Macro>
 				<Element>
 					<Visible>
 						(L:HUD_STEER_MODE) 0 == (A:GPS IS ACTIVE WAY POINT, bool) &amp;&amp;
@@ -3798,7 +3794,7 @@ Version 2.0
 					<Element Name="ADI Steering Modes">
 						<Position X="0" Y="0"/>
 						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-							<String>%((A:Autopilot master, bool))%{if}A%{end}%((L:HUD_STEER_MODE))%{case}%{:0}NAV%{:1}TCN%{:2}%ILSN%{:3}ILST%{end}</String>
+							<String>%((L:HUD_STEER_MODE))%{case}%{:0}NAV%{:1}TCN%{:2}%ILSN%{:3}ILST%{end}</String>
 						</Text>
 					</Element>
 					<Element Name="GPS ID">
@@ -3866,7 +3862,7 @@ Version 2.0
 				<Element Name="TCN / NAV Ranges (Window 4)">
 					<Visible>(L:HUD_MASTER_MODE, enum) 0 ==</Visible>
 					<Position X="0" Y="30"/>
-					<Macro Name="Current_Range">(A:NAV DME:2, nmiles) (A:NAV DME:2, nmiles) (A:NAV1 DME, nmiles) (A:GPS WP DISTANCE, nmiles) 4 (L:HUD_STEER_MODE) case 999.9 min 0 max</Macro>
+					<Macro Name="Current_Range">(A:NAV DME:1, nmiles) (A:GPS WP DISTANCE, nmiles) (A:NAV DME:1, nmiles) (A:GPS WP DISTANCE, nmiles) 4 (L:HUD_STEER_MODE) case 999.9 min 0 max</Macro>
 					<Text X="120" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 						<String>%((L:HUD_STEER_MODE))%{case}%{:0}N%{:1}T%{:2}N%{:3}T%{end} %(@Current_Range)%!4.1f!%</String>
 					</Text>
