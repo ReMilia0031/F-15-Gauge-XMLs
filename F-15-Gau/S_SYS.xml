@@ -253,7 +253,7 @@ Version 5.0
 					1 (>L:KNOB_FUEL_SELECT)
 					3 (>L:KNOB_FUEL_BINGO)
 
-					0 (>L:SW1_FS_JFS_LEVER, enum)
+					0 (>L:SW2_FS_JFS_LEVER, enum)
 					0 (>L:JFS_LEVER_PULLED, bool)
 					7000 (>L:JFS_ACCUM)
 
@@ -269,7 +269,7 @@ Version 5.0
 			<Element Name="JFS STARTER for ACCUMULATOR 1">
 				<Select>
 					<Value>
-						(L:SW1_FS_JFS_LEVER, enum) 1 ==
+						(L:SW2_FS_JFS_LEVER, enum) 1 ==
 						(L:SW1_FS_ENG_JFS, bool) 1 == and
 						(L:JFS_ACCUM) 7000 == and
 						(L:JFS_START, bool) 0 == and
@@ -286,7 +286,7 @@ Version 5.0
 			<Element Name="JFS STARTER for ACCUMULATOR 2">
 				<Select>
 					<Value>
-					(L:SW1_FS_JFS_LEVER, enum) 2 ==
+					(L:SW2_FS_JFS_LEVER, enum) 2 ==
 					(L:SW1_FS_ENG_JFS, bool) 1 == and
 					(L:JFS_ACCUM) 4000 == and
 					(L:JFS_START, bool) 0 == and
@@ -387,7 +387,7 @@ Version 5.0
 				<Element Name="JFS ACCUMULATOR 1">
 					<Select>
 						<Value>
-						(L:SW1_FS_JFS_LEVER, enum) 1 ==
+						(L:SW2_FS_JFS_LEVER, enum) 1 ==
 						(L:SW1_FS_ENG_JFS, bool) 1 == and
 						(L:JFS_LEVER_PULLED, bool) 0 == and
 						(L:ENG_AVAIL, bool) 0 == and
@@ -412,7 +412,7 @@ Version 5.0
 				<Element Name="JFS ACCUMULATOR 2">
 					<Select>
 						<Value>
-						(L:SW1_FS_JFS_LEVER, enum) 2 ==
+						(L:SW2_FS_JFS_LEVER, enum) 2 ==
 						(L:SW1_FS_ENG_JFS, bool) 1 == and
 						(L:JFS_LEVER_PULLED, bool) 0 == and
 						(L:ENG_AVAIL, bool) 0 == and
@@ -999,8 +999,8 @@ Version 5.0
 		<Element Name="JFS Lever">
     		<Select>
       			<Value>
-					(L:SW1_FS_JFS_LEVER, enum) 1 ==
-					(L:SW1_FS_JFS_LEVER, enum) 2 == or
+					(L:SW2_FS_JFS_LEVER, enum) 1 ==
+					(L:SW2_FS_JFS_LEVER, enum) 2 == or
 					(L:JFS_KNOB_INIT) 0 == and
 						if{
 							1 (>L:JFS_KNOB_INIT)
@@ -1011,15 +1011,15 @@ Version 5.0
 					(P:LOCAL TIME, seconds) (L:JFS_KNOB-TIME, seconds) - 1 &gt;
 					(L:JFS_KNOB_INIT) 1 == and
 						if{
-							0 (>L:SW1_FS_JFS_LEVER, enum)
+							0 (>L:SW2_FS_JFS_LEVER, enum)
 							0 (>L:JFS_KNOB-TIME, seconds)
 							0 (>L:JFS_KNOB_INIT)
 						}
 
-						(L:SW1_FS_JFS_LEVER, enum) 0 ==
+						(L:SW2_FS_JFS_LEVER, enum) 0 ==
 						(L:JFS_KNOB_INIT) 1 == and
 						if{
-							0 (>L:SW1_FS_JFS_LEVER, enum)
+							0 (>L:SW2_FS_JFS_LEVER, enum)
 							0 (>L:JFS_KNOB-TIME, seconds)
 							0 (>L:JFS_KNOB_INIT)
 						}

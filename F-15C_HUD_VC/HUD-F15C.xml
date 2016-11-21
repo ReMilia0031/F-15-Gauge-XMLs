@@ -2288,21 +2288,21 @@ Version 2.0
 					<Axis X="-28" Y="-21"/>
 				</Arc>
 			</Element>
-			<Element>
+			<Element Name="R">
 				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
 					<Point X="12" Y="0"/>
 					<Point X="22" Y="0"/>
 					<Axis X="-42" Y="-35"/>
 				</Polyline>
 			</Element>
-			<Element>
+			<Element Name="L">
 				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
 					<Point X="-12" Y="0"/>
 					<Point X="-22" Y="0"/>
 					<Axis X="-42" Y="-35"/>
 				</Polyline>
 			</Element>
-			<Element>
+			<Element Name="Vert">
 				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
 					<Point X="0" Y="-12"/>
 					<Point X="0" Y="-22"/>
@@ -2370,33 +2370,42 @@ Version 2.0
 		</Element>
 
 		<Element Name="ILS Needle">
-			<Visible>(L:ILS Switch, enum) 1 &lt; (L:HUD_MASTER_MODE, enum) 2 &lt; &amp;&amp;</Visible>
+			<Visible>(L:ILS Switch, enum) 1 &lt; (L:HUD_MASTER_MODE, enum) 2 &lt; and</Visible>
 			<Macro Name="ILS_LOC_Mode">
-				(A:NAV2 HAS LOCALIZER, bool) (A:NAV2 SIGNAL, bool) &amp;&amp;
+				(A:NAV1 HAS LOCALIZER, bool) (A:NAV1 SIGNAL, bool) and
 					if{ 0 }
 					els{
-						(A:NAV2 HAS NAV, bool) !
+						(A:NAV1 HAS NAV, bool) !
 							if{ 1 }
 							els{ 2 }
 					}
 			</Macro>
-			<Macro Name="ILS_GS_Mode">(A:NAV2 HAS GLIDE SLOPE, bool) if{ 0 } els{ (A:NAV2 HAS NAV, bool) ! if{ 1 } els{ 2 } }</Macro>
-			<Macro Name="LOC_Needle">0 (L:LOC Error, degrees) (A:NAV2 RADIAL ERROR, degrees) 3 @ILS_LOC_Mode case</Macro>
-			<Macro Name="GS_Needle">0 (L:GS Error, degrees) (A:NAV2 GLIDE SLOPE ERROR, degrees) 3 @ILS_GS_Mode case</Macro>
+			<Macro Name="ILS_GS_Mode">
+				(A:NAV1 HAS GLIDE SLOPE, bool) (A:NAV1 SIGNAL, bool) and
+					if{ 0 }
+					els{
+						(A:NAV1 HAS NAV, bool) !
+							if{ 1 }
+							els{ 2 }
+					}
+			</Macro>
+			<Macro Name="LOC_Needle">0 (L:LOC Error, degrees) (A:NAV1 RADIAL ERROR, degrees) 3 @ILS_LOC_Mode case</Macro>
+			<Macro Name="GS_Needle">0 (L:GS Error, degrees) (A:NAV1 GLIDE SLOPE ERROR, degrees) 3 @ILS_GS_Mode case</Macro>
 
 			<Element Name="GlideSlope">
 				<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
 				<Visible>(L:HSI_MODE,enum) 3 == (L:HSI_MODE,enum) 4 == or @ILS_LOC_Mode 2 &lt; and</Visible>
 				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
-					<Point X="0" Y="0"/>
-					<Point X="115" Y="0"/>
+					<Point X="-50" Y="0"/>
+					<Point X="50" Y="0"/>
+					<Axis X="-42" Y="-35"/>
 				</Polyline>
 				<Shift>
-					<Value Minimum="-1.4" Maximum="1.4">@GS_Needle</Value>
+					<Value Minimum="-3" Maximum="3">@GS_Needle</Value>
 					<Nonlinearity>
-						<Item Value="-1.4" X="-16" Y="-20"/>
-						<Item Value="0" X="-16" Y="30"/>
-						<Item Value="1.4" X="-16" Y="80"/>
+						<Item Value="-3" X="0" Y="-50"/>
+						<Item Value="0" X="0" Y="0"/>
+						<Item Value="3" X="0" Y="50"/>
 					</Nonlinearity>
 				</Shift>
 			</Element>
@@ -2404,71 +2413,75 @@ Version 2.0
 				<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
 				<Visible>(L:HSI_MODE,enum) 3 == (L:HSI_MODE,enum) 4 == or @ILS_LOC_Mode 2 &lt; and</Visible>
 				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
-					<Point X="0" Y="0"/>
-					<Point X="0" Y="115"/>
+					<Point X="0" Y="-50"/>
+					<Point X="0" Y="50"/>
+					<Axis X="-42" Y="-35"/>
 				</Polyline>
 				<Shift>
 					<Value Minimum="-6" Maximum="6">@LOC_Needle</Value>
 					<Nonlinearity>
-						<Item Value="-6" X="-12" Y="-24"/>
-						<Item Value="0" X="38" Y="-24"/>
-						<Item Value="6" X="88" Y="-24"/>
+						<Item Value="-6" X="-50" Y="0"/>
+						<Item Value="0" X="0" Y="0"/>
+						<Item Value="6" X="50" Y="0"/>
 					</Nonlinearity>
 				</Shift>
 			</Element>
+
 			<Element Name="GPS Flight Director">
 				<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
 				<Visible>(L:HSI_MODE,enum) 0 == (A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and</Visible>
 
-				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="9" Bright="Yes">
-					<Point X="0" Y="0"/>
-					<Point X="0" Y="115"/>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+					<Point X="0" Y="-50"/>
+					<Point X="0" Y="50"/>
+					<Axis X="-42" Y="-35"/>
 				</Polyline>
 				<Shift>
-					<Value Minimum="-6" Maximum="6">(A:GPS WP BEARING, degrees) (A:GPS WP DESIRED TRACK, degrees) - 10 *</Value>
+					<Value Minimum="-60" Maximum="60">(A:GPS WP BEARING, degrees) (A:GPS WP DESIRED TRACK, degrees) - 10 *</Value>
 					<Nonlinearity>
-						<Item Value="6" X="-12" Y="-24"/>
-						<Item Value="0" X="38" Y="-24"/>
-						<Item Value="-6" X="88" Y="-24"/>
+						<Item Value="60" X="50" Y="0"/>
+						<Item Value="0" X="0" Y="0"/>
+						<Item Value="-60" X="-50" Y="0"/>
 					</Nonlinearity>
 				</Shift>
 			</Element>
 			<Element Name="TCN Flight Director">
 				<Clip Top="19" Left="-153" Right="813" Bottom="985"/>
-				<Visible>(L:HSI_MODE,enum) 2 == (A:NAV HAS NAV:1, enum) 0 != and</Visible>
+				<Visible>(L:HSI_MODE,enum) 2 ==</Visible>
 
-				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="9" Bright="Yes">
-					<Point X="0" Y="0"/>
-					<Point X="0" Y="115"/>
+				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="5" Bright="Yes">
+					<Point X="0" Y="-50"/>
+					<Point X="0" Y="50"/>
+					<Axis X="-42" Y="-35"/>
 				</Polyline>
 				<Shift>
-					<Value Minimum="-6" Maximum="6">(A:AUTOPILOT FLIGHT DIRECTOR BANK, degrees)</Value>
+					<Value Minimum="-60" Maximum="60">(A:NAV2 CDI, number)</Value>
 					<Nonlinearity>
-						<Item Value="6" X="-12" Y="-24"/>
-						<Item Value="0" X="38" Y="-24"/>
-						<Item Value="-6" X="88" Y="-24"/>
+						<Item Value="60" X="50" Y="0"/>
+						<Item Value="0" X="0" Y="0"/>
+						<Item Value="-60" X="-50" Y="0"/>
 					</Nonlinearity>
 				</Shift>
 			</Element>
 			<Shift>
 				<Value>(L:VVectX, degrees) @HUDX1 max @HUDX2 min</Value>
 				<Nonlinearity>
-					<Item Value="-90"  X="4427"/>
+					<Item Value="-90" X="4427"/>
 					<Item Value="90" X="-3851"/>
 				</Nonlinearity>
 			</Shift>
 			<Shift>
 				<Value>(L:VVectY, degrees) @HUDY1 max @HUDY2 min</Value>
 				<Nonlinearity>
-					<Item Value="0" Y="253"/>
-					<Item Value="90"  Y="4392"/>
+					<Item Value="0" Y="295"/>
+					<Item Value="90" Y="4435"/>
 				</Nonlinearity>
 			</Shift>
 		</Element>
 
 		<Element Name="Pitch Steering (ILS)">
 			<Element>
-				<Visible>(L:HSI_MODE,enum) 3 == (L:HSI_MODE,enum) 4 == or (A:NAV2 HAS GLIDE SLOPE, bool) and</Visible>
+				<Visible>(L:HSI_MODE,enum) 3 == (L:HSI_MODE,enum) 4 == or (A:NAV1 HAS GLIDE SLOPE, bool) and</Visible>
 					<Position X="130" Y="470"/>
 				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
 					<Point X="32" Y="6"/>
@@ -2488,120 +2501,20 @@ Version 2.0
 				</Polyline>
 			</Element>
 			<Element>
-				<Visible>(L:HSI_MODE,enum) 3 == (L:HSI_MODE,enum) 4 == or (A:NAV2 HAS GLIDE SLOPE, bool) and</Visible>
+				<Visible>(L:HSI_MODE,enum) 3 == (L:HSI_MODE,enum) 4 == or (A:NAV1 HAS GLIDE SLOPE, bool) and</Visible>
 				<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="4" Bright="Yes">
 					<Point X="-10" Y="-10"/>
 					<Point X="0" Y="0"/>
 					<Point X="-10" Y="10"/>
 				</Polyline>
 				<Shift>
-					<Value Minimum="-6.0" Maximum="6.0">@GS_Needle</Value>
+					<Value Minimum="-3" Maximum="3">@GS_Needle</Value>
 					<Nonlinearity>
-						<Item Value="6.0" X="130" Y="470"/>
-						<Item Value="-6.0" X="130" Y="674"/>
+						<Item Value="-3" X="130" Y="470"/>
+						<Item Value="3" X="130" Y="674"/>
 					</Nonlinearity>
 				</Shift>
 			</Element>
-		</Element>
-
-		<Element Name="Bank Steering (CDI)">
-			<Visible>(L:HUD_MASTER_MODE, enum) 2 &lt;</Visible>
-			<Macro Name="NAV1_CDI">(A:NAV1 CDI, number) 127 / 10 *</Macro>
-			<Macro Name="GPS_CDI">@radnor90_h( (A:GPS WP BEARING, radians) (A:GPS WP DESIRED TRACK, radians) - ) rddg</Macro>
-			<Macro Name="Current_CDI">@NAV1_CDI @GPS_CDI @NAV1_CDI @GPS_CDI 4 (L:HUD_STEER_MODE) case</Macro>
-			<Macro Name="NAV1_Course">(A:NAV1 OBS, radians) (A:Plane heading degrees gyro, radians) -</Macro>
-			<Macro Name="GPS_Course">(A:GPS WP DESIRED TRACK, radians) (A:Plane heading degrees gyro, radians) -</Macro>
-			<Macro Name="Selected_Course">@NAV1_Course @GPS_Course @NAV1_Course @GPS_Course 4 (L:HUD_STEER_MODE) case</Macro>
-			<Element>
-				<Visible>
-					(L:HUD_STEER_MODE) 1 ==
-					(L:HUD_STEER_MODE) 3 == or
-				</Visible>
-				<Element>
-					<Position X="330" Y="467"/>
-					<Element>
-						<Arc Radius="10" StartAngle="360" EndAngle="0" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
-							<Axis X="-91" Y="11"/>
-						</Arc>
-					</Element>
-					<Element>
-						<Arc Radius="10" StartAngle="360" EndAngle="0" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
-							<Axis X="-41" Y="11"/>
-						</Arc>
-					</Element>
-					<Element>
-						<Arc Radius="10" StartAngle="360" EndAngle="0" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
-							<Axis X="11" Y="11"/>
-						</Arc>
-					</Element>
-					<Element>
-						<Arc Radius="10" StartAngle="360" EndAngle="0" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
-							<Axis X="61" Y="11"/>
-						</Arc>
-					</Element>
-					<Element>
-						<Arc Radius="10" StartAngle="360" EndAngle="0" LineWidth="4" Color="%((L:HUD_COLOR_SYM))" Bright="yes">
-							<Axis X="111" Y="11"/>
-						</Arc>
-					</Element>
-					<Rotate>
-						<Value>@Selected_Course</Value>
-					</Rotate>
-				</Element>
-				<Element>
-					<Position X="330" Y="467"/>
-					<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="3" Bright="Yes">
-						<Point X="0" Y="0"/>
-						<Point X="-20" Y="30"/>
-						<Point X="20" Y="30"/>
-						<Point X="0" Y="0"/>
-						<Point X="-18" Y="28"/>
-						<Point X="18" Y="28"/>
-						<Point X="0" Y="0"/>
-						<Point X="-16" Y="26"/>
-						<Point X="16" Y="26"/>
-						<Point X="0" Y="0"/>
-						<Point X="-14" Y="24"/>
-						<Point X="14" Y="24"/>
-						<Point X="0" Y="0"/>
-						<Point X="-12" Y="22"/>
-						<Point X="12" Y="22"/>
-						<Point X="0" Y="0"/>
-						<Point X="-10" Y="20"/>
-						<Point X="10" Y="20"/>
-						<Point X="0" Y="0"/>
-						<Point X="-8" Y="18"/>
-						<Point X="8" Y="18"/>
-						<Point X="0" Y="0"/>
-						<Point X="-6" Y="16"/>
-						<Point X="6" Y="16"/>
-						<Point X="0" Y="0"/>
-						<Point X="-4" Y="14"/>
-						<Point X="4" Y="14"/>
-						<Point X="0" Y="0"/>
-						<Point X="-2" Y="12"/>
-						<Point X="2" Y="12"/>
-						<Point X="0" Y="0"/>
-						<Point X="0" Y="10"/>
-						<Point X="0" Y="10"/>
-						<Point X="0" Y="0"/>
-						<Point X="0" Y="120"/>
-
-						<Axis X="0" Y="60"/>
-					</Polyline>
-					<Shift>
-						<Value Minimum="-10" Maximum="10">@Current_CDI</Value>
-						<Nonlinearity>
-							<Item Value="-10" X="228" Y="467" />
-							<Item Value="0" X="330" Y="467"/>
-							<Item Value="10" X="432" Y="467"/>
-						</Nonlinearity>
-					</Shift>
-					<Rotate>
-						<Value>@Selected_Course</Value>
-					</Rotate>
-				</Element>
-	 		</Element>
 		</Element>
 
 		<Element Name="Heading Scale">
@@ -2618,9 +2531,9 @@ Version 2.0
 				<Macro Name="round_point25">@1 0.25 / near 0.25 *</Macro>
 				<Macro Name="GPS_Bearing180">(A:GPS WP BEARING, degrees) 180 + (A:GPS GROUND MAGNETIC TRACK, degrees) - dnor</Macro>
 				<Macro Name="NAV_Bearing180">
-					(A:NAV1 HAS LOCALIZER, bool) !
-					if{ @round_point25( (A:NAV1 RADIAL, degrees) (A:NAV1 MAGVAR, degrees) - (A:PLANE HEADING DEGREES TRUE, degrees) - dnor ) }
-					els{ @round_point25( (A:NAV1 LOCALIZER, degrees) 180 + (A:PLANE HEADING DEGREES TRUE, degrees) - dnor ) }
+					(A:NAV2 HAS LOCALIZER, bool) !
+					if{ @round_point25( (A:NAV2 RADIAL, degrees) (A:NAV2 MAGVAR, degrees) - (A:PLANE HEADING DEGREES TRUE, degrees) - dnor ) }
+					els{ @round_point25( (A:NAV2 LOCALIZER, degrees) 180 + (A:PLANE HEADING DEGREES TRUE, degrees) - dnor ) }
 				</Macro>
 				<Macro Name="Marker_Bearing180">@NAV_Bearing180 @GPS_Bearing180 @NAV_Bearing180 @GPS_Bearing180 4 (L:HUD_STEER_MODE) case</Macro>
 				<Element>
@@ -3658,7 +3571,7 @@ Version 2.0
 				<Element Name="Range Rate (+- KTS)">
 					<Position X="430" Y="515"/>
 					<Element>
-						<Text Bright="Yes" Luminous="Yes" X="100" Y="32" Length="5" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 							<String>%((L:LAAI, knots) 10 / near 10 *)%!d!</String>
 							<Axis X="12" Y="16"/>
 						</Text>
@@ -3671,14 +3584,14 @@ Version 2.0
 				<Element Name="Scale Number">
 					<Element>
 						<Position X="539" Y="270"/>
-						<Text Bright="Yes" Luminous="Yes" X="100" Y="32" Length="5" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 							<String>%((L:RADAR_SCALE, nmiles))%!d!</String>
 							<Axis X="12" Y="16"/>
 						</Text>
 					</Element>
 					<Element>
-						<Position X="557" Y="400"/>
-						<Text Bright="Yes" Luminous="Yes" X="100" Y="32" Length="5" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<Position X="557" Y="400"/>						
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 							<String>%((L:RADAR_SCALE, nmiles) 0.5 *)%!d!</String>
 							<Axis X="12" Y="16"/>
 						</Text>
@@ -3724,31 +3637,31 @@ Version 2.0
 				<Element Name="ILS Marker (Window 2)">
 					<Position X="0" Y="0"/>
 					<Visible>(L:HUD_MASTER_MODE, enum) 0 ==</Visible>
-					<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
-						<String>%((A:MARKER BEACON STATE, enum) (L:IsFlashTime) and )%{if}MKR%{end}</String>
+					<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<String>%((A:MARKER BEACON STATE, enum) (L:IsFlashTime) and )%{if}MKR  %{end}</String>
 					</Text>
 				</Element>
 				<Element Name="ARMT Counts (Window 2)">
 					<Visible>(L:HUD_MASTER_MODE, enum) 2 ==</Visible>
 					<Element Name="GUN Round Remaining">
 						<Visible>(L:AAM_SEL, Enum) 0 ==</Visible>
-						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
-							<String>%((L:AO_GUN_AMMO_COUNT, Number))%!03d!</String>
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:AO_GUN_AMMO_COUNT, Number))%!03d!  </String>
 						</Text>
 					</Element>
 					<Element Name="SRM Count">
 						<Visible>(L:AAM_SEL, Enum) 1 ==</Visible>
 						<Element>
-							<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
-								<String>S %((L:AO_SRM_QTY, Number))%!d!</String>
+							<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>S %((L:AO_SRM_QTY, Number))%!d!  </String>
 							</Text>
 						</Element>
 					</Element>
 					<Element Name="MRM Count">
 						<Visible>(L:AAM_SEL, Enum) 2 ==</Visible>
 						<Element>
-							<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
-								<String>M %((L:AO_SRM_QTY, Number))%!d!</String>
+							<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>M %((L:AO_SRM_QTY, Number))%!d!  </String>
 							</Text>
 						</Element>
 					</Element>
@@ -3757,13 +3670,13 @@ Version 2.0
 				<Element Name="Aircraft Mach (Window 7)">
 					<Element>
 						<Position X="-65" Y="30"/>
-						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6"  Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<Text X="100" Y="30" Bright="Yes" Length="6"  Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
 							<String>%( (A:Airspeed mach, machs) 1.00 &gt; )%{if}%((A:Airspeed mach, machs) int )%!d!%{else}%{end}</String>
 						</Text>
 					</Element>
 					<Element>
 						<Position X="0" Y="30"/>
-						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
 							<String>% .%((A:Airspeed mach, machs) (A:Airspeed mach, machs) int - 1000 * int)%!03d!</String>
 						</Text>
 					</Element>
@@ -3773,14 +3686,14 @@ Version 2.0
 					<Element Name="Aircraft G">
 						<Visible>(L:HUD_MASTER_MODE, enum) 0 ==</Visible>
 						<Position X="0" Y="60"/>
-						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
 							<String>%((A:G Force,G Force) 99.9 min -99.9 max)%!3.1f!% G</String>
 						</Text>
 					</Element>
 					<Element Name="Target Mach">
 						<Visible>(L:RLST, bool) (L:HUD_MASTER_MODE, enum) 2 == and</Visible>
 						<Position X="0" Y="60"/>
-						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
 							<String>TM %((L:TGT_AIRSPEED_MACH))%!1.1f!</String>
 						</Text>
 					</Element>
@@ -3793,36 +3706,9 @@ Version 2.0
 				<Visible>(L:HUD_MASTER_MODE, enum) 0 ==</Visible>
 					<Element Name="ADI Steering Modes">
 						<Position X="0" Y="0"/>
-						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-							<String>%((L:HUD_STEER_MODE))%{case}%{:0}NAV%{:1}TCN%{:2}%ILSN%{:3}ILST%{end}</String>
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>  %((L:HUD_STEER_MODE))%{case}%{:0} NAV%{:1} TCN%{:2}%ILSN%{:3}ILST%{end}</String>
 						</Text>
-					</Element>
-					<Element Name="GPS ID">
-						<Visible>(L:HUD_STEER_MODE) 0 == (L:HUD_STEER_MODE) 2 == or</Visible>
-							<Position X="70" Y="0"/>
-							<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-								<String>%((A:GPS WP NEXT ID, string))%!s!</String>
-							</Text>
-					</Element>
-					<Element Name="NAV1 Freq">
-						<Element>
-							<Select>
-								<Value>
-									(A:Nav1 Active Frequency, MHz) s0 112.3 &lt;
-									if{ l0 10 * 1063 - int (&gt;L:TCN-channel, enum) }
-									els{ l0 10 * 1053 - int (&gt;L:TCN-channel, enum) }
-								</Value>
-							</Select>
-						</Element>
-						<Element>
-							<Visible>(L:HUD_STEER_MODE) 1 ==</Visible>
-							<Element>
-								<Position X="70" Y="0"/>
-								<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-									<String>%((A:NAV1 HAS LOCALIZER, bool))%{if}%((A:Nav1 Active Frequency, MHz))%!4.2f!%{else}%( (L:TCN-channel, enum) )%!d!%( (A:Nav1 Active Frequency, MHz) 10 * 1 % 0 == )%{if}X%{else}Y</String>
-								</Text>
-							</Element>
-						</Element>
 					</Element>
 				</Element>
 				<Element Name="SRM In Range / Track Mem / Jam Codes / MRM Hold ALT (Window 3)">
@@ -3831,7 +3717,7 @@ Version 2.0
 						<Visible>(L:AAM_SEL, Enum) 1 ==</Visible>
 						<Element>
 							<Position X="0" Y="0"/>
-							<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 								<String>%((L:SRM_IN_RNG))%{case}%{:0}NO ZN%{:1}IN RNG%{end}</String>
 							</Text>
 						</Element>
@@ -3839,40 +3725,50 @@ Version 2.0
 					<Element Name="Track Memory">
 						<Visible>(L:RDR_TRK_MEM_ENABLE)</Visible>
 						<Position X="0" Y="0"/>
-						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-							<String>MEM</String>
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>   MEM</String>
 						</Text>
 					</Element>
 					<Element Name="Radar JAM Codes">
 						<Visible>(L:RDR_JAM_ENABLE)</Visible>
 						<Position X="0" Y="0"/>
-						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-							<String>%((L:RDR_JAM_CODES))%{case}%{:0}JAM%{:1}HOJ%{:2}%AOJ%{end}</String>
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>   %((L:RDR_JAM_CODES))%{case}%{:0}JAM%{:1}HOJ%{:2}AOJ%{end}</String>
 						</Text>
 					</Element>
 					<Element Name="MRM Hold Altitide">
 						<Visible>(L:AAM_SEL, Enum) 2 == (L:RDR_HOLD_ALT_ENABLE) and</Visible>
 						<Position X="0" Y="0"/>
-						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 							<String>HD ALT</String>
 						</Text>
 					</Element>
 				</Element>
 
 				<Element Name="TCN / NAV Ranges (Window 4)">
-					<Visible>(L:HUD_MASTER_MODE, enum) 0 ==</Visible>
-					<Position X="0" Y="30"/>
-					<Macro Name="Current_Range">(A:NAV DME:1, nmiles) (A:GPS WP DISTANCE, nmiles) (A:NAV DME:1, nmiles) (A:GPS WP DISTANCE, nmiles) 4 (L:HUD_STEER_MODE) case 999.9 min 0 max</Macro>
-					<Text X="120" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-						<String>%((L:HUD_STEER_MODE))%{case}%{:0}N%{:1}T%{:2}N%{:3}T%{end} %(@Current_Range)%!4.1f!%</String>
-					</Text>
+					<Element Name="TCN / NAV">
+						<Visible>(L:HUD_MASTER_MODE, enum) 0 ==</Visible>
+						<Position X="0" Y="30"/>
+						<Macro Name="Current_Range">(A:NAV DME:2, nmiles) (A:GPS WP DISTANCE, nmiles) (A:NAV DME:2, nmiles) (A:GPS WP DISTANCE, nmiles) 4 (L:HUD_STEER_MODE) case 999.9 min 0 max</Macro>
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:HUD_STEER_MODE))%{case}%{:0}N%{:1}T%{:2}N%{:3}T%{end}</String>
+						</Text>
+					</Element>	
+					<Element Name="Ranges">
+						<Visible>(L:HUD_MASTER_MODE, enum) 0 ==</Visible>
+						<Position X="0" Y="30"/>
+						<Macro Name="Current_Range">(A:NAV DME:2, nmiles) (A:GPS WP DISTANCE, nmiles) (A:NAV DME:2, nmiles) (A:GPS WP DISTANCE, nmiles) 4 (L:HUD_STEER_MODE) case 999.9 min 0 max</Macro>
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Right" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<String>%(@Current_Range)%!3.1f!%</String>
+						</Text>
+					</Element>
 				</Element>
 				<Element Name="Radar Range (Window 4)">
 					<Element>
 						<Visible>(L:HUD_MASTER_MODE, enum) 2 == (L:RLST, bool) and</Visible>
 						<Element>
 							<Position X="0" Y="30"/>
-							<Text X="100" Y="32" Bright="Yes" Length="14" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 								<String>R %((L:LAAJ, nmiles))%!3.1f!</String>
 							</Text>
 						</Element>
@@ -3882,7 +3778,7 @@ Version 2.0
 					<Visible>(L:HUD_MASTER_MODE, enum) 2 == (L:RLST, bool) ! and</Visible>
 					<Element>
 						<Position X="0" Y="30"/>
-						<Text X="100" Y="30" Bright="Yes" Length="14" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 							<String>%((L:KNOB_FS_RDR_SPL_MODE))%{case}%{:1}MN TRK%{:2}SNIFF%{:3}FLOOD%{end}</String>
 						</Text>
 					</Element>
@@ -3890,30 +3786,21 @@ Version 2.0
 
 				<Element Name="Time To Go (Window 5)">
 					<Element Name="NAV TTG">
-						<Visible>(L:HUD_MASTER_MODE, enum) 3 ! (L:AAM_SEL, Enum) 0 == and </Visible>
-						<Macro Name="Current_TTG">(L:ETE_Carrier, seconds) (L:ETE_Carrier, seconds) (L:NAV1 ETE, seconds) (A:GPS WP ETE, seconds) 4 (L:HUD_STEER_MODE) case</Macro>
+						<Visible>(L:HUD_MASTER_MODE, enum) 0 ==</Visible>
+						<Macro Name="Current_TTG">(L:NAV2 ETE, seconds) (A:GPS WP ETE, seconds) (L:NAV2 ETE, seconds) (A:GPS WP ETE, seconds) 4 (L:HUD_STEER_MODE) case</Macro>
 						<Element>
 							<Select>
 								<Value>
-									(L:HUD_STEER_MODE) 1 ==
-									if{
-										(A:Radio height, feet) (A:NAV1 DME, feet) / asin cos (A:NAV1 DME, feet) * 6076 / (&gt;L:NAV1GroundDistance, nmiles)
-										(L:NAV1GroundDistance, meters) 100 &gt;
-										if{ (L:NAV1GroundDistance, nmiles) (A:GROUND VELOCITY, knots) / 3600 * (&gt;L:NAV1 ETE, seconds) }
-										els{ 0 (&gt;L:NAV1 ETE, seconds) }
-									}
-									(L:HUD_STEER_MODE) 2 &gt;
-									if{
-										(L:TCN Slant Range, meters) 100 &gt;
-										if{ (A:NAV DME:2, nmiles) (A:GROUND VELOCITY, knots) / 3600 * (&gt;L:ETE_Carrier, seconds) }
-										els{ 0 (&gt;L:ETE_Carrier, seconds) }
-									}
+									(A:Radio height, feet) (A:NAV2 DME, feet) / asin cos (A:NAV2 DME, feet) * 6076 / (>L:NAV2GroundDistance, nmiles)
+									(L:NAV2GroundDistance, meters) 100 &gt;
+										if{ (L:NAV2GroundDistance, nmiles) (A:GROUND VELOCITY, knots) / 3600 * (>L:NAV2 ETE, seconds) }
+										els{ 0 (>L:NAV2 ETE, seconds) }
 								</Value>
 							</Select>
 						</Element>
 						<Element>
 							<Position X="0" Y="60"/>
-							<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 								<String>%( @Current_TTG 3600 &lt; )%{if}%(@Current_TTG 60 / 60 % int )%!02d! MIN%{else}59 MIN</String>
 							</Text>
 						</Element>
@@ -3922,8 +3809,8 @@ Version 2.0
 						<Visible>(L:HUD_MASTER_MODE, enum) 2 == (L:AAM_SEL, Enum) 2 == and</Visible>
 						<Element>
 							<Position X="0" Y="60"/>
-							<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-								<String>%((L:MRM_TTG) 0 != )%{if}%((L:MRM_TTG) 99 &lt; )%{if}%((L:MRM_TTG))%!02d! SEC%{else}99 SEC%{else}%{end}99 SEC%{end}</String>
+							<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+								<String>%((L:MRM_TTG) 99 &lt; )%{if}%((L:MRM_TTG))%!02d! SEC%{else}99 SEC%{end}</String>
 							</Text>
 						</Element>
 					</Element>
@@ -3931,19 +3818,17 @@ Version 2.0
 						<Visible>(L:HUD_MASTER_MODE, enum) 3 ==</Visible>
 						<Element>
 							<Position X="0" Y="60"/>
-							<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+							<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 								<String>%( (L:TTGT, seconds) 6000 &lt; )%{if}%((L:TTGT, seconds) 60 / int )%!02d!:%((L:TTGT, seconds) 60 % int )%!02d!%{else}99:59%{end} TTGT</String>
 							</Text>
 						</Element>
 					</Element>
-
-
 				</Element>
 
 				<Element Name="ILS Course Set (Window 6)">
 					<Visible>(L:HSI_MODE,enum) 3 == (L:HSI_MODE,enum) 4 == or @ILS_GS_Mode 2 &lt; and (L:HUD_MASTER_MODE, enum) 0 == and</Visible>
 					<Position X="0" Y="90"/>
-					<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+					<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 						<String>%((L:HUD_GLDSLP))%{case}%{:0}CSET%{:1}GSUP%{:2}GSDN%{end}</String>
 					</Text>
 				</Element>
@@ -3951,13 +3836,13 @@ Version 2.0
 				<Visible>(L:HUD_MASTER_MODE, enum) 2 == (L:RLST, bool) and</Visible>
 					<Element>
 						<Position X="0" Y="90"/>
-						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 							<String>%((L:LAAN) 0 == )%{if}T%{end}%{else}%((L:LAAN) abs 18 == )%{if}H%{end}</String>
 						</Text>
 					</Element>
 					<Element>
 						<Position X="0" Y="90"/>
-						<Text X="100" Y="30" Bright="Yes" Luminous="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 							<String>%( (L:LAAN) 0 != (L:LAAN) abs 18 != &amp;&amp; )%{if}%((L:LAAN) abs)%!02d!%( (L:LAAN) 0 &gt; )%{if}R%{else}L%{end}</String>
 						</Text>
 					</Element>
@@ -3965,8 +3850,8 @@ Version 2.0
 				<Element Name="RAM Track (Window 6)">
 					<Visible>(L:HUD_MASTER_MODE, enum) 2 == (L:RLST, bool) ! and</Visible>
 					<Element>
-						<Position X="0" Y="90"/>
-						<Text X="100" Y="30" Bright="Yes" Length="14" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
+						<Position X="0" Y="90"/>						
+						<Text X="100" Y="30" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 							<String>RAM</String>
 						</Text>
 					</Element>

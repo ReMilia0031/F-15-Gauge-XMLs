@@ -1605,8 +1605,8 @@ Version 5.0
       			<Value>
 				(L:TACAN_ADI_TCN_ILS_PNL_PWR) 1 ==
 					if{
-						(A:NAV2 RADIAL ERROR, degrees) 5 * (>L:GAU_ILS_LC)
-						(A:NAV2 GLIDE SLOPE ERROR, degrees) 5 * (>L:GAU_ILS_GS)
+						(A:NAV1 RADIAL ERROR, degrees) 5 * (>L:GAU_ILS_LC)
+						(A:NAV1 GLIDE SLOPE ERROR, degrees) 5 * (>L:GAU_ILS_GS)
 					}
 					els{
 						0 (>L:GAU_ILS_LC)
@@ -1718,7 +1718,7 @@ Version 5.0
 									(A:ADF1 RADIAL, radians) (>L:HSI_PTR1)
 								}
 								els{
-									(A:NAV1 OBS, radians) (>L:HSI_PTR1)
+									(A:NAV2 OBS, radians) (>L:HSI_PTR1)
 								}
 
 							(A:PLANE HEADING DEGREES GYRO, radians) /-/ (>L:HSI_COMPASS)
@@ -1747,12 +1747,12 @@ Version 5.0
 								}
 							(L:KNOB_FS_STEER_MODE) 1 ==
 								if{
-									(A:NAV1 OBS, radians) (>L:HSI_PTR2)
-									(A:NAV1 DME, nmiles) (>L:HSI_RANGE)
-									(A:NAV1 OBS, degrees) (>L:HSI_CRS_SELECT)
-									(A:NAV1 OBS, radians) (>L:HSI_CRS_ALLOW)
-									(A:NAV1 TOFROM, enum) /-/ (>L:HSI_TO_FROM)
-									(A:NAV1 CDI, number) (>L:HSI_DEVIATION)
+									(A:NAV2 OBS, radians) (>L:HSI_PTR2)
+									(A:NAV2 DME, nmiles) (>L:HSI_RANGE)
+									(A:NAV2 OBS, degrees) (>L:HSI_CRS_SELECT)
+									(A:NAV2 OBS, radians) (>L:HSI_CRS_ALLOW)
+									(A:NAV2 TOFROM, enum) /-/ (>L:HSI_TO_FROM)
+									(A:NAV2 CDI, number) (>L:HSI_DEVIATION)
 								}
 							(L:KNOB_FS_STEER_MODE) 2 ==
 								if{
@@ -1765,10 +1765,10 @@ Version 5.0
 								}
 							(L:KNOB_FS_STEER_MODE) 3 ==
 								if{
-									(A:NAV1 OBS, radians) (>L:HSI_PTR2)
-									(A:NAV1 DME, nmiles) (>L:HSI_RANGE)
-									(A:NAV1 OBS, degrees) (>L:HSI_CRS_SELECT)
-									(A:NAV1 OBS, radians) (>L:HSI_CRS_ALLOW)
+									(A:NAV2 OBS, radians) (>L:HSI_PTR2)
+									(A:NAV2 DME, nmiles) (>L:HSI_RANGE)
+									(A:NAV2 OBS, degrees) (>L:HSI_CRS_SELECT)
+									(A:NAV2 OBS, radians) (>L:HSI_CRS_ALLOW)
 									0 (>L:HSI_TO_FROM)
 									(L:GAU_ILS_LC) (>L:HSI_DEVIATION)
 								}
@@ -4042,7 +4042,7 @@ Version 5.0
 					(L:ILS_INIT) 0 ==
 						if{
 							1 (>L:ILS_INIT)
-							(A:NAV2 ACTIVE FREQUENCY, MHz) (>L:ILS_FREQ, MHz)
+							(A:NAV1 ACTIVE FREQUENCY, MHz) (>L:ILS_FREQ, MHz)
 							(L:ILS_FREQ, MHz) flr (>L:ILS_FREQ_100)
 							(L:ILS_FREQ, MHz) (L:ILS_FREQ, MHz) flr - (>L:ILS_FREQ_1)
 							(L:ILS_FREQ, MHz) (>L:ILS_FREQ_Slave, MHz)
@@ -4055,7 +4055,7 @@ Version 5.0
 					(L:ILS_PWR) 1 == and
 						if{
 							(L:ILS_FREQ, MHz) (>L:ILS_FREQ_Slave, MHz)
-							(L:ILS_FREQ, Frequency BCD16) (>K:NAV2_RADIO_SET)
+							(L:ILS_FREQ, Frequency BCD16) (>K:NAV1_RADIO_SET)
 						}
 				</Value>
 			</Select>
@@ -4067,14 +4067,14 @@ Version 5.0
 					(L:KNOB_FS_ILS_VOL) 0 &gt; and
 					(L:ILSV_CNG) 0 == and
 						if{
-							1 (>K:RADIO_VOR2_IDENT_SET)
+							1 (>K:RADIO_VOR1_IDENT_SET)
 							1 (>L:ILSV_CNG)
 						}
 
 					(L:KNOB_FS_ILS_VOL) 0 ==
 					(L:ILSV_CNG) 1 == and
 						if{
-							0 (>K:RADIO_VOR2_IDENT_SET)
+							0 (>K:RADIO_VOR1_IDENT_SET)
 							0 (>L:ILSV_CNG)
 						}
 				</Value>
@@ -4086,11 +4086,11 @@ Version 5.0
 				(L:TCN_INIT) 0 ==
 						if{
 							1 (>L:TCN_INIT)
-							(A:NAV1 ACTIVE FREQUENCY, MHz) s0 112.3 &lt;
+							(A:NAV2 ACTIVE FREQUENCY, MHz) s0 112.3 &lt;
 								if{ l0 10 * 1063 - int (>L:TCN_FREQ) }
 								els{ l0 10 * 1053 - int (>L:TCN_FREQ) }
 
-							(A:NAV1 ACTIVE FREQUENCY, MHz) 100 * 1 / 10 % int (>L:TCN_XY)
+							(A:NAV2 ACTIVE FREQUENCY, MHz) 100 * 1 / 10 % int (>L:TCN_XY)
 
 							(L:TCN_XY) 5 ==
 								if{
@@ -4141,7 +4141,7 @@ Version 5.0
 									(L:VOR_FREQ, Mhz) (L:VOR_FREQ_Slave, Mhz) - 0 !
 									if{
 										(L:VOR_FREQ, Mhz) (>L:VOR_FREQ_Slave, Mhz)
-										(L:VOR_FREQ, Frequency BCD16) (>K:NAV1_RADIO_SET)
+										(L:VOR_FREQ, Frequency BCD16) (>K:NAV2_RADIO_SET)
 									}
 
 						}
@@ -4156,14 +4156,14 @@ Version 5.0
 					(L:KNOB_FS_TCN_VOL) 0 &gt; and
 					(L:TCNV_CNG) 0 == and
 						if{
-							1 (>K:RADIO_VOR1_IDENT_SET)
+							1 (>K:RADIO_VOR2_IDENT_SET)
 							1 (>L:TCNV_CNG)
 						}
 
 					(L:KNOB_FS_TCN_VOL) 0 ==
 					(L:TCNV_CNG) 1 == and
 						if{
-							0 (>K:RADIO_VOR1_IDENT_SET)
+							0 (>K:RADIO_VOR2_IDENT_SET)
 							0 (>L:TCNV_CNG)
 						}
 				</Value>
@@ -4255,18 +4255,16 @@ Version 5.0
 						(>K:AUTOPILOT_OFF)
 					}					
 
-				<!-- (A:SIM ON GROUND, bool) 0 == and -->
-				(A:NAV HAS LOCALIZER:2, bool)
-				(A:NAV SIGNAL:2, bool) and
+				(A:SIM ON GROUND, bool) 0 == and
+				(A:NAV HAS LOCALIZER:1, bool)
+				(A:NAV SIGNAL:1, bool) and
 				(A:YOKE X POSITION, Position) 0 == and
 				(A:YOKE Y POSITION, Position) 0 == and
 					if{
 						(L:KNOB_FS_STEER_MODE) 2 ==
 						(L:KNOB_FS_STEER_MODE) 3 == or
-							if{							
-								(>K:AP_HDG_HOLD_ON)
+							if{
 								(>K:AP_APR_HOLD_ON)
-								(>K:AP_ALT_HOLD_ON)
 							}
 							els{
 								(>K:AP_APR_HOLD_OFF)
@@ -4283,7 +4281,7 @@ Version 5.0
 				<Value>
 					(A:YOKE Y POSITION, Position) 0 ==
 					(L:CAS_PITCH_RDY, enum) 1 == and
-					<!-- (A:SIM ON GROUND, bool) 0 == and -->
+					(A:SIM ON GROUND, bool) 0 == and
 					(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
 						if{
 							(A:VERTICAL SPEED, Feet per minute) -2000 &lt;
@@ -4306,7 +4304,7 @@ Version 5.0
 						
 					(A:YOKE Y POSITION, Position) 0 !=
 					(L:CAS_PITCH_RDY, enum) 0 == or
-					<!-- (A:SIM ON GROUND, bool) 1 == or -->
+					(A:SIM ON GROUND, bool) 1 == or
 						if{
 							(>K:AP_ATT_HOLD_OFF)
 							(>K:AP_ALT_HOLD_OFF)
@@ -4327,7 +4325,7 @@ Version 5.0
 			<Select>
 				<Value>
 					(A:YOKE X POSITION, Position) 0 ==
-					<!-- (A:SIM ON GROUND, bool) 0 == and -->
+					(A:SIM ON GROUND, bool) 0 == and
 					(L:CAS_ROLL_RDY, enum) 1 == and
 					(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
 						if{
@@ -4343,35 +4341,19 @@ Version 5.0
 								if{
 									(L:KNOB_FS_STEER_MODE) 1 ==
 									(L:KNOB_FS_STEER_MODE) 2 == or
-									(A:NAV SIGNAL:1, bool) and
+									(A:AUTOPILOT HEADING LOCK) 0 == and
 										if{
-											(L:KNOB_FS_STEER_MODE) 0 ==
-											(L:KNOB_FS_STEER_MODE) 1 == or
-											(A:AUTOPILOT NAV1 LOCK) 0 == and
-												if{
-													(>K:AP_NAV1_HOLD_ON)
-												}
+											(>K:AP_HDG_HOLD_ON)
+											(A:PLANE HEADING DEGREES MAGNETIC,degrees) (>K:HEADING_BUG_SET)
 										}
-										els{
-											(A:AUTOPILOT HEADING LOCK) 0 ==
-												if{
-													(>K:AP_HDG_HOLD_ON)
-													(A:PLANE HEADING DEGREES MAGNETIC,degrees) (>K:HEADING_BUG_SET)
-												}
-										}
-									
-								
 								}
-							
-							
 						}
 
 					(A:YOKE X POSITION, Position) 0 !=
 					(L:CAS_ROLL_RDY, enum) 0 == or
-					<!-- (A:SIM ON GROUND, bool) 1 == or -->
+					(A:SIM ON GROUND, bool) 1 == or
 						if{
 							(>K:AP_HDG_HOLD_OFF)
-							(>K:AP_NAV1_HOLD_OFF)
 							(>K:AP_WING_LEVELER_OFF)
 						}
 				</Value>
@@ -5243,14 +5225,14 @@ Version 5.0
 					<Value>
 						(L:ILS_PWR) 1 ==
 						if{
-							(A:NAV2 GLIDE SLOPE ERROR, degrees) -0.25 &lt;
+							(A:NAV1 GLIDE SLOPE ERROR, degrees) -0.25 &lt;
 								if{ 1 (>L:HUD_GLDSLP) }
 
-							(A:NAV2 GLIDE SLOPE ERROR, degrees) 0.25 &gt;
+							(A:NAV1 GLIDE SLOPE ERROR, degrees) 0.25 &gt;
 								if{ 2 (>L:HUD_GLDSLP) }
 
-							(A:NAV2 GLIDE SLOPE ERROR, degrees) -0.25 &gt;
-							(A:NAV2 GLIDE SLOPE ERROR, degrees) 0.25 &lt; and
+							(A:NAV1 GLIDE SLOPE ERROR, degrees) -0.25 &gt;
+							(A:NAV1 GLIDE SLOPE ERROR, degrees) 0.25 &lt; and
 								if{ 0 (>L:HUD_GLDSLP) }
 						}
 					</Value>
