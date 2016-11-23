@@ -156,7 +156,7 @@ Version 5.0
 
 					1 (>L:SW1_FS_ENG_GEN_L)
 					1 (>L:SW1_FS_ENG_GEN_R)
-					2 (>L:SW2_FS_ENG_EMER_GEN)
+					0 (>L:SW2_FS_ENG_EMER_GEN)
 					1 (>L:SW1_FS_ENG_CONT_L)
 					1 (>L:SW1_FS_ENG_CONT_R)
 					0 (>L:SW2_FS_ENG_EXT_PWR)
@@ -240,6 +240,7 @@ Version 5.0
 					0 (>L:SW1_FS_EMER_CANOPY)
 					0 (>L:SW1_FS_HOOK)
 					0 (>L:SW1_FS_EMER_GEAR)
+					  (>K:RESET_G_FORCE_INDICATOR)
 
 					3 (>L:KNOB_FS_WEP_JETT_SEL)
 					2 (>L:KNOB_FS_MPCD_PWR)
@@ -672,6 +673,77 @@ Version 5.0
 	</Element>
 
 	<Element Name="Switch">
+		<Element Name="External Power Switch">
+    		<Select>
+      			<Value>
+					(L:SW2_FS_ENG_EXT_PWR) 2 ==
+					(L:SW_EXT_PWR_INIT) 0 == and
+						if{
+							(P:LOCAL TIME, seconds) (>L:SW_EXT_PWR-TIME, seconds)
+							1 (>L:SW_EXT_PWR_INIT)
+						}
+
+					(L:SW2_FS_ENG_EXT_PWR) 2 ==
+					(P:LOCAL TIME, seconds) (L:SW_EXT_PWR-TIME, seconds) - 1 &gt; and
+						if{
+							1 (>L:SW2_FS_ENG_EXT_PWR)
+							0 (>L:SW_EXT_PWR-TIME, seconds)
+							0 (>L:SW_EXT_PWR_INIT)
+						}
+      			</Value>
+    		</Select>
+		</Element>
+		<Element Name="CAS Switchs">
+    		<Select>
+      			<Value>
+					(L:SW2_FS_CAS_PITCH) 1 ==
+					(L:SW_CAS_PIT_INIT) 0 == and
+						if{
+							(P:LOCAL TIME, seconds) (>L:SW_CAS_PIT-TIME, seconds)
+							1 (>L:SW_CAS_PIT_INIT)
+						}
+
+					(L:SW2_FS_CAS_PITCH) 1 ==
+					(P:LOCAL TIME, seconds) (L:SW_CAS_PIT-TIME, seconds) - 1 &gt; and
+						if{
+							2 (>L:SW2_FS_CAS_PITCH)
+							0 (>L:SW_CAS_PIT-TIME, seconds)
+							0 (>L:SW_CAS_PIT_INIT)
+						}
+						
+					(L:SW2_FS_CAS_ROLL) 1 ==
+					(L:SW_CAS_ROL_INIT) 0 == and
+						if{
+							(P:LOCAL TIME, seconds) (>L:SW_CAS_ROL-TIME, seconds)
+							1 (>L:SW_CAS_ROL_INIT)
+						}
+
+					(L:SW2_FS_CAS_ROLL) 1 ==
+					(P:LOCAL TIME, seconds) (L:SW_CAS_ROL-TIME, seconds) - 1 &gt; and
+						if{
+							2 (>L:SW2_FS_CAS_ROLL)
+							0 (>L:SW_CAS_ROL-TIME, seconds)
+							0 (>L:SW_CAS_ROL_INIT)
+						}
+						
+					(L:SW2_FS_CAS_YAW) 1 ==
+					(L:SW_CAS_YAW_INIT) 0 == and
+						if{
+							(P:LOCAL TIME, seconds) (>L:SW_CAS_YAW-TIME, seconds)
+							1 (>L:SW_CAS_YAW_INIT)
+						}
+
+					(L:SW2_FS_CAS_YAW) 1 ==
+					(P:LOCAL TIME, seconds) (L:SW_CAS_YAW-TIME, seconds) - 1 &gt; and
+						if{
+							2 (>L:SW2_FS_CAS_YAW)
+							0 (>L:SW_CAS_YAW-TIME, seconds)
+							0 (>L:SW_CAS_YAW_INIT)
+						}
+      			</Value>
+    		</Select>
+		</Element>
+
 		<Element Name="Emergency Brake Controller">
     		<Select>
       			<Value>

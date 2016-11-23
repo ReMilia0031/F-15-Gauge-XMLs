@@ -1,7 +1,9 @@
-﻿<Gauge Name="HUD-F15C" Version="5.0">
+﻿<Gauge Name="HUD-F15C" Version="6.0">
 
 
 <!--
+Version 5.20
+	[EDT] ILSバーとか
 Version 5.00
 	[EDT] Weapon周り
 Version 4.50

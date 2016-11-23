@@ -369,7 +369,7 @@
 				<Element>
 					<Text X="280" Y="15" Luminous="Yes" Length="20" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 						<String>
-							%((A:FUEL TANK LEFT AUX QUANTITY, gallons))%!04d!%
+							FUEL
 						</String>
 					</Text>
 				</Element>
@@ -390,7 +390,7 @@
 				<Element>
 					<Text X="230" Y="15" Luminous="Yes" Length="20" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 						<String>
-							%((A:FUEL TANK EXTERNAL1 QUANTITY, gallons))%!04d!%
+							
 						</String>
 					</Text>
 				</Element>				
@@ -411,7 +411,7 @@
 				<Element>
 					<Text X="230" Y="15" Luminous="Yes" Length="20" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 						<String>
-							%((A:FUEL TANK LEFT AUX QUANTITY, gallons))%!04d!%
+							FUEL
 						</String>
 					</Text>
 				</Element>
@@ -453,31 +453,31 @@
 			<Element>
 				<Position X="165" Y="310"/>
 				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-					<String>%((A:AUTOPILOT NAV1 LOCK, BOOL) 1 ==)%{if}CRS%{else} --- %</String>
+					<String>%((A:AUTOPILOT ALTITUDE LOCK, bool))%{if}ALT%{else} --- %</String>
 				</Text>
 			</Element>
 			<Element>
 				<Position X="215" Y="310"/>
 				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-					<String>%((A:AUTOPILOT HEADING LOCK, BOOL) 1 ==)%{if}HDG%{else} --- %</String>
+					<String>%((A:AUTOPILOT ATTITUDE HOLD, bool))%{if}ATT%{else} --- %</String>
 				</Text>
 			</Element>			
 			<Element>
 				<Position X="265" Y="310"/>
 				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-					<String>%((A:AUTOPILOT ALTITUDE LOCK, BOOL) 1 ==)%{if}ALT%{else} --- %</String>
+					<String>%((A:AUTOPILOT HEADING LOCK, bool))%{if}HDG%{else}%((A:AUTOPILOT NAV1 LOCK, bool))%{if}NAV%{else}%((A:AUTOPILOT WING LEVELER, bool))%{if}WIG%{else}---%</String>
 				</Text>
 			</Element>
 			<Element>
 				<Position X="310" Y="310"/>
 				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-					<String>%((A:AUTOPILOT AIRSPEED HOLD, BOOL) 1 ==)%{if}SPD%{else} --- %</String>
+					<String>%((A:AUTOPILOT YAW DAMPER, bool))%{if}YAW%{else} --- %</String>
 				</Text>
 			</Element>
 			<Element>
 				<Position X="360" Y="310"/>
 				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-					<String>---</String>
+					<String>%((A:AUTOPILOT APPROACH HOLD, bool))%{if}APR%{else} --- %</String>
 				</Text>
 			</Element>
 			
@@ -493,25 +493,25 @@
 			<Element>
 				<Position X="170" Y="384"/>
 				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-					<String>%((A:AUTOPILOT NAV1 LOCK, BOOL) 1 ==)%{if}%((A:NAV1 OBS, degrees))%!03d!%{else} --- %</String>
+					<String>%((A:AUTOPILOT ALTITUDE LOCK, bool) 1 ==)%{if}%((A:AUTOPILOT ALTITUDE LOCK VAR, feet))%!03d!%{else} --- %</String>
 				</Text>
 			</Element>
 			<Element>
 				<Position X="220" Y="384"/>
 				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-					<String>%((A:AUTOPILOT HEADING LOCK, BOOL) 1 ==)%{if}%((A:Autopilot heading lock dir, degrees) flr 360 % d 0 == if{ 360 } )%!03d!%{else} --- %</String>
+					<String>%((A:AUTOPILOT ATTITUDE HOLD, bool) 1 ==)%{if}%((A:AUTOPILOT FLIGHT DIRECTOR PITCH, degrees))%!03d!%{else} --- %</String>
 				</Text>
 			</Element>			
 			<Element>
 				<Position X="270" Y="384"/>
 				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-					<String>%((A:AUTOPILOT ALTITUDE LOCK, BOOL) 1 ==)%{if}%((A:AUTOPILOT ALTITUDE LOCK VAR, feet) 100 / )%!03d!%{else} --- %</String>
+					<String>%((A:AUTOPILOT HEADING LOCK, bool) 1 ==)%{if}%((A:AUTOPILOT HEADING LOCK DIR, degrees) flr 360 % d 0 == if{ 0 } )%!03d!%{else} --- %</String>
 				</Text>
 			</Element>
 			<Element>
 				<Position X="315" Y="384"/>
 				<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-					<String>%((A:AUTOPILOT AIRSPEED HOLD, BOOL) 1 ==)%{if}%((A:AUTOPILOT AIRSPEED HOLD VAR, knots))%!03d!%{else} --- %</String>
+					<String>---</String>
 				</Text>
 			</Element>
 			<Element>

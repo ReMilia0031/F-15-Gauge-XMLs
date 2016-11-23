@@ -4298,13 +4298,16 @@ Version 5.0
 							(>K:AP_ALT_HOLD_ON)
 							(A:INDICATED ALTITUDE,feet) (>K:AP_ALT_VAR_SET_ENGLISH)
 						}
-					(A:YOKE Y POSITION, Position) 0 !=
-					(L:CAS_PITCH_RDY, enum) 0 == or
-					(L:CAS_ALT_HOLD_RDY, enum) 0 == or
-					(A:SIM ON GROUND, bool) 1 == or
+				
+						
+					(L:CAS_ALT_HOLD_RDY, enum) 0 ==
 						if{
 							(>K:AP_ALT_HOLD_OFF)
-							(A:ELEVATOR POSITION, Position) (>K:AXIS_ELEV_TRIM_SET)
+						}
+						
+					(L:CAS_ATT_HOLD_RDY, enum) 1 == or
+						if{
+							(>K:AP_ATT_HOLD_OFF)
 						}
 
 					(L:CAS_PITCH_RDY, enum) 1 ==
@@ -4319,11 +4322,11 @@ Version 5.0
 
 					(A:YOKE Y POSITION, Position) 0 !=
 					(L:CAS_PITCH_RDY, enum) 0 == or
-					(L:CAS_ATT_HOLD_RDY, enum) 0 == or
 					(A:SIM ON GROUND, bool) 1 == or
 						if{
 							(>K:AP_ALT_HOLD_OFF)
-							(A:ELEVATOR POSITION, Position) (>K:AXIS_ELEV_TRIM_SET)
+							(>K:AP_ATT_HOLD_OFF)
+							0 (>K:AXIS_ELEV_TRIM_SET)
 						}
 				</Value>
 			</Select>
@@ -4388,11 +4391,9 @@ Version 5.0
 			<Select>
 				<Value>
 				(L:BTN_FS_TAKEOFF_TRIM_EXEC, enum) 1 ==
-				(L:TAKEOFF_TRIM_INIT, enum) 0 == and
 				(A:SIM ON GROUND, enum) 1 == and
 					if{
 						0 (>K:AXIS_ELEV_TRIM_SET, enum)
-						1 (>K:TAKEOFF_TRIM_INIT, enum)
 						0 (>L:BTN_FS_TAKEOFF_TRIM_EXEC, enum)
 					}
 				</Value>
