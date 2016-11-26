@@ -45,8 +45,8 @@ Version 5.0
 					0 (>L:SW2_FS_MISC_LANDING_TAXI)
 
 					1 (>L:SW2_FS_FUEL_CTRL_WING)
-					1 (>L:SW2_FS_FUEL_CTRL_CTR)
-					1 (>L:SW2_FS_FUEL_CTRL_CONF)
+					2 (>L:SW2_FS_FUEL_CTRL_CTR)
+					2 (>L:SW2_FS_FUEL_CTRL_CONF)
 					0 (>L:SW1_FS_FUEL_DUMP)
 					1 (>L:SW2_FS_FUEL_EMERG_TX)
 					0 (>L:SW1_FS_FUEL_EXT_TX)
@@ -634,6 +634,18 @@ Version 5.0
 						(A:TURB ENG2 N2, percent) 35 &gt; and
 							if{
 								3276 (>K:THROTTLE2_SET)
+							}						
+
+						(A:GENERAL ENG1 THROTTLE LEVER POSITION, percent) 70 &gt;
+						(A:TURB ENG N2:1, percent) 96 &lt; and
+							if{
+								11468 (>K:THROTTLE_70)
+							}
+
+						(A:GENERAL ENG1 THROTTLE LEVER POSITION, percent) 70 &gt;
+						(A:TURB ENG N2:1, percent) 96 &lt; and
+							if{
+								11468 (>K:THROTTLE2_SET)
 							}
 					</Value>
 				</Select>
@@ -1193,7 +1205,8 @@ Version 5.0
 		<Element Name="FUEL LOW">
     		<Select>
       			<Value>
-				(A:FUEL TOTAL QUANTITY WEIGHT, pounds) 1500 &lt;
+				(A:FUEL TANK CENTER2 QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * 960 &lt;
+				(A:FUEL TANK CENTER3 QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * 540 &lt; or
 					if{
 						1 (>L:FUEL_LOW_WARN, enum)
 					}

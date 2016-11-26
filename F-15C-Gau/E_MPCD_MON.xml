@@ -2378,7 +2378,7 @@
 									</GaugeText>
 								</Element>
 							</Element>
-							<Element id="R ENG">
+							<Element id="VALUE">
 								<FloatPosition>317.000,90.000</FloatPosition>
 								<Element id="ELEVATOR POSITION">
 									<FloatPosition>0.000,24.000</FloatPosition>
@@ -2675,7 +2675,7 @@
 									</GaugeText>
 								</Element>
 							</Element>
-							<Element id="R ENG">
+							<Element id="VALUE">
 								<FloatPosition>317.000,90.000</FloatPosition>
 								<Element id="HANDLE POSITION">
 									<FloatPosition>0.000,24.000</FloatPosition>
@@ -2985,7 +2985,7 @@
 									</GaugeText>
 								</Element>
 							</Element>
-							<Element id="R ENG">
+							<Element id="VALUE">
 								<FloatPosition>317.000,90.000</FloatPosition>
 								<Element id="TEMPERATURE">
 									<FloatPosition>0.000,24.000</FloatPosition>
@@ -3143,6 +3143,528 @@
 									</GaugeText>
 								</Element>
 								
+							</Element>
+						</Element>
+						<Element id="FUEL">
+							<Visibility>
+								(L:BIT_FUNC_PAGES) 5 ==
+							</Visibility>
+							<Element id="TITLE">
+								<FloatPosition>190.000,50.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>35</FontHeight>
+									<GaugeString>FUEL</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>120,50</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="LABELS">
+							<FloatPosition>65.000,90.000</FloatPosition>
+								<Element id="LEFT ENGINE FEED TANK">
+									<FloatPosition>0.000,24.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>L ENG FEED (8)</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="RIGHT ENGINE FEED TANK">
+									<FloatPosition>0.000,48.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>R ENG FEED (7)</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="LEFT WING TANK">
+									<FloatPosition>0.000,72.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>L WING (19)</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="RIGHT WING TANK">
+									<FloatPosition>0.000,96.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>R WING (20)</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="TANK 1">
+									<FloatPosition>0.000,120.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>TANK 1 (6)</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="LEFT EXTERNAL TANK">
+									<FloatPosition>0.000,144.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>L EXT (4)</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="RIGHT EXTERNAL TANK">
+									<FloatPosition>0.000,168.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>R EXT (5)</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="CENTER EXTERNAL TANK">
+									<FloatPosition>0.000,192.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>C EXT (9)</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="LEFT CONFORMAL FUEL TANK">
+									<FloatPosition>0.000,216.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>L CFT (12)</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="RIGHT CONFORMAL FUEL TANK">
+									<FloatPosition>0.000,240.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>R CFT (11)</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="L ENG SELECT FUEL TANK">
+									<FloatPosition>0.000,264.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>L ENG SEL FUEL TANK</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="R ENG SELECT FUEL TANK">
+									<FloatPosition>0.000,288.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>R ENG SEL FUEL TANK</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="TOTAL FUEL QTY">
+									<FloatPosition>0.000,336.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>TOTAL FUEL</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+							</Element>
+							<Element id="VALUE">
+								<FloatPosition>317.000,90.000</FloatPosition>
+								<Element id="LEFT FEED">
+									<FloatPosition>0.000,24.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 8 != (A:TURB ENG TANK SELECTOR:2, enum) 8 != and</Visibility>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK CENTER3 QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="LEFT FEED">
+									<FloatPosition>0.000,24.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 8 == (A:TURB ENG TANK SELECTOR:2, enum) 8 == or</Visibility>
+									<GaugeText id="GaugeText">
+										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+										<Bright>True</Bright>
+										<FontColor>0x000000</FontColor>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK CENTER3 QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="RIGHT FEED">
+									<FloatPosition>0.000,48.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 7 != (A:TURB ENG TANK SELECTOR:2, enum) 7 != and</Visibility>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK CENTER2 QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="RIGHT FEED">
+									<FloatPosition>0.000,48.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 7 == (A:TURB ENG TANK SELECTOR:2, enum) 7 == or</Visibility>
+									<GaugeText id="GaugeText">
+										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+										<Bright>True</Bright>
+										<FontColor>0x000000</FontColor>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK CENTER2 QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="LEFT MAIN">
+									<FloatPosition>0.000,72.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 19 != (A:TURB ENG TANK SELECTOR:2, enum) 19 != and</Visibility>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK LEFT MAIN QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="LEFT MAIN">
+									<FloatPosition>0.000,72.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 19 == (A:TURB ENG TANK SELECTOR:2, enum) 19 == or</Visibility>
+									<GaugeText id="GaugeText">
+										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+										<Bright>True</Bright>
+										<FontColor>0x000000</FontColor>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK LEFT MAIN QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="RIGHT MAIN">
+									<FloatPosition>0.000,96.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 20 != (A:TURB ENG TANK SELECTOR:2, enum) 20 != and</Visibility>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK RIGHT MAIN QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="RIGHT MAIN">
+									<FloatPosition>0.000,96.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 20 == (A:TURB ENG TANK SELECTOR:2, enum) 20 == or</Visibility>
+									<GaugeText id="GaugeText">
+										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+										<Bright>True</Bright>
+										<FontColor>0x000000</FontColor>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK RIGHT MAIN QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="TANK 1">
+									<FloatPosition>0.000,120.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 6 != (A:TURB ENG TANK SELECTOR:2, enum) 6 != and</Visibility>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK CENTER QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="TANK 1">
+									<FloatPosition>0.000,120.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 6 == (A:TURB ENG TANK SELECTOR:2, enum) 6 == or</Visibility>
+									<GaugeText id="GaugeText">
+										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+										<Bright>True</Bright>
+										<FontColor>0x000000</FontColor>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK CENTER QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="LEXT">
+									<FloatPosition>0.000,144.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 4 != (A:TURB ENG TANK SELECTOR:2, enum) 4 != and</Visibility>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK LEFT AUX QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="LEXT">
+									<FloatPosition>0.000,144.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 4 == (A:TURB ENG TANK SELECTOR:2, enum) 4 == or</Visibility>
+									<GaugeText id="GaugeText">
+										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+										<Bright>True</Bright>
+										<FontColor>0x000000</FontColor>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK LEFT AUX QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="REXT">
+									<FloatPosition>0.000,168.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 5 != (A:TURB ENG TANK SELECTOR:2, enum) 5 != and</Visibility>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK RIGHT AUX QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="REXT">
+									<FloatPosition>0.000,168.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 5 == (A:TURB ENG TANK SELECTOR:2, enum) 5 == or</Visibility>
+									<GaugeText id="GaugeText">
+										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+										<Bright>True</Bright>
+										<FontColor>0x000000</FontColor>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK RIGHT AUX QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="CEXT">
+									<FloatPosition>0.000,192.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 9 != (A:TURB ENG TANK SELECTOR:2, enum) 9 != and</Visibility>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK EXTERNAL1 QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="CEXT">
+									<FloatPosition>0.000,192.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 9 == (A:TURB ENG TANK SELECTOR:2, enum) 9 == or</Visibility>
+									<GaugeText id="GaugeText">
+										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+										<Bright>True</Bright>
+										<FontColor>0x000000</FontColor>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK EXTERNAL1 QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="LCFT">
+									<FloatPosition>0.000,216.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 12 != (A:TURB ENG TANK SELECTOR:2, enum) 12 != and</Visibility>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK LEFT TIP QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="LCFT">
+									<FloatPosition>0.000,216.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 12 == (A:TURB ENG TANK SELECTOR:2, enum) 12 == or</Visibility>
+									<GaugeText id="GaugeText">
+										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+										<Bright>True</Bright>
+										<FontColor>0x000000</FontColor>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK LEFT TIP QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="RCFT">
+									<FloatPosition>0.000,240.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 11 != (A:TURB ENG TANK SELECTOR:2, enum) 11 != and</Visibility>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK RIGHT TIP QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="RCFT">
+									<FloatPosition>0.000,240.000</FloatPosition>
+									<Visibility>(A:TURB ENG TANK SELECTOR:1, enum) 11 == (A:TURB ENG TANK SELECTOR:2, enum) 11 == or</Visibility>
+									<GaugeText id="GaugeText">
+										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+										<Bright>True</Bright>
+										<FontColor>0x000000</FontColor>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TANK RIGHT TIP QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="L SEL FUEL">
+									<FloatPosition>0.000,264.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:TURB ENG TANK SELECTOR:1, enum))%!d!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="R SEL FUEL">
+									<FloatPosition>0.000,288.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:TURB ENG TANK SELECTOR:2, enum))%!d!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="TOTAL FUEL">
+									<FloatPosition>0.000,336.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:FUEL TOTAL QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
 							</Element>
 						</Element>
 
@@ -5242,6 +5764,12 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:1}SCAN
+%{:2}
+%((L:BIT_PAGES) 1 ==)
+	%{if}
+		%((L:BIT_FUNC_PAGES) 0 ==)
+			%{if}FUEL
+			%{end}
 %{:15}S\nH\nR
 %{end}
 </GaugeString>
@@ -5809,6 +6337,24 @@
 								0 (&gt;L:MPCD-SMENU, Enum)
 								quit
 							}
+							(L:MPCD-menu, Enum) 1000 div 2 ==
+								if{
+									(L:BIT_PAGES) 1 ==
+										if{
+											5 (>L:BIT_FUNC_PAGES)
+										}
+										els{
+											1 (>L:BIT_PAGES)
+										}
+										quit
+
+									(L:BIT_PAGES) 15 ==
+										if{
+											4 (>L:BIT_TEWS_PAGES)
+										}
+										quit
+									quit
+								}
 							(L:MPCD-menu, Enum) 1000 div 15 == if{
 								(L:MPCD_DTM_SHR) 0 ==
 									if{
@@ -5830,11 +6376,6 @@
 						(L:BTN_FS_LMPD_KEY6_EXEC, Number) if{
 							0 (&gt;L:BTN_FS_LMPD_KEY6_EXEC, Number)
 
-							(L:MPCD-menu, Enum) 0 == if{
-								6000 (&gt;L:MPCD-menu, Enum)
-								0 (&gt;L:MPCD-SMENU, Enum)
-								quit
-							}
 							(L:MPCD-menu, Enum) 1000 div 1 == if{
 
 								(L:HUD_MASTER_MODE, Enum) 2 == if{
