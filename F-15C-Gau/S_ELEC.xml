@@ -70,7 +70,7 @@ Version 5.0
 			<Element Name="MASTER BATTERY">
 				<Select>
 					<Value>
-					(L:EXTARNAL_AC_VOLTS) 0 &gt;
+					(L:EXTARNAL_AC_AVAIL) 1 ==
 					(L:ESS_DC_BUS_AVAIL) 1 == or
 						if{
 							(A:ELECTRICAL MASTER BATTERY, enum) 0 ==
@@ -78,7 +78,7 @@ Version 5.0
 									(>K:TOGGLE_MASTER_BATTERY)
 								}
 						}
-					(L:EXTARNAL_AC_VOLTS) 0 ==
+					(L:EXTARNAL_AC_AVAIL) 0 ==
 					(L:ESS_DC_BUS_AVAIL) 0 == and
 						if{
 							(A:ELECTRICAL MASTER BATTERY, enum) 1 ==
@@ -205,17 +205,47 @@ Version 5.0
 					<Value>
 					(L:LGEN_AVAIL, enum) 0 ==
 					(L:RGEN_AVAIL, enum) 0 == and
+					(A:SIM ON GROUND, bool) 0 == and 
 					(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
 						if{
 							115 (>L:EMER_GEN_AC_VOLTAGE)
 							28 (>L:EMER_GEN_DC_VOLTAGE)
 						}
+
+					(L:LGEN_AVAIL, enum) 0 ==
+					(L:RGEN_AVAIL, enum) 0 == and
+					(A:SIM ON GROUND, bool) 1 == and
+					(A:APU PCT RPM, percent) 90 &gt; and
+					(L:SW2_FS_ENG_EMER_GEN, enum) 2 == and
+						if{
+							115 (>L:EMER_GEN_AC_VOLTAGE)
+							28 (>L:EMER_GEN_DC_VOLTAGE)
+						}
+
+					(L:LGEN_AVAIL, enum) 0 ==
+					(L:RGEN_AVAIL, enum) 0 == or
+					(L:L_BST_PUMP_ON) 0 == or
+					(L:R_BST_PUMP_ON) 0 == or
+					(A:SIM ON GROUND, bool) 0 == and 
+					(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
+						if{
+							28 (>L:EMER_ESS_DC_VOLTAGE)
+						}
 						els{
+							0 (>L:EMER_ESS_DC_VOLTAGE)
+						}	
+						
+					(L:LGEN_AVAIL, enum) 1 ==
+					(L:RGEN_AVAIL, enum) 1 == and
+					(L:SW2_FS_ENG_EMER_GEN, enum) 0 == or
+						if{
 							0 (>L:EMER_GEN_AC_VOLTAGE)
 							0 (>L:EMER_GEN_DC_VOLTAGE)
 						}
 					(L:EMER_GEN_AC_VOLTAGE) (>L:EMER_GEN_AC_BUS_VOLTAGE)
 					(L:EMER_GEN_DC_VOLTAGE) (>L:EMER_GEN_DC_BUS_VOLTAGE)
+					(L:EMER_ESS_DC_VOLTAGE) (>L:EMER_ESS_DC_BUS_VOLTAGE)
+					
 					</Value>
 				</Select>
 			</Element>
@@ -223,13 +253,6 @@ Version 5.0
 			<Element Name="Emergency Generator Available">
 				<Select>
 					<Value>
-					(L:LGEN_AVAIL, enum) 0 ==
-					(L:RGEN_AVAIL, enum) 0 == or
-					(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
-						if{ 1 (>L:EMER_GEN_AVAIL) }
-						els{ 0 (>L:EMER_GEN_AVAIL) }
-
-
 					(L:EMER_GEN_AC_VOLTAGE) 115 ==
 						if{ 1 (>L:EMER_GEN_AC_AVAIL) }
 						els{ 0 (>L:EMER_GEN_AC_AVAIL) }
@@ -238,27 +261,15 @@ Version 5.0
 						if{ 1 (>L:EMER_GEN_DC_AVAIL) }
 						els{ 0 (>L:EMER_GEN_DC_AVAIL) }
 
+					(L:EMER_ESS_DC_VOLTAGE) 28 ==
+						if{ 1 (>L:EMER_ESS_DC_AVAIL) }
+						els{ 0 (>L:EMER_ESS_DC_AVAIL) }
+
 
 					</Value>
 				</Select>
 			</Element>
 			<Element Name="Bus Line">
-
-				RIGHT_AC_BUS
-				RIGHT_26_AC_BUS
-				M_ARM_DC_BUS
-				ARAM_DC_BUS
-				RIGHT_DC_BUS
-				LEFT_AC_BUS
-				ESS_AC_BUS
-				ENG_INST_AC_BUS
-				LEFT_DC_BUS
-				ESS_DC_BUS
-				EMER_ESS_DC_BUS
-				ENG_CONT_ESS_DC_BUS
-				JFS_ESS_DC_BUS
-				FIRE_EXT_BUS
-				-->
 				<Element Name="Generator Bus Line">
 					<Select>
 						<Value>
@@ -402,9 +413,18 @@ Version 5.0
 							(L:LEFT_XFMR_LINE_VOLTAGE) (>L:LEFT_DC_BUS_VOLTAGE)
 							(L:LEFT_XFMR_LINE_VOLTAGE) (>L:ESS_DC_BUS_VOLTAGE)
 
-							(L:ESS_DC_BUS_VOLTAGE) (>L:ENG_CONT_ESS_DC_BUS_VOLTAGE)
-							(L:LEFT_XFMR_LINE_VOLTAGE) (>L:JFS_ESS_DC_BUS_VOLTAGE)
-							(L:LEFT_XFMR_LINE_VOLTAGE) (>L:FIRE_EXT_BUS_VOLTAGE)
+							(L:EMER_ESS_DC_AVAIL) 0 ==
+								if{
+									(L:ESS_DC_BUS_VOLTAGE) (>L:ENG_CONT_ESS_DC_BUS_VOLTAGE)
+									(L:LEFT_XFMR_LINE_VOLTAGE) (>L:JFS_ESS_DC_BUS_VOLTAGE)
+									(L:LEFT_XFMR_LINE_VOLTAGE) (>L:FIRE_EXT_BUS_VOLTAGE)
+								}
+							(L:EMER_ESS_DC_AVAIL) 1 ==
+								if{
+									(L:EMER_ESS_DC_BUS_VOLTAGE) (>L:ENG_CONT_ESS_DC_BUS_VOLTAGE)
+									(L:EMER_ESS_DC_BUS_VOLTAGE) (>L:JFS_ESS_DC_BUS_VOLTAGE)
+									(L:EMER_ESS_DC_BUS_VOLTAGE) (>L:FIRE_EXT_BUS_VOLTAGE)
+								}
 
 						</Value>
 					</Select>
@@ -449,28 +469,26 @@ Version 5.0
 			</Element>
 
 			<Element Name="EMERGENCY BOOST PUMP ON">
-    		<Select>
-      			<Value>
-					(L:LGEN_AVAIL, enum) 0 ==
-					(L:RGEN_AVAIL, enum) 0 == or
-						if{
-							(L:SW2_FS_ENG_EMER_GEN, enum) 2 ==
-								if{
-									1 (>L:EMER_BST_ON, bool)
-								}
-								els{
-									0 (>L:EMER_BST_ON, bool)
-								}
-						}
-		      	</Value>
-    		</Select>
-		</Element>
+				<Select>
+					<Value>
+						(L:LGEN_AVAIL, enum) 0 ==
+						(L:RGEN_AVAIL, enum) 0 == or
+						(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
+							if{
+								1 (>L:EMER_BST_ON, bool)
+							}
+							els{
+								0 (>L:EMER_BST_ON, bool)
+							}
+					</Value>
+				</Select>
+			</Element>
 			<Element Name="BOOST SYS MALFUNCTION">
 				<Select>
 					<Value>
 						(L:LGEN_AVAIL, enum) 0 ==
 						(L:RGEN_AVAIL, enum) 0 == and
-						(L:SW2_FS_ENG_EMER_GEN, enum) 2 == and
+						(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
 							if{
 								1 (>L:BST_SYS, bool)
 							}
@@ -800,8 +818,16 @@ Version 5.0
 				<Element Name="ENG INST AC BUS">
 					<Select>
 						<Value>
-						1 (>L:ENG_RPM_TACH_IND_PWR)
-						1 (>L:ENG_FTIT_IND_PWR)
+						(L:LEFT_AC_BUS_AVAIL) 1 ==
+						(L:JFS_ESS_DC_BUS_AVAIL) 1 == or
+							if{
+								1 (>L:ENG_RPM_TACH_IND_PWR)
+								1 (>L:ENG_FTIT_IND_PWR)
+							}
+							els{
+								0 (>L:ENG_RPM_TACH_IND_PWR)
+								0 (>L:ENG_FTIT_IND_PWR)
+							}
 						</Value>
 					</Select>
 				</Element>
@@ -983,11 +1009,11 @@ Version 5.0
 				</Element>
 			</Element>
 			<Element Name="SYS">
-				<Element Name="LEFT BOOST PUMP ON">
+				<Element Name="LEFT BOOST PUMP">
 					<Select>
 						<Value>
 							(L:L_BST_PUMP_PWR) 1 ==
-							(A:TURB ENG1 N2, percent) 35 &gt; and
+							(A:GENERAL ENG FUEL PRESSURE:1, psi) 15 &gt; and
 								if{
 									1 (>L:L_BST_PUMP_ON)
 								}
@@ -998,11 +1024,11 @@ Version 5.0
 					</Select>
 				</Element>
 
-				<Element Name="RIGHT BOOST PUMP ON">
+				<Element Name="RIGHT BOOST PUMP">
 					<Select>
 						<Value>
 							(L:R_BST_PUMP_PWR) 1 ==
-							(A:TURB ENG2 N2, percent) 35 &gt; and
+							(A:GENERAL ENG FUEL PRESSURE:2, psi) 15 &gt; and
 								if{
 									1 (>L:R_BST_PUMP_ON)
 								}
@@ -1175,8 +1201,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-					(L:SW2_FS_ENG_EXT_PWR, enum) 0 &gt;
-					(A:AIRSPEED INDICATED, knots) 10 &lt; and
+					(A:AIRSPEED INDICATED, knots) 10 &lt;
 					(A:SIM ON GROUND, enum) 1 == and
 						if{ 28 (>L:EXTARNAL_AC_VOLTS) }
 						els{ 0 (>L:EXTARNAL_AC_VOLTS) }
@@ -1187,6 +1212,7 @@ Version 5.0
 				<Select>
 					<Value>
 					(L:EXTARNAL_AC_VOLTS) 28 ==
+					(L:SW2_FS_ENG_EXT_PWR, enum) 0 &gt; and
 						if{ 1 (>L:EXTARNAL_AC_AVAIL) }
 						els{ 0 (>L:EXTARNAL_AC_AVAIL) }
 					</Value>
@@ -3045,7 +3071,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="RUDDER LIMITER">
+			<Element Name="RUDDER LIMITER">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3056,7 +3082,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="EMER BST PMP SYS LOGIC MALF">
+			<Element Name="EMER BST PMP SYS LOGIC MALF">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3067,7 +3093,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="INLET TEMP HI">
+			<Element Name="INLET TEMP HI">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3078,7 +3104,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="L BST PUMP FAILURE">
+			<Element Name="L BST PUMP FAILURE">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3089,7 +3115,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="L INLET CONTOROLLER FAILURE">
+			<Element Name="L INLET CONTOROLLER FAILURE">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3100,7 +3126,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="IFF NOT RESPONDING">
+			<Element Name="IFF NOT RESPONDING">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3111,7 +3137,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="L GEN FAIURE">
+			<Element Name="L GEN FAIURE">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3122,7 +3148,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="HYDRAULICS FAILURE">
+			<Element Name="HYDRAULICS FAILURE">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3133,7 +3159,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="PITCH RATIO INCORRECT">
+			<Element Name="PITCH RATIO INCORRECT">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3144,7 +3170,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="SPARE">
+			<Element Name="SPARE">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3155,7 +3181,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="CAS YAW DISENGAGED">
+			<Element Name="CAS YAW DISENGAGED">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3166,7 +3192,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="L BLEED AIR LEAK">
+			<Element Name="L BLEED AIR LEAK">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3177,7 +3203,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="FUEL LOW">
+			<Element Name="FUEL LOW">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3188,7 +3214,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="ECS LOW FLOW">
+			<Element Name="ECS LOW FLOW">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3201,7 +3227,7 @@ Version 5.0
 			</Element>
 
 
-			<Element  Name="ENG FUEL INLET HOT">
+			<Element Name="ENG FUEL INLET HOT">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3212,7 +3238,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="UNREKIABLE ATTITUDE SOURCE">
+			<Element Name="UNREKIABLE ATTITUDE SOURCE">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3223,7 +3249,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="R BST PUMP FAILURE">
+			<Element Name="R BST PUMP FAILURE">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3234,7 +3260,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="R INLET CONTOROLLER FAILURE">
+			<Element Name="R INLET CONTOROLLER FAILURE">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3245,7 +3271,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="AV BUILT IN TEST CAUTION">
+			<Element Name="AV BUILT IN TEST CAUTION">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3256,7 +3282,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="R GEN FAIURE">
+			<Element Name="R GEN FAIURE">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3267,7 +3293,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="OIL PLESS LOW">
+			<Element Name="OIL PLESS LOW">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3278,7 +3304,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="ROLL RATIO INCORRECT">
+			<Element Name="ROLL RATIO INCORRECT">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3289,7 +3315,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="L EEC FAILED">
+			<Element Name="L EEC FAILED">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3300,7 +3326,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="CAS ROLL DISENGAGED">
+			<Element Name="CAS ROLL DISENGAGED">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3311,7 +3337,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="R BLEED AIR LEAK">
+			<Element Name="R BLEED AIR LEAK">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3322,7 +3348,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="BINGO FUEL">
+			<Element Name="BINGO FUEL">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3333,7 +3359,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="HOOK UNLOCKED">
+			<Element Name="HOOK UNLOCKED">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3345,7 +3371,7 @@ Version 5.0
 				</Select>
 			</Element>
 
-			<Element  Name="JFS ACCUM PRESSURE LOW">
+			<Element Name="JFS ACCUM PRESSURE LOW">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3356,7 +3382,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="EMER BOOST PUMP SUPPLYING">
+			<Element Name="EMER BOOST PUMP SUPPLYING">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3367,7 +3393,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="INLET ICE">
+			<Element Name="INLET ICE">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3378,7 +3404,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="ANTI SKID OFF">
+			<Element Name="ANTI SKID OFF">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3389,7 +3415,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="R EEC FAILED">
+			<Element Name="R EEC FAILED">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3400,7 +3426,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="CAS PITCH DISENGAGED">
+			<Element Name="CAS PITCH DISENGAGED">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3411,7 +3437,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="WINDSHLD HOT">
+			<Element Name="WINDSHLD HOT">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3422,7 +3448,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="OXY LOW">
+			<Element Name="OXY LOW">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3433,7 +3459,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element  Name="AFCS DISENGADED">
+			<Element Name="AFCS DISENGADED">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -5505,7 +5531,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:MPCD_AC_PWR) 1==
-						(P:LOCAL TIME, seconds) (L:MPCD-TIME, seconds) - 8 &gt; and
+						(P:LOCAL TIME, seconds) (L:MPCD-TIME, seconds) - 1 &gt; and
 							if{
 								1 (>L:MPCD-POWER, enum)
 								0 (>L:MPCD-TIME, seconds)

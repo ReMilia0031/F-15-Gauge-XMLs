@@ -755,7 +755,305 @@ Version 5.0
       			</Value>
     		</Select>
 		</Element>
-
+		<Element Name="FUEL Switchs">
+			<Element Name="Control Switches">
+				<Select>
+					<Value>
+	<!-- 				OFF			= 0		OFF
+					ALL			= 1		ALL
+					LEFT ALL	= 2		LEFT EXT/CONF
+					RIGHT ALL	= 3		RIGHT EXT/CONF
+					LEFT_AUX	= 4		EXT LEFT
+					RIGHT_AUX	= 5		EXT RIGHT
+					CENTER		= 6		TANK1
+					CENTER2		= 7		RIGHT FEED
+					CENTER3		= 8		LEFT FEED
+					EXTERNAL1	= 9		EXT CTR
+					EXTERNAL2	= 10
+					RIGHT_TIP	= 11	RIGHT CFT
+					LEFT_TIP	= 12	LEFT CFT
+								= 13	XFEED
+								= 14	XFEED L2R
+								= 15	XFEED R2L
+								= 16	BOTH
+								= 17	EXT ALL
+								= 18	ISOLATE
+								= 19	LEFT MAIN
+								= 20	RIGHT MAIN
+					
+					2 stop trans
+					1 norm
+					0 stop refuel -->
+					
+						(L:SW2_FS_FUEL_CTRL_WING) 1 == 
+						(L:SW2_FS_FUEL_CTRL_CTR) 1 == and
+						(L:SW2_FS_FUEL_CTRL_CONF) 1 == and
+							if{
+								(L:EXT_TX) 1 ==
+									if{
+										12 (>K:FUEL_SELECTOR_SET)
+										11 (>K:FUEL_SELECTOR_2_SET)
+										
+										(A:FUEL TANK LEFT TIP LEVEL, percent) 0 ==
+											if{
+												4 (>K:FUEL_SELECTOR_SET)
+											}
+										(A:FUEL TANK RIGHT TIP LEVEL, percent) 0 ==
+											if{
+												5 (>K:FUEL_SELECTOR_2_SET)
+											}								
+									}
+								(L:EXT_TX) 0 ==
+									if{
+										4 (>K:FUEL_SELECTOR_SET)
+										5 (>K:FUEL_SELECTOR_2_SET)
+										
+										(A:FUEL TANK LEFT AUX LEVEL, percent) 0 ==
+											if{
+												12 (>K:FUEL_SELECTOR_SET)
+											}
+			
+										(A:FUEL TANK RIGHT AUX LEVEL, percent) 0 ==
+											if{
+												11 (>K:FUEL_SELECTOR_2_SET)
+											}	
+									}
+								(A:FUEL TANK LEFT TIP LEVEL, percent) 0 ==
+								(A:FUEL TANK LEFT AUX LEVEL, percent) 0 == and
+									if{
+										9 (>K:FUEL_SELECTOR_SET)
+									}
+									
+								(A:FUEL TANK RIGHT TIP LEVEL, percent) 0 ==
+								(A:FUEL TANK RIGHT AUX LEVEL, percent) 0 == and
+									if{
+										9 (>K:FUEL_SELECTOR_2_SET)
+									}
+	
+								(A:FUEL TANK EXTERNAL1 LEVEL, percent) 0 ==
+									if{
+										19 (>K:FUEL_SELECTOR_SET)
+										20 (>K:FUEL_SELECTOR_2_SET)
+									}
+							}
+							
+						(L:SW2_FS_FUEL_CTRL_WING) 1 ==
+						(L:SW2_FS_FUEL_CTRL_CTR) 1 == and
+						(L:SW2_FS_FUEL_CTRL_CONF) 2 == and
+							if{					
+								9 (>K:FUEL_SELECTOR_SET)
+								9 (>K:FUEL_SELECTOR_2_SET)	
+								
+								(A:FUEL TANK EXTERNAL1 LEVEL, percent) 0 ==
+									if{
+										4 (>K:FUEL_SELECTOR_SET)
+										5 (>K:FUEL_SELECTOR_2_SET)	
+			
+										(A:FUEL TANK LEFT AUX LEVEL, percent) 0 ==
+											if{
+												19 (>K:FUEL_SELECTOR_SET)
+											}
+			
+										(A:FUEL TANK RIGHT AUX LEVEL, percent) 0 ==
+											if{
+												20 (>K:FUEL_SELECTOR_2_SET)
+											}									
+									}
+									
+							}
+						(L:SW2_FS_FUEL_CTRL_WING) 2 ==
+						(L:SW2_FS_FUEL_CTRL_CTR) 1 == and
+						(L:SW2_FS_FUEL_CTRL_CONF) 1 == and
+							if{						
+								9 (>K:FUEL_SELECTOR_SET)
+								9 (>K:FUEL_SELECTOR_2_SET)	
+								
+								(A:FUEL TANK EXTERNAL1 LEVEL, percent) 0 ==
+									if{
+										12 (>K:FUEL_SELECTOR_SET)
+										11 (>K:FUEL_SELECTOR_2_SET)
+								
+										(A:FUEL TANK LEFT TIP LEVEL, percent) 0 ==
+											if{
+												19 (>K:FUEL_SELECTOR_SET)
+											}
+										(A:FUEL TANK RIGHT TIP LEVEL, percent) 0 ==
+											if{
+												20 (>K:FUEL_SELECTOR_2_SET)
+											}									
+									}
+							}
+							
+						(L:SW2_FS_FUEL_CTRL_WING) 1 ==
+						(L:SW2_FS_FUEL_CTRL_CTR) 2 == and
+						(L:SW2_FS_FUEL_CTRL_CONF) 1 == and
+							if{					
+								2 (>K:FUEL_SELECTOR_SET)
+								3 (>K:FUEL_SELECTOR_2_SET)
+									
+								(A:FUEL TANK LEFT AUX LEVEL, percent) 0 ==
+								(A:FUEL TANK LEFT TIP LEVEL, percent) 0 == and
+									if{
+										19 (>K:FUEL_SELECTOR_SET)
+									}
+								
+								(A:FUEL TANK RIGHT AUX LEVEL, percent) 0 ==
+								(A:FUEL TANK RIGHT TIP LEVEL, percent) 0 == and
+									if{
+										20 (>K:FUEL_SELECTOR_2_SET)
+									}
+							}
+							
+						(L:SW2_FS_FUEL_CTRL_WING) 2 ==
+						(L:SW2_FS_FUEL_CTRL_CTR) 2 == and
+						(L:SW2_FS_FUEL_CTRL_CONF) 1 == and
+							if{					
+								12 (>K:FUEL_SELECTOR_SET)
+								13 (>K:FUEL_SELECTOR_2_SET)
+								
+								(A:FUEL TANK LEFT TIP LEVEL, percent) 0 ==
+								if{
+									19 (>K:FUEL_SELECTOR_SET)
+								}
+								
+								(A:FUEL TANK RIGHT TIP LEVEL, percent) 0 ==
+								if{
+									20 (>K:FUEL_SELECTOR_2_SET)
+								}
+							}
+	
+						(L:SW2_FS_FUEL_CTRL_WING) 1 ==
+						(L:SW2_FS_FUEL_CTRL_CTR) 2 == and
+						(L:SW2_FS_FUEL_CTRL_CONF) 2 == and
+							if{					
+								4 (>K:FUEL_SELECTOR_SET)
+								5 (>K:FUEL_SELECTOR_2_SET)
+								
+								(A:FUEL TANK LEFT AUX LEVEL, percent) 0 ==
+								if{
+									19 (>K:FUEL_SELECTOR_SET)
+								}
+								(A:FUEL TANK RIGHT AUX LEVEL, percent) 0 ==
+								if{
+									20 (>K:FUEL_SELECTOR_2_SET)
+								}
+							}
+	
+						(L:SW2_FS_FUEL_CTRL_WING) 2 ==
+						(L:SW2_FS_FUEL_CTRL_CTR) 1 == and
+						(L:SW2_FS_FUEL_CTRL_CONF) 2 == and
+							if{					
+								9 (>K:FUEL_SELECTOR_SET)
+								9 (>K:FUEL_SELECTOR_2_SET)
+								
+								(A:FUEL TANK EXTERNAL1 LEVEL, percent) 0 ==
+								if{
+									19 (>K:FUEL_SELECTOR_SET)
+									20 (>K:FUEL_SELECTOR_2_SET)
+								}
+							}
+						(L:SW2_FS_FUEL_CTRL_WING) 2 ==
+						(L:SW2_FS_FUEL_CTRL_CTR) 2 == and
+						(L:SW2_FS_FUEL_CTRL_CONF) 2 == and
+							if{					
+								0 (>K:FUEL_SELECTOR_SET)
+								0 (>K:FUEL_SELECTOR_2_SET)
+							}
+							
+						(A:FUEL TANK LEFT MAIN LEVEL, percent) 0 ==
+							if{
+								6 (>K:FUEL_SELECTOR_SET)
+							}
+						(A:FUEL TANK RIGHT MAIN LEVEL, percent) 0 ==
+							if{
+								6 (>K:FUEL_SELECTOR_2_SET)
+							}
+							
+						(A:FUEL TANK CENTER LEVEL, percent) 0 ==
+							if{
+								8 (>K:FUEL_SELECTOR_SET)
+								7 (>K:FUEL_SELECTOR_2_SET)
+							}
+							
+							(A:FUEL TANK CENTER3 LEVEL, percent) 0 ==
+							if{
+								1 (>K:FUEL_SELECTOR_SET)
+							}
+						(A:FUEL TANK CENTER2 LEVEL, percent) 0 ==
+							if{
+								1 (>K:FUEL_SELECTOR_2_SET)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="EXT_TX">
+				<Select>
+					<Value>
+						(L:SW1_FS_FUEL_EXT_TX) 1 ==
+							if{
+								(A:FUEL TANK LEFT TIP LEVEL, percent) 0 &gt;
+								(A:FUEL TANK RIGHT TIP LEVEL, percent) 0 &gt; or
+									if{
+										1 (>L:EXT_TX)
+									}
+							}
+						(L:SW1_FS_FUEL_EXT_TX) 0 ==
+							if{
+								(A:FUEL TANK LEFT AUX LEVEL, percent) 0 &gt;
+								(A:FUEL TANK RIGHT AUX LEVEL, percent) 0 &gt; or
+									if{
+										0 (>L:EXT_TX)
+									}
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="DUMP">
+				<Select>
+					<Value>
+					<!-- LCFT RCFT LEXT REXT LWING RWING LFEED RFEED TANK 1 CEXT -->
+						(L:SW1_FS_FUEL_DUMP) 1 ==
+						(A:FUEL DUMP SWITCH, bool) 0 == and
+							if{
+								(>K:FUEL_DUMP_TOGGLE)
+							}
+														
+						(L:FUEL_INTERNAL, enum) (L:SETTING BNGO) &lt;						
+						(A:FUEL DUMP SWITCH, bool) 1 == and
+							if{
+								0 (>L:SW1_FS_FUEL_DUMP)
+								(>K:FUEL_DUMP_TOGGLE)
+							}
+						
+						(L:SW2_FS_FUEL_EMERG_TX) 0 ==
+							if{}
+						(L:SW2_FS_FUEL_EMERG_TX) 2 ==
+							if{}
+			
+						(L:SW2_FS_FUEL_SLIP) 0 ==
+							if{}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="Emer TX">
+				<Select>
+					<Value>
+						(L:SW2_FS_FUEL_EMERG_TX) 0 ==
+							if{}
+						(L:SW2_FS_FUEL_EMERG_TX) 2 ==
+							if{}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="Slipway">
+				<Select>
+					<Value>
+						(L:SW2_FS_FUEL_SLIP) 0 ==
+							if{}
+					</Value>
+				</Select>
+			</Element>
+		</Element>		
 		<Element Name="Emergency Brake Controller">
     		<Select>
       			<Value>
