@@ -1,6 +1,10 @@
-<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="8.00">
+<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="8.20">
 
 <!--
+Version 8.20
+	[EDT] Fairing
+Version 8.10
+	[ADD] Fuel System
 Version 8.00
 	[ADD] AFCS,CAS
 Version 7.50
@@ -60,12 +64,11 @@ Version 5.0
 						6 (>L:KNOB_FS_TEWS_INT)
 
 					}
-				</Value>
+			</Value>
 		</Select>
 	</Element>
 
 	<Element Name="POWER">
-
 		<Element Name="FSX POWER">
 			<Element Name="MASTER BATTERY">
 				<Select>
@@ -203,49 +206,48 @@ Version 5.0
 			<Element Name="Emergency Generator">
 				<Select>
 					<Value>
-					(L:LGEN_AVAIL, enum) 0 ==
-					(L:RGEN_AVAIL, enum) 0 == and
-					(A:SIM ON GROUND, bool) 0 == and 
-					(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
-						if{
-							115 (>L:EMER_GEN_AC_VOLTAGE)
-							28 (>L:EMER_GEN_DC_VOLTAGE)
-						}
+						(L:LGEN_AVAIL, enum) 0 ==
+						(L:RGEN_AVAIL, enum) 0 == and
+						(A:SIM ON GROUND, bool) 0 == and
+						(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
+							if{
+								115 (>L:EMER_GEN_AC_VOLTAGE)
+								28 (>L:EMER_GEN_DC_VOLTAGE)
+							}
 
-					(L:LGEN_AVAIL, enum) 0 ==
-					(L:RGEN_AVAIL, enum) 0 == and
-					(A:SIM ON GROUND, bool) 1 == and
-					(A:APU PCT RPM, percent) 90 &gt; and
-					(L:SW2_FS_ENG_EMER_GEN, enum) 2 == and
-						if{
-							115 (>L:EMER_GEN_AC_VOLTAGE)
-							28 (>L:EMER_GEN_DC_VOLTAGE)
-						}
+						(L:LGEN_AVAIL, enum) 0 ==
+						(L:RGEN_AVAIL, enum) 0 == and
+						(A:SIM ON GROUND, bool) 1 == and
+						(A:APU PCT RPM, percent) 90 &gt; and
+						(L:SW2_FS_ENG_EMER_GEN, enum) 2 == and
+							if{
+								115 (>L:EMER_GEN_AC_VOLTAGE)
+								28 (>L:EMER_GEN_DC_VOLTAGE)
+							}
 
-					(L:LGEN_AVAIL, enum) 0 ==
-					(L:RGEN_AVAIL, enum) 0 == or
-					(L:L_BST_PUMP_ON) 0 == or
-					(L:R_BST_PUMP_ON) 0 == or
-					(A:SIM ON GROUND, bool) 0 == and 
-					(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
-						if{
-							28 (>L:EMER_ESS_DC_VOLTAGE)
-						}
-						els{
-							0 (>L:EMER_ESS_DC_VOLTAGE)
-						}	
-						
-					(L:LGEN_AVAIL, enum) 1 ==
-					(L:RGEN_AVAIL, enum) 1 == and
-					(L:SW2_FS_ENG_EMER_GEN, enum) 0 == or
-						if{
-							0 (>L:EMER_GEN_AC_VOLTAGE)
-							0 (>L:EMER_GEN_DC_VOLTAGE)
-						}
-					(L:EMER_GEN_AC_VOLTAGE) (>L:EMER_GEN_AC_BUS_VOLTAGE)
-					(L:EMER_GEN_DC_VOLTAGE) (>L:EMER_GEN_DC_BUS_VOLTAGE)
-					(L:EMER_ESS_DC_VOLTAGE) (>L:EMER_ESS_DC_BUS_VOLTAGE)
-					
+						(L:LGEN_AVAIL, enum) 0 ==
+						(L:RGEN_AVAIL, enum) 0 == or
+						(L:L_BST_PUMP_ON) 0 == or
+						(L:R_BST_PUMP_ON) 0 == or
+						(A:SIM ON GROUND, bool) 0 == and
+						(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
+							if{
+								28 (>L:EMER_ESS_DC_VOLTAGE)
+							}
+							els{
+								0 (>L:EMER_ESS_DC_VOLTAGE)
+							}
+
+						(L:LGEN_AVAIL, enum) 1 ==
+						(L:RGEN_AVAIL, enum) 1 == and
+						(L:SW2_FS_ENG_EMER_GEN, enum) 0 == or
+							if{
+								0 (>L:EMER_GEN_AC_VOLTAGE)
+								0 (>L:EMER_GEN_DC_VOLTAGE)
+							}
+						(L:EMER_GEN_AC_VOLTAGE) (>L:EMER_GEN_AC_BUS_VOLTAGE)
+						(L:EMER_GEN_DC_VOLTAGE) (>L:EMER_GEN_DC_BUS_VOLTAGE)
+						(L:EMER_ESS_DC_VOLTAGE) (>L:EMER_ESS_DC_BUS_VOLTAGE)
 					</Value>
 				</Select>
 			</Element>
@@ -253,19 +255,17 @@ Version 5.0
 			<Element Name="Emergency Generator Available">
 				<Select>
 					<Value>
-					(L:EMER_GEN_AC_VOLTAGE) 115 ==
-						if{ 1 (>L:EMER_GEN_AC_AVAIL) }
-						els{ 0 (>L:EMER_GEN_AC_AVAIL) }
+						(L:EMER_GEN_AC_VOLTAGE) 115 ==
+							if{ 1 (>L:EMER_GEN_AC_AVAIL) }
+							els{ 0 (>L:EMER_GEN_AC_AVAIL) }
 
-					(L:EMER_GEN_DC_VOLTAGE) 28 ==
-						if{ 1 (>L:EMER_GEN_DC_AVAIL) }
-						els{ 0 (>L:EMER_GEN_DC_AVAIL) }
+						(L:EMER_GEN_DC_VOLTAGE) 28 ==
+							if{ 1 (>L:EMER_GEN_DC_AVAIL) }
+							els{ 0 (>L:EMER_GEN_DC_AVAIL) }
 
-					(L:EMER_ESS_DC_VOLTAGE) 28 ==
-						if{ 1 (>L:EMER_ESS_DC_AVAIL) }
-						els{ 0 (>L:EMER_ESS_DC_AVAIL) }
-
-
+						(L:EMER_ESS_DC_VOLTAGE) 28 ==
+							if{ 1 (>L:EMER_ESS_DC_AVAIL) }
+							els{ 0 (>L:EMER_ESS_DC_AVAIL) }
 					</Value>
 				</Select>
 			</Element>
@@ -329,11 +329,11 @@ Version 5.0
 							(L:LEFT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:LEFT_XFMR_VOLTAGE)
 							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:RIGHT_XFMR_VOLTAGE)
 
-
 							(L:EMER_GEN_DC_AVAIL) 0 ==
 								if{
 									(L:LEFT_XFMR_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
 								}
+
 							(L:EMER_GEN_DC_AVAIL) 0 &gt;
 								if{
 									(L:EMER_GEN_DC_BUS_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
@@ -344,8 +344,6 @@ Version 5.0
 								if{
 									(L:EXTARNAL_AC_VOLTS) (>L:LEFT_XFMR_LINE_VOLTAGE)
 								}
-
-
 
 							(L:RIGHT_XFMR_VOLTAGE) (>L:RIGHT_XFMR_LINE_VOLTAGE)
 
@@ -371,7 +369,6 @@ Version 5.0
 
 							(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:LEFT_AC_BUS_VOLTAGE)
 							(L:RIGHT_AC_BUS_LINE_VOLTAGE) (>L:RIGHT_AC_BUS_VOLTAGE)
-
 
 							(L:ESS_AC_BUS_VOLTAGE) (>L:ENG_INST_AC_BUS_VOLTAGE)
 							(L:ESS_AC_BUS_VOLTAGE) (>L:AUTO_XMFR_VOLTAGE)
@@ -425,7 +422,6 @@ Version 5.0
 									(L:EMER_ESS_DC_BUS_VOLTAGE) (>L:JFS_ESS_DC_BUS_VOLTAGE)
 									(L:EMER_ESS_DC_BUS_VOLTAGE) (>L:FIRE_EXT_BUS_VOLTAGE)
 								}
-
 						</Value>
 					</Select>
 				</Element>
@@ -1023,7 +1019,6 @@ Version 5.0
 						</Value>
 					</Select>
 				</Element>
-
 				<Element Name="RIGHT BOOST PUMP">
 					<Select>
 						<Value>
@@ -1194,7 +1189,6 @@ Version 5.0
 						</Value>
 					</Select>
 				</Element>
-
 			</Element>
 		</Element>
 		<Element Name="EXTERNAL POWER">
@@ -1419,7 +1413,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:GND_CC_PWR, enum) 1 ==
-						(L:LEFT_AC_BUS_AVAIL) 1 == and
+						(L:ADC_PWR) 1 == and
 						if{ 1 (>L:CC_PWR, enum) }
 						els{ 0 (>L:CC_PWR, enum) }
 
@@ -1449,7 +1443,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:GNd_SPEED_BRAKE_PWR, enum) 1 ==
-						(L:ESS_DC_BUS_AVAIL) 1 == and
+						(L:SPD_BRK_PWR) 1 == and
 							if{}
 					</Value>
 				</Select>
@@ -1490,7 +1484,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:GND_CSBPC_PWR, enum) 1 ==
-						(L:RIGHT_DC_BUS_AVAIL) 1 == and
+						(L:CSBPC_HYD_BYPASS_PWR) 1 == and
 							if{}
 					</Value>
 				</Select>
@@ -1587,8 +1581,6 @@ Version 5.0
 							if{
 								(A:AIRSPEED BARBER POLE, knots) (>L:GAU_AIRSPEED_INDEX)
 							}
-
-
 						}
 					els{
 						0 (>L:GAU_AIRSPEED_C)
@@ -1687,7 +1679,6 @@ Version 5.0
 									-91 (>L:GAU_ATT_STR_BANK)
 									30 (>L:GAU_ATT_STR_PITCH)
 								}
-
 						}
 						els{
 							60 (>L:GAU_ATT_PITCH)
@@ -1726,7 +1717,6 @@ Version 5.0
 					(A:ATTITUDE BARS POSITION, degrees) 38 &gt;
 					(A:ATTITUDE BARS POSITION, degrees) 57 &lt; and
 						if{ 6 (>L:ADI_BAR_POS) }
-
 
 					(L:STBY_ATTD_PWR, enum) 1 ==
 						if{
@@ -2152,9 +2142,8 @@ Version 5.0
 		</Element>
 	</Element>
 
-
 	<Element Name="LIGHT">
-		<Element Name="LIGHT FLICKER">
+		<Element Name="WARN CAUT LTS">
 			<Select>
 				<Value>
 					(L:WRN_ADV_CAUT_LTS_PWR) 1 ==
@@ -2167,11 +2156,10 @@ Version 5.0
 
 					(L:WARN_CAUT_LTS) 1 ==
 						els{ (L:AUTO_XMFR_VOLTAGE) 28 * 115 / (>L:LTS_BUS_VOLTAGE) }
-
 				</Value>
 			</Select>
 		</Element>
-		<Element Name="LT INIT">
+		<Element Name="LT INIT TEST">
 			<Element>
 				<Select>
 					<Value>
@@ -2265,8 +2253,8 @@ Version 5.0
 							(L:RWR_AC_PWR) 1 ==
 							(L:RDR_TGT_DIS) 10 &lt; and
 							(L:TGT_ALTITUDE) 1000 &lt; and
-								if{ 1 (>L:SAM, enum)  }
-								els{ 0 (>L:SAM, enum) }
+								if{ 1 (>L:SAM_WARN)  }
+								els{ 0 (>L:SAM_WARN) }
 						</Value>
 					</Select>
 				</Element>
@@ -2278,7 +2266,7 @@ Version 5.0
 							(L:SW2_FS_EW_ICS, enum) 0 != and
 							(L:SW1_FS_TEWS_ICS) 1 == and
 							(L:SW1_FS_TEWS_EWWS_PWR) 1 == and
-							(L:SAM, enum) 1 == and
+							(L:SAM_WARN) 1 == and
 							(L:LIGHT_FLICKER, enum) 1 == and
 							(L:FS_LIGHT_TEST, enum)	1 == or
 								if{ 1 (>L:LT_FS_SAM_WARN, enum)  }
@@ -2359,7 +2347,7 @@ Version 5.0
 			</Element>
 
 			<Element Name="MASTER CAUTION ENGINE">
-				<Element>
+				<Element Name="Button">
 					<Select>
 						<Value>
 							(L:BTN_FS_MASTER_CAUTION_EXEC, enum) 1 ==
@@ -2378,8 +2366,7 @@ Version 5.0
 						</Value>
 					</Select>
 				</Element>
-
-				<Element>
+				<Element Name="Base">
 					<Select>
 						<Value>
 							(L:LT_FS_ANTI_SKID, enum) 1 ==
@@ -2422,7 +2409,7 @@ Version 5.0
 						</Value>
 					</Select>
 				</Element>
-				<Element>
+				<Element Name="LT">
 					<Select>
 						<Value>
 							(L:LIGHT_FLICKER, enum) 1 ==
@@ -2460,6 +2447,8 @@ Version 5.0
 							<Value>
 								(L:LIGHT_FLICKER, enum) 1 ==
 								(L:AMAD_FIRE, bool) 1 == and
+								(L:SW2_FS_FIRE_DISCHARGE, enum) 2 == and
+								(L:FS_LIGHT_TEST, enum)	1 == or
 									if{ 1 (>L:LT_FS_AMAD_FIRE, enum)  }
 							</Value>
 						</Select>
@@ -2469,12 +2458,10 @@ Version 5.0
 							<Value>
 								(L:LIGHT_FLICKER, enum) 1 ==
 								(L:SW2_FS_FIRE_DISCHARGE, enum) 2 == and
-								(L:FS_LIGHT_TEST, enum)	1 == or
 									if{ 1 (>L:LT_FS_AMAD_FIRE, enum)  }
 							</Value>
 						</Select>
 					</Element>
-
 					<Element>
 						<Select>
 							<Value>
@@ -2483,12 +2470,6 @@ Version 5.0
 								(L:AMAD_FIRE, enum) 0 == and
 								(L:FS_LIGHT_TEST, enum)	0 == and
 									if{ 0 (>L:LT_FS_AMAD_FIRE, enum)  }
-							</Value>
-						</Select>
-					</Element>
-					<Element>
-						<Select>
-							<Value>
 							</Value>
 						</Select>
 					</Element>
@@ -3059,7 +3040,6 @@ Version 5.0
 			</Element>
 		</Element>
 		<Element Name="Annucator Panel">
-
 			<Element Name="SPEED BRAKE">
 				<Select>
 					<Value>
@@ -3225,7 +3205,6 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-
 
 			<Element Name="ENG FUEL INLET HOT">
 				<Select>
@@ -3553,6 +3532,11 @@ Version 5.0
 									(>K:TOGGLE_TAXI_LIGHTS)
 								}
 							}
+
+						(A:GEAR CENTER POSITION, percent) 100 !=
+							if{
+								0 (>L:LIGHT_TAXI,bool)
+							}
 					</Value>
 				</Select>
 			</Element> -->
@@ -3653,7 +3637,6 @@ Version 5.0
 				</Select>
 			</Element>
 		</Element>
-
 		<Element Name="BEACON LIGHTS">
 			<Select>
 				<Value>
@@ -3716,7 +3699,7 @@ Version 5.0
 			</Element>
 		</Element>
 		<Element Name="RED GEAR LIGHTS">
-			<Element>
+			<Element Name="NGEAR">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3727,7 +3710,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element>
+			<Element Name="RGEAR">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3738,7 +3721,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element>
+			<Element Name="NGEAR">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
@@ -3761,7 +3744,6 @@ Version 5.0
 					(L:FS_LIGHT_TEST, enum)	1 == or
 						if{ 1 (>L:LT_FS_FLAP_MID, enum) }
 						els{ 0 (>L:LT_FS_FLAP_MID, enum) }
-
 
 					(L:GND_FLAPS_GAUGE_PWR, enum)
 					(L:LIGHT_FLICKER, enum) 1 == and
@@ -3944,7 +3926,6 @@ Version 5.0
 		</Element>
 	</Element>
 
-
 	<Element Name="INLET CONTROLER">
  		<Select>
    			<Value>
@@ -4008,7 +3989,6 @@ Version 5.0
 						}
 					}
 
-
 					(A:SIM ON GROUND, bool) 1 ==
 					(A:AIRSPEED INDICATED, knots) 5 &lt; and
 					(A:BRAKE PARKING INDICATOR, bool) 0 == and
@@ -4017,13 +3997,11 @@ Version 5.0
 							(P:LOCAL TIME, seconds) (>L:ANTI_SKID_TIME, seconds)
 						}
 
-
 					(A:BRAKE PARKING INDICATOR, bool) 0 ==
 					(P:LOCAL TIME, seconds) (L:ANTI_SKID_TIME, seconds) - 20 &gt; and
 						if{
 							1 (>L:ANTI_SKID_DISABLE)
 						}
-
 
 					(A:SIM ON GROUND, bool) 0 ==
 					(A:AIRSPEED INDICATED, knots) 5 &gt; or
@@ -4197,7 +4175,6 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-
 	</Element>
 	<Element Name="AFCS CONTROLER">
 		<Element Name="CAS RDY">
@@ -4324,13 +4301,12 @@ Version 5.0
 							(>K:AP_ALT_HOLD_ON)
 							(A:INDICATED ALTITUDE,feet) (>K:AP_ALT_VAR_SET_ENGLISH)
 						}
-				
-						
+
 					(L:CAS_ALT_HOLD_RDY, enum) 0 ==
 						if{
 							(>K:AP_ALT_HOLD_OFF)
 						}
-						
+
 					(L:CAS_ATT_HOLD_RDY, enum) 1 == or
 						if{
 							(>K:AP_ATT_HOLD_OFF)
@@ -4398,7 +4374,6 @@ Version 5.0
 			</Select>
 		</Element>
 
-
 		<Element Name="ROLL RATIO CONTROLER">
 			<Select>
 				<Value>
@@ -4425,7 +4400,6 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-
 	</Element>
 
 	<Element Name="Communications">
@@ -4610,14 +4584,10 @@ Version 5.0
 						if{
 							0x00FF00 (>L:R2_INT_COL)
 						}
-
 				</Value>
 			</Select>
 		</Element>
-
-
 	</Element>
-
 
 	<Element Name="EEC CONTROLER">
  		<Select>
@@ -4760,7 +4730,6 @@ Version 5.0
 						els{
 							0 (>L:SUPPLY_ON)
 							}
-
 				</Value>
 			</Select>
 		</Element>
@@ -4822,34 +4791,32 @@ Version 5.0
 		<Element Name="ARMT SYS">
 			<Select>
 				<Value>
-						0 (>L:RDR_TRK_MEM_ENABLE)
-						0 (>L:RDR_JAM_ENABLE)
-						1 (>L:RDR_JAM_CODES)
-						0 (>L:RDR_HOLD_ALT_ENABLE)
+					0 (>L:RDR_TRK_MEM_ENABLE)
+					0 (>L:RDR_JAM_ENABLE)
+					1 (>L:RDR_JAM_CODES)
+					0 (>L:RDR_HOLD_ALT_ENABLE)
 
-						(L:RDR_XMTR_LVPS_PWR) 1 ==
+					(L:RDR_XMTR_LVPS_PWR) 1 ==
+						if{
+							(L:TO_ALT_DIFF) -100 &lt;
+								if{ 0 (>L:RDR_HOLD_ALT_ENABLE) }
+
+							(L:TO_ALT_DIFF) 100 &gt;
+								if{ 0 (>L:RDR_HOLD_ALT_ENABLE) }
+
+							(L:TO_ALT_DIFF) -100 &gt;
+							(L:TO_ALT_DIFF) 100 &lt; and
+								if{ 1 (>L:RDR_HOLD_ALT_ENABLE) }
+
+							(L:LAAJ, nmiles) (A:GROUND VELOCITY, knots) / 3600 * (>L:MRM_TTG)
+						}
+
+						(L:MASTER_ARM, Bool)
+						(L:HUD_MASTER_MODE, Enum) 2 == and
 							if{
-								(L:TO_ALT_DIFF) -100 &lt;
-									if{ 0 (>L:RDR_HOLD_ALT_ENABLE) }
-
-								(L:TO_ALT_DIFF) 100 &gt;
-									if{ 0 (>L:RDR_HOLD_ALT_ENABLE) }
-
-								(L:TO_ALT_DIFF) -100 &gt;
-								(L:TO_ALT_DIFF) 100 &lt; and
-									if{ 1 (>L:RDR_HOLD_ALT_ENABLE) }
-
-								(L:LAAJ, nmiles) (A:GROUND VELOCITY, knots) / 3600 * (>L:MRM_TTG)
+								0 (>L:SW1_RS_CMD_FLARE_JETT,enum)
+								3 (>L:KNOB_RS_CMD_MODE,enum)
 							}
-
-							(L:MASTER_ARM, Bool)
-							(L:HUD_MASTER_MODE, Enum) 2 == and
-								if{
-									0 (>L:SW1_RS_CMD_FLARE_JETT,enum)
-									3 (>L:KNOB_RS_CMD_MODE,enum)
-								}
-
-
 				</Value>
 			</Select>
 		</Element>
@@ -4857,17 +4824,21 @@ Version 5.0
 		<Element Name="Gun Rate">
 			<Select>
 				<Value>
-				(L:Rate Switch, enum)
-				if{ 4000 (>L:GUN_RATE) } els{ 6000 (>L:GUN_RATE) }
-				(L:GUN_PWR) 1 ==
+					(L:Rate Switch, enum)
 					if{
-						(L:GUN_run) 2 ==
-						(L:AO_GUN_AMMO_COUNT, Number) 0 != and
-							if{
-								(L:AO_GUN_AMMO_COUNT, Number) (L:GUN_RATE) 1000 / - (>L:AO_GUN_AMMO_COUNT, Number)
-							}
+						4000 (>L:GUN_RATE)
 					}
-
+					els{
+						6000 (>L:GUN_RATE)
+					}
+					(L:GUN_PWR) 1 ==
+						if{
+							(L:GUN_run) 2 ==
+							(L:AO_GUN_AMMO_COUNT, Number) 0 != and
+								if{
+									(L:AO_GUN_AMMO_COUNT, Number) (L:GUN_RATE) 1000 / - (>L:AO_GUN_AMMO_COUNT, Number)
+								}
+						}
 				</Value>
 			</Select>
 		</Element>
@@ -4882,22 +4853,20 @@ Version 5.0
 					4 AIM-120C
 				A/G Type
 					5 Fuel
-					6 EO
-					7 IR
-					8 MK-82
+					6 EO		(MK-84 Electro-Optical Guided Bomb)
+					7 IR		(MK-84 Infrared Guided Bomb)
+					8 MK-82		(MK-82 LDGP)
 					9 MK-82 R
-					10 MK-84
-					11 MK-84 L
+					10 MK-84	(MK-82 LDGP)
+					11 MK-84 L	(MK-84 Laser Guided Bomb GBU-10)
 					12 CBU-58
 					13 CBU-42
 					14 CBU-52
 					15 CBU-71
-					16 MK-20
+					16 MK-20	(Rockeye Cluster Bomb Unit)
 					17 SUU-20
-					18 BLU-27F
-					19 BLU-27U
-
--->
+					18 BLU-27F	(BLU-27 Finnrd Fire Bomb)
+					19 BLU-27U	(BLU-27 Finnrd Fire Bomb)-->
 				(A:BRAKE PARKING INDICATOR, bool) 1 ==
 				(A:SIM ON GROUND, enum) 1 == and
 					if{
@@ -5058,9 +5027,8 @@ Version 5.0
 	</Element>
 
 	<Element Name="ARAMENTS CONTROL PANEL">
-
 		<Element Name="A/G">
-			<Element>
+			<Element Name="STA-2">
 				<Select>
 					<Value>
 						(L:BTN_FS_ARAM_STR_SEL_1_EXEC) 1 ==
@@ -5074,7 +5042,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element>
+			<Element Name="STA-5">
 				<Select>
 					<Value>
 						(L:BTN_FS_ARAM_STR_SEL_2_EXEC) 1 ==
@@ -5088,7 +5056,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element>
+			<Element Name="STA-8">
 				<Select>
 					<Value>
 						(L:BTN_FS_ARAM_STR_SEL_3_EXEC) 1 ==
@@ -5103,7 +5071,6 @@ Version 5.0
 				</Select>
 			</Element>
 		</Element>
-
 		<Element Name="INTERVAL">
 			<Select>
 				<Value>
@@ -5112,7 +5079,6 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-
 		<Element Name="QUANTITY">
 			<Select>
 				<Value>
@@ -5121,72 +5087,67 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-
 		<Element Name="MON/OPT BTNS">
-
-			<Element>
-				<Select>
-					<Value>
-						(L:BTN_FS_ARAM_MON_1_EXEC) 1 ==
-							if{
-								0 (>L:BTN_FS_ARAM_MON_1_EXEC)
-								(>K:VOR1_OBI_INC)
-							}
-						(L:BTN_FS_ARAM_MON_2_EXEC) 1 ==
-							if{
-								0 (>L:BTN_FS_ARAM_MON_2_EXEC)
-								(>K:HEADING_BUG_INC)
-							}
-						(L:BTN_FS_ARAM_MON_3_EXEC) 1 ==
-							if{
-								0 (>L:BTN_FS_ARAM_MON_3_EXEC)
-								(>K:AP_ALT_VAR_INC)
-							}
-						(L:BTN_FS_ARAM_MON_4_EXEC) 1 ==
-							if{
-								0 (>L:BTN_FS_ARAM_MON_4_EXEC)
-								(>K:AP_SPD_VAR_DEC)
-							}
-						(L:BTN_FS_ARAM_OPT_1_EXEC) 1 ==
-							if{
-								0 (>L:BTN_FS_ARAM_OPT_1_EXEC)
-								(>K:VOR1_OBI_DEC)
-							}
-						(L:BTN_FS_ARAM_OPT_2_EXEC) 1 ==
-							if{
-								0 (>L:BTN_FS_ARAM_OPT_2_EXEC)
-								(>K:HEADING_BUG_DEC)
-							}
-						(L:BTN_FS_ARAM_OPT_3_EXEC) 1 ==
-							if{
-								0 (>L:BTN_FS_ARAM_OPT_3_EXEC)
-								(>K:AP_ALT_VAR_DEC)
-							}
-						(L:BTN_FS_ARAM_OPT_4_EXEC) 1 ==
-							if{
-								0 (>L:BTN_FS_ARAM_OPT_4_EXEC)
-								(>K:AP_SPD_VAR_DEC)
-							}
-						(L:BTN_FS_ARAM_OPT_5_EXEC) 1 ==
-							if{
-								0 (>L:BTN_FS_ARAM_OPT_5_EXEC)
-								(A:AUTOPILOT MASTER, enum) 0 ==
-									if{
-										2 (>L:SW2_FS_CAS_PITCH, enum)
-										2 (>L:SW2_FS_CAS_ROLL, enum)
-										2 (>L:SW2_FS_CAS_YAW, enum)
-									}
-									els{
-										1 (>L:SW2_FS_CAS_PITCH, enum)
-										1 (>L:SW2_FS_CAS_ROLL, enum)
-										1 (>L:SW2_FS_CAS_YAW, enum)
-									}
-							}
-					</Value>
-				</Select>
-			</Element>
+			<Select>
+				<Value>
+					(L:BTN_FS_ARAM_MON_1_EXEC) 1 ==
+						if{
+							0 (>L:BTN_FS_ARAM_MON_1_EXEC)
+							(>K:VOR1_OBI_INC)
+						}
+					(L:BTN_FS_ARAM_MON_2_EXEC) 1 ==
+						if{
+							0 (>L:BTN_FS_ARAM_MON_2_EXEC)
+							(>K:HEADING_BUG_INC)
+						}
+					(L:BTN_FS_ARAM_MON_3_EXEC) 1 ==
+						if{
+							0 (>L:BTN_FS_ARAM_MON_3_EXEC)
+							(>K:AP_ALT_VAR_INC)
+						}
+					(L:BTN_FS_ARAM_MON_4_EXEC) 1 ==
+						if{
+							0 (>L:BTN_FS_ARAM_MON_4_EXEC)
+							(>K:AP_SPD_VAR_DEC)
+						}
+					(L:BTN_FS_ARAM_OPT_1_EXEC) 1 ==
+						if{
+							0 (>L:BTN_FS_ARAM_OPT_1_EXEC)
+							(>K:VOR1_OBI_DEC)
+						}
+					(L:BTN_FS_ARAM_OPT_2_EXEC) 1 ==
+						if{
+							0 (>L:BTN_FS_ARAM_OPT_2_EXEC)
+							(>K:HEADING_BUG_DEC)
+						}
+					(L:BTN_FS_ARAM_OPT_3_EXEC) 1 ==
+						if{
+							0 (>L:BTN_FS_ARAM_OPT_3_EXEC)
+							(>K:AP_ALT_VAR_DEC)
+						}
+					(L:BTN_FS_ARAM_OPT_4_EXEC) 1 ==
+						if{
+							0 (>L:BTN_FS_ARAM_OPT_4_EXEC)
+							(>K:AP_SPD_VAR_DEC)
+						}
+					(L:BTN_FS_ARAM_OPT_5_EXEC) 1 ==
+						if{
+							0 (>L:BTN_FS_ARAM_OPT_5_EXEC)
+							(A:AUTOPILOT MASTER, enum) 0 ==
+								if{
+									2 (>L:SW2_FS_CAS_PITCH, enum)
+									2 (>L:SW2_FS_CAS_ROLL, enum)
+									2 (>L:SW2_FS_CAS_YAW, enum)
+								}
+								els{
+									1 (>L:SW2_FS_CAS_PITCH, enum)
+									1 (>L:SW2_FS_CAS_ROLL, enum)
+									1 (>L:SW2_FS_CAS_YAW, enum)
+								}
+						}
+				</Value>
+			</Select>
 		</Element>
-
 	</Element>
 
 	<Element Name="HUD">
@@ -5295,33 +5256,30 @@ Version 5.0
 			<Element Name="SRM">
 				<Select>
 					<Value>
-							(L:Point_X_ref_HUD, degrees) -2 &gt;
-							(L:Point_X_ref_HUD, degrees) 2 &lt; and
-							(L:Point_Y_ref_HUD, degrees) -2 &gt;
-							(L:Point_Y_ref_HUD, degrees) 2 &lt; and
-								if{
-									1 (>L:SRM_ASE_IN)
-								}
-								els{
-									0 (>L:SRM_ASE_IN)
-								}
-
-
-
-							(L:LAAJ, nmiles) (L:RDR_RMIN) &gt;
-							(L:LAAJ, nmiles) (L:RDR_RMAX_1) &lt; and
-							(L:SRM_ASE_IN) 1 == and
-								if{
-									1 (>L:SRM_SHOT)
-								}
+						(L:Point_X_ref_HUD, degrees) -2 &gt;
+						(L:Point_X_ref_HUD, degrees) 2 &lt; and
+						(L:Point_Y_ref_HUD, degrees) -2 &gt;
+						(L:Point_Y_ref_HUD, degrees) 2 &lt; and
+							if{
+								1 (>L:SRM_ASE_IN)
+							}
+							els{
+								0 (>L:SRM_ASE_IN)
 							}
 
-							(L:LAAJ, nmiles) (L:RDR_RMIN) &lt;
-							(L:LAAJ, nmiles) (L:RDR_RMAX_1) &gt; or
-							(L:SRM_ASE_IN) 0 == or
-								if{
-									0 (>L:SRM_SHOT)
-								}
+						(L:LAAJ, nmiles) (L:RDR_RMIN) &gt;
+						(L:LAAJ, nmiles) (L:RDR_RMAX_1) &lt; and
+						(L:SRM_ASE_IN) 1 == and
+							if{
+								1 (>L:SRM_SHOT)
+							}
+
+						(L:LAAJ, nmiles) (L:RDR_RMIN) &lt;
+						(L:LAAJ, nmiles) (L:RDR_RMAX_1) &gt; or
+						(L:SRM_ASE_IN) 0 == or
+							if{
+								0 (>L:SRM_SHOT)
+							}
 					</Value>
 				</Select>
 			</Element>
@@ -5384,42 +5342,41 @@ Version 5.0
 			<Element Name="Brightness">
 				<Select>
 					<Value>
-
-					(L:SW1_FS_HUD_BRT) 0 ==
-						if{
-						(L:KNOB_FS_HUD_SYM_BRT) 0 ==
+						(L:SW1_FS_HUD_BRT) 0 ==
 							if{
-								0x000000 (>L:HUD_COLOR_SYM)
+							(L:KNOB_FS_HUD_SYM_BRT) 0 ==
+								if{
+									0x000000 (>L:HUD_COLOR_SYM)
+								}
+							(L:KNOB_FS_HUD_SYM_BRT) 1 ==
+								if{
+									0x002A00 (>L:HUD_COLOR_SYM)
+								}
+							(L:KNOB_FS_HUD_SYM_BRT) 2 ==
+								if{
+									0x005400 (>L:HUD_COLOR_SYM)
+								}
+							(L:KNOB_FS_HUD_SYM_BRT) 3 ==
+								if{
+									0x007E00 (>L:HUD_COLOR_SYM)
+								}
+							(L:KNOB_FS_HUD_SYM_BRT) 4 ==
+								if{
+									0x00A800 (>L:HUD_COLOR_SYM)
+								}
+							(L:KNOB_FS_HUD_SYM_BRT) 5 ==
+								if{
+									0x00D200 (>L:HUD_COLOR_SYM)
+								}
+							(L:KNOB_FS_HUD_SYM_BRT) 6 ==
+								if{
+									0x00FD00 (>L:HUD_COLOR_SYM)
+								}
 							}
-						(L:KNOB_FS_HUD_SYM_BRT) 1 ==
+						(L:SW1_FS_HUD_BRT) 1 ==
 							if{
-								0x002A00 (>L:HUD_COLOR_SYM)
-							}
-						(L:KNOB_FS_HUD_SYM_BRT) 2 ==
-							if{
-								0x005400 (>L:HUD_COLOR_SYM)
-							}
-						(L:KNOB_FS_HUD_SYM_BRT) 3 ==
-							if{
-								0x007E00 (>L:HUD_COLOR_SYM)
-							}
-						(L:KNOB_FS_HUD_SYM_BRT) 4 ==
-							if{
-								0x00A800 (>L:HUD_COLOR_SYM)
-							}
-						(L:KNOB_FS_HUD_SYM_BRT) 5 ==
-							if{
-								0x00D200 (>L:HUD_COLOR_SYM)
-							}
-						(L:KNOB_FS_HUD_SYM_BRT) 6 ==
-							if{
-								0x00FD00 (>L:HUD_COLOR_SYM)
-							}
-						}
-					(L:SW1_FS_HUD_BRT) 1 ==
-						if{
-								0x00FD00 (>L:HUD_COLOR_SYM)
-							}
+									0x00FD00 (>L:HUD_COLOR_SYM)
+								}
 					</Value>
 				</Select>
 			</Element>
@@ -5557,35 +5514,33 @@ Version 5.0
 		</Element>
 		<Element Name="Systems">
 			<Element Name="Brightness">
-					<Select>
-						<Value>
-						<!--
-						GREEN(00FF00)
-						AMBER(407AAA)
-						CYAN(ff9900)
-						WHITE(FFFFFF) -->
-							(L:KNOB_FS_MPCD_PWR) 1 ==
-								if{
-									0x007E00 (>L:MPCD_COLOR)
-									0x003F00 (>L:MPCD_COLOR_DARK)
-								}
+				<Select>
+					<Value>
+					<!--
+					GREEN(00FF00)
+					AMBER(407AAA)
+					CYAN(ff9900)
+					WHITE(FFFFFF) -->
+						(L:KNOB_FS_MPCD_PWR) 1 ==
+							if{
+								0x007E00 (>L:MPCD_COLOR)
+								0x003F00 (>L:MPCD_COLOR_DARK)
+							}
 
-							(L:KNOB_FS_MPCD_PWR) 2 ==
-								if{
-									0x00FE00 (>L:MPCD_COLOR)
-									0x007E00 (>L:MPCD_COLOR_DARK)
-								}
-						</Value>
-					</Select>
-				</Element>
-
+						(L:KNOB_FS_MPCD_PWR) 2 ==
+							if{
+								0x00FE00 (>L:MPCD_COLOR)
+								0x007E00 (>L:MPCD_COLOR_DARK)
+							}
+					</Value>
+				</Select>
+			</Element>
 			<Element Name="DTM">
 				<Select>
 					<Value>
-							(L:MPCD_DTM_SAM) 1 ==
+						(L:MPCD_DTM_SAM) 1 ==
 							if{ 6 (>L:MPCD_DTM_TRK) }
 							els{ 4 (>L:MPCD_DTM_TRK) }
-
 					</Value>
 				</Select>
 			</Element>
@@ -5702,7 +5657,6 @@ Version 5.0
 
 							(C:ITrafficInfo:S:Vertical speed,feet per minute) 100 / (>L:TGT_VSI)
 
-
 							(C:ITrafficInfo:S:TURB ENG1 N2, percent) (>L:TGT_LENG_RPM)
 							(C:ITrafficInfo:S:TURB ENG2 N2, percent) (>L:TGT_RENG_RPM)
 
@@ -5735,9 +5689,7 @@ Version 5.0
 							(C:ITrafficInfo:S:FUEL TANK RIGHT TIP QUANTITY, gallons)
 							(C:ITrafficInfo:S:FUEL TANK EXTARNAL1 QUANTITY, gallons)
 							(C:ITrafficInfo:S:FUEL TANK EXTARNAL2 QUANTITY, gallons)
-
 							(C:ITrafficInfo:S:FUEL WEIGHT PER GALLON, pounds)
-
 
 							(C:ITrafficInfo:S:PRESSURIZATION CABIN ALTITUDE, feet) (>L:TGT_CABINALT)
 
@@ -5755,12 +5707,12 @@ Version 5.0
 			<Element Name="MODEs">
 				<Select>
 					<Value>
-					(L:RDR_INIT) 0 ==
-						if{
-							1 (>L:RDR_INIT)
-							2 (>L:RDR_BAND)
-							3 (>L:RDR_CHAN)
-						}
+						(L:RDR_INIT) 0 ==
+							if{
+								1 (>L:RDR_INIT)
+								2 (>L:RDR_BAND)
+								3 (>L:RDR_CHAN)
+							}
 
 						(L:SW1_FS_RDR_MODE_CONTR) 0 ==
 							if{
@@ -5873,64 +5825,62 @@ Version 5.0
 						(L:VSD_RNG, enum) 4 ==
 							if{ 160 (>L:VSD_RANGEFactor, number) }
 
-
-					(L:VSD_RANGEFactor, number) (>L:RADAR_SCALE, nmiles)
+						(L:VSD_RANGEFactor, number) (>L:RADAR_SCALE, nmiles)
 					</Value>
 				</Select>
 			</Element>
 			<Element Name="Scan">
 				<Select>
 					<Value>
-					(L:RDR_CONT_LVPS_AC_PWR) 1 ==
-					if{
-						(L:SW1_FS_RDR_MODE_CONTR) 0 ==
+						(L:RDR_CONT_LVPS_AC_PWR) 1 ==
+						if{
+							(L:SW1_FS_RDR_MODE_CONTR) 0 ==
+								if{
+									(L:KNOB_FS_RDR_EL_SCAN) (>L:VSD_EL_SCAN)
+									(L:KNOB_FS_RDR_AZ_SCAN)	(>L:VSD_AZ_SCAN)
+								}
+								els{
+									(L:AAM_SEL, Enum) 0 ==
+										if{
+											4 (>L:VSD_EL_SCAN)
+											2 (>L:VSD_AZ_SCAN)
+										}
+									(L:AAM_SEL, Enum) 1 ==
+										if{
+											3 (>L:VSD_EL_SCAN)
+											1 (>L:VSD_AZ_SCAN)
+										}
+									(L:AAM_SEL, Enum) 2 ==
+										if{
+											3 (>L:VSD_EL_SCAN)
+											1 (>L:VSD_AZ_SCAN)
+										}
+								}
+						(L:VSD_MODE) 1 ==
 							if{
-								(L:KNOB_FS_RDR_EL_SCAN) (>L:VSD_EL_SCAN)
-								(L:KNOB_FS_RDR_AZ_SCAN)	(>L:VSD_AZ_SCAN)
+								(A:PLANE PITCH DEGREES, Degrees) /-/ (>L:VSD_EL_SCAN)
+								(A:PLANE BANK DEGREES, Degrees) /-/ (>L:VSD_AZ_SCAN)
 							}
-							els{
-								(L:AAM_SEL, Enum) 0 ==
-									if{
-										4 (>L:VSD_EL_SCAN)
-										2 (>L:VSD_AZ_SCAN)
-									}
-								(L:AAM_SEL, Enum) 1 ==
-									if{
-										3 (>L:VSD_EL_SCAN)
-										1 (>L:VSD_AZ_SCAN)
-									}
-								(L:AAM_SEL, Enum) 2 ==
-									if{
-										3 (>L:VSD_EL_SCAN)
-										1 (>L:VSD_AZ_SCAN)
-									}
+
+							(L:VSD_MODE) 2 ==
+							(L:VSD_MODE) 4 == or
+							if{
+								110 70 50 30 20 5 (L:VSD_EL_SCAN) case (>L:EL_SCAN)
+								2 4 6 8 10 5 (L:VSD_EL_SCAN) case (>L:EL_SCAN_TIME)
+
+								200 100 50 3 (L:VSD_AZ_SCAN) case (>L:AZ_SCAN)
+								2 4 8 3 (L:VSD_AZ_SCAN) case (>L:AZ_SCAN_TIME)
+
+								(P:Local time, seconds) (L:EL_SCAN_TIME) * 4 % 2 - abs + 1 - (L:EL_SCAN) * 10 / int 10 * (>L:VSD_EL_SCAN)
+								(P:Local time, seconds) (L:AZ_SCAN_TIME) * 4 % 2 - abs + 1 - (L:AZ_SCAN) * (>L:VSD_AZ_SCAN)
+								(P:Local time, seconds) 4 % (>L:PX_time)
 							}
-					(L:VSD_MODE) 1 ==
-						if{
-							(A:PLANE PITCH DEGREES, Degrees) /-/ (>L:VSD_EL_SCAN)
-							(A:PLANE BANK DEGREES, Degrees) /-/ (>L:VSD_AZ_SCAN)
+							(L:VSD_MODE) 3 ==
+							if{
+								(L:RDR_TGT_DIS) 2 * (>L:VSD_EL_SCAN)
+								(L:TGT_HDG) (A:Plane heading degrees gyro, radians) - (>L:VSD_AZ_SCAN)
+							}
 						}
-
-						(L:VSD_MODE) 2 ==
-						(L:VSD_MODE) 4 == or
-						if{
-							110 70 50 30 20 5 (L:VSD_EL_SCAN) case (>L:EL_SCAN)
-							2 4 6 8 10 5 (L:VSD_EL_SCAN) case (>L:EL_SCAN_TIME)
-
-							200 100 50 3 (L:VSD_AZ_SCAN) case (>L:AZ_SCAN)
-							2 4 8 3 (L:VSD_AZ_SCAN) case (>L:AZ_SCAN_TIME)
-
-
-							(P:Local time, seconds) (L:EL_SCAN_TIME) * 4 % 2 - abs + 1 - (L:EL_SCAN) * 10 / int 10 * (>L:VSD_EL_SCAN)
-							(P:Local time, seconds) (L:AZ_SCAN_TIME) * 4 % 2 - abs + 1 - (L:AZ_SCAN) * (>L:VSD_AZ_SCAN)
-							(P:Local time, seconds) 4 % (>L:PX_time)
-						}
-						(L:VSD_MODE) 3 ==
-						if{
-							(L:RDR_TGT_DIS) 2 * (>L:VSD_EL_SCAN)
-							(L:TGT_HDG) (A:Plane heading degrees gyro, radians) - (>L:VSD_AZ_SCAN)
-						}
-					}
 					</Value>
 				</Select>
 			</Element>
@@ -6134,17 +6084,21 @@ Version 5.0
 		</Element>
 		<Element Name="Systems">
 			<Element Name="Range Change">
-				(P:Local time, seconds) 1 % (>L:TEWS_time)
+				<Select>
+					<Value>
+						(P:Local time, seconds) 1 % (>L:TEWS_time)
 
-				(L:TEWS_time) 0 &gt;
-				(L:TEWS_time) 0.5 &lt; and
-					if{
-						1 (>L:TEWS_RANGEStatic, number)
-					}
-				(L:TEWS_time) 0.5 &gt;
-					if{
-						1.001 (>L:TEWS_RANGEStatic, number)
-					}
+						(L:TEWS_time) 0 &gt;
+						(L:TEWS_time) 0.5 &lt; and
+							if{
+								1 (>L:TEWS_RANGEStatic, number)
+							}
+						(L:TEWS_time) 0.5 &gt;
+							if{
+								1.001 (>L:TEWS_RANGEStatic, number)
+							}
+					</Value>
+				</Select>
 			</Element>
 			<Element Name="ECM">
 				<Element>
@@ -6198,41 +6152,41 @@ Version 5.0
 			<Element Name="Brightness">
 				<Select>
 					<Value>
-								(L:KNOB_FS_TEWS_INT) 0 ==
-									if{
-										0x001000 (>L:TEWS_COLOR_SYM)
-										0x000800 (>L:TEWS_COLOR_SYM_DARK)
-									}
-								(L:KNOB_FS_TEWS_INT) 1 ==
-									if{
-										0x002000 (>L:TEWS_COLOR_SYM)
-										0x001000 (>L:TEWS_COLOR_SYM_DARK)
-									}
-								(L:KNOB_FS_TEWS_INT) 2 ==
-									if{
-										0x004000 (>L:TEWS_COLOR_SYM)
-										0x002000 (>L:TEWS_COLOR_SYM_DARK)
-									}
-								(L:KNOB_FS_TEWS_INT) 3 ==
-									if{
-										0x008000 (>L:TEWS_COLOR_SYM)
-										0x004000 (>L:TEWS_COLOR_SYM_DARK)
-									}
-								(L:KNOB_FS_TEWS_INT) 4 ==
-									if{
-										0x00A000 (>L:TEWS_COLOR_SYM)
-										0x005000 (>L:TEWS_COLOR_SYM_DARK)
-									}
-								(L:KNOB_FS_TEWS_INT) 5 ==
-									if{
-										0x00C000 (>L:TEWS_COLOR_SYM)
-										0x006000 (>L:TEWS_COLOR_SYM_DARK)
-									}
-								(L:KNOB_FS_TEWS_INT) 6 ==
-									if{
-										0x00FF00 (>L:TEWS_COLOR_SYM)
-										0x007F00 (>L:TEWS_COLOR_SYM_DARK)
-									}
+						(L:KNOB_FS_TEWS_INT) 0 ==
+							if{
+								0x001000 (>L:TEWS_COLOR_SYM)
+								0x000800 (>L:TEWS_COLOR_SYM_DARK)
+							}
+						(L:KNOB_FS_TEWS_INT) 1 ==
+							if{
+								0x002000 (>L:TEWS_COLOR_SYM)
+								0x001000 (>L:TEWS_COLOR_SYM_DARK)
+							}
+						(L:KNOB_FS_TEWS_INT) 2 ==
+							if{
+								0x004000 (>L:TEWS_COLOR_SYM)
+								0x002000 (>L:TEWS_COLOR_SYM_DARK)
+							}
+						(L:KNOB_FS_TEWS_INT) 3 ==
+							if{
+								0x008000 (>L:TEWS_COLOR_SYM)
+								0x004000 (>L:TEWS_COLOR_SYM_DARK)
+							}
+						(L:KNOB_FS_TEWS_INT) 4 ==
+							if{
+								0x00A000 (>L:TEWS_COLOR_SYM)
+								0x005000 (>L:TEWS_COLOR_SYM_DARK)
+							}
+						(L:KNOB_FS_TEWS_INT) 5 ==
+							if{
+								0x00C000 (>L:TEWS_COLOR_SYM)
+								0x006000 (>L:TEWS_COLOR_SYM_DARK)
+							}
+						(L:KNOB_FS_TEWS_INT) 6 ==
+							if{
+								0x00FF00 (>L:TEWS_COLOR_SYM)
+								0x007F00 (>L:TEWS_COLOR_SYM_DARK)
+							}
 					</Value>
 				</Select>
 			</Element>
