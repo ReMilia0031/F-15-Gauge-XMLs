@@ -1,5 +1,7 @@
-<Gauge Name="F-15 SYSTEMS" Version="8.00">
+<Gauge Name="F-15 SYSTEMS" Version="8.10">
 <!--
+Version 8.10
+	[ADD] JFS SYS
 Version 8.00
 	[EDT] Fairing
 Version 7.80
@@ -157,7 +159,7 @@ Version 5.0
 
 					1 (>L:SW1_FS_ENG_GEN_L)
 					1 (>L:SW1_FS_ENG_GEN_R)
-					0 (>L:SW2_FS_ENG_EMER_GEN)
+					2 (>L:SW2_FS_ENG_EMER_GEN)
 					1 (>L:SW1_FS_ENG_CONT_L)
 					1 (>L:SW1_FS_ENG_CONT_R)
 					0 (>L:SW2_FS_ENG_EXT_PWR)
@@ -257,7 +259,8 @@ Version 5.0
 
 					0 (>L:SW2_FS_JFS_LEVER, enum)
 					0 (>L:JFS_LEVER_PULLED, bool)
-					7000 (>L:JFS_ACCUM)
+					7000 (>L:JFS_ACCUM_1, psi)
+					7000 (>L:JFS_ACCUM_2, psi)
 
 					0 (>L:SW1_FS_EMER_VENT)
 
@@ -273,7 +276,7 @@ Version 5.0
 					<Value>
 						(L:SW2_FS_JFS_LEVER, enum) 1 ==
 						(L:SW1_FS_ENG_JFS, bool) 1 == and
-						(L:JFS_ACCUM) 7000 == and
+						(L:JFS_ACCUM_1) 6000 &gt; and
 						(L:JFS_START, bool) 0 == and
 						(L:ENG_AVAIL, bool) 0 == and
 						(A:APU PCT RPM, percent) 99 &lt; and
@@ -288,17 +291,17 @@ Version 5.0
 			<Element Name="JFS STARTER for ACCUMULATOR 2">
 				<Select>
 					<Value>
-					(L:SW2_FS_JFS_LEVER, enum) 2 ==
-					(L:SW1_FS_ENG_JFS, bool) 1 == and
-					(L:JFS_ACCUM) 4000 == and
-					(L:JFS_START, bool) 0 == and
-					(L:ENG_AVAIL, bool) 0 == and
-					(A:APU PCT RPM, percent) 99 &lt; and
-						if{
-							(>K:APU_STARTER)
-							1 (>L:JFS_START, bool)
-							1 (>L:JFS_PWR, bool)
-						}
+						(L:SW2_FS_JFS_LEVER, enum) 2 ==
+						(L:SW1_FS_ENG_JFS, bool) 1 == and
+						(L:JFS_ACCUM_2) 6000 &gt; and
+						(L:JFS_START, bool) 0 == and
+						(L:ENG_AVAIL, bool) 0 == and
+						(A:APU PCT RPM, percent) 99 &lt; and
+							if{
+								(>K:APU_STARTER)
+								1 (>L:JFS_START, bool)
+								1 (>L:JFS_PWR, bool)
+							}
 					</Value>
 				</Select>
 			</Element>
@@ -389,24 +392,24 @@ Version 5.0
 				<Element Name="JFS ACCUMULATOR 1">
 					<Select>
 						<Value>
-						(L:SW2_FS_JFS_LEVER, enum) 1 ==
-						(L:SW1_FS_ENG_JFS, bool) 1 == and
-						(L:JFS_LEVER_PULLED, bool) 0 == and
-						(L:ENG_AVAIL, bool) 0 == and
-							if{ 1 (>L:JFS_LEVER_PULLED, bool) }
+							(L:SW2_FS_JFS_LEVER, enum) 1 ==
+							(L:SW1_FS_ENG_JFS, bool) 1 == and
+							(L:JFS_LEVER_PULLED, bool) 0 == and
+							(L:ENG_AVAIL, bool) 0 == and
+								if{ 1 (>L:JFS_LEVER_PULLED, bool) }
 
-						(L:JFS_LEVER_PULLED, bool) 1 ==
-						(L:JFS_ACCUM) 4000 &gt; and
-							if{	(L:JFS_ACCUM) 100 - (>L:JFS_ACCUM) }
+							(L:JFS_LEVER_PULLED, bool) 1 ==
+							(L:JFS_ACCUM_1) 400 &gt; and
+								if{	(L:JFS_ACCUM_1) 500 - (>L:JFS_ACCUM_1) }
 						</Value>
 					</Select>
 				</Element>
 				<Element>
 					<Select>
 						<Value>
-						(L:JFS_LEVER_PULLED, bool) 1 ==
-						(L:JFS_ACCUM) 4000 == and
-							if{ 0 (>L:JFS_LEVER_PULLED, bool) }
+							(L:JFS_LEVER_PULLED, bool) 1 ==
+							(L:JFS_ACCUM_1) 100 &lt; and
+								if{ 0 (>L:JFS_LEVER_PULLED, bool) }
 						</Value>
 					</Select>
 				</Element>
@@ -414,24 +417,24 @@ Version 5.0
 				<Element Name="JFS ACCUMULATOR 2">
 					<Select>
 						<Value>
-						(L:SW2_FS_JFS_LEVER, enum) 2 ==
-						(L:SW1_FS_ENG_JFS, bool) 1 == and
-						(L:JFS_LEVER_PULLED, bool) 0 == and
-						(L:ENG_AVAIL, bool) 0 == and
-							if{ 2 (>L:JFS_LEVER_PULLED, bool) }
+							(L:SW2_FS_JFS_LEVER, enum) 2 ==
+							(L:SW1_FS_ENG_JFS, bool) 1 == and
+							(L:JFS_LEVER_PULLED, bool) 0 == and
+							(L:ENG_AVAIL, bool) 0 == and
+								if{ 2 (>L:JFS_LEVER_PULLED, bool) }
 
-						(L:JFS_LEVER_PULLED, bool) 2 ==
-						(L:JFS_ACCUM) 200 &gt; and
-							if{ (L:JFS_ACCUM) 100 - (>L:JFS_ACCUM) }
+							(L:JFS_LEVER_PULLED, bool) 2 ==
+							(L:JFS_ACCUM_2) 400 &gt; and
+								if{ (L:JFS_ACCUM_2) 500 - (>L:JFS_ACCUM_2) }
 						</Value>
 					</Select>
 				</Element>
 				<Element>
 					<Select>
 						<Value>
-						(L:JFS_LEVER_PULLED, bool) 2 ==
-						(L:JFS_ACCUM) 200 == and
-							if{ 0 (>L:JFS_LEVER_PULLED, bool) }
+							(L:JFS_LEVER_PULLED, bool) 2 ==
+							(L:JFS_ACCUM_2) 100 &lt; and
+								if{ 0 (>L:JFS_LEVER_PULLED, bool) }
 						</Value>
 					</Select>
 				</Element>
@@ -439,11 +442,49 @@ Version 5.0
 				<Element Name="JFS ACCUMULATORS RECHARGE">
 					<Select>
 						<Value>
-							(A:TURB ENG N2:1, percent) 65 &gt;
-							(A:TURB ENG N2:2, percent) 65 &gt; or
-							(L:JFS_ACCUM) 7000 &lt; and
+							(L:JFS_RUN, bool) 0 ==
+							(L:JFS_ACCUM_1) 7000 &lt; and
 								if{
-									(L:JFS_ACCUM) 10 + (>L:JFS_ACCUM)
+									(L:JFS_ACCUM_1) (L:PX_HYD) 500 / + (>L:JFS_ACCUM_1)
+								}
+							(L:JFS_RUN, bool) 0 ==
+							(L:JFS_ACCUM_2) 7000 &lt; and
+								if{
+									(L:JFS_ACCUM_2) (L:PX_HYD) 500 / + (>L:JFS_ACCUM_2)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+			<Element Name="JFS MECH">
+				<Element Name="JFS TURBINE">
+					<Select>
+						<Value>
+							(A:APU PCT RPM, percent) 62402 * 100 / (>L:JFS_TURBINE_RPM)
+							(A:APU PCT RPM, percent) 59432 * 100 / (>L:JFS_GENERAT_RPM)
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="Central GearBox">
+					<Select>
+						<Value>
+							(L:JFS_TURBINE_RPM) 12129 * 62402 / (>L:JFS_CG_RPM)
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="Airframe Mounted Accessory Drive (AMAD) System">
+					<Select>
+						<Value>
+							(L:JFS_CG_RPM) 6 / (>L:JFS_L_AMAD_RPM)
+							(L:JFS_CG_RPM) 6 / (>L:JFS_R_AMAD_RPM)
+
+							(L:AMAD_L_COUPLE, bool) 1 ==
+								if{
+									(A:TURB ENG N2:1, percent) 2020 * 20 / (>L:JFS_L_AMAD_RPM)
+								}
+							(L:AMAD_R_COUPLE, bool) 1 ==
+								if{
+									(A:TURB ENG N2:2, percent) 2020 * 20 / (>L:JFS_R_AMAD_RPM)
 								}
 						</Value>
 					</Select>
@@ -458,8 +499,6 @@ Version 5.0
 						(L:SW1_FS_ENG_MASTER_L, bool) 1 ==
 						(A:APU PCT RPM, percent) 90 &gt; and
 						(L:SW1_FS_THR_L_FING, bool) 1 == and
-						(L:AMAD_L_FAULT, bool) 0 == and
-						(A:GENERAL ENG1 COMBUSTION, bool) 0 == and
 						(L:ENG_L_STARTER_INIT, bool) 0 == and
 							if{
 								1 (>L:AMAD_L_COUPLE, bool)
@@ -473,6 +512,7 @@ Version 5.0
 				<Select>
 					<Value>
 					(L:SW1_FS_THR_L_FING, bool) 0 ==
+					(A:GENERAL ENG COMBUSTION:1, bool) 1 == or
 					(L:ENG_L_STARTER_INIT, bool) 1 == and
 						if{ 0 (>L:AMAD_L_COUPLE, bool) 0 (>L:ENG_L_STARTER, bool) 0 (>L:ENG_L_STARTER_INIT, bool) }
 					</Value>
@@ -494,27 +534,6 @@ Version 5.0
 				</Select>
 			</Element>
 
-			<Element Name="ENG1 FUEL FEED">
-				<Select>
-					<Value>
-					(L:SW1_FS_THROT_L, bool) 1 ==
-					(L:FUEL_L_INIT, enum) 0 == and
-						if{ 1000 (>K:MIXTURE1_SET) 1 (>L:FUEL_L_INIT, enum) }
-					</Value>
-				</Select>
-			</Element>
-			<Element>
-				<Select>
-					<Value>
-					(L:SW1_FS_THROT_L, bool) 0 ==
-					(L:SW1_FS_ENG_MASTER_L, bool) 0 == or
-					(L:BTN_FS_FIRE_LENG_EXEC, bool) 1 == or
-					(L:FUEL_L_INIT, enum) 1 == and
-						if{ 0 (>K:MIXTURE1_SET) 0 (>L:FUEL_L_INIT, enum) 0 (>L:SW1_FS_THR_L_FING, bool) 0 (>L:BTN_FS_FIRE_LENG_EXEC, bool) }
-					</Value>
-				</Select>
-			</Element>
-
 			<Element Name="ENG2 STARTER">
 				<Select>
 					<Value>
@@ -522,7 +541,6 @@ Version 5.0
 					(A:APU PCT RPM, percent) 90 &gt; and
 					(L:SW1_FS_THR_R_FING, bool) 1 == and
 					(L:AMAD_R_FAULT, bool) 0 == and
-					(A:GENERAL ENG2 COMBUSTION, bool) 0 == and
 					(L:ENG_R_STARTER_INIT, bool) 0 == and
 						if{ 1 (>L:AMAD_R_COUPLE, bool) 1 (>L:ENG_R_STARTER, bool) 1 (>L:ENG_R_STARTER_INIT, bool) }
 					</Value>
@@ -532,6 +550,7 @@ Version 5.0
 				<Select>
 					<Value>
 					(L:SW1_FS_THR_R_FING, bool) 0 ==
+					(A:GENERAL ENG COMBUSTION:2, bool) 1 == or
 					(L:ENG_R_STARTER_INIT, bool) 1 == and
 						if{ 0 (>L:AMAD_R_COUPLE, bool) 0 (>L:ENG_R_STARTER, bool) 0 (>L:ENG_R_STARTER_INIT, bool) }
 					</Value>
@@ -552,28 +571,6 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-
-			<Element Name="ENG2 FUEL FEED">
-				<Select>
-					<Value>
-					(L:SW1_FS_THROT_R, bool) 1 ==
-					(L:FUEL_R_INIT, enum) 0 == and
-						if{ 1000 (>K:MIXTURE2_SET) 1 (>L:FUEL_R_INIT, enum) }
-					</Value>
-				</Select>
-			</Element>
-			<Element>
-				<Select>
-					<Value>
-					(L:SW1_FS_THROT_R, bool) 0 ==
-					(L:SW1_FS_ENG_MASTER_R, bool) 0 == or
-					(L:BTN_FS_FIRE_RENG_EXEC, bool) 1 == or
-					(L:FUEL_R_INIT, enum) 1 == and
-						if{ 0 (>K:MIXTURE2_SET) 0 (>L:FUEL_R_INIT, enum) 0 (>L:SW1_FS_THR_R_FING, bool) 0 (>L:BTN_FS_FIRE_RENG_EXEC, bool) }
-					</Value>
-				</Select>
-			</Element>
-
 		</Element>
 
 		<Element Name="ENGINE CONTROL">
@@ -682,6 +679,50 @@ Version 5.0
 							els{
 								0 (>L:ENG_AVAIL, bool)
 							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="ENG1 FUEL FEED">
+				<Select>
+					<Value>
+						(L:SW1_FS_ENG_MASTER_L, bool) 1 ==
+						(L:SW1_FS_THROT_L, bool) 1 == and
+						(L:BTN_FS_FIRE_LENG_EXEC, bool) 0 == and
+						(L:FUEL_L_INIT, enum) 0 == and
+							if{ 1000 (>K:MIXTURE1_SET) 1 (>L:FUEL_L_INIT, enum) }
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(L:SW1_FS_THROT_L, bool) 0 ==
+						(L:SW1_FS_ENG_MASTER_L, bool) 0 == or
+						(L:BTN_FS_FIRE_LENG_EXEC, bool) 1 == or
+						(L:FUEL_L_INIT, enum) 1 == and
+							if{ 0 (>K:MIXTURE1_SET) 0 (>L:FUEL_L_INIT, enum) 0 (>L:SW1_FS_THR_L_FING, bool) 0 (>L:BTN_FS_FIRE_LENG_EXEC, bool) }
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="ENG2 FUEL FEED">
+				<Select>
+					<Value>
+						(L:SW1_FS_ENG_MASTER_L, bool) 1 ==
+						(L:SW1_FS_THROT_R, bool) 1 == and
+						(L:BTN_FS_FIRE_RENG_EXEC, bool) 0 == and
+						(L:FUEL_R_INIT, enum) 0 == and
+							if{ 1000 (>K:MIXTURE2_SET) 1 (>L:FUEL_R_INIT, enum) }
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(L:SW1_FS_THROT_R, bool) 0 ==
+						(L:SW1_FS_ENG_MASTER_R, bool) 0 == or
+						(L:BTN_FS_FIRE_RENG_EXEC, bool) 1 == or
+						(L:FUEL_R_INIT, enum) 1 == and
+							if{ 0 (>K:MIXTURE2_SET) 0 (>L:FUEL_R_INIT, enum) 0 (>L:SW1_FS_THR_R_FING, bool) 0 (>L:BTN_FS_FIRE_RENG_EXEC, bool) }
 					</Value>
 				</Select>
 			</Element>

@@ -1,6 +1,8 @@
 <Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="8.20">
 
 <!--
+Version 8.30
+	[ADD] JFS SYS
 Version 8.20
 	[EDT] Fairing
 Version 8.10
@@ -218,7 +220,8 @@ Version 5.0
 						(L:LGEN_AVAIL, enum) 0 ==
 						(L:RGEN_AVAIL, enum) 0 == and
 						(A:SIM ON GROUND, bool) 1 == and
-						(A:APU PCT RPM, percent) 90 &gt; and
+						(L:JFS_GEN_AC_AVAIL) 1 == and
+						(L:JFS_GEN_DC_AVAIL) 1 == and
 						(L:SW2_FS_ENG_EMER_GEN, enum) 2 == and
 							if{
 								115 (>L:EMER_GEN_AC_VOLTAGE)
@@ -240,6 +243,8 @@ Version 5.0
 
 						(L:LGEN_AVAIL, enum) 1 ==
 						(L:RGEN_AVAIL, enum) 1 == and
+						(L:JFS_GEN_AC_AVAIL) 0 == or
+						(L:JFS_GEN_DC_AVAIL) 0 == or
 						(L:SW2_FS_ENG_EMER_GEN, enum) 0 == or
 							if{
 								0 (>L:EMER_GEN_AC_VOLTAGE)
@@ -269,6 +274,33 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
+			<Element Name="JFS Generator">
+				<Select>
+					<Value>
+						(L:JFS_GENERAT_RPM) 115 * 54000 / (>L:JFS_GEN_AC_VOLTAGE)
+						(L:JFS_GENERAT_RPM) 28 * 54000 / (>L:JFS_GEN_DC_VOLTAGE)
+						
+						(L:JFS_GEN_AC_VOLTAGE) 115 &gt;
+							if{ 115 (>L:JFS_GEN_AC_VOLTAGE) }
+						(L:JFS_GEN_DC_VOLTAGE) 28 &gt;
+							if{ 28 (>L:JFS_GEN_DC_VOLTAGE) }
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="JFS Generator Available">
+				<Select>
+					<Value>
+						(L:JFS_GEN_AC_VOLTAGE) 115 &gt;
+							if{ 1 (>L:JFS_GEN_AC_AVAIL) }
+							els{ 0 (>L:JFS_GEN_AC_AVAIL) }
+
+						(L:EMER_GEN_DC_VOLTAGE) 28 ==
+							if{ 1 (>L:JFS_GEN_DC_AVAIL) }
+							els{ 0 (>L:JFS_GEN_DC_AVAIL) }
+					</Value>
+				</Select>
+			</Element>
+
 			<Element Name="Bus Line">
 				<Element Name="Generator Bus Line">
 					<Select>
