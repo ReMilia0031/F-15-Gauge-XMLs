@@ -6,7 +6,7 @@
 		<Element Name="GUN RATE" Container="Yes">
 			<Position X="101" Y="52"/>
 			<Select>
-				<Value>(L:Rate Switch, bool)</Value>
+				<Value>(L:GUN_FIRE_RATE, Number)</Value>
 				<Case Value="0">
 					<Image Name="gunsw0.bmp" ImageSizes="26,27"/>
 				</Case>
@@ -369,7 +369,28 @@
 				<Element>
 					<Text X="280" Y="15" Luminous="Yes" Length="20" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 						<String>
-							FUEL
+							%((L:AO_STA-2_LType, Enum))
+								%{case}
+								%{:0}PYLON
+								%{:1}AAM-7
+								%{:2}AAM-4
+								%{:3}AIM-9L
+								%{:4}AIM-120C
+								%{:5}FUEL
+								%{:6}EO
+								%{:7}IR
+								%{:8}1 \t MK-82
+								%{:9}1 \t MK-82 R
+								%{:10}1 \t MK-84
+								%{:11}1 \t MK-84 L
+								%{:12}1 \t GBU-58
+								%{:13}1 \t GBU-42
+								%{:14}1 \t GBU-52
+								%{:15}1 \t GBU-71
+								%{:16}1 \t SUU-20
+								%{:17}1 \t BLU-27F
+								%{:18}1 \t BLU-27U
+								%{end}%
 						</String>
 					</Text>
 				</Element>
@@ -391,6 +412,28 @@
 					<Text X="230" Y="15" Luminous="Yes" Length="20" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 						<String>
 							
+							%((L:AO_STA-5_LType, Enum))
+								%{case}
+								%{:0}PYLON
+								%{:1}AAM-7
+								%{:2}AAM-4
+								%{:3}AIM-9L
+								%{:4}AIM-120C
+								%{:5}FUEL
+								%{:6}EO
+								%{:7}IR
+								%{:8}1 \t MK-82
+								%{:9}1 \t MK-82 R
+								%{:10}1 \t MK-84
+								%{:11}1 \t MK-84 L
+								%{:12}1 \t GBU-58
+								%{:13}1 \t GBU-42
+								%{:14}1 \t GBU-52
+								%{:15}1 \t GBU-71
+								%{:16}1 \t SUU-20
+								%{:17}1 \t BLU-27F
+								%{:18}1 \t BLU-27U
+								%{end}%
 						</String>
 					</Text>
 				</Element>				
@@ -411,7 +454,28 @@
 				<Element>
 					<Text X="230" Y="15" Luminous="Yes" Length="20" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
 						<String>
-							FUEL
+							%((L:AO_STA-8_LType, Enum))
+								%{case}
+								%{:0}PYLON
+								%{:1}AAM-7
+								%{:2}AAM-4
+								%{:3}AIM-9L
+								%{:4}AIM-120C
+								%{:5}FUEL
+								%{:6}EO
+								%{:7}IR
+								%{:8}1 \t MK-82
+								%{:9}1 \t MK-82 R
+								%{:10}1 \t MK-84
+								%{:11}1 \t MK-84 L
+								%{:12}1 \t GBU-58
+								%{:13}1 \t GBU-42
+								%{:14}1 \t GBU-52
+								%{:15}1 \t GBU-71
+								%{:16}1 \t SUU-20
+								%{:17}1 \t BLU-27F
+								%{:18}1 \t BLU-27U
+								%{end}%
 						</String>
 					</Text>
 				</Element>
@@ -430,14 +494,14 @@
 		<Element Name="INTERVAL" Container="Yes">
 			<Position X="208" Y="245"/>
 			<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-				<String>%((L:ARAM_INTERVAL))%!03d!%</String>
+				<String>%((L:AO_REL_INTVL, Number))%!03d!%</String>
 			</Text>
 		</Element>	
 
 		<Element Name="QUANTITY" Container="Yes">
 			<Position X="308" Y="245"/>
 			<Text X="50" Y="15" Luminous="Yes" Length="4" Font="Arial" Color="#E0E0E0" Adjust="left" VerticalAdjust="Center" Multiline="No" Fixed="No">
-				<String>%((L:ARAM_QTY))%!02d!%</String>
+				<String>%((L:ORD_REL_QTY, Number))%!02d!%</String>
 			</Text>
 		</Element>
 
@@ -530,7 +594,7 @@
 			<Cursor Type="Hand"/>
 			<Tooltip ID="">GUN RATE (HIGH/LOW)</Tooltip>
 			 <Click>
-				(L:Rate Switch, bool) ++ 2 % (>L:Rate Switch, bool)
+				(L:GUN_FIRE_RATE, Number) ++ 2 % (>L:GUN_FIRE_RATE, Number)
 			</Click>	  
 		</Area>
 		

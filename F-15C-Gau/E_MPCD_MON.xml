@@ -1,14 +1,13 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
 <SimBase.Document
-        Type="AceXML"
-        version="1,0"
-        id="MPCD">
+		Type="AceXML"
+		version="1,0"
+		id="MPCD">
 	<Descr>AceXML Document</Descr>
 	<Filename>E_MPCD_MON.xml</Filename>
 	<SimGauge.Gauge id="Multi Purpose Color Display Monitor (94-10-27)" ArtDirectory=".">
 		<Size>512,512</Size>
-
 		<Macro id="ForeColor" Name="ForeColor">
 			<MacroValue>(L:MPCD_COLOR)</MacroValue>
 		</Macro>
@@ -22,7 +21,7 @@
 			</Image>
 		</Element>
 		<Element id="STBY">
-            <FloatPosition>210.000,240.000</FloatPosition>
+			<FloatPosition>210.000,240.000</FloatPosition>
 			<Visibility>
 				(L:MPCD-INIT, Enum) 1 ==
 				(P:absolute time, number) 0.5 % 0.25 &lt; and
@@ -45,6 +44,7 @@
 			<Element id="ARMT">
 				<Visibility>(L:MPCD-menu, Enum) 1000 div 1 ==</Visibility>
 				<Element id="AA ARMT">
+					<Visibility>(L:ARMT_PAGES) 1 ==</Visibility>
 					<Element id="WING_SYMBOL">
 						<Element id="1">
 							<PolyLine id="IND">
@@ -978,7 +978,6 @@
 						</Element>
 					</Element>
 					<Element id="LEFT">
-
 						<Element id="GUN Number">
 							<FloatPosition>10.000,69.000</FloatPosition>
 							<GaugeText id="GaugeText">
@@ -993,7 +992,6 @@
 								<Transparent>True</Transparent>
 							</GaugeText>
 						</Element>
-
 						<Element id="GUN RATE">
 							<FloatPosition>10.000,89.000</FloatPosition>
 							<GaugeText id="GaugeText">
@@ -1003,7 +1001,7 @@
 								<FontFace>Consolas</FontFace>
 								<FontHeight>22</FontHeight>
 								<GaugeString>
-									%((L:Rate Switch, bool) 0 ==)
+									%((L:GUN_FIRE_RATE, Number) 0 ==)
 										%{if}
 											HIGH
 										%{else}
@@ -1108,17 +1106,12 @@
 										<FontHeight>22</FontHeight>
 										<GaugeString>
 %((L:ICMS_STATUS_B2))%{case}
-%{:0}OFF
-%{:1}WRM
-%{:2}BIT
-%{:3}INI
-%{:4}NOP
-%{:5}TMP
-%{:6}DGR
-%{:7}JAM
-%{:8}AUT
-%{:9}STB
-%{:10}MAN
+%{:0}NOP
+%{:1}DGR
+%{:2}JAM
+%{:3}AUT
+%{:4}MAN
+%{:5}OFF
 %{end}
 </GaugeString>
 										<HorizontalAlign>LEFT</HorizontalAlign>
@@ -1152,17 +1145,12 @@
 										<FontHeight>22</FontHeight>
 										<GaugeString>
 %((L:ICMS_STATUS_B1))%{case}
-%{:0}OFF
-%{:1}WRM
-%{:2}BIT
-%{:3}INI
-%{:4}NOP
-%{:5}TMP
-%{:6}DGR
-%{:7}JAM
-%{:8}AUT
-%{:9}STB
-%{:10}MAN
+%{:0}NOP
+%{:1}DGR
+%{:2}JAM
+%{:3}AUT
+%{:4}MAN
+%{:5}OFF
 %{end}
 </GaugeString>
 										<HorizontalAlign>LEFT</HorizontalAlign>
@@ -1171,29 +1159,6 @@
 									</GaugeText>
 								</Element>
 							</Element>
-						</Element>
-						<Element id="A/G_SEL">
-							  <FloatPosition>0.000,240.000</FloatPosition>
-							  <Visibility>(L:HUD_MASTER_MODE, Enum) 3 ==</Visibility>
-							  <Rectangle id="Rectangle">
-								  <LineWidth>2</LineWidth>
-								  <Bright>True</Bright>
-								  <Width>80</Width>
-								  <Height>24</Height>
-								  <LineColorScript>@ForeColor</LineColorScript>
-							  </Rectangle>
-						</Element>
-
-						<Element id="SCAN_SEL">
-							  <FloatPosition>0.000,405.000</FloatPosition>
-							  <Visibility>(L:AAM_SEL, Enum) 1 ==</Visibility>
-							  <Rectangle id="Rectangle">
-								  <LineWidth>2</LineWidth>
-								  <Bright>True</Bright>
-								  <Width>80</Width>
-								  <Height>24</Height>
-								  <LineColorScript>@ForeColor</LineColorScript>
-							  </Rectangle>
 						</Element>
 					</Element>
 					<Element id="RIGHT">
@@ -1234,11 +1199,11 @@
 								<FontColorScript>@ForeColor</FontColorScript>
 								<FontFace>Consolas</FontFace>
 								<FontHeight>22</FontHeight>
-								<GaugeString>CMD 
-%((L:CHAFF_PROGRAM_1))
+								<GaugeString>CMD
+%((L:CMD_PROGRAM_CAP))
 %{case}
-%{:0}MSS
-%{:1}DCL
+%{:0}DCL
+%{:1}MSS
 %{end}
 								</GaugeString>
 								<HorizontalAlign>RIGHT</HorizontalAlign>
@@ -1255,7 +1220,7 @@
 								<FontFace>Consolas</FontFace>
 								<FontHeight>22</FontHeight>
 								<GaugeString>
-%((L:CHAFF_PROGRAM_1))
+%((L:CMD_GLOBAL))
 %{case}
 %{:0}TRNG
 %{:1}GLOBAL
@@ -1266,30 +1231,1302 @@
 								<Transparent>True</Transparent>
 							</GaugeText>
 						</Element>
-
-
-						<Element id="COOL_SEL">
-							<FloatPosition>43.000,171.000</FloatPosition>
-							<Visibility>(L:AAM_COOL, Bool)</Visibility>
-							<Rectangle id="Rectangle">
-								<LineWidth>2</LineWidth>
-								<Bright>True</Bright>
-								<Width>60</Width>
-								<Height>24</Height>
-								<LineColorScript>@ForeColor</LineColorScript>
-							</Rectangle>
+					</Element>
+					<Element id="PROGRAM">
+						<FloatPosition>0.000,0.000</FloatPosition>
+						<Element id="BOTTOM">
+							<FloatPosition>0.000,480.000</FloatPosition>
+							<Element id="P1">
+								<FloatPosition>58.000,0.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>1</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,24</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+								<Element id="SELECTOR">
+									<FloatPosition>0.000,0.000</FloatPosition>
+									<Visibility>(L:IF15E_CBJP1_JETT, Bool)</Visibility>
+									<Rectangle id="Rectangle">
+										<LineWidth>2</LineWidth>
+										<Bright>True</Bright>
+										<Width>80</Width>
+										<Height>24</Height>
+										<LineColorScript>@ForeColor</LineColorScript>
+									</Rectangle>
+								</Element>
+							</Element>
+							<Element id="P2">
+								<FloatPosition>140.000,0.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>2</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,24</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+								<Element id="SELECTOR">
+									<FloatPosition>0.000,0.000</FloatPosition>
+									<Visibility>(L:IF15E_CBJP2_JETT, Bool)</Visibility>
+									<Rectangle id="Rectangle">
+										<LineWidth>2</LineWidth>
+										<Bright>True</Bright>
+										<Width>80</Width>
+										<Height>24</Height>
+										<LineColorScript>@ForeColor</LineColorScript>
+									</Rectangle>
+								</Element>
+							</Element>
+							<Element id="ENTER">
+								<FloatPosition>386.000,0.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>ENTER</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,24</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+						</Element>
+						<Element id="CENTER">
+							<FloatPosition>66.000,372.000</FloatPosition>
+							<Element id="L1">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>
+CBT 1: %((L:IF15E_CBT_1_PROG, Number) )%{case}
+%{:1}L PYLON
+%{:10}R PYLON
+%{:11}LR PYLON
+%{:100}C STORE
+%{:101}L PYLON C STORE
+%{:110}R PYLON C STORE
+%{:111}LR PYLON C STORE
+%{:1000}L RACK
+%{:1001}L PYLON L RACK
+%{:1010}R PYLON L RACK
+%{:1011}LR PYLON L RACK
+%{:1100}C STORE L RACK
+%{:1101}L PYLON C STORE L RACK
+%{:1110}R PYLON C STORE L RACK
+%{:1111}LR PYLON C STORE L RACK
+%{:10000}R RACK
+%{:10001}L PYLON R RACK
+%{:10010}R PYLON R RACK
+%{:10011}LR PYLON R RACK
+%{:10100}C STORE R RACK
+%{:10101}L PYLON C STORE R RACK
+%{:10110}R PYLON C STORE R RACK
+%{:10111}LR PYLON C STORE R RACK
+%{:11000}LR RACK
+%{:11001}l PYLON LR RACK
+%{:11010}R PYLON LR RACK
+%{:11011}LR PYLON LR RACK
+%{:11100}C STORE LR RACK
+%{:11101}L PYLON C STORE LR RACK
+%{:11110}R PYLON C STORE LR RACK
+%{:11111}LR PYLON C STORE LR RACK
+%{end}
+									</GaugeString>
+									<Size>400,24</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="L2">
+								<FloatPosition>0.000,30.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>
+CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
+%{:1}L PYLON
+%{:10}R PYLON
+%{:11}LR PYLON
+%{:100}C STORE
+%{:101}L PYLON C STORE
+%{:110}R PYLON C STORE
+%{:111}LR PYLON C STORE
+%{:1000}L RACK
+%{:1001}L PYLON L RACK
+%{:1010}R PYLON L RACK
+%{:1011}LR PYLON L RACK
+%{:1100}C STORE L RACK
+%{:1101}L PYLON C STORE L RACK
+%{:1110}R PYLON C STORE L RACK
+%{:1111}LR PYLON C STORE L RACK
+%{:10000}R RACK
+%{:10001}L PYLON R RACK
+%{:10010}R PYLON R RACK
+%{:10011}LR PYLON R RACK
+%{:10100}C STORE R RACK
+%{:10101}L PYLON C STORE R RACK
+%{:10110}R PYLON C STORE R RACK
+%{:10111}LR PYLON C STORE R RACK
+%{:11000}LR RACK
+%{:11001}l PYLON LR RACK
+%{:11010}R PYLON LR RACK
+%{:11011}LR PYLON LR RACK
+%{:11100}C STORE LR RACK
+%{:11101}L PYLON C STORE LR RACK
+%{:11110}R PYLON C STORE LR RACK
+%{:11111}LR PYLON C STORE LR RACK
+%{end}
+									</GaugeString>
+									<Size>380,24</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
 						</Element>
 					</Element>
+				</Element>
+				<Element id="AG ARMT">
+					<FloatPosition>0.000,0.000</FloatPosition>
+					<Visibility>(L:ARMT_PAGES) 2 ==</Visibility>
+					<Element id="WEAPONS">
+						<FloatPosition>0.000,11.000</FloatPosition>
+						<Element id="LWING">
+							<FloatPosition>58.000,0.000</FloatPosition>
+							<Element id="A">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>
+%((L:AO_STA-2_LType, Enum))
+		%{case}
+		%{:0}PYLON
+		%{:1}AAM-7
+		%{:2}AAM-4
+		%{:3}AIM-9L
+		%{:4}AIM-120C
+		%{:5}FUEL
+		%{:6}EO
+		%{:7}IR
+		%{:8}1 \t MK-82
+		%{:9}1 \t MK-82 R
+		%{:10}1 \t MK-84
+		%{:11}1 \t MK-84 L
+		%{:12}1 \t GBU-58
+		%{:13}1 \t GBU-42
+		%{:14}1 \t GBU-52
+		%{:15}1 \t GBU-71
+		%{:16}1 \t SUU-20
+		%{:17}1 \t BLU-27F
+		%{:18}1 \t BLU-27U
+%{end}
+</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,48</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="B">
+								<FloatPosition>0.000,24.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>%( 4 9 (L:AO_STA-2_LType, Enum) rng)%{if}%((L:AO_STA-2_LQty, Number))%!01d!%{end}</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,22</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="SEL">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<Visibility>(L:IF15E_STA2_RDY, Bool)</Visibility>
+								<Rectangle id="Rectangle">
+									<LineWidth>2</LineWidth>
+									<Bright>True</Bright>
+									<Width>80</Width>
+									<Height>24</Height>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</Rectangle>
+							</Element>
+						</Element>
+						<Element id="LCFT">
+							<FloatPosition>140.000,0.000</FloatPosition>
+							<Element id="A">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>
+%((L:AO_LCFT_LType, Enum))
+		%{case}
+		%{:0}
+		%{:1}AAM-7
+		%{:2}AAM-4
+		%{:3}AIM-9L
+		%{:4}AIM-120C
+		%{:5}FUEL
+		%{:6}EO
+		%{:7}IR
+		%{:8}1 \t MK-82
+		%{:9}1 \t MK-82 R
+		%{:10}1 \t MK-84
+		%{:11}1 \t MK-84 L
+		%{:12}1 \t GBU-58
+		%{:13}1 \t GBU-42
+		%{:14}1 \t GBU-52
+		%{:15}1 \t GBU-71
+		%{:16}1 \t SUU-20
+		%{:17}1 \t BLU-27F
+		%{:18}1 \t BLU-27U
+%{end}
+</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,48</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="B">
+								<FloatPosition>0.000,24.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>%( 4 9 (L:AO_LCFT_LType, Enum) rng)%{if}%((L:AO_LCFT_LQty, Number))%!01d!%{end}</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,22</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="SEL">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<Visibility>(L:IF15E_LCFT_RDY, Bool)</Visibility>
+								<Rectangle id="Rectangle">
+									<LineWidth>2</LineWidth>
+									<Bright>True</Bright>
+									<Width>80</Width>
+									<Height>24</Height>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</Rectangle>
+							</Element>
+						</Element>
+						<Element id="CL">
+							<FloatPosition>222.000,0.000</FloatPosition>
+							<Element id="A">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>
+%((L:AO_STA-5_LType, Enum))
+		%{case}
+		%{:0}PYLON
+		%{:1}AAM-7
+		%{:2}AAM-4
+		%{:3}AIM-9L
+		%{:4}AIM-120C
+		%{:5}FUEL
+		%{:6}EO
+		%{:7}IR
+		%{:8}1 \t MK-82
+		%{:9}1 \t MK-82 R
+		%{:10}1 \t MK-84
+		%{:11}1 \t MK-84 L
+		%{:12}1 \t GBU-58
+		%{:13}1 \t GBU-42
+		%{:14}1 \t GBU-52
+		%{:15}1 \t GBU-71
+		%{:16}1 \t SUU-20
+		%{:17}1 \t BLU-27F
+		%{:18}1 \t BLU-27U
+%{end}
+</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,48</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="B">
+								<FloatPosition>0.000,24.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>%( 4 9 (L:AO_STA-5_LType, Enum) rng)%{if}%((L:AO_STA-5_LQty, Number))%!01d!%{end}</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,22</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="SEL">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<Visibility>(L:IF15E_STA5_RDY, Bool)</Visibility>
+								<Rectangle id="Rectangle">
+									<LineWidth>2</LineWidth>
+									<Bright>True</Bright>
+									<Width>80</Width>
+									<Height>24</Height>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</Rectangle>
+							</Element>
+						</Element>
+						<Element id="RCFT">
+							<FloatPosition>304.000,0.000</FloatPosition>
+							<Element id="A">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>
+%((L:AO_RCFT_LType, Enum))
+		%{case}
+		%{:0}
+		%{:1}AAM-7
+		%{:2}AAM-4
+		%{:3}AIM-9L
+		%{:4}AIM-120C
+		%{:5}FUEL
+		%{:6}EO
+		%{:7}IR
+		%{:8}1 \t MK-82
+		%{:9}1 \t MK-82 R
+		%{:10}1 \t MK-84
+		%{:11}1 \t MK-84 L
+		%{:12}1 \t GBU-58
+		%{:13}1 \t GBU-42
+		%{:14}1 \t GBU-52
+		%{:15}1 \t GBU-71
+		%{:16}1 \t SUU-20
+		%{:17}1 \t BLU-27F
+		%{:18}1 \t BLU-27U
+%{end}
+</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,48</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="B">
+								<FloatPosition>0.000,24.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>%( 4 9 (L:AO_RCFT_LType, Enum) rng)%{if}%((L:AO_RCFT_LQty, Number))%!01d!%{end}</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,22</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="SEL">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<Visibility>(L:IF15E_RCFT_RDY, Bool)</Visibility>
+								<Rectangle id="Rectangle">
+									<LineWidth>2</LineWidth>
+									<Bright>True</Bright>
+									<Width>80</Width>
+									<Height>24</Height>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</Rectangle>
+							</Element>
+						</Element>
+						<Element id="RWING">
+							<FloatPosition>386.000,0.000</FloatPosition>
+							<Element id="A">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>
+%((L:AO_STA-8_LType, Enum))
+		%{case}
+		%{:0}PYLON
+		%{:1}AAM-7
+		%{:2}AAM-4
+		%{:3}AIM-9L
+		%{:4}AIM-120C
+		%{:5}FUEL
+		%{:6}EO
+		%{:7}IR
+		%{:8}1 \t MK-82
+		%{:9}1 \t MK-82 R
+		%{:10}1 \t MK-84
+		%{:11}1 \t MK-84 L
+		%{:12}1 \t GBU-58
+		%{:13}1 \t GBU-42
+		%{:14}1 \t GBU-52
+		%{:15}1 \t GBU-71
+		%{:16}1 \t SUU-20
+		%{:17}1 \t BLU-27F
+		%{:18}1 \t BLU-27U
+%{end}
+</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,48</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="B">
+								<FloatPosition>0.000,24.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>%( 4 9 (L:AO_STA-8_LType, Enum) rng)%{if}%((L:AO_STA-8_LQty, Number))%!01d!%{end}</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,22</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="SEL">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<Visibility>(L:IF15E_STA8_RDY, Bool)</Visibility>
+								<Rectangle id="Rectangle">
+									<LineWidth>2</LineWidth>
+									<Bright>True</Bright>
+									<Width>80</Width>
+									<Height>24</Height>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</Rectangle>
+							</Element>
+						</Element>
+					</Element>
+					<Element id="LEFT">
+						<FloatPosition>10.000,78.000</FloatPosition>
+						<Element id="GUN">
+							<FloatPosition>0.000,71.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>%((L:GUN_FIRE_RATE, Number))%{case}%{:0}HIGH%{:1}LOW%{end}\n%((L:AO_GUN_AMMO_COUNT, Number) (L:IF15E_Rounds_Fired, Number) -)%!03d!</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>50,48</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="REL QTY 1">
+							<FloatPosition>0.000,162.000</FloatPosition>
+							<Element id="A">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<HorizontalLine id="HorizontalLine">
+									<Bright>True</Bright>
+									<Width>65</Width>
+									<LineWidth>4</LineWidth>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</HorizontalLine>
+							</Element>
+							<Element id="B">
+								<FloatPosition>65.000,0.000</FloatPosition>
+								<VerticalLine id="VerticalLine">
+									<Bright>True</Bright>
+									<Height>110</Height>
+									<LineWidth>4</LineWidth>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</VerticalLine>
+							</Element>
+						</Element>
+						<Element id="REL QTY 2">
+							<FloatPosition>0.000,246.000</FloatPosition>
+							<Element id="A">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<HorizontalLine id="HorizontalLine">
+									<Bright>True</Bright>
+									<Width>54</Width>
+									<LineWidth>4</LineWidth>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</HorizontalLine>
+							</Element>
+							<Element id="B">
+								<FloatPosition>54.000,0.000</FloatPosition>
+								<VerticalLine id="VerticalLine">
+									<Bright>True</Bright>
+									<Height>25</Height>
+									<LineWidth>4</LineWidth>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</VerticalLine>
+							</Element>
+						</Element>
+						<Element id="REL QTY 3">
+							<FloatPosition>0.000,270.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>QTY %((L:ORD_REL_QTY, Number))%!02d!</GaugeString>
+								<Size>80,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+					</Element>
+					<Element id="RIGHT">
+						<FloatPosition>402.000,80.000</FloatPosition>
+						<Element id="CBUBH">
+							<FloatPosition>-10.000,71.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>
+CBU HOB\n
+%((L:CBU_HOB, Number))%!03d!
+</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>100,48</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="REL INT1">
+							<FloatPosition>32.000,162.000</FloatPosition>
+							<Element id="A">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<HorizontalLine id="HorizontalLine">
+									<Bright>True</Bright>
+									<Width>60</Width>
+									<LineWidth>4</LineWidth>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</HorizontalLine>
+							</Element>
+							<Element id="B">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<VerticalLine id="VerticalLine">
+									<Bright>True</Bright>
+									<Height>110</Height>
+									<LineWidth>4</LineWidth>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</VerticalLine>
+							</Element>
+						</Element>
+						<Element id="REL INT2">
+							<FloatPosition>43.000,246.000</FloatPosition>
+							<Element id="A">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<HorizontalLine id="HorizontalLine">
+									<Bright>True</Bright>
+									<Width>40</Width>
+									<LineWidth>4</LineWidth>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</HorizontalLine>
+							</Element>
+							<Element id="B">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<VerticalLine id="VerticalLine">
+									<Bright>True</Bright>
+									<Height>25</Height>
+									<LineWidth>4</LineWidth>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</VerticalLine>
+							</Element>
+						</Element>
+						<Element id="REL INT3">
+							<FloatPosition>-40.000,270.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>INTVL %((L:AO_REL_INTVL, Number))%!03d!</GaugeString>
+								<HorizontalAlign>RIGHT</HorizontalAlign>
+								<Size>120,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+					</Element>
+					<Element id="BOTTOM">
+						<FloatPosition>0.000,470.000</FloatPosition>
+						<Element id="1">
+							<FloatPosition>58.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>1/STA</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>80,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Element id="SEL">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<Visibility>(L:AG_REL_MODE, Enum) 0 ==</Visibility>
+								<Rectangle id="Rectangle">
+									<LineWidth>2</LineWidth>
+									<Bright>True</Bright>
+									<Width>80</Width>
+									<Height>24</Height>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</Rectangle>
+							</Element>
+						</Element>
+						<Element id="2">
+							<FloatPosition>140.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>RP SGL</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>80,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Element id="SEL">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<Visibility>(L:AG_REL_MODE, Enum) 1 ==</Visibility>
+								<Rectangle id="Rectangle">
+									<LineWidth>2</LineWidth>
+									<Bright>True</Bright>
+									<Width>80</Width>
+									<Height>24</Height>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</Rectangle>
+							</Element>
+						</Element>
+						<Element id="3">
+							<FloatPosition>222.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>RP MPL</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>80,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Element id="SEL">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<Visibility>(L:AG_REL_MODE, Enum) 2 ==</Visibility>
+								<Rectangle id="Rectangle">
+									<LineWidth>2</LineWidth>
+									<Width>80</Width>
+									<Height>24</Height>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</Rectangle>
+							</Element>
+						</Element>
+						<Element id="4">
+							<FloatPosition>304.000,0.000</FloatPosition>
+						</Element>
+						<Element id="5">
+							<FloatPosition>386.000,-24.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>%((L:HUD_MASTER_MODE, Enum) 3 ==)%{if}RDY%{else}STBY%{end}</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>80,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Element id="ARMD">
+								<FloatPosition>0.000,0.000</FloatPosition>
+								<Visibility>(L:Master_Arm, Bool) (L:HUD_MASTER_MODE, Enum) 3 == &amp;&amp;</Visibility>
+								<Rectangle id="Rectangle">
+									<LineWidth>2</LineWidth>
+									<Bright>True</Bright>
+									<Width>80</Width>
+									<Height>24</Height>
+									<LineColorScript>@ForeColor</LineColorScript>
+								</Rectangle>
+							</Element>
+						</Element>
+					</Element>
+				</Element>
+				<Element id="CBT JETT">
+					<FloatPosition>0.000,0.000</FloatPosition>
+					<Visibility>(L:ARMT_PAGES) 3 ==</Visibility>
+						<Element id="TOP">
+							<FloatPosition>0.000,11.000</FloatPosition>
+							<Element id="LP">
+								<FloatPosition>58.000,0.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>
+%((L:AO_STA-2_LQty, Number) 0 != )%{if}
+%((L:AO_STA-2_LType, Enum))
+%{case}
+%{:0}PYLON
+%{:1}AAM-7
+%{:2}AAM-4
+%{:3}AIM-9L
+%{:4}AIM-120C
+%{:5}FUEL
+%{:6}EO
+%{:7}IR
+%{:8}1 \t MK-82
+%{:9}1 \t MK-82 R
+%{:10}1 \t MK-84
+%{:11}1 \t MK-84 L
+%{:12}1 \t GBU-58
+%{:13}1 \t GBU-42
+%{:14}1 \t GBU-52
+%{:15}1 \t GBU-71
+%{:16}1 \t SUU-20
+%{:17}1 \t BLU-27F
+%{:18}1 \t BLU-27U
+%{end}
+%{end}
+</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,48</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+								<Element id="SELECTOR">
+									<FloatPosition>0.000,0.000</FloatPosition>
+									<Visibility>(L:IF15E_STA-2_JETT, Bool)</Visibility>
+									<Rectangle id="Rectangle">
+										<LineWidth>2</LineWidth>
+										<Bright>True</Bright>
+										<Width>80</Width>
+										<Height>24</Height>
+										<LineColorScript>@ForeColor</LineColorScript>
+									</Rectangle>
+								</Element>
+							</Element>
+							<Element id="LR">
+								<FloatPosition>140.000,0.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>
+%((L:AO_LCFT_LQty, Number) 0 != )%{if}
+%((L:AO_LCFT_LType, Enum))
+%{case}
+%{:0}PYLON
+%{:1}AAM-7
+%{:2}AAM-4
+%{:3}AIM-9L
+%{:4}AIM-120C
+%{:5}FUEL
+%{:6}EO
+%{:7}IR
+%{:8}1 \t MK-82
+%{:9}1 \t MK-82 R
+%{:10}1 \t MK-84
+%{:11}1 \t MK-84 L
+%{:12}1 \t GBU-58
+%{:13}1 \t GBU-42
+%{:14}1 \t GBU-52
+%{:15}1 \t GBU-71
+%{:16}1 \t SUU-20
+%{:17}1 \t BLU-27F
+%{:18}1 \t BLU-27U
+%{end}
+%{end}
+</GaugeString>
+									<Size>80,48</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+								<Element id="SELECTOR">
+									<FloatPosition>0.000,0.000</FloatPosition>
+									<Visibility>(L:IF15E_LCFT_JETT, Bool)</Visibility>
+									<Rectangle id="Rectangle">
+										<LineWidth>2</LineWidth>
+										<Bright>True</Bright>
+										<Width>80</Width>
+										<Height>24</Height>
+										<LineColorScript>@ForeColor</LineColorScript>
+									</Rectangle>
+								</Element>
+							</Element>
+							<Element id="ST">
+								<FloatPosition>222.000,0.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>
+%((L:AO_STA-5_LQty, Number) 0 != )%{if}
+%((L:AO_STA-5_LType, Enum))
+%{case}
+%{:0}PYLON
+%{:1}AAM-7
+%{:2}AAM-4
+%{:3}AIM-9L
+%{:4}AIM-120C
+%{:5}FUEL
+%{:6}EO
+%{:7}IR
+%{:8}1 \t MK-82
+%{:9}1 \t MK-82 R
+%{:10}1 \t MK-84
+%{:11}1 \t MK-84 L
+%{:12}1 \t GBU-58
+%{:13}1 \t GBU-42
+%{:14}1 \t GBU-52
+%{:15}1 \t GBU-71
+%{:16}1 \t SUU-20
+%{:17}1 \t BLU-27F
+%{:18}1 \t BLU-27U
+%{end}
+%{end}
+</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,48</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+								<Element id="SELECTOR">
+									<FloatPosition>0.000,0.000</FloatPosition>
+									<Visibility>(L:IF15E_STA-5_JETT, Bool)</Visibility>
+									<Rectangle id="Rectangle">
+										<LineWidth>2</LineWidth>
+										<Bright>True</Bright>
+										<Width>80</Width>
+										<Height>24</Height>
+										<LineColorScript>@ForeColor</LineColorScript>
+									</Rectangle>
+								</Element>
+							</Element>
+							<Element id="RR">
+								<FloatPosition>304.000,0.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>
+%((L:AO_RCFT_LQty, Number) 0 != )%{if}
+%((L:AO_RCFT_LType, Enum))
+%{case}
+%{:0}PYLON
+%{:1}AAM-7
+%{:2}AAM-4
+%{:3}AIM-9L
+%{:4}AIM-120C
+%{:5}FUEL
+%{:6}EO
+%{:7}IR
+%{:8}1 \t MK-82
+%{:9}1 \t MK-82 R
+%{:10}1 \t MK-84
+%{:11}1 \t MK-84 L
+%{:12}1 \t GBU-58
+%{:13}1 \t GBU-42
+%{:14}1 \t GBU-52
+%{:15}1 \t GBU-71
+%{:16}1 \t SUU-20
+%{:17}1 \t BLU-27F
+%{:18}1 \t BLU-27U
+%{end}
+%{end}
+</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,48</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+								<Element id="SELECTOR">
+									<FloatPosition>0.000,0.000</FloatPosition>
+									<Visibility>(L:IF15E_RCFT_JETT, Bool)</Visibility>
+									<Rectangle id="Rectangle">
+										<LineWidth>2</LineWidth>
+										<Bright>True</Bright>
+										<Width>80</Width>
+										<Height>24</Height>
+										<LineColorScript>@ForeColor</LineColorScript>
+									</Rectangle>
+								</Element>
+							</Element>
+							<Element id="RP">
+								<FloatPosition>386.000,0.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>
+%((L:AO_STA-8_LQty, Number) 0 != )%{if}
+%((L:AO_STA-8_LType, Enum))
+%{case}
+%{:0}PYLON
+%{:1}AAM-7
+%{:2}AAM-4
+%{:3}AIM-9L
+%{:4}AIM-120C
+%{:5}FUEL
+%{:6}EO
+%{:7}IR
+%{:8}1 \t MK-82
+%{:9}1 \t MK-82 R
+%{:10}1 \t MK-84
+%{:11}1 \t MK-84 L
+%{:12}1 \t GBU-58
+%{:13}1 \t GBU-42
+%{:14}1 \t GBU-52
+%{:15}1 \t GBU-71
+%{:16}1 \t SUU-20
+%{:17}1 \t BLU-27F
+%{:18}1 \t BLU-27U
+%{end}
+%{end}
+</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>80,48</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+								<Element id="SELECTOR">
+									<FloatPosition>0.000,0.000</FloatPosition>
+									<Visibility>(L:IF15E_STA-8_JETT, Bool)</Visibility>
+									<Rectangle id="Rectangle">
+										<LineWidth>2</LineWidth>
+										<Bright>True</Bright>
+										<Width>80</Width>
+										<Height>24</Height>
+										<LineColorScript>@ForeColor</LineColorScript>
+									</Rectangle>
+								</Element>
+							</Element>
+						</Element>
+						<Element id="LEFT">
+							<FloatPosition>10.000,78.000</FloatPosition>
+							<Element id="RACK">
+								<FloatPosition>0.000,83.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>RACK</GaugeString>
+									<Size>80,22</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+								<Element id="SELECTOR">
+									<FloatPosition>0.000,0.000</FloatPosition>
+									<Visibility>(L:IF15E_LCFT_JETT, Bool) (L:IF15E_RCFT_JETT, Bool) || </Visibility>
+									<Rectangle id="Rectangle">
+										<LineWidth>2</LineWidth>
+										<Bright>True</Bright>
+										<Width>80</Width>
+										<Height>24</Height>
+										<LineColorScript>@ForeColor</LineColorScript>
+									</Rectangle>
+								</Element>
+							</Element>
+							<Element id="STORE">
+								<FloatPosition>0.000,162.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>STORE</GaugeString>
+									<Size>80,24</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+								<Element id="SELECTOR">
+									<FloatPosition>0.000,0.000</FloatPosition>
+									<Visibility>(L:IF15E_LENG_JETT, Bool) (L:IF15E_STA-5_JETT, Bool) || (L:IF15E_RENG_JETT, Bool) || </Visibility>
+									<Rectangle id="Rectangle">
+										<LineWidth>2</LineWidth>
+										<Bright>True</Bright>
+										<Width>80</Width>
+										<Height>24</Height>
+										<LineColorScript>@ForeColor</LineColorScript>
+									</Rectangle>
+								</Element>
+							</Element>
+							<Element id="PYLON">
+								<FloatPosition>0.000,246.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>PYLON</GaugeString>
+									<Size>80,24</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+								<Element id="SELECTOR">
+									<FloatPosition>0.000,0.000</FloatPosition>
+									<Visibility>(L:IF15E_STA-2_JETT, Bool) (L:IF15E_STA-8_JETT, Bool) || </Visibility>
+									<Rectangle id="Rectangle">
+										<LineWidth>2</LineWidth>
+										<Bright>True</Bright>
+										<Width>80</Width>
+										<Height>24</Height>
+										<LineColorScript>@ForeColor</LineColorScript>
+									</Rectangle>
+								</Element>
+							</Element>
+						</Element>
+						<Element id="PROGRAM">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<Element id="BOTTOM">
+								<FloatPosition>0.000,480.000</FloatPosition>
+								<Element id="P1">
+									<FloatPosition>58.000,0.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bold>True</Bold>
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>1</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>80,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+									<Element id="SELECTOR">
+										<FloatPosition>0.000,0.000</FloatPosition>
+										<Visibility>(L:IF15E_CBJP1_JETT, Bool)</Visibility>
+										<Rectangle id="Rectangle">
+											<LineWidth>2</LineWidth>
+											<Bright>True</Bright>
+											<Width>80</Width>
+											<Height>24</Height>
+											<LineColorScript>@ForeColor</LineColorScript>
+										</Rectangle>
+									</Element>
+								</Element>
+								<Element id="P2">
+									<FloatPosition>140.000,0.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bold>True</Bold>
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>2</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>80,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+									<Element id="SELECTOR">
+										<FloatPosition>0.000,0.000</FloatPosition>
+										<Visibility>(L:IF15E_CBJP2_JETT, Bool)</Visibility>
+										<Rectangle id="Rectangle">
+											<LineWidth>2</LineWidth>
+											<Bright>True</Bright>
+											<Width>80</Width>
+											<Height>24</Height>
+											<LineColorScript>@ForeColor</LineColorScript>
+										</Rectangle>
+									</Element>
+								</Element>
+								<Element id="ENTER">
+									<FloatPosition>386.000,0.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bold>True</Bold>
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>ENTER</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>80,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+							</Element>
+							<Element id="CENTER">
+								<FloatPosition>66.000,372.000</FloatPosition>
+								<Element id="L1">
+									<FloatPosition>0.000,0.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bold>True</Bold>
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>
+CBT 1: %((L:IF15E_CBT_1_PROG, Number) )%{case}
+%{:1}L PYLON
+%{:10}R PYLON
+%{:11}LR PYLON
+%{:100}C STORE
+%{:101}L PYLON C STORE
+%{:110}R PYLON C STORE
+%{:111}LR PYLON C STORE
+%{:1000}L RACK
+%{:1001}L PYLON L RACK
+%{:1010}R PYLON L RACK
+%{:1011}LR PYLON L RACK
+%{:1100}C STORE L RACK
+%{:1101}L PYLON C STORE L RACK
+%{:1110}R PYLON C STORE L RACK
+%{:1111}LR PYLON C STORE L RACK
+%{:10000}R RACK
+%{:10001}L PYLON R RACK
+%{:10010}R PYLON R RACK
+%{:10011}LR PYLON R RACK
+%{:10100}C STORE R RACK
+%{:10101}L PYLON C STORE R RACK
+%{:10110}R PYLON C STORE R RACK
+%{:10111}LR PYLON C STORE R RACK
+%{:11000}LR RACK
+%{:11001}l PYLON LR RACK
+%{:11010}R PYLON LR RACK
+%{:11011}LR PYLON LR RACK
+%{:11100}C STORE LR RACK
+%{:11101}L PYLON C STORE LR RACK
+%{:11110}R PYLON C STORE LR RACK
+%{:11111}LR PYLON C STORE LR RACK
+%{end}
+										</GaugeString>
+										<Size>400,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="L2">
+									<FloatPosition>0.000,30.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bold>True</Bold>
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>
+CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
+%{:1}L PYLON
+%{:10}R PYLON
+%{:11}LR PYLON
+%{:100}C STORE
+%{:101}L PYLON C STORE
+%{:110}R PYLON C STORE
+%{:111}LR PYLON C STORE
+%{:1000}L RACK
+%{:1001}L PYLON L RACK
+%{:1010}R PYLON L RACK
+%{:1011}LR PYLON L RACK
+%{:1100}C STORE L RACK
+%{:1101}L PYLON C STORE L RACK
+%{:1110}R PYLON C STORE L RACK
+%{:1111}LR PYLON C STORE L RACK
+%{:10000}R RACK
+%{:10001}L PYLON R RACK
+%{:10010}R PYLON R RACK
+%{:10011}LR PYLON R RACK
+%{:10100}C STORE R RACK
+%{:10101}L PYLON C STORE R RACK
+%{:10110}R PYLON C STORE R RACK
+%{:10111}LR PYLON C STORE R RACK
+%{:11000}LR RACK
+%{:11001}l PYLON LR RACK
+%{:11010}R PYLON LR RACK
+%{:11011}LR PYLON LR RACK
+%{:11100}C STORE LR RACK
+%{:11101}L PYLON C STORE LR RACK
+%{:11110}R PYLON C STORE LR RACK
+%{:11111}LR PYLON C STORE LR RACK
+%{end}
+										</GaugeString>
+										<Size>380,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+							</Element>
+						</Element>
+						<Element id="TEST">
+							<FloatPosition>160.000,80.000</FloatPosition>
+							<Visibility>0</Visibility>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontHeight>22</FontHeight>
+								<GaugeString>
+%((L:IF15E_STA-2_JETT, Bool))%!01d!\n
+%((L:IF15E_STA-8_JETT, Bool))%!01d!\n
+%((L:IF15E_STA-5_JETT, Bool))%!01d!\n
+%((L:IF15E_LCFT_JETT, Bool))%!01d!\n
+%((L:IF15E_RCT_JETT, Bool))%!01d!
+								</GaugeString>
+								<Size>80,168</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="TEST 2">
+							<FloatPosition>200.000,80.000</FloatPosition>
+							<Visibility>0</Visibility>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontHeight>22</FontHeight>
+								<GaugeString>
+%((L:IF15E_CBT_2_PROG, Number))%!01d!\n
+%((L:IF15E_CBT_2_PROG, Number) 1 &amp;)%!01d!\n
+%((L:IF15E_CBT_2_PROG, Number) 2 &amp;)%!01d!\n
+%((L:IF15E_CBT_2_PROG, Number) 4 &amp;)%!01d!\n
+%((L:IF15E_CBT_2_PROG, Number) 8 &amp;)%!01d!\n
+%((L:IF15E_CBT_2_PROG, Number) 16 &amp;)%!01d!
+								</GaugeString>
+								<Size>80,168</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
 				</Element>
 			</Element>
 			<Element id="BIT">
 				<Visibility>(L:MPCD-menu, Enum) 1000 div 2 == </Visibility>
-
 					<Element id="TITLE">
-					<Visibility>(L:BIT_PAGES) 0 ==</Visibility>
+						<Visibility>(L:BIT_PAGES) 0 ==</Visibility>
 						<FloatPosition>190.000,50.000</FloatPosition>
 						<GaugeText id="GaugeText">
-                            <Bright>True</Bright>
+							<Bright>True</Bright>
 							<FontColorScript>@ForeColor</FontColorScript>
 							<FontFace>Consolas</FontFace>
 							<FontHeight>35</FontHeight>
@@ -1299,8 +2536,612 @@
 							<Transparent>True</Transparent>
 						</GaugeText>
 					</Element>
-					<Element id="FUNC">
-					<Visibility>(L:BIT_PAGES) 1 ==</Visibility>
+					<Element id="FUNC BIT">
+						<Visibility>(L:BIT_PAGES) 0 ==</Visibility>
+						<FloatPosition>70.000,100.000</FloatPosition>
+						<Element id="FUNC">
+							<FloatPosition>-20.000,-20.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>FUNC</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+
+						<Element id="PACS">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<Visibility>(L:PACS_AC_PWR) 0 == (L:PACS_DC_PWR) 0 == or</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>PACS</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="AIM-9 STA-2">
+							<FloatPosition>0.000,20.000</FloatPosition>
+							<Visibility>(L:AIM-9_STA_2_AC_PWR) 0 == (L:AIM-9_STA_2_DC_PWR) 0 == or</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>AIM-9 STA-2</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="AIM-9 STA-8">
+							<FloatPosition>0.000,40.000</FloatPosition>
+							<Visibility>(L:AIM-9_STA_8_AC_PWR) 0 == (L:AIM-9_STA_8_DC_PWR) 0 == or</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>AIM-9 STA-8</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="AIM-7 STA-3/4">
+							<FloatPosition>0.000,60.000</FloatPosition>
+							<Visibility>(L:AIM-7_STA_3_4_PWR) 0 == (L:AIM-7_STA_3_4_PWR) 0 == or</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>AIM-7 STA-3/4</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="AIM-7 STA-6/7">
+							<FloatPosition>0.000,80.000</FloatPosition>
+							<Visibility>(L:AIM-7_STA_6_7_PWR) 0 == (L:AIM-7_STA_6_7_PWR) 0 == or</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>AIM-7 STA-6/7</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+
+						<Element id="MK-84 STA">
+							<FloatPosition>200.000,0.000</FloatPosition>
+							<Visibility>(L:MK-84_STA_AC_PWR) 0 == (L:MK-84_STA_AC_PWR) 0 == or</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>MK-84 STA</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="GUN">
+							<FloatPosition>200.000,20.000</FloatPosition>
+							<Visibility>(L:GUN_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>GUN</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="LEAD COMP">
+							<FloatPosition>200.000,40.000</FloatPosition>
+							<Visibility>(L:LEAD_COMP_GYRO_AC_PWR) 0 == (L:LEAD_COMP_GYRO_DC_PWR) 0 == or</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>LEAD COMP</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="CFT PWR SUP">
+							<FloatPosition>200.000,60.000</FloatPosition>
+							<Visibility>(L:LR_CFT_AG_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>CFT PWR SUP</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="CMD PRGMR">
+							<FloatPosition>200.000,80.000</FloatPosition>
+							<Visibility>(L:CMD_PRGMR_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>CMD PRGMR</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+
+						<Element id="STOR REL">
+							<FloatPosition>300.000,0.000</FloatPosition>
+							<Visibility>(L:STORE_RELEASE_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>STOR REL</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="A/G JETT">
+							<FloatPosition>300.000,20.000</FloatPosition>
+							<Visibility>(L:AG_JETT_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>A/G JETT</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="ARM BUS">
+							<FloatPosition>300.000,40.000</FloatPosition>
+							<Visibility>(L:ARM_BUS_CONT_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>ARM BUS</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="EMER JETT">
+							<FloatPosition>300.000,60.000</FloatPosition>
+							<Visibility>(L:EMER_JETT_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>EMER JETT</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="ACS">
+							<FloatPosition>300.000,80.000</FloatPosition>
+							<Visibility>(L:ACS_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>ACS</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+					</Element>
+					<Element id="GAUGE BIT">
+						<Visibility>(L:BIT_PAGES) 0 ==</Visibility>
+						<FloatPosition>70.000,220.000</FloatPosition>
+						<Element id="GAUGE">
+							<FloatPosition>-20.000,-20.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>GAUGE</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="AMI">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<Visibility>(L:AIR_MACH_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>AMI</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="AOA">
+							<FloatPosition>0.000,20.000</FloatPosition>
+							<Visibility>(L:AOA_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>AOA</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="ATTD">
+							<FloatPosition>0.000,40.000</FloatPosition>
+							<Visibility>(L:ATTD_DIR_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>ATTD</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="STBY ATTD">
+							<FloatPosition>0.000,60.000</FloatPosition>
+							<Visibility>(L:STBY_ATTD_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>STBY ATTD</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="HSI">
+							<FloatPosition>0.000,80.000</FloatPosition>
+							<Visibility>(L:HORIZ_SIT_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>HSI</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+
+						<Element id="ALTMTR">
+							<FloatPosition>150.000,0.000</FloatPosition>
+							<Visibility>(L:ALTMTR_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>ALTMTR</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="VSI">
+							<FloatPosition>150.000,20.000</FloatPosition>
+							<Visibility>(L:VS_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>VSI</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="TACH">
+							<FloatPosition>150.000,40.000</FloatPosition>
+							<Visibility>(L:ENG_RPM_TACH_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>TACH</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="FTIT">
+							<FloatPosition>150.000,60.000</FloatPosition>
+							<Visibility>(L:ENG_RPM_TACH_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>FTIT</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="FF">
+							<FloatPosition>150.000,80.000</FloatPosition>
+							<Visibility>(L:L_ENG_FUEL_FLOW_IND_PWR) 0 == (L:R_ENG_FUEL_FLOW_IND_PWR) 0 == or</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>FF</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+
+						<Element id="ENP">
+							<FloatPosition>200.000,0.000</FloatPosition>
+							<Visibility>(L:ENG_ENP_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>ENP</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="HYDR">
+							<FloatPosition>200.000,20.000</FloatPosition>
+							<Visibility>(L:HYDR_PRESS_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>HYDR</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="OIL P">
+							<FloatPosition>200.000,40.000</FloatPosition>
+							<Visibility>(L:ENG_OIL_PRESS_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>OIL P</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="FUEL QTY">
+							<FloatPosition>200.000,60.000</FloatPosition>
+							<Visibility>(L:FUEL_QTY_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>FUEL QTY</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="PRAD">
+							<FloatPosition>200.000,80.000</FloatPosition>
+							<Visibility>(L:PRAD_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>PRAD</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+
+						<Element id="OXY">
+							<FloatPosition>250.000,0.000</FloatPosition>
+							<Visibility>(L:OXY_GAGING_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>OXY</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="PRC">
+							<FloatPosition>250.000,20.000</FloatPosition>
+							<Visibility>(L:PRC_IND_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>PRC</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+					</Element>
+					<Element id="RDR BIT">
+						<Visibility>(L:BIT_PAGES) 0 ==</Visibility>
+						<FloatPosition>70.000,340.000</FloatPosition>
+						<Element id="RADAR">
+							<FloatPosition>-20.000,-20.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>RADAR</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="COOLANT PMUP">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<Visibility>(L:RDR_COOLANT_PUMP_AC_PWR) 0 == (L:RDR_COOLANT_PUMP_DC_PWR) 0 == or</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>COOLANT PUMP</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="CONT LVPS">
+							<FloatPosition>0.000,20.000</FloatPosition>
+							<Visibility>(L:RDR_CONT_LVPS_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>CONT LVPS</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="LVPS">
+							<FloatPosition>0.000,40.000</FloatPosition>
+							<Visibility>(L:RDR_LVPS_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>LVPS</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="XMTR">
+							<FloatPosition>0.000,60.000</FloatPosition>
+							<Visibility>(L:RDR_XMTR_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>XMTR</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="XMTR LVPS">
+							<FloatPosition>0.000,80.000</FloatPosition>
+							<Visibility>(L:RDR_XMTR_LVPS_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>XMTR LVPS</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+
+						<Element id="WARN RCVR">
+							<FloatPosition>150.000,0.000</FloatPosition>
+							<Visibility>(L:RDR_WARN_RCVR_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>WARN RCVR</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="WARN RCVR POD">
+							<FloatPosition>150.000,20.000</FloatPosition>
+							<Visibility>(L:RDR_WARN_RCVR_POD_PWR) 0 ==</Visibility>
+							<GaugeText id="GaugeText">
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>WARN RCVR POD</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>120,20</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+					</Element>
+					<Element id="FIC">
+						<Visibility>(L:BIT_PAGES) 1 ==</Visibility>
 						<Element id="TITLE">
 							<Visibility>(L:BIT_TEWS_PAGES) 0 == (L:BIT_FUNC_PAGES) 0 == and</Visibility>
 							<FloatPosition>190.000,50.000</FloatPosition>
@@ -1689,7 +3530,7 @@
 								</Element>
 								<Element id="FUEL PRESS">
 									<FloatPosition>0.000,168.000</FloatPosition>
-									<Visibility>(A:GENERAL ENG FUEL PRESSURE:1, psi) 10 &gt;</Visibility>
+									<Visibility>(A:GENERAL ENG FUEL PRESSURE:1, psi) 15 &gt;</Visibility>
 									<GaugeText id="GaugeText">
 										<Bright>True</Bright>
 										<FontColorScript>@ForeColor</FontColorScript>
@@ -1703,7 +3544,7 @@
 								</Element>
 								<Element id="FUEL PRESSW">
 									<FloatPosition>0.000,168.000</FloatPosition>
-									<Visibility>(A:GENERAL ENG FUEL PRESSURE:1, psi) 10 &lt;</Visibility>
+									<Visibility>(A:GENERAL ENG FUEL PRESSURE:1, psi) 15 &lt;</Visibility>
 									<GaugeText id="GaugeText">
 										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
 										<Bright>True</Bright>
@@ -2031,7 +3872,7 @@
 								</Element>
 								<Element id="FUEL PRESS">
 									<FloatPosition>0.000,168.000</FloatPosition>
-									<Visibility>(A:GENERAL ENG FUEL PRESSURE:2, psi) 10 &gt;</Visibility>
+									<Visibility>(A:GENERAL ENG FUEL PRESSURE:2, psi) 15 &gt;</Visibility>
 									<GaugeText id="GaugeText">
 										<Bright>True</Bright>
 										<FontColorScript>@ForeColor</FontColorScript>
@@ -2045,7 +3886,7 @@
 								</Element>
 								<Element id="FUEL PRESSW">
 									<FloatPosition>0.000,168.000</FloatPosition>
-									<Visibility>(A:GENERAL ENG FUEL PRESSURE:2, psi) 10 &lt;</Visibility>
+									<Visibility>(A:GENERAL ENG FUEL PRESSURE:2, psi) 15 &lt;</Visibility>
 									<GaugeText id="GaugeText">
 										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
 										<Bright>True</Bright>
@@ -3142,7 +4983,7 @@
 										<Transparent>True</Transparent>
 									</GaugeText>
 								</Element>
-								
+
 							</Element>
 						</Element>
 						<Element id="FUEL">
@@ -3159,6 +5000,25 @@
 									<GaugeString>FUEL</GaugeString>
 									<HorizontalAlign>CENTER</HorizontalAlign>
 									<Size>120,50</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="DUMP">
+								<Visibility>
+									(A:FUEL DUMP SWITCH, bool) 1 ==
+									(P:absolute time, number) 1 % 0.5 &lt; and
+								</Visibility>
+								<FloatPosition>190.000,90.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+									<Bold>True</Bold>
+									<Bright>True</Bright>
+									<FontColor>0x000000</FontColor>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>22</FontHeight>
+									<GaugeString>DUMP</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>120,24</Size>
 									<Transparent>True</Transparent>
 								</GaugeText>
 							</Element>
@@ -3667,8 +5527,7 @@
 								</Element>
 							</Element>
 						</Element>
-
-						</Element>
+					</Element>
 
 					<Element id="TEWS">
 					<Visibility>(L:BIT_PAGES) 15 ==</Visibility>
@@ -3686,7 +5545,6 @@
 								<Transparent>True</Transparent>
 							</GaugeText>
 						</Element>
-
 						<Element id="ICS BIT LOG">
 						<Visibility>(L:BIT_TEWS_PAGES) 4 ==</Visibility>
 							<Element id="TITLE">
@@ -3918,328 +5776,328 @@
 								</Point>
 							</PolyLine>
 						</Element>
-                        <Rotation id="HEADING">
-                            <PointsTo>NORTH</PointsTo>
-                            <Expression id="Expression">
-                                <Script>(A:PLANE HEADING DEGREES GYRO, Radians) /-/</Script>
-                            </Expression>
-                        </Rotation>
+						<Rotation id="HEADING">
+							<PointsTo>NORTH</PointsTo>
+							<Expression id="Expression">
+								<Script>(A:PLANE HEADING DEGREES GYRO, Radians) /-/</Script>
+							</Expression>
+						</Rotation>
 					</Element>
-                <Element id="COMPASS TEXT">
-                     <FloatPosition>256.000,360.000</FloatPosition>
-                     <Element id="N">
-                         <FloatPosition>0.000,0.000</FloatPosition>
-                         <GaugeText id="GaugeText">
-                             <Axis>14.000,14.000</Axis>
-                             <Bright>True</Bright>
-                             <FontColor>@ForeColor</FontColor>
-                             <FontFace>Consolas</FontFace>
-                             <FontHeight>20</FontHeight>
-                             <GaugeString>N</GaugeString>
-                             <HorizontalAlign>CENTER</HorizontalAlign>
-                             <Size>28,28</Size>
-                             <Transparent>True</Transparent>
-                         </GaugeText>
-                         <Shift id="Y">
-                             <Scale>0.000,0.500</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) cos *</Script>
-                             </Expression>
-                         </Shift>
-                         <Shift id="X">
-                             <Scale>0.500,0.000</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) sin *</Script>
-                             </Expression>
-                         </Shift>
-                     </Element>
-                     <Element id="W">
-                         <FloatPosition>0.000,0.000</FloatPosition>
-                         <GaugeText id="GaugeText">
-                             <Axis>14.000,14.000</Axis>
-                             <Bright>True</Bright>
-                             <FontColor>@ForeColor</FontColor>
-                             <FontFace>Consolas</FontFace>
-                             <FontHeight>20</FontHeight>
-                             <GaugeString>W</GaugeString>
-                             <HorizontalAlign>CENTER</HorizontalAlign>
-                             <Size>28,28</Size>
-                             <Transparent>True</Transparent>
-                         </GaugeText>
-                         <Shift id="Y">
-                             <Scale>0.000,0.500</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 270 dgrd - cos *</Script>
-                             </Expression>
-                         </Shift>
-                         <Shift id="X">
-                             <Scale>0.500,0.000</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 270 dgrd - sin *</Script>
-                             </Expression>
-                         </Shift>
-                     </Element>
-                     <Element id="E">
-                         <FloatPosition>0.000,0.000</FloatPosition>
-                         <GaugeText id="GaugeText">
-                             <Axis>14.000,14.000</Axis>
-                             <Bright>True</Bright>
-                             <FontColor>@ForeColor</FontColor>
-                             <FontFace>Consolas</FontFace>
-                             <FontHeight>20</FontHeight>
-                             <GaugeString>E</GaugeString>
-                             <HorizontalAlign>CENTER</HorizontalAlign>
-                             <Size>28,28</Size>
-                             <Transparent>True</Transparent>
-                         </GaugeText>
-                         <Shift id="Y">
-                             <Scale>0.000,0.500</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 90 dgrd - cos *</Script>
-                             </Expression>
-                         </Shift>
-                         <Shift id="X">
-                             <Scale>0.500,0.000</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 90 dgrd - sin *</Script>
-                             </Expression>
-                         </Shift>
-                     </Element>
-                     <Element id="S">
-                         <FloatPosition>0.000,0.000</FloatPosition>
-                         <GaugeText id="GaugeText">
-                             <Axis>14.000,14.000</Axis>
-                             <Bright>True</Bright>
-                             <FontColor>@ForeColor</FontColor>
-                             <FontFace>Consolas</FontFace>
-                             <FontHeight>20</FontHeight>
-                             <GaugeString>S</GaugeString>
-                             <HorizontalAlign>CENTER</HorizontalAlign>
-                             <Size>28,28</Size>
-                             <Transparent>True</Transparent>
-                         </GaugeText>
-                         <Shift id="Y">
-                             <Scale>0.000,0.500</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 180 dgrd - cos *</Script>
-                             </Expression>
-                         </Shift>
-                         <Shift id="X">
-                             <Scale>0.500,0.000</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 180 dgrd - sin *</Script>
-                             </Expression>
-                         </Shift>
-                     </Element>
-                     <Element id="3">
-                         <FloatPosition>0.000,0.000</FloatPosition>
-                         <GaugeText id="GaugeText">
-                             <Axis>24.000,12.000</Axis>
-                             <Bright>True</Bright>
-                             <FontColor>@ForeColor</FontColor>
-                             <FontFace>Consolas</FontFace>
-                             <FontHeight>18</FontHeight>
-                             <GaugeString>3</GaugeString>
-                             <HorizontalAlign>CENTER</HorizontalAlign>
-                             <Size>48,24</Size>
-                             <Transparent>True</Transparent>
-                         </GaugeText>
-                         <Shift id="Y">
-                             <Scale>0.000,0.500</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 30 dgrd - cos *</Script>
-                             </Expression>
-                         </Shift>
-                         <Shift id="X">
-                             <Scale>0.500,0.000</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 30 dgrd - sin *</Script>
-                             </Expression>
-                         </Shift>
-                     </Element>
-                     <Element id="6">
-                         <FloatPosition>0.000,0.000</FloatPosition>
-                         <GaugeText id="GaugeText">
-                             <Axis>24.000,12.000</Axis>
-                             <Bright>True</Bright>
-                             <FontColor>@ForeColor</FontColor>
-                             <FontFace>Consolas</FontFace>
-                             <FontHeight>18</FontHeight>
-                             <GaugeString>6</GaugeString>
-                             <HorizontalAlign>CENTER</HorizontalAlign>
-                             <Size>48,24</Size>
-                             <Transparent>True</Transparent>
-                         </GaugeText>
-                         <Shift id="Y">
-                             <Scale>0.000,0.500</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 60 dgrd - cos *</Script>
-                             </Expression>
-                         </Shift>
-                         <Shift id="X">
-                             <Scale>0.500,0.000</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 60 dgrd - sin *</Script>
-                             </Expression>
-                         </Shift>
-                     </Element>
-                     <Element id="12">
-                         <FloatPosition>0.000,0.000</FloatPosition>
-                         <GaugeText id="GaugeText">
-                             <Axis>24.000,12.000</Axis>
-                             <Bright>True</Bright>
-                             <FontColor>@ForeColor</FontColor>
-                             <FontFace>Consolas</FontFace>
-                             <FontHeight>18</FontHeight>
-                             <GaugeString>12</GaugeString>
-                             <HorizontalAlign>CENTER</HorizontalAlign>
-                             <Size>48,24</Size>
-                             <Transparent>True</Transparent>
-                         </GaugeText>
-                         <Shift id="Y">
-                             <Scale>0.000,0.500</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 120 dgrd - cos *</Script>
-                             </Expression>
-                         </Shift>
-                         <Shift id="X">
-                             <Scale>0.500,0.000</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 120 dgrd - sin *</Script>
-                             </Expression>
-                         </Shift>
-                     </Element>
-                     <Element id="15">
-                         <FloatPosition>0.000,0.000</FloatPosition>
-                         <GaugeText id="GaugeText">
-                             <Axis>24.000,12.000</Axis>
-                             <Bright>True</Bright>
-                             <FontColor>@ForeColor</FontColor>
-                             <FontFace>Consolas</FontFace>
-                             <FontHeight>18</FontHeight>
-                             <GaugeString>15</GaugeString>
-                             <HorizontalAlign>CENTER</HorizontalAlign>
-                             <Size>48,24</Size>
-                             <Transparent>True</Transparent>
-                         </GaugeText>
-                         <Shift id="Y">
-                             <Scale>0.000,0.500</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 150 dgrd - cos *</Script>
-                             </Expression>
-                         </Shift>
-                         <Shift id="X">
-                             <Scale>0.500,0.000</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 150 dgrd - sin *</Script>
-                             </Expression>
-                         </Shift>
-                     </Element>
-                     <Element id="21">
-                         <FloatPosition>0.000,0.000</FloatPosition>
-                         <GaugeText id="GaugeText">
-                             <Axis>24.000,12.000</Axis>
-                             <Bright>True</Bright>
-                             <FontColor>@ForeColor</FontColor>
-                             <FontFace>Consolas</FontFace>
-                             <FontHeight>18</FontHeight>
-                             <GaugeString>21</GaugeString>
-                             <HorizontalAlign>CENTER</HorizontalAlign>
-                             <Size>48,24</Size>
-                             <Transparent>True</Transparent>
-                         </GaugeText>
-                         <Shift id="Y">
-                             <Scale>0.000,0.500</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 210 dgrd - cos *</Script>
-                             </Expression>
-                         </Shift>
-                         <Shift id="X">
-                             <Scale>0.500,0.000</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 210 dgrd - sin *</Script>
-                             </Expression>
-                         </Shift>
-                     </Element>
-                     <Element id="24">
-                         <FloatPosition>0.000,0.000</FloatPosition>
-                         <GaugeText id="GaugeText">
-                             <Axis>24.000,12.000</Axis>
-                             <Bright>True</Bright>
-                             <FontColor>@ForeColor</FontColor>
-                             <FontFace>Consolas</FontFace>
-                             <FontHeight>18</FontHeight>
-                             <GaugeString>24</GaugeString>
-                             <HorizontalAlign>CENTER</HorizontalAlign>
-                             <Size>48,24</Size>
-                             <Transparent>True</Transparent>
-                         </GaugeText>
-                         <Shift id="Y">
-                             <Scale>0.000,0.500</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 240 dgrd - cos *</Script>
-                             </Expression>
-                         </Shift>
-                         <Shift id="X">
-                             <Scale>0.500,0.000</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 240 dgrd - sin *</Script>
-                             </Expression>
-                         </Shift>
-                     </Element>
-                     <Element id="30">
-                         <FloatPosition>0.000,0.000</FloatPosition>
-                         <GaugeText id="GaugeText">
-                             <Axis>24.000,12.000</Axis>
-                             <Bright>True</Bright>
-                             <FontColor>@ForeColor</FontColor>
-                             <FontFace>Consolas</FontFace>
-                             <FontHeight>18</FontHeight>
-                             <GaugeString>30</GaugeString>
-                             <HorizontalAlign>CENTER</HorizontalAlign>
-                             <Size>48,24</Size>
-                             <Transparent>True</Transparent>
-                         </GaugeText>
-                         <Shift id="Y">
-                             <Scale>0.000,0.500</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 300 dgrd - cos *</Script>
-                             </Expression>
-                         </Shift>
-                         <Shift id="X">
-                             <Scale>0.500,0.000</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 300 dgrd - sin *</Script>
-                             </Expression>
-                         </Shift>
-                     </Element>
-                     <Element id="33">
-                         <FloatPosition>0.000,0.000</FloatPosition>
-                         <GaugeText id="GaugeText">
-                             <Axis>24.000,12.000</Axis>
-                             <Bright>True</Bright>
-                             <FontColor>@ForeColor</FontColor>
-                             <FontFace>Consolas</FontFace>
-                             <FontHeight>18</FontHeight>
-                             <GaugeString>33</GaugeString>
-                             <HorizontalAlign>CENTER</HorizontalAlign>
-                             <Size>48,24</Size>
-                             <Transparent>True</Transparent>
-                         </GaugeText>
-                         <Shift id="Y">
-                             <Scale>0.000,0.500</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 330 dgrd - cos *</Script>
-                             </Expression>
-                         </Shift>
-                         <Shift id="X">
-                             <Scale>0.500,0.000</Scale>
-                             <Expression id="Expression">
-                                 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 330 dgrd - sin *</Script>
-                             </Expression>
-                         </Shift>
-                     </Element>
-                 </Element>
+				<Element id="COMPASS TEXT">
+					 <FloatPosition>256.000,360.000</FloatPosition>
+					 <Element id="N">
+						 <FloatPosition>0.000,0.000</FloatPosition>
+						 <GaugeText id="GaugeText">
+							 <Axis>14.000,14.000</Axis>
+							 <Bright>True</Bright>
+							 <FontColor>@ForeColor</FontColor>
+							 <FontFace>Consolas</FontFace>
+							 <FontHeight>20</FontHeight>
+							 <GaugeString>N</GaugeString>
+							 <HorizontalAlign>CENTER</HorizontalAlign>
+							 <Size>28,28</Size>
+							 <Transparent>True</Transparent>
+						 </GaugeText>
+						 <Shift id="Y">
+							 <Scale>0.000,0.500</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) cos *</Script>
+							 </Expression>
+						 </Shift>
+						 <Shift id="X">
+							 <Scale>0.500,0.000</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) sin *</Script>
+							 </Expression>
+						 </Shift>
+					 </Element>
+					 <Element id="W">
+						 <FloatPosition>0.000,0.000</FloatPosition>
+						 <GaugeText id="GaugeText">
+							 <Axis>14.000,14.000</Axis>
+							 <Bright>True</Bright>
+							 <FontColor>@ForeColor</FontColor>
+							 <FontFace>Consolas</FontFace>
+							 <FontHeight>20</FontHeight>
+							 <GaugeString>W</GaugeString>
+							 <HorizontalAlign>CENTER</HorizontalAlign>
+							 <Size>28,28</Size>
+							 <Transparent>True</Transparent>
+						 </GaugeText>
+						 <Shift id="Y">
+							 <Scale>0.000,0.500</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 270 dgrd - cos *</Script>
+							 </Expression>
+						 </Shift>
+						 <Shift id="X">
+							 <Scale>0.500,0.000</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 270 dgrd - sin *</Script>
+							 </Expression>
+						 </Shift>
+					 </Element>
+					 <Element id="E">
+						 <FloatPosition>0.000,0.000</FloatPosition>
+						 <GaugeText id="GaugeText">
+							 <Axis>14.000,14.000</Axis>
+							 <Bright>True</Bright>
+							 <FontColor>@ForeColor</FontColor>
+							 <FontFace>Consolas</FontFace>
+							 <FontHeight>20</FontHeight>
+							 <GaugeString>E</GaugeString>
+							 <HorizontalAlign>CENTER</HorizontalAlign>
+							 <Size>28,28</Size>
+							 <Transparent>True</Transparent>
+						 </GaugeText>
+						 <Shift id="Y">
+							 <Scale>0.000,0.500</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 90 dgrd - cos *</Script>
+							 </Expression>
+						 </Shift>
+						 <Shift id="X">
+							 <Scale>0.500,0.000</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 90 dgrd - sin *</Script>
+							 </Expression>
+						 </Shift>
+					 </Element>
+					 <Element id="S">
+						 <FloatPosition>0.000,0.000</FloatPosition>
+						 <GaugeText id="GaugeText">
+							 <Axis>14.000,14.000</Axis>
+							 <Bright>True</Bright>
+							 <FontColor>@ForeColor</FontColor>
+							 <FontFace>Consolas</FontFace>
+							 <FontHeight>20</FontHeight>
+							 <GaugeString>S</GaugeString>
+							 <HorizontalAlign>CENTER</HorizontalAlign>
+							 <Size>28,28</Size>
+							 <Transparent>True</Transparent>
+						 </GaugeText>
+						 <Shift id="Y">
+							 <Scale>0.000,0.500</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 180 dgrd - cos *</Script>
+							 </Expression>
+						 </Shift>
+						 <Shift id="X">
+							 <Scale>0.500,0.000</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 180 dgrd - sin *</Script>
+							 </Expression>
+						 </Shift>
+					 </Element>
+					 <Element id="3">
+						 <FloatPosition>0.000,0.000</FloatPosition>
+						 <GaugeText id="GaugeText">
+							 <Axis>24.000,12.000</Axis>
+							 <Bright>True</Bright>
+							 <FontColor>@ForeColor</FontColor>
+							 <FontFace>Consolas</FontFace>
+							 <FontHeight>18</FontHeight>
+							 <GaugeString>3</GaugeString>
+							 <HorizontalAlign>CENTER</HorizontalAlign>
+							 <Size>48,24</Size>
+							 <Transparent>True</Transparent>
+						 </GaugeText>
+						 <Shift id="Y">
+							 <Scale>0.000,0.500</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 30 dgrd - cos *</Script>
+							 </Expression>
+						 </Shift>
+						 <Shift id="X">
+							 <Scale>0.500,0.000</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 30 dgrd - sin *</Script>
+							 </Expression>
+						 </Shift>
+					 </Element>
+					 <Element id="6">
+						 <FloatPosition>0.000,0.000</FloatPosition>
+						 <GaugeText id="GaugeText">
+							 <Axis>24.000,12.000</Axis>
+							 <Bright>True</Bright>
+							 <FontColor>@ForeColor</FontColor>
+							 <FontFace>Consolas</FontFace>
+							 <FontHeight>18</FontHeight>
+							 <GaugeString>6</GaugeString>
+							 <HorizontalAlign>CENTER</HorizontalAlign>
+							 <Size>48,24</Size>
+							 <Transparent>True</Transparent>
+						 </GaugeText>
+						 <Shift id="Y">
+							 <Scale>0.000,0.500</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 60 dgrd - cos *</Script>
+							 </Expression>
+						 </Shift>
+						 <Shift id="X">
+							 <Scale>0.500,0.000</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 60 dgrd - sin *</Script>
+							 </Expression>
+						 </Shift>
+					 </Element>
+					 <Element id="12">
+						 <FloatPosition>0.000,0.000</FloatPosition>
+						 <GaugeText id="GaugeText">
+							 <Axis>24.000,12.000</Axis>
+							 <Bright>True</Bright>
+							 <FontColor>@ForeColor</FontColor>
+							 <FontFace>Consolas</FontFace>
+							 <FontHeight>18</FontHeight>
+							 <GaugeString>12</GaugeString>
+							 <HorizontalAlign>CENTER</HorizontalAlign>
+							 <Size>48,24</Size>
+							 <Transparent>True</Transparent>
+						 </GaugeText>
+						 <Shift id="Y">
+							 <Scale>0.000,0.500</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 120 dgrd - cos *</Script>
+							 </Expression>
+						 </Shift>
+						 <Shift id="X">
+							 <Scale>0.500,0.000</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 120 dgrd - sin *</Script>
+							 </Expression>
+						 </Shift>
+					 </Element>
+					 <Element id="15">
+						 <FloatPosition>0.000,0.000</FloatPosition>
+						 <GaugeText id="GaugeText">
+							 <Axis>24.000,12.000</Axis>
+							 <Bright>True</Bright>
+							 <FontColor>@ForeColor</FontColor>
+							 <FontFace>Consolas</FontFace>
+							 <FontHeight>18</FontHeight>
+							 <GaugeString>15</GaugeString>
+							 <HorizontalAlign>CENTER</HorizontalAlign>
+							 <Size>48,24</Size>
+							 <Transparent>True</Transparent>
+						 </GaugeText>
+						 <Shift id="Y">
+							 <Scale>0.000,0.500</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 150 dgrd - cos *</Script>
+							 </Expression>
+						 </Shift>
+						 <Shift id="X">
+							 <Scale>0.500,0.000</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 150 dgrd - sin *</Script>
+							 </Expression>
+						 </Shift>
+					 </Element>
+					 <Element id="21">
+						 <FloatPosition>0.000,0.000</FloatPosition>
+						 <GaugeText id="GaugeText">
+							 <Axis>24.000,12.000</Axis>
+							 <Bright>True</Bright>
+							 <FontColor>@ForeColor</FontColor>
+							 <FontFace>Consolas</FontFace>
+							 <FontHeight>18</FontHeight>
+							 <GaugeString>21</GaugeString>
+							 <HorizontalAlign>CENTER</HorizontalAlign>
+							 <Size>48,24</Size>
+							 <Transparent>True</Transparent>
+						 </GaugeText>
+						 <Shift id="Y">
+							 <Scale>0.000,0.500</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 210 dgrd - cos *</Script>
+							 </Expression>
+						 </Shift>
+						 <Shift id="X">
+							 <Scale>0.500,0.000</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 210 dgrd - sin *</Script>
+							 </Expression>
+						 </Shift>
+					 </Element>
+					 <Element id="24">
+						 <FloatPosition>0.000,0.000</FloatPosition>
+						 <GaugeText id="GaugeText">
+							 <Axis>24.000,12.000</Axis>
+							 <Bright>True</Bright>
+							 <FontColor>@ForeColor</FontColor>
+							 <FontFace>Consolas</FontFace>
+							 <FontHeight>18</FontHeight>
+							 <GaugeString>24</GaugeString>
+							 <HorizontalAlign>CENTER</HorizontalAlign>
+							 <Size>48,24</Size>
+							 <Transparent>True</Transparent>
+						 </GaugeText>
+						 <Shift id="Y">
+							 <Scale>0.000,0.500</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 240 dgrd - cos *</Script>
+							 </Expression>
+						 </Shift>
+						 <Shift id="X">
+							 <Scale>0.500,0.000</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 240 dgrd - sin *</Script>
+							 </Expression>
+						 </Shift>
+					 </Element>
+					 <Element id="30">
+						 <FloatPosition>0.000,0.000</FloatPosition>
+						 <GaugeText id="GaugeText">
+							 <Axis>24.000,12.000</Axis>
+							 <Bright>True</Bright>
+							 <FontColor>@ForeColor</FontColor>
+							 <FontFace>Consolas</FontFace>
+							 <FontHeight>18</FontHeight>
+							 <GaugeString>30</GaugeString>
+							 <HorizontalAlign>CENTER</HorizontalAlign>
+							 <Size>48,24</Size>
+							 <Transparent>True</Transparent>
+						 </GaugeText>
+						 <Shift id="Y">
+							 <Scale>0.000,0.500</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 300 dgrd - cos *</Script>
+							 </Expression>
+						 </Shift>
+						 <Shift id="X">
+							 <Scale>0.500,0.000</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 300 dgrd - sin *</Script>
+							 </Expression>
+						 </Shift>
+					 </Element>
+					 <Element id="33">
+						 <FloatPosition>0.000,0.000</FloatPosition>
+						 <GaugeText id="GaugeText">
+							 <Axis>24.000,12.000</Axis>
+							 <Bright>True</Bright>
+							 <FontColor>@ForeColor</FontColor>
+							 <FontFace>Consolas</FontFace>
+							 <FontHeight>18</FontHeight>
+							 <GaugeString>33</GaugeString>
+							 <HorizontalAlign>CENTER</HorizontalAlign>
+							 <Size>48,24</Size>
+							 <Transparent>True</Transparent>
+						 </GaugeText>
+						 <Shift id="Y">
+							 <Scale>0.000,0.500</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 330 dgrd - cos *</Script>
+							 </Expression>
+						 </Shift>
+						 <Shift id="X">
+							 <Scale>0.500,0.000</Scale>
+							 <Expression id="Expression">
+								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 330 dgrd - sin *</Script>
+							 </Expression>
+						 </Shift>
+					 </Element>
+				 </Element>
 				<Element id="ACQUISITION SYMBOL">
 					<FloatPosition>256.000,240.000</FloatPosition>
 					<Element id="1">
@@ -4496,7 +6354,7 @@
 
 			</Element>
 			<Element id="WPN">
-            <FloatPosition>210.000,240.000</FloatPosition>
+			<FloatPosition>210.000,240.000</FloatPosition>
 				<Visibility>(L:MPCD-menu, Enum) 1000 div 4 == </Visibility>
 				<GaugeText id="GaugeText">
 						<BackgroundColorScript>@ForeColor</BackgroundColorScript>
@@ -4513,7 +6371,7 @@
 			</Element>
 
 			<Element id="AUTO RANGE">
-            <FloatPosition>210.000,240.000</FloatPosition>
+			<FloatPosition>210.000,240.000</FloatPosition>
 				<Visibility>(L:MPCD-menu, Enum) 1000 div 9 == </Visibility>
 				<GaugeText id="GaugeText">
 						<BackgroundColorScript>@ForeColor</BackgroundColorScript>
@@ -4528,8 +6386,24 @@
 						<Transparent>True</Transparent>
 				</GaugeText>
 			</Element>
+			<Element id="DCLTR">
+			<FloatPosition>210.000,240.000</FloatPosition>
+				<Visibility>(L:MPCD-menu, Enum) 1000 div 11 == </Visibility>
+				<GaugeText id="GaugeText">
+						<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+						<Bold>True</Bold>
+						<Bright>True</Bright>
+						<FontColor>0x000000</FontColor>
+						<FontFace>Consolas</FontFace>
+						<FontHeight>22</FontHeight>
+						<GaugeString>INOP</GaugeString>
+						<HorizontalAlign>CENTER</HorizontalAlign>
+						<Size>100,24</Size>
+						<Transparent>True</Transparent>
+				</GaugeText>
+			</Element>
 			<Element id="LINES">
-            <FloatPosition>210.000,240.000</FloatPosition>
+			<FloatPosition>210.000,240.000</FloatPosition>
 				<Visibility>(L:MPCD-menu, Enum) 1000 div 12 == </Visibility>
 				<GaugeText id="GaugeText">
 						<BackgroundColorScript>@ForeColor</BackgroundColorScript>
@@ -4924,339 +6798,339 @@
 								</Point>
 							</PolyLine>
 						</Element>
-                        <Rotation id="HEADING">
-                            <PointsTo>NORTH</PointsTo>
-                            <Expression id="Expression">
-                                <Script>(A:PLANE HEADING DEGREES GYRO, Radians) /-/</Script>
-                            </Expression>
-                        </Rotation>
+						<Rotation id="HEADING">
+							<PointsTo>NORTH</PointsTo>
+							<Expression id="Expression">
+								<Script>(A:PLANE HEADING DEGREES GYRO, Radians) /-/</Script>
+							</Expression>
+						</Rotation>
 					</Element>
-                    <Element id="COMPASS TEXT">
+					<Element id="COMPASS TEXT">
 						<Visibility>(L:MPCD_DTM_SHR) (L:MPCD-menu, Enum) 1000 div 15 == and</Visibility>
-                        <FloatPosition>256.000,256.000</FloatPosition>
-                        <Element id="N">
-                            <FloatPosition>0.000,0.000</FloatPosition>
-                            <GaugeText id="GaugeText">
-                                <Axis>14.000,14.000</Axis>
-                                <Bright>True</Bright>
-                                <FontColor>@ForeColor</FontColor>
-                                <FontFace>Consolas</FontFace>
-                                <FontHeight>28</FontHeight>
-                                <GaugeString>N</GaugeString>
-                                <HorizontalAlign>CENTER</HorizontalAlign>
-                                <Size>28,28</Size>
-                                <Transparent>True</Transparent>
-                            </GaugeText>
-                            <Shift id="Y">
-                                <Scale>0.000,1.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) cos *</Script>
-                                </Expression>
-                            </Shift>
-                            <Shift id="X">
-                                <Scale>1.000,0.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) sin *</Script>
-                                </Expression>
-                            </Shift>
-                        </Element>
-                        <Element id="W">
-                            <FloatPosition>0.000,0.000</FloatPosition>
-                            <GaugeText id="GaugeText">
-                                <Axis>14.000,14.000</Axis>
-                                <Bright>True</Bright>
-                                <FontColor>@ForeColor</FontColor>
-                                <FontFace>Consolas</FontFace>
-                                <FontHeight>28</FontHeight>
-                                <GaugeString>W</GaugeString>
-                                <HorizontalAlign>CENTER</HorizontalAlign>
-                                <Size>28,28</Size>
-                                <Transparent>True</Transparent>
-                            </GaugeText>
-                            <Shift id="Y">
-                                <Scale>0.000,1.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 270 dgrd - cos *</Script>
-                                </Expression>
-                            </Shift>
-                            <Shift id="X">
-                                <Scale>1.000,0.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 270 dgrd - sin *</Script>
-                                </Expression>
-                            </Shift>
-                        </Element>
-                        <Element id="E">
-                            <FloatPosition>0.000,0.000</FloatPosition>
-                            <GaugeText id="GaugeText">
-                                <Axis>14.000,14.000</Axis>
-                                <Bright>True</Bright>
-                                <FontColor>@ForeColor</FontColor>
-                                <FontFace>Consolas</FontFace>
-                                <FontHeight>28</FontHeight>
-                                <GaugeString>E</GaugeString>
-                                <HorizontalAlign>CENTER</HorizontalAlign>
-                                <Size>28,28</Size>
-                                <Transparent>True</Transparent>
-                            </GaugeText>
-                            <Shift id="Y">
-                                <Scale>0.000,1.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 90 dgrd - cos *</Script>
-                                </Expression>
-                            </Shift>
-                            <Shift id="X">
-                                <Scale>1.000,0.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 90 dgrd - sin *</Script>
-                                </Expression>
-                            </Shift>
-                        </Element>
-                        <Element id="S">
-                            <FloatPosition>0.000,0.000</FloatPosition>
-                            <GaugeText id="GaugeText">
-                                <Axis>14.000,14.000</Axis>
-                                <Bright>True</Bright>
-                                <FontColor>@ForeColor</FontColor>
-                                <FontFace>Consolas</FontFace>
-                                <FontHeight>28</FontHeight>
-                                <GaugeString>S</GaugeString>
-                                <HorizontalAlign>CENTER</HorizontalAlign>
-                                <Size>28,28</Size>
-                                <Transparent>True</Transparent>
-                            </GaugeText>
-                            <Shift id="Y">
-                                <Scale>0.000,1.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 180 dgrd - cos *</Script>
-                                </Expression>
-                            </Shift>
-                            <Shift id="X">
-                                <Scale>1.000,0.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 180 dgrd - sin *</Script>
-                                </Expression>
-                            </Shift>
-                        </Element>
-                        <Element id="3">
-                            <FloatPosition>0.000,0.000</FloatPosition>
-                            <GaugeText id="GaugeText">
-                                <Axis>24.000,12.000</Axis>
-                                <Bright>True</Bright>
-                                <FontColor>@ForeColor</FontColor>
-                                <FontFace>Consolas</FontFace>
-                                <FontHeight>22</FontHeight>
-                                <GaugeString>3</GaugeString>
-                                <HorizontalAlign>CENTER</HorizontalAlign>
-                                <Size>48,24</Size>
-                                <Transparent>True</Transparent>
-                            </GaugeText>
-                            <Shift id="Y">
-                                <Scale>0.000,1.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 30 dgrd - cos *</Script>
-                                </Expression>
-                            </Shift>
-                            <Shift id="X">
-                                <Scale>1.000,0.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 30 dgrd - sin *</Script>
-                                </Expression>
-                            </Shift>
-                        </Element>
-                        <Element id="6">
-                            <FloatPosition>0.000,0.000</FloatPosition>
-                            <GaugeText id="GaugeText">
-                                <Axis>24.000,12.000</Axis>
-                                <Bright>True</Bright>
-                                <FontColor>@ForeColor</FontColor>
-                                <FontFace>Consolas</FontFace>
-                                <FontHeight>22</FontHeight>
-                                <GaugeString>6</GaugeString>
-                                <HorizontalAlign>CENTER</HorizontalAlign>
-                                <Size>48,24</Size>
-                                <Transparent>True</Transparent>
-                            </GaugeText>
-                            <Shift id="Y">
-                                <Scale>0.000,1.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 60 dgrd - cos *</Script>
-                                </Expression>
-                            </Shift>
-                            <Shift id="X">
-                                <Scale>1.000,0.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 60 dgrd - sin *</Script>
-                                </Expression>
-                            </Shift>
-                        </Element>
-                        <Element id="12">
-                            <FloatPosition>0.000,0.000</FloatPosition>
-                            <GaugeText id="GaugeText">
-                                <Axis>24.000,12.000</Axis>
-                                <Bright>True</Bright>
-                                <FontColor>@ForeColor</FontColor>
-                                <FontFace>Consolas</FontFace>
-                                <FontHeight>22</FontHeight>
-                                <GaugeString>12</GaugeString>
-                                <HorizontalAlign>CENTER</HorizontalAlign>
-                                <Size>48,24</Size>
-                                <Transparent>True</Transparent>
-                            </GaugeText>
-                            <Shift id="Y">
-                                <Scale>0.000,1.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 120 dgrd - cos *</Script>
-                                </Expression>
-                            </Shift>
-                            <Shift id="X">
-                                <Scale>1.000,0.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 120 dgrd - sin *</Script>
-                                </Expression>
-                            </Shift>
-                        </Element>
-                        <Element id="15">
-                            <FloatPosition>0.000,0.000</FloatPosition>
-                            <GaugeText id="GaugeText">
-                                <Axis>24.000,12.000</Axis>
-                                <Bright>True</Bright>
-                                <FontColor>@ForeColor</FontColor>
-                                <FontFace>Consolas</FontFace>
-                                <FontHeight>22</FontHeight>
-                                <GaugeString>15</GaugeString>
-                                <HorizontalAlign>CENTER</HorizontalAlign>
-                                <Size>48,24</Size>
-                                <Transparent>True</Transparent>
-                            </GaugeText>
-                            <Shift id="Y">
-                                <Scale>0.000,1.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 150 dgrd - cos *</Script>
-                                </Expression>
-                            </Shift>
-                            <Shift id="X">
-                                <Scale>1.000,0.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 150 dgrd - sin *</Script>
-                                </Expression>
-                            </Shift>
-                        </Element>
-                        <Element id="21">
-                            <FloatPosition>0.000,0.000</FloatPosition>
-                            <GaugeText id="GaugeText">
-                                <Axis>24.000,12.000</Axis>
-                                <Bright>True</Bright>
-                                <FontColor>@ForeColor</FontColor>
-                                <FontFace>Consolas</FontFace>
-                                <FontHeight>22</FontHeight>
-                                <GaugeString>21</GaugeString>
-                                <HorizontalAlign>CENTER</HorizontalAlign>
-                                <Size>48,24</Size>
-                                <Transparent>True</Transparent>
-                            </GaugeText>
-                            <Shift id="Y">
-                                <Scale>0.000,1.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 210 dgrd - cos *</Script>
-                                </Expression>
-                            </Shift>
-                            <Shift id="X">
-                                <Scale>1.000,0.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 210 dgrd - sin *</Script>
-                                </Expression>
-                            </Shift>
-                        </Element>
-                        <Element id="24">
-                            <FloatPosition>0.000,0.000</FloatPosition>
-                            <GaugeText id="GaugeText">
-                                <Axis>24.000,12.000</Axis>
-                                <Bright>True</Bright>
-                                <FontColor>@ForeColor</FontColor>
-                                <FontFace>Consolas</FontFace>
-                                <FontHeight>22</FontHeight>
-                                <GaugeString>24</GaugeString>
-                                <HorizontalAlign>CENTER</HorizontalAlign>
-                                <Size>48,24</Size>
-                                <Transparent>True</Transparent>
-                            </GaugeText>
-                            <Shift id="Y">
-                                <Scale>0.000,1.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 240 dgrd - cos *</Script>
-                                </Expression>
-                            </Shift>
-                            <Shift id="X">
-                                <Scale>1.000,0.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 240 dgrd - sin *</Script>
-                                </Expression>
-                            </Shift>
-                        </Element>
-                        <Element id="30">
-                            <FloatPosition>0.000,0.000</FloatPosition>
-                            <GaugeText id="GaugeText">
-                                <Axis>24.000,12.000</Axis>
-                                <Bright>True</Bright>
-                                <FontColor>@ForeColor</FontColor>
-                                <FontFace>Consolas</FontFace>
-                                <FontHeight>22</FontHeight>
-                                <GaugeString>30</GaugeString>
-                                <HorizontalAlign>CENTER</HorizontalAlign>
-                                <Size>48,24</Size>
-                                <Transparent>True</Transparent>
-                            </GaugeText>
-                            <Shift id="Y">
-                                <Scale>0.000,1.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 300 dgrd - cos *</Script>
-                                </Expression>
-                            </Shift>
-                            <Shift id="X">
-                                <Scale>1.000,0.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 300 dgrd - sin *</Script>
-                                </Expression>
-                            </Shift>
-                        </Element>
-                        <Element id="33">
-                            <FloatPosition>0.000,0.000</FloatPosition>
-                            <GaugeText id="GaugeText">
-                                <Axis>24.000,12.000</Axis>
-                                <Bright>True</Bright>
-                                <FontColor>@ForeColor</FontColor>
-                                <FontFace>Consolas</FontFace>
-                                <FontHeight>22</FontHeight>
-                                <GaugeString>33</GaugeString>
-                                <HorizontalAlign>CENTER</HorizontalAlign>
-                                <Size>48,24</Size>
-                                <Transparent>True</Transparent>
-                            </GaugeText>
-                            <Shift id="Y">
-                                <Scale>0.000,1.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 330 dgrd - cos *</Script>
-                                </Expression>
-                            </Shift>
-                            <Shift id="X">
-                                <Scale>1.000,0.000</Scale>
-                                <Expression id="Expression">
-                                    <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 330 dgrd - sin *</Script>
-                                </Expression>
-                            </Shift>
-                        </Element>
-                    </Element>
-                    <Element id="LUBBER LINE">
+						<FloatPosition>256.000,256.000</FloatPosition>
+						<Element id="N">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>14.000,14.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>28</FontHeight>
+								<GaugeString>N</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>28,28</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,1.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>1.000,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="W">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>14.000,14.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>28</FontHeight>
+								<GaugeString>W</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>28,28</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,1.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 270 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>1.000,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 270 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="E">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>14.000,14.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>28</FontHeight>
+								<GaugeString>E</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>28,28</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,1.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 90 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>1.000,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 90 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="S">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>14.000,14.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>28</FontHeight>
+								<GaugeString>S</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>28,28</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,1.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 180 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>1.000,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 180 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="3">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>3</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,1.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 30 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>1.000,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 30 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="6">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>6</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,1.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 60 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>1.000,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 60 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="12">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>12</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,1.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 120 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>1.000,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 120 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="15">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>15</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,1.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 150 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>1.000,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 150 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="21">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>21</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,1.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 210 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>1.000,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 210 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="24">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>24</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,1.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 240 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>1.000,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 240 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="30">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>30</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,1.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 300 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>1.000,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 300 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="33">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>33</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,1.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 330 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>1.000,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 330 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+					</Element>
+					<Element id="LUBBER LINE">
 						<Visibility>(L:MPCD_DTM_SHR) (L:MPCD-menu, Enum) 1000 div 15 == and</Visibility>
-                        <FloatPosition>256.000,40.000</FloatPosition>
-                        <VerticalLine id="VerticalLine">
-                            <Bright>True</Bright>
-                            <Height>60</Height>
-                            <LineWidth>4</LineWidth>
-                            <LineColorScript>@ForeColor</LineColorScript>
-                        </VerticalLine>
-                    </Element>
+						<FloatPosition>256.000,40.000</FloatPosition>
+						<VerticalLine id="VerticalLine">
+							<Bright>True</Bright>
+							<Height>60</Height>
+							<LineWidth>4</LineWidth>
+							<LineColorScript>@ForeColor</LineColorScript>
+						</VerticalLine>
+					</Element>
 					<Element id="DTM_CIRCLE">
 						<FloatPosition>256.000,256.000</FloatPosition>
 						<Arc id="ASE">
@@ -5288,7 +7162,7 @@
 							</PolyLine>
 						</Element>
 					</Element>
-					
+
 					<Element id="AIR CENTER SYMBOL">
 						<FloatPosition>256.000,256.000</FloatPosition>
 						<Element id="1">
@@ -5405,7 +7279,6 @@
 				</Element>
 			</Element>
 
-
 			<Element id="MAIN MENU">
 				<FloatPosition>0.000,0.000</FloatPosition>
 				<Element id="TOP">
@@ -5420,28 +7293,29 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 	%{:0}
-	%{:1}%((L:AO_STA-2_LType, Enum))
-	%{case}
-	%{:0}PYLON
-	%{:1}AAM-7
-	%{:2}AAM-4
-	%{:3}AIM-9L
-	%{:4}AIM-120C
-	%{:5}FUEL
-	%{:6}EO
-	%{:7}IR
-	%{:8}1 \t MK-82
-	%{:9}1 \t MK-82 R
-	%{:10}1 \t MK-84
-	%{:11}1 \t MK-84 L
-	%{:12}1 \t GBU-58
-	%{:13}1 \t GBU-42
-	%{:14}1 \t GBU-52
-	%{:15}1 \t GBU-71
-	%{:16}1 \t SUU-20
-	%{:17}1 \t BLU-27F
-	%{:18}1 \t BLU-27U
-	%{end}
+	%{:1}%((L:ARMT_PAGES) 1 ==)
+		%{if}%((L:AO_STA-2_LType, Enum))
+			%{case}
+			%{:0}PYLON
+			%{:1}AAM-7
+			%{:2}AAM-4
+			%{:3}AIM-9L
+			%{:4}AIM-120C
+			%{:5}FUEL
+			%{:6}EO
+			%{:7}IR
+			%{:8}1 \t MK-82
+			%{:9}1 \t MK-82 R
+			%{:10}1 \t MK-84
+			%{:11}1 \t MK-84 L
+			%{:12}1 \t GBU-58
+			%{:13}1 \t GBU-42
+			%{:14}1 \t GBU-52
+			%{:15}1 \t GBU-71
+			%{:16}1 \t SUU-20
+			%{:17}1 \t BLU-27F
+			%{:18}1 \t BLU-27U
+		%{end}
 %{end}
 </GaugeString>
 							<HorizontalAlign>CENTER</HorizontalAlign>
@@ -5504,27 +7378,29 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}
-%{:1}%((L:AO_STA-5_LType, Enum))%{case}
-	%{:0}PYLON
-	%{:1}AAM-7
-	%{:2}AAM-4
-	%{:3}AIM-9L
-	%{:4}AIM-120C
-	%{:5}FUEL
-	%{:6}EO
-	%{:7}IR
-	%{:8}MK-82
-	%{:9}MK-82 R
-	%{:10}MK-84
-	%{:11}MK-84 L
-	%{:12}GBU-58
-	%{:13}GBU-42
-	%{:14}GBU-52
-	%{:15}GBU-71
-	%{:16}SUU-20
-	%{:17}BLU-27F
-	%{:18}BLU-27U
-	%{end}	
+	%{:1}%((L:ARMT_PAGES) 1 ==)
+		%{if}%((L:AO_STA-5_LType, Enum))
+			%{case}
+			%{:0}PYLON
+			%{:1}AAM-7
+			%{:2}AAM-4
+			%{:3}AIM-9L
+			%{:4}AIM-120C
+			%{:5}FUEL
+			%{:6}EO
+			%{:7}IR
+			%{:8}1 \t MK-82
+			%{:9}1 \t MK-82 R
+			%{:10}1 \t MK-84
+			%{:11}1 \t MK-84 L
+			%{:12}1 \t GBU-58
+			%{:13}1 \t GBU-42
+			%{:14}1 \t GBU-52
+			%{:15}1 \t GBU-71
+			%{:16}1 \t SUU-20
+			%{:17}1 \t BLU-27F
+			%{:18}1 \t BLU-27U
+		%{end}
 %{end}
 </GaugeString>
 							<HorizontalAlign>CENTER</HorizontalAlign>
@@ -5573,26 +7449,28 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}
-%{:1}%((L:AO_STA-8_LType, Enum))%{case}
-	%{:0}PYLON
-	%{:1}AAM-7
-	%{:2}AAM-4
-	%{:3}AIM-9L
-	%{:4}AIM-120C
-	%{:5}FUEL
-	%{:6}EO
-	%{:7}IR
-	%{:8}MK-82
-	%{:9}MK-82 R
-	%{:10}MK-84
-	%{:11}MK-84 L
-	%{:12}GBU-58
-	%{:13}GBU-42
-	%{:14}GBU-52
-	%{:15}GBU-71
-	%{:16}SUU-20
-	%{:17}BLU-27F
-	%{:18}BLU-27U
+%{:1}%((L:ARMT_PAGES) 1 ==)
+	%{if}%((L:AO_STA-8_LType, Enum))
+		%{case}
+		%{:0}PYLON
+		%{:1}AAM-7
+		%{:2}AAM-4
+		%{:3}AIM-9L
+		%{:4}AIM-120C
+		%{:5}FUEL
+		%{:6}EO
+		%{:7}IR
+		%{:8}1 \t MK-82
+		%{:9}1 \t MK-82 R
+		%{:10}1 \t MK-84
+		%{:11}1 \t MK-84 L
+		%{:12}1 \t GBU-58
+		%{:13}1 \t GBU-42
+		%{:14}1 \t GBU-52
+		%{:15}1 \t GBU-71
+		%{:16}1 \t SUU-20
+		%{:17}1 \t BLU-27F
+		%{:18}1 \t BLU-27U
 	%{end}
 %{end}
 </GaugeString>
@@ -5650,13 +7528,18 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}BIT
+%{:1}%((L:ARMT_PAGES) 0 ==)
+		%{if}A/A ARMT
+		%{end}
+	%((L:ARMT_PAGES) 1 ==)
+		%{if}NML
+		%{end}
 %{:2}%((L:BIT_PAGES) 1 ==)
 	%{if}
 		%((L:BIT_FUNC_PAGES) 0 ==)
 			%{if}CONTROL
 			%{end}
 	%{end}
-%{:1}NML
 %{:15}S\nR\nV
 %{end}
 </GaugeString>
@@ -5686,7 +7569,12 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}SIT
-%{:1}A/G
+%{:1}%((L:ARMT_PAGES) 0 ==)
+		%{if}A/G ARMT
+		%{end}
+	%((L:ARMT_PAGES) 1 ==)
+		%{if}A/G
+		%{end}
 %{:2}%((L:BIT_PAGES) 1 ==)
 	%{if}
 		%((L:BIT_FUNC_PAGES) 0 ==)
@@ -5722,6 +7610,9 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}WPN
+%{:1}%((L:ARMT_PAGES) 0 ==)
+	%{if}CBT JETT
+	%{end}
 %{:2}
 %((L:BIT_PAGES) 1 ==)
 	%{if}
@@ -5763,7 +7654,12 @@
 							<FontHeight>22</FontHeight>
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
-%{:1}SCAN
+%{:1}%((L:ARMT_PAGES) 0 ==)
+		%{if}%WPN\nLOAD
+		%{end}
+	%((L:ARMT_PAGES) 1 ==)
+		%{if}%SCAN
+		%{end}
 %{:2}
 %((L:BIT_PAGES) 1 ==)
 	%{if}
@@ -5788,6 +7684,17 @@
 								<LineColorScript>@ForeColor</LineColorScript>
 							</Rectangle>
 						</Element>
+						<Element id="ARMT SCAN SEL BOX">
+							<FloatPosition>-5.000,0.000</FloatPosition>
+							<Visibility>(L:AAM_SEL, Enum) 1 == (L:MPCD-menu, Enum) 1000 div 1 == and</Visibility>
+							<Rectangle id="Rectangle">
+								<LineWidth>2</LineWidth>
+								<Bright>True</Bright>
+								  <Width>60</Width>
+								  <Height>24</Height>
+								<LineColorScript>@ForeColor</LineColorScript>
+							</Rectangle>
+						</Element>
 					</Element>
 				</Element>
 				<Element id="BOTTOM">
@@ -5802,7 +7709,9 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}
-%{:1}MODE
+%{:1}%((L:ARMT_PAGES) 1 ==)
+	%{if}%MODE S
+	%{end}
 %{:2}%((L:BIT_PAGES) 15 ==)
 	%{if}
 		%((L:BIT_TEWS_PAGES) 6 ==)
@@ -5842,7 +7751,9 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}
-%{:1}S
+%{:1}%((L:ARMT_PAGES) 1 ==)
+	%{if}
+	%{end}
 %{:2}%((L:BIT_PAGES) 15 ==)
 	%{if}%((L:BIT_TEWS_PAGES) 7 ==)
 		%{if}ICS
@@ -5959,7 +7870,9 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}
-%{:1}SIT
+%{:1}%((L:ARMT_PAGES) 1 ==)
+	%{if}%SIT
+	%{end}
 %{end}
 </GaugeString>
 							<HorizontalAlign>CENTER</HorizontalAlign>
@@ -6012,12 +7925,26 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}LINES
+%{:1}%((L:ARMT_PAGES) 0 ==)
+	%{if}ICS\nDCL
+	%{end}
 %{end}
 </GaugeString>
 							<HorizontalAlign>RIGHT</HorizontalAlign>
-							<Size>100,24</Size>
+							<Size>100,48</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
+						<Element id="ARMT ICS SEL BOX">
+							<FloatPosition>60.000,0.000</FloatPosition>
+							<Visibility>(L:MPCD-menu, Enum) 1000 div 1 == (L:ARMT_PAGES) 0 == and (L:ICS_STATUS_DCL) 1 == and</Visibility>
+							<Rectangle id="Rectangle">
+								<LineWidth>2</LineWidth>
+								<Bright>True</Bright>
+								<Width>50</Width>
+								<Height>50</Height>
+								<LineColorScript>@ForeColor</LineColorScript>
+							</Rectangle>
+						</Element>
 					</Element>
 					<Element id="BTN 13">
 						<FloatPosition>0.000,162.000</FloatPosition>
@@ -6029,7 +7956,12 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}
-%{:1}COOL
+%{:1}%((L:ARMT_PAGES) 0 ==)
+	%{if}CMD\nMSS
+	%{end}
+	%((L:ARMT_PAGES) 1 ==)
+	%{if}%COOL
+	%{end}
 %{:15}R\nT\nE
 %{end}
 </GaugeString>
@@ -6066,6 +7998,29 @@
 								<LineColorScript>@ForeColor</LineColorScript>
 							</Rectangle>
 						</Element>
+						<Element id="ARMT CMD SEL BOX">
+							<FloatPosition>60.000,0.000</FloatPosition>
+							<Visibility>(L:MPCD-menu, Enum) 1000 div 1 == (L:ARMT_PAGES) 0 == and (L:CMD_PROGRAM_CAP) 1 == and</Visibility>
+							<Rectangle id="Rectangle">
+								<LineWidth>2</LineWidth>
+								<Bright>True</Bright>
+								<Width>50</Width>
+								<Height>50</Height>
+								<LineColorScript>@ForeColor</LineColorScript>
+							</Rectangle>
+						</Element>
+						<Element id="ARMT SRM COOL SEL BOX">
+							<FloatPosition>50.000,0.000</FloatPosition>
+							<Visibility>(L:SRM_COOL, Enum) 1 == (L:MPCD-menu, Enum) 1000 div 1 == and</Visibility>
+							<Rectangle id="Rectangle">
+								<LineWidth>2</LineWidth>
+								<Bright>True</Bright>
+								<Width>60</Width>
+								<Height>24</Height>
+								<LineColorScript>@ForeColor</LineColorScript>
+							</Rectangle>
+						</Element>
+
 					</Element>
 					<Element id="BTN 14">
 						<FloatPosition>0.000,83.000</FloatPosition>
@@ -6077,6 +8032,9 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}
+%{:1}%((L:ARMT_PAGES) 0 ==)
+	%{if}GLOBAL
+	%{end}
 %{:15}L\nN\nE
 %{:19}ICS
 %{end}
@@ -6103,6 +8061,17 @@
 								</Point>
 							</Polygon>
 						</Element>
+						<Element id="ARMT CMD SEL BOX">
+							<FloatPosition>30.000,0.000</FloatPosition>
+							<Visibility>(L:MPCD-menu, Enum) 1000 div 1 == (L:ARMT_PAGES) 0 == and (L:CMD_GLOBAL) 1 == and</Visibility>
+							<Rectangle id="Rectangle">
+								<LineWidth>2</LineWidth>
+								<Bright>True</Bright>
+								<Width>70</Width>
+								<Height>24</Height>
+								<LineColorScript>@ForeColor</LineColorScript>
+							</Rectangle>
+						</Element>
 						<Element id="DTM SEL BOX">
 							<FloatPosition>85.000,0.000</FloatPosition>
 							<Visibility>(L:MPCD_DTM_LNE) (L:MPCD-menu, Enum) 1000 div 15 == and</Visibility>
@@ -6125,6 +8094,9 @@
 							<GaugeString>
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}DTM
+%{:1}%((L:ARMT_PAGES) 0 ==)
+	%{if}TRNG
+	%{end}
 %{:2}%((L:BIT_PAGES) 0 ==)
 	%{if}
 		%((L:BIT_PAGES) 15 ==)
@@ -6141,6 +8113,17 @@
 							<Size>100,72</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
+						<Element id="ARMT CMD SEL BOX">
+							<FloatPosition>50.000,0.000</FloatPosition>
+							<Visibility>(L:MPCD-menu, Enum) 1000 div 1 == (L:ARMT_PAGES) 0 == and (L:CMD_GLOBAL) 0 == and</Visibility>
+							<Rectangle id="Rectangle">
+								<LineWidth>2</LineWidth>
+								<Bright>True</Bright>
+								<Width>60</Width>
+								<Height>24</Height>
+								<LineColorScript>@ForeColor</LineColorScript>
+							</Rectangle>
+						</Element>
 						<Element id="DTM SEL BOX">
 							<FloatPosition>85.000,0.000</FloatPosition>
 							<Visibility>(L:MPCD_DTM_PLN) (L:MPCD-menu, Enum) 1000 div 15 == and</Visibility>
@@ -6167,21 +8150,19 @@
 
 							(L:MPCD-menu, Enum) 0 == if{
 								1000 (&gt;L:MPCD-menu, Enum)
-								0 (&gt;L:MPCD-SMENU, Enum)
 								quit
 							}
 							(L:MPCD-menu, Enum) 1000 div 1 == if{
-								(L:Rate Switch, enum) 0 ==
+								(L:GUN_FIRE_RATE, Number) 0 ==
 									if{
-										1 (>L:Rate Switch, enum)
+										1 (>L:GUN_FIRE_RATE, Number)
 									}
 									els{
-										0 (>L:Rate Switch, enum)
+										0 (>L:GUN_FIRE_RATE, Number)
 									}
 								quit
 							}
-							(L:MPCD-menu, Enum) 1000 div 2 ==
-								if{
+							(L:MPCD-menu, Enum) 1000 div 2 == if{
 									(L:BIT_PAGES) 1 ==
 										if{
 											1 (>L:BIT_FUNC_PAGES)
@@ -6189,8 +8170,8 @@
 										els{
 											1 (>L:BIT_PAGES)
 										}
-									quit
-								}
+								quit
+							}
 							(L:MPCD-menu, Enum) 1000 div 15 == if{
 								(L:MPCD_DTM_DAT) 0 ==
 									if{
@@ -6214,21 +8195,40 @@
 
 							(L:MPCD-menu, Enum) 0 == if{
 								2000 (&gt;L:MPCD-menu, Enum)
-								0 (&gt;L:MPCD-SMENU, Enum)
 								quit
 							}
-
-							(L:MPCD-menu, Enum) 1000 div 2 ==
-								if{
-									(L:BIT_PAGES) 1 ==
+							(L:MPCD-menu, Enum) 1000 div 1 == if{
+								(L:ARMT_PAGES) 0 ==
+									if{
+										1 (>L:ARMT_PAGES)
+									}
+								(L:ARMT_PAGES) 2 ==
+									if{
+										(L:GUN_FIRE_RATE, Number) 0 ==
+											if{
+												1 (>L:GUN_FIRE_RATE, Number)
+											}
+											els{
+												0 (>L:GUN_FIRE_RATE, Number)
+											}
+									}
+									(L:ARMT_PAGES) 3 ==
 										if{
-											2 (>L:BIT_FUNC_PAGES)
+											(L:IF15E_LCFT_JETT, Bool) ! (&gt;L:IF15E_LCFT_JETT, Bool)
+											(L:IF15E_LCFT_JETT, Bool) (&gt;L:IF15E_RCFT_JETT, Bool)
 										}
-										els{
-											1 (>L:BIT_PAGES)
-										}
-									quit
-								}
+								quit
+							}
+							(L:MPCD-menu, Enum) 1000 div 2 == if{
+								(L:BIT_PAGES) 1 ==
+									if{
+										2 (>L:BIT_FUNC_PAGES)
+									}
+									els{
+										1 (>L:BIT_PAGES)
+									}
+								quit
+							}
 							(L:MPCD-menu, Enum) 1000 div 15 == if{
 								(L:MPCD_DTM_SRV) 0 ==
 									if{
@@ -6252,21 +8252,38 @@
 
 							(L:MPCD-menu, Enum) 0 == if{
 								3000 (&gt;L:MPCD-menu, Enum)
-								0 (&gt;L:MPCD-SMENU, Enum)
 								quit
 							}
 
-							(L:MPCD-menu, Enum) 1000 div 2 ==
-								if{
-									(L:BIT_PAGES) 1 ==
-										if{
-											3 (>L:BIT_FUNC_PAGES)
-										}
-										els{
-											1 (>L:BIT_PAGES)
-										}
-									quit
+							(L:MPCD-menu, Enum) 1000 div 1 == if{
+								(L:ARMT_PAGES) 0 ==
+								(L:ARMT_PAGES) 1 == or
+									if{
+										2 (>L:ARMT_PAGES)
+									}
+								(L:ARMT_PAGES) 2 == if{
+									(L:ORD_REL_QTY, Number) ++ (&gt;L:ORD_REL_QTY, Number)
+									(L:ORD_REL_QTY, Number) 10 % 0 == if{
+										(L:ORD_REL_QTY, Number) 0 &gt;
+											if{ (L:ORD_REL_QTY, Number) 10 / flr -- 10 * }
+											els{ 0 } (&gt;L:ORD_REL_QTY, Number)
+									}
 								}
+								(L:ARMT_PAGES) 3 == if{
+									(L:IF15E_STA-5_JETT, Bool) ! (&gt;L:IF15E_STA-5_JETT, Bool)
+								}
+								quit
+							}
+							(L:MPCD-menu, Enum) 1000 div 2 == if{
+								(L:BIT_PAGES) 1 ==
+									if{
+										3 (>L:BIT_FUNC_PAGES)
+									}
+									els{
+										1 (>L:BIT_PAGES)
+									}
+								quit
+							}
 							(L:MPCD-menu, Enum) 1000 div 15 == if{
 								(L:MPCD_DTM_TGT) 0 ==
 									if{
@@ -6290,7 +8307,22 @@
 
 							(L:MPCD-menu, Enum) 0 == if{
 								4000 (&gt;L:MPCD-menu, Enum)
-								0 (&gt;L:MPCD-SMENU, Enum)
+								quit
+							}
+							(L:MPCD-menu, Enum) 1000 div 1 == if{
+								(L:ARMT_PAGES) 0 ==
+									if{
+										3 (>L:ARMT_PAGES)
+									}
+								(L:ARMT_PAGES) 2 == if{
+									(L:ORD_REL_QTY, Number) 10 + (&gt;L:ORD_REL_QTY, Number)
+									(L:ORD_REL_QTY, Number) 100 &gt;=
+										if{ (L:ORD_REL_QTY, Number) 10 % (&gt;L:ORD_REL_QTY, Number) }
+								}
+								(L:ARMT_PAGES) 3 == if{
+									(L:IF15E_STA-2_JETT, Bool) ! (&gt;L:IF15E_STA-2_JETT, Bool)
+									(L:IF15E_STA-2_JETT, Bool) (&gt;L:IF15E_STA-8_JETT, Bool)
+								}
 								quit
 							}
 							(L:MPCD-menu, Enum) 1000 div 2 ==
@@ -6302,14 +8334,10 @@
 										els{
 											1 (>L:BIT_PAGES)
 										}
-										quit
-
 									(L:BIT_PAGES) 15 ==
 										if{
 											4 (>L:BIT_TEWS_PAGES)
 										}
-										quit
-									quit
 								}
 							(L:MPCD-menu, Enum) 1000 div 15 == if{
 								(L:MPCD_DTM_SAM) 0 ==
@@ -6334,7 +8362,6 @@
 
 							(L:MPCD-menu, Enum) 0 == if{
 								5000 (&gt;L:MPCD-menu, Enum)
-								0 (&gt;L:MPCD-SMENU, Enum)
 								quit
 							}
 							(L:MPCD-menu, Enum) 1000 div 2 ==
@@ -6346,14 +8373,11 @@
 										els{
 											1 (>L:BIT_PAGES)
 										}
-										quit
-
 									(L:BIT_PAGES) 15 ==
 										if{
 											4 (>L:BIT_TEWS_PAGES)
 										}
-										quit
-									quit
+								quit
 								}
 							(L:MPCD-menu, Enum) 1000 div 15 == if{
 								(L:MPCD_DTM_SHR) 0 ==
@@ -6377,30 +8401,28 @@
 							0 (&gt;L:BTN_FS_LMPD_KEY6_EXEC, Number)
 
 							(L:MPCD-menu, Enum) 1000 div 1 == if{
-
-								(L:HUD_MASTER_MODE, Enum) 2 == if{
+								(L:ARMT_PAGES) 1 ==
+									if{
 										(L:AAM_SEL, Enum) 2 ==
 											if{
 												0 (>L:AAM_SEL, Enum)
 											}
 											els{
 												(L:AAM_SEL, Enum) ++ (>L:AAM_SEL, Enum)
-												quit
 											}
-										quit
-										}
-								(L:HUD_MASTER_MODE, Enum) 3 == if{
-										(L:AAM_SEL, Enum) 2 ==
-											if{
-												0 (>L:AAM_SEL, Enum)
-											}
-											els{
-												2 (>L:AAM_SEL, Enum)
-												quit
-											}
-										quit
 									}
-								quit
+								(L:ARMT_PAGES) 2 ==
+									if{ 0 (&gt;L:AG_REL_MODE, Enum) }
+								(L:ARMT_PAGES) 3 ==
+									if{
+										(L:IF15E_CBJP1_JETT, Bool) ! (&gt;L:IF15E_CBJP1_JETT, Bool)
+										0 (&gt;L:IF15E_CBJP2_JETT, Bool)
+										(L:IF15E_CBT_1_PROG, Number) 10 % 1 == (&gt;L:IF15E_STA-2_JETT, Bool)
+										(L:IF15E_CBT_1_PROG, Number) 100 % 10 / flr 1 == (&gt;L:IF15E_STA-8_JETT, Bool)
+										(L:IF15E_CBT_1_PROG, Number) 1000 % 100 / flr 1 == (&gt;L:IF15E_STA-5_JETT, Bool)
+										(L:IF15E_CBT_1_PROG, Number) 10000 % 1000 / flr 1 == (&gt;L:IF15E_LCFT_JETT, Bool)
+										(L:IF15E_CBT_1_PROG, Number) 10000 / flr 1 == (&gt;L:IF15E_RCFT_JETT, Bool)
+									}
 							}
 							(L:MPCD-menu, Enum) 1000 div 2 == if{
 								(L:BIT_TEWS_PAGES) 0 ==
@@ -6420,6 +8442,21 @@
 						(L:BTN_FS_LMPD_KEY7_EXEC, Number) if{
 							0 (&gt;L:BTN_FS_LMPD_KEY7_EXEC, Number)
 
+							(L:MPCD-menu, Enum) 1000 div 1 == if{
+								(L:ARMT_PAGES) 2 ==
+									if{ 1 (&gt;L:AG_REL_MODE, Enum) }
+								(L:ARMT_PAGES) 3 ==
+									if{
+										(L:IF15E_CBJP2_JETT, Bool) ! (&gt;L:IF15E_CBJP2_JETT, Bool)
+										0 (&gt;L:IF15E_CBJP1_JETT, Bool)
+										(L:IF15E_CBT_2_PROG, Number) 10 % 1 == (&gt;L:IF15E_STA-2_JETT, Bool)
+										(L:IF15E_CBT_2_PROG, Number) 100 % 10 / flr 1 == (&gt;L:IF15E_STA-8_JETT, Bool)
+										(L:IF15E_CBT_2_PROG, Number) 1000 % 100 / flr 1 == (&gt;L:IF15E_STA-5_JETT, Bool)
+										(L:IF15E_CBT_2_PROG, Number) 10000 % 1000 / flr 1 == (&gt;L:IF15E_LCFT_JETT, Bool)
+										(L:IF15E_CBT_2_PROG, Number) 10000 / flr 1 == (&gt;L:IF15E_RCFT_JETT, Bool)
+									}
+								quit
+							}
 							(L:MPCD-menu, Enum) 1000 div 2 == if{
 								(L:BIT_TEWS_PAGES) 0 ==
 									if{
@@ -6438,6 +8475,11 @@
 						(L:BTN_FS_LMPD_KEY8_EXEC, Number) if{
 							0 (&gt;L:BTN_FS_LMPD_KEY8_EXEC, Number)
 
+							(L:MPCD-menu, Enum) 1000 div 1 == if{
+								(L:ARMT_PAGES) 2 ==
+									if{ 2 (&gt;L:AG_REL_MODE, Enum) }
+								quit
+							}
 						}
 					</Script>
 				</Expression>
@@ -6451,10 +8493,8 @@
 
 							(L:MPCD-menu, Enum) 0 == if{
 								9000 (&gt;L:MPCD-menu, Enum)
-								0 (&gt;L:MPCD-SMENU, Enum)
 								quit
 							}
-
 						}
 					</Script>
 				</Expression>
@@ -6465,6 +8505,12 @@
 					<Script>
 						(L:BTN_FS_LMPD_KEY10_EXEC, Number) if{
 							0 (&gt;L:BTN_FS_LMPD_KEY10_EXEC, Number)
+
+							(L:MPCD-menu, Enum) 1000 div 1 == if{
+								(L:ARMT_PAGES) 2 ==
+									if{ 1 (>L:IF15E_CBJP_ENTER, Bool) }
+								quit
+							}
 						}
 					</Script>
 				</Expression>
@@ -6475,10 +8521,18 @@
 					<Script>
 						(L:BTN_FS_LMPD_KEY11_EXEC, Number) if{
 							0 (&gt;L:BTN_FS_LMPD_KEY11_EXEC, Number)
-							0 (&gt;L:MPCD-menu, Enum)
-							0 (&gt;L:MPCD-SMENU, Enum)
-							0 (>L:BIT_FUNC_PAGES)
-							0 (>L:BIT_TEWS_PAGES)
+							(L:MPCD-menu, Enum) 0 == if{
+								11000 (&gt;L:MPCD-menu, Enum)
+								quit
+							}
+							els{
+								0 (>L:MPCD-menu, Enum)
+								0 (>L:BIT_PAGES)
+								0 (>L:BIT_FUNC_PAGES)
+								0 (>L:BIT_TEWS_PAGES)
+								0 (>L:ARMT_PAGES)
+								quit
+							}
 						}
 					</Script>
 				</Expression>
@@ -6492,10 +8546,23 @@
 
 							(L:MPCD-menu, Enum) 0 == if{
 								12000 (&gt;L:MPCD-menu, Enum)
-								0 (&gt;L:MPCD-SMENU, Enum)
 								quit
 							}
-						}
+							(L:MPCD-menu, Enum) 1000 div 1 == if
+								(L:ARMT_PAGES) 0 ==
+									if{
+										(L:ICS_STATUS_DCL) 0 ==
+											if{ 1 (>L:ICS_STATUS_DCL) }
+											els{ 0 (>L:ICS_STATUS_DCL) }
+									}
+								(L:ARMT_PAGES) 2 ==
+									if{
+										(L:AO_REL_INTVL, Number) 100 % 90 &lt;
+											if{(L:AO_REL_INTVL, Number) 10 + }
+											els{ (L:AO_REL_INTVL, Number) 100 / flr 100 * } (&gt;L:AO_REL_INTVL, Number)
+									}
+								quit
+							}
 					</Script>
 				</Expression>
 			</Shift>
@@ -6506,6 +8573,32 @@
 						(L:BTN_FS_LMPD_KEY13_EXEC, Number) if{
 							0 (&gt;L:BTN_FS_LMPD_KEY13_EXEC, Number)
 
+							(L:MPCD-menu, Enum) 1000 div 1 == if{
+								(L:ARMT_PAGES) 0 ==
+									if{
+										(L:CMD_PROGRAM_CAP) 0 ==
+											if{ 1 (>L:CMD_PROGRAM_CAP) }
+											els{ 0 (>L:CMD_PROGRAM_CAP) }
+									}
+								(L:ARMT_PAGES) 1 ==
+									if{
+										(L:AAM_SEL, Enum) 1 ==
+										(L:SRM_COOL, Enum) 0 == and
+											if{
+												1 (>L:SRM_COOL, Enum)
+											}
+											els{
+												0 (>L:SRM_COOL, Enum)
+											}
+									}
+								(L:ARMT_PAGES) 2 ==
+									if{
+										(L:AO_REL_INTVL, Number) 100 + (&gt;L:AO_REL_INTVL, Number)
+										(L:AO_REL_INTVL, Number) 1000 &gt;=
+											if{ (L:AO_REL_INTVL, Number) 1000 % (&gt;L:AO_REL_INTVL, Number) }
+									}
+								quit
+							}
 							(L:MPCD-menu, Enum) 1000 div 15 == if{
 								(L:MPCD_DTM_RTE) 0 ==
 									if{
@@ -6527,6 +8620,15 @@
 						(L:BTN_FS_LMPD_KEY14_EXEC, Number) if{
 							0 (&gt;L:BTN_FS_LMPD_KEY14_EXEC, Number)
 
+							(L:MPCD-menu, Enum) 1000 div 1 == if{
+								(L:ARMT_PAGES) 0 ==
+									if{ 1 (>L:CMD_GLOBAL) }
+								(L:ARMT_PAGES) 2 == if{
+									(L:CBU_HOB, Number) 50 + (&gt;L:CBU_HOB, Number)
+									(L:CBU_HOB, Number) 950 &gt; if{ 0 (&gt;L:CBU_HOB, Number) }
+								}
+								quit
+							}
 							(L:MPCD-menu, Enum) 1000 div 15 == if{
 								(L:MPCD_DTM_LNE) 0 ==
 									if{
@@ -6550,12 +8652,14 @@
 
 							(L:MPCD-menu, Enum) 0 == if{
 								15000 (&gt;L:MPCD-menu, Enum)
-								0 (&gt;L:MPCD-SMENU, Enum)
 								quit
 							}
-
+							(L:MPCD-menu, Enum) 1000 div 1 == if{
+								(L:ARMT_PAGES) 0 ==
+									if{ 0 (>L:CMD_GLOBAL) }
+								quit
+							}
 							(L:MPCD-menu, Enum) 1000 div 2 == if{
-
 								(L:BIT_PAGES) 15 ==
 									if{
 										0 (>L:BIT_PAGES)
@@ -6634,11 +8738,11 @@
 		</Element>
 		<MouseArea id="MPCD_PANEL">
 				<CursorType>Hand</CursorType>
-                    <MouseClick id="MouseClick">
-                        <Script>200 (&gt;K:PANEL_ID_TOGGLE)</Script>
-                    </MouseClick>
+					<MouseClick id="MouseClick">
+						<Script>600 (&gt;K:PANEL_ID_TOGGLE)</Script>
+					</MouseClick>
 				<Tooltip id="Tooltip">
-					<DefaultScript>Multi Purpose Color Display Monitor</DefaultScript>
+					<DefaultScript>Multi Purpose Color Display</DefaultScript>
 				</Tooltip>
 			</MouseArea>
 	</SimGauge.Gauge>
