@@ -1,4 +1,4 @@
-<GAUGE Name="F-15 ELECTRICAL SYSTEMS" Version="8.50">
+<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="8.50">
 
 <!--
 Version 8.50
@@ -308,22 +308,25 @@ Version 5.0
 				<Element Name="GENERATOR BUS LINE">
 					<Select>
 						<Value>
-						<!-- LMAIN GEN ENABLED , EMER GEN DISABLED -->
+						<!-- LMAIN GEN ENABLED , EMER GEN DISABLED , EXT PWR DISABLED -->
 							(L:SW1_FS_ENG_GEN_L, bool) 1 ==
 							(L:EMER_GEN_AC_AVAIL) 0 == and
+							(L:EXTARNAL_AC_AVAIL) 0 == and
 								if{
 									(L:LGEN_VOLTAGE_AC) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
 								}
-						<!-- LMAIN GEN DISABLED , EMER GEN DISABLED		 -->
+						<!-- LMAIN GEN DISABLED , EMER GEN DISABLED , EXT PWR DISABLED -->
 							(L:SW1_FS_ENG_GEN_L, bool) 0 ==
 							(L:EMER_GEN_AC_AVAIL) 0 == and
+							(L:EXTARNAL_AC_AVAIL) 0 == and
 								if{
 									0 (>L:LEFT_AC_BUS_LINE_VOLTAGE)
 								}
-						<!-- LMAIN GEN DISABLED , EMER GEN ENABLED -->
+						<!-- LMAIN GEN DISABLED , EMER GEN ENABLED , EXT PWR DISABLED -->
 							(L:LGEN_VOLTAGE_AC) 100 &lt;
 							(L:SW1_FS_ENG_GEN_L, bool) 0 == or
 							(L:EMER_GEN_AC_AVAIL) 0 &gt; and
+							(L:EXTARNAL_AC_AVAIL) 0 == and
 								if{
 									(L:EMER_GEN_AC_BUS_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
 								}
@@ -335,14 +338,13 @@ Version 5.0
 								els{
 									0 (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
 								}
-
 						<!--  EXTERNAL POWER ENABLED -->
-							(L:LEFT_AC_BUS_LINE_VOLTAGE) 0 ==
-							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 0 == and
-							(L:SW2_FS_ENG_EXT_PWR, enum) 0 &gt; and
+							(L:LEFT_AC_BUS_LINE_VOLTAGE) 28 &lt;
+							(L:EXTARNAL_AC_AVAIL) 1 == and
 								if{
 									(L:EXTARNAL_AC_VOLTS) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
 								}
+
 
 							(L:LEFT_AC_BUS_LINE_VOLTAGE) 100 &lt;
 							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 100 &gt; and
@@ -361,8 +363,12 @@ Version 5.0
 				<Element Name="XFMR RECTIFIER">
 					<Select>
 						<Value>
-							(L:LEFT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:LEFT_XFMR_VOLTAGE)
-							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:RIGHT_XFMR_VOLTAGE)
+							(L:L_XMFR_RECT_PWR) 1 ==
+								if{ (L:LEFT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:LEFT_XFMR_VOLTAGE) }
+							
+							(L:R_XMFR_RECT_PWR) 1 ==
+								if{ (L:RIGHT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:RIGHT_XFMR_VOLTAGE) }
+							
 
 							(L:EMER_GEN_DC_AVAIL) 0 ==
 								if{
@@ -375,7 +381,7 @@ Version 5.0
 								}
 
 							(L:LEFT_XFMR_VOLTAGE) 28 &lt;
-							(L:SW2_FS_ENG_EXT_PWR, enum) 0 &gt; and
+							(L:EXTARNAL_AC_AVAIL) 1 == and
 								if{
 									(L:EXTARNAL_AC_VOLTS) (>L:LEFT_XFMR_LINE_VOLTAGE)
 								}
@@ -384,14 +390,12 @@ Version 5.0
 
 							(L:LEFT_XFMR_LINE_VOLTAGE) 20 &lt;
 							(L:RIGHT_XFMR_LINE_VOLTAGE) 25 &gt; and
-							(L:R_XMFR_RECT_PWR) 1 == and
 								if{
 									(L:RIGHT_XFMR_LINE_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
 								}
 
 							(L:LEFT_XFMR_LINE_VOLTAGE) 25 &gt;
 							(L:RIGHT_XFMR_LINE_VOLTAGE) 20 &lt; and
-							(L:L_XMFR_RECT_PWR) 1 == and
 								if{
 									(L:LEFT_XFMR_LINE_VOLTAGE) (>L:RIGHT_XFMR_LINE_VOLTAGE)
 								}
@@ -402,8 +406,17 @@ Version 5.0
 					<Select>
 						<Value>
 							(L:26_VAC_AUTO_XFMR_PWR) 1 ==
+							(L:EXTARNAL_AC_AVAIL) 0 == and
 								if{
 									(L:RIGHT_AC_BUS_LINE_VOLTAGE) 26 * 115 / (>L:RIGHT_26_AC_BUS_VOLTAGE)
+								}
+							(L:EXTARNAL_AC_AVAIL) 1 ==
+								if{
+									(L:EXTARNAL_AC_VOLTS) 26 * 28 / (>L:RIGHT_26_AC_BUS_VOLTAGE)
+								}
+							(L:EXTARNAL_AC_AVAIL) 0 ==
+								if{
+									0 (>L:RIGHT_26_AC_BUS_VOLTAGE)
 								}
 							(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:ESS_AC_BUS_VOLTAGE)
 
@@ -504,29 +517,6 @@ Version 5.0
 				</Element>
 			</Element>
 
-			<Element Name="EMERGENCY BOOST PUMP">
-				<Select>
-					<Value>
-						(L:R_BST_PUMP_ON) 0 ==
-						(L:R_BST_PUMP_ON) 0 == or
-						(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
-						(L:EMER_GEN_EBP_PWR) 1 == and
-						(L:EBP_INIT) 0 == and
-							if{
-								1 (>L:EMER_BST_ON, bool)
-								1 (>K:TOGGLE_ELECT_FUEL_PUMP1)
-								1 (>K:TOGGLE_ELECT_FUEL_PUMP2)
-								1 (>L:EBP_INIT)
-							}
-							els{
-								0 (>L:EMER_BST_ON, bool)
-								0 (>K:TOGGLE_ELECT_FUEL_PUMP1)
-								0 (>K:TOGGLE_ELECT_FUEL_PUMP2)
-								0 (>L:EBP_INIT)
-							}
-					</Value>
-				</Select>
-			</Element>
 			<Element Name="BOOST SYS MALFUNCTION">
 				<Select>
 					<Value>
@@ -581,7 +571,7 @@ Version 5.0
 									1 (>L:R_ENG_FUEL_FLOW_IND_PWR)
 									1 (>L:R_TOTAL_TEMP_PROBE_HTR_PWR)
 									1 (>L:R_WING_XFR_PUMP_PWR)
-									1 (>L:R_XMFR_RECT	_PWR)
+									1 (>L:R_XMFR_RECT_PWR)
 									1 (>L:RDR_WARN_RCVR_POD_PWR)
 									1 (>L:RWR_AC_PWR)
 									1 (>L:SEAT_ADJ_PWR)
@@ -1183,7 +1173,8 @@ Version 5.0
 						<Value>
 							(L:L_BST_PUMP_PWR) 1 ==
 							(L:FUEL_PRESS_REGULATORS_PWR) 1 == and
-							(A:GENERAL ENG FUEL PRESSURE:1, PSI) 15 &gt; and
+							(A:GENERAL ENG FUEL PRESSURE:1, PSI) 12 &gt; and
+							(A:GENERAL ENG COMBUSTION:1, bool) 1 == and
 								if{
 									1 (>L:L_BST_PUMP_ON)
 								}
@@ -1198,7 +1189,8 @@ Version 5.0
 						<Value>
 							(L:R_BST_PUMP_PWR) 1 ==
 							(L:FUEL_PRESS_REGULATORS_PWR) 1 == and
-							(A:GENERAL ENG FUEL PRESSURE:2, PSI) 15 &gt; and
+							(A:GENERAL ENG FUEL PRESSURE:2, PSI) 12 &gt; and
+							(A:GENERAL ENG COMBUSTION:2, bool) 1 == and
 								if{
 									1 (>L:R_BST_PUMP_ON)
 								}
@@ -1211,14 +1203,18 @@ Version 5.0
 				<Element Name="HYD PUMP">
 					<Select>
 						<Value>
-							(L:HYD_PRESS_PWR) 1 == and
+							(L:HYD_PRESS_PWR) 1 ==
 							(L:HYD_INIT) 0 == and
+							(A:HYDRAULIC SWITCH, bool) 0 == and
 								if{
 									1 (>K:HYDRAULIC_SWITCH_TOGGLE)
 									2 (>K:HYDRAULIC_SWITCH_TOGGLE)
 									1 (>L:HYD_INIT)
 								}
-								els{
+							(L:HYD_PRESS_PWR) 0 ==
+							(L:HYD_INIT) 1 == and
+							(A:HYDRAULIC SWITCH, bool) 1 == and
+								if{
 									1 (>K:HYDRAULIC_SWITCH_TOGGLE)
 									2 (>K:HYDRAULIC_SWITCH_TOGGLE)
 									0 (>L:HYD_INIT)
@@ -1717,8 +1713,8 @@ Version 5.0
 						(L:GND_AFCS_PWR, enum) 1 ==
 						(L:AFCS_AC_PWR) 1 == and
 						(L:AFCS_DC_PWR) 1 == and
-							if{ 1 (>L:ACFS_POWER)}
-							els{ 0 (>L:ACFS_POWER)}
+							if{ 1 (>L:AFCS_POWER) }
+							els{ 0 (>L:AFCS_POWER) }
 					</Value>
 				</Select>
 			</Element>
@@ -2338,17 +2334,17 @@ Version 5.0
 						els{
 							(L:GAU_LENG_OIL_PRESS) 0 &gt;
 								if{
-									(L:GAU_LENG_OIL_PRESS) + (L:GAU_LENG_OIL_PRESS) 10 / - (>L:GAU_LENG_OIL_PRESS)
+									(L:GAU_LENG_OIL_PRESS) + (L:GAU_LENG_OIL_PRESS) 100 / - (>L:GAU_LENG_OIL_PRESS)
 								}
 							
 							(L:GAU_RENG_OIL_PRESS) 0 &gt;
 								if{
-									(L:GAU_RENG_OIL_PRESS) + (L:GAU_RENG_OIL_PRESS) 10 / - (>L:GAU_RENG_OIL_PRESS)
+									(L:GAU_RENG_OIL_PRESS) + (L:GAU_RENG_OIL_PRESS) 100 / - (>L:GAU_RENG_OIL_PRESS)
 								}
 							
 							(L:PX_OIL, enum) 0 &gt;
 								if{
-									(L:PX_OIL, enum) + (L:PX_OIL, enum) 10 / - (>L:PX_OIL, enum)
+									(L:PX_OIL, enum) + (L:PX_OIL, enum) 100 / - (>L:PX_OIL, enum)
 								}
 							
 						}
@@ -4920,41 +4916,41 @@ Version 5.0
 		<Element Name="CAS RDY">
 			<Select>
 				<Value>
-				(L:ACFS_POWER) 1 ==
-					if{
-						1 (>L:PITCH_RATIO_RDY, enum)
-						1 (>L:ROLL_RATIO_RDY, enum)
+					(L:AFCS_POWER) 1 ==
+						if{
+							1 (>L:PITCH_RATIO_RDY, enum)
+							1 (>L:ROLL_RATIO_RDY, enum)
 
-						(L:SW2_FS_CAS_PITCH) 2 ==
-							if{
-								1 (>L:CAS_PITCH_RDY, enum)
-							}
-							els{
-								0 (>L:CAS_PITCH_RDY, enum)
-							}
-						(L:SW2_FS_CAS_ROLL) 2 ==
-							if{
-								1 (>L:CAS_ROLL_RDY, enum)
-							}
-							els{
-								0 (>L:CAS_ROLL_RDY, enum)
-							}
-						(L:SW2_FS_CAS_YAW) 2 ==
-							if{
-								1 (>L:CAS_YAW_RDY, enum)
-							}
-							els{
-								0 (>L:CAS_YAW_RDY, enum)
-							}
-					}
-					els{
-						0 (>L:PITCH_RATIO_RDY, enum)
-						0 (>L:ROLL_RATIO_RDY, enum)
-
-						0 (>L:CAS_YAW_RDY, enum)
-						0 (>L:CAS_ROLL_RDY, enum)
-						0 (>L:CAS_PITCH_RDY, enum)
-					}
+							(L:SW2_FS_CAS_PITCH) 2 ==
+								if{
+									1 (>L:CAS_PITCH_RDY, enum)
+								}
+								els{
+									0 (>L:CAS_PITCH_RDY, enum)
+								}
+							(L:SW2_FS_CAS_ROLL) 2 ==
+								if{
+									1 (>L:CAS_ROLL_RDY, enum)
+								}
+								els{
+									0 (>L:CAS_ROLL_RDY, enum)
+								}
+							(L:SW2_FS_CAS_YAW) 2 ==
+								if{
+									1 (>L:CAS_YAW_RDY, enum)
+								}
+								els{
+									0 (>L:CAS_YAW_RDY, enum)
+								}
+						}
+						els{
+							0 (>L:PITCH_RATIO_RDY, enum)
+							0 (>L:ROLL_RATIO_RDY, enum)
+	
+							0 (>L:CAS_YAW_RDY, enum)
+							0 (>L:CAS_ROLL_RDY, enum)
+							0 (>L:CAS_PITCH_RDY, enum)
+						}
 				</Value>
 			</Select>
 		</Element>
@@ -5449,7 +5445,64 @@ Version 5.0
 		</Element>
 	</Element>
 
+	<Element Name="EMERGENCY BOOST PUMP">
+		<Select>
+			<Value>			
+				(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt;
+				(L:EMER_GEN_EBP_PWR) 1 == and
+					if{			
+						(L:L_BST_PUMP_ON) 0 ==
+						(A:GENERAL ENG FUEL PUMP SWITCH:1, bool) 0 == and
+						(L:EBP_L_INIT) 0 == and
+							if{
+								1 (>L:EMER_BST_ON, bool)
+								(>K:TOGGLE_ELECT_FUEL_PUMP1)
+								1 (>L:EBP_L_INIT)
+							}
+							
+						(L:R_BST_PUMP_ON) 0 ==
+						(A:GENERAL ENG FUEL PUMP SWITCH:2, bool) 0 == and
+						(L:EBP_R_INIT) 0 == and
+							if{
+								1 (>L:EMER_BST_ON, bool)
+								(>K:TOGGLE_ELECT_FUEL_PUMP2)
+								1 (>L:EBP_R_INIT)
+							}
 
+						(L:L_BST_PUMP_ON) 1 ==
+						(A:GENERAL ENG FUEL PUMP SWITCH:1, bool) 1 == and
+						(L:EBP_L_INIT) 1 == and
+							if{
+								0 (>L:EMER_BST_ON, bool)
+								(>K:TOGGLE_ELECT_FUEL_PUMP1)
+								0 (>L:EBP_L_INIT)
+							}
+						(L:R_BST_PUMP_ON) 1 ==
+						(A:GENERAL ENG FUEL PUMP SWITCH:2, bool) 1 == and
+						(L:EBP_R_INIT) 1 == and
+							if{
+								0 (>L:EMER_BST_ON, bool)
+								(>K:TOGGLE_ELECT_FUEL_PUMP2)
+								0 (>L:EBP_R_INIT)
+							}
+					}
+					els{
+						(A:GENERAL ENG FUEL PUMP SWITCH:1, bool) 1 == and
+						(L:EBP_L_INIT) 1 == and
+							if{
+								(>K:TOGGLE_ELECT_FUEL_PUMP1)
+								0 (>L:EBP_L_INIT)
+							}					
+						(A:GENERAL ENG FUEL PUMP SWITCH:2, bool) 1 == and
+						(L:EBP_R_INIT) 1 == and
+							if{
+								(>K:TOGGLE_ELECT_FUEL_PUMP2)
+								0 (>L:EBP_R_INIT)
+							}
+					}
+			</Value>
+		</Select>
+	</Element>
 	
 	<Element Name="EEC CONTROLER">
  		<Select>
@@ -6500,7 +6553,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:MPCD_PWR) 1 ==
-						(L:KNOB_FS_MPCD_PWR, enum) 0 &gt; and
+						(L:KNOB_FS_MPCD_PWR, enum) 0 &gt;
 						(L:MPCD-POWER, enum) 0 == and
 						(L:MPCD-TIME, Seconds) 0 == and
 							if{
@@ -7227,4 +7280,4 @@ Version 5.0
 		</Element>
 	</Element>
 
-</GAUGE>
+</Gauge>
