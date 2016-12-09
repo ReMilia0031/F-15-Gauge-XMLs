@@ -44,7 +44,7 @@
 			<Element id="ARMT">
 				<Visibility>(L:MPCD-menu, Enum) 1000 div 1 ==</Visibility>
 				<Element id="AA ARMT">
-					<Visibility>(L:ARMT_PAGES) 1 ==</Visibility>
+					<Visibility>(L:ARMT_PAGES) 1 == (L:PACS_ENABLED) 1 == and</Visibility>
 					<Element id="WING_SYMBOL">
 						<Element id="1">
 							<PolyLine id="IND">
@@ -2519,7 +2519,23 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 							</GaugeText>
 						</Element>
 				</Element>
-			</Element>
+
+				<Element id="PACS DISABLED">
+					<Visibility>(L:ARMT_PAGES) 1 == (L:ARMT_PAGES) 2 == or (L:ARMT_PAGES) 3 == or (L:PACS_ENABLED) 0 == and</Visibility>
+					<FloatPosition>210.000,240.000</FloatPosition>
+					<GaugeText id="GaugeText">
+						<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+						<Bold>True</Bold>
+						<Bright>True</Bright>
+						<FontColor>0x000000</FontColor>
+						<FontFace>Consolas</FontFace>
+						<FontHeight>22</FontHeight>
+						<GaugeString>STBY</GaugeString>
+						<HorizontalAlign>CENTER</HorizontalAlign>
+						<Size>100,24</Size>
+						<Transparent>True</Transparent>
+					</GaugeText>
+				</Element>			</Element>
 			<Element id="BIT">
 				<Visibility>(L:MPCD-menu, Enum) 1000 div 2 == </Visibility>
 					<Element id="TITLE">

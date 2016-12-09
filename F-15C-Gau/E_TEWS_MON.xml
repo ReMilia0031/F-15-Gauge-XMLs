@@ -21,8 +21,6 @@
 		<Element id="STBY">
             <FloatPosition>210.000,240.000</FloatPosition>
             <Visibility>
-				(L:LH_TEWS_POD_AC_PWR) 1 ==
-				(L:RH_TEWS_POD_AC_PWR) 1 == and
 				(L:TEWS-POWER, bool) 0 == and
 				(L:SW1_FS_TEWS_ICS) 1 == and
 				(P:absolute time, number) 0.5 % 0.25 &lt; and
@@ -44,6 +42,7 @@
 			<Visibility>(L:TEWS-POWER, bool) 1 ==</Visibility>
 			<Element id="DISPLAY">
 				<Element id="RWR">
+				<Visibility>(L:TEWS_SYS_PWR) 1 ==</Visibility>
 					<MaskImage id="TEWS/TEWS_MASK.bmp" Name="TEWS/TEWS_MASK.bmp"></MaskImage>
 					<CustomDraw id="CustomDraw" Name="fs9gps:1:map">
 						<Size>512,512</Size>
@@ -204,7 +203,7 @@
 		<MouseArea id="TEWS_PANEL">
 				<CursorType>Hand</CursorType>
                     <MouseClick id="MouseClick">
-                        <Script>150 (&gt;K:PANEL_ID_TOGGLE)</Script>
+                        <Script>550 (&gt;K:PANEL_ID_TOGGLE)</Script>
                     </MouseClick>
 				<Tooltip id="Tooltip">
 					<DefaultScript>Tactical Electronic Warfare System</DefaultScript>
