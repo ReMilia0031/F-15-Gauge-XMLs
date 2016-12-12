@@ -21,8 +21,9 @@
 		<Element id="STBY">
             <FloatPosition>210.000,240.000</FloatPosition>
             <Visibility>
-				(L:TEWS-POWER, bool) 0 == and
+				(L:TEWS_POD_CONT_PWR) 1 ==
 				(L:SW1_FS_TEWS_ICS) 1 == and
+				(L:TEWS-POWER, bool) 0 == and
 				(P:absolute time, number) 0.5 % 0.25 &lt; and
 			</Visibility>
             <GaugeText id="GaugeText">

@@ -308,6 +308,34 @@ Version 5.0
 				<Element Name="GENERATOR BUS LINE">
 					<Select>
 						<Value>
+						<!-- LMAIN GEN DISABLED , EMER GEN DISABLED , EXT POWER DISABLED -->
+							(L:SW1_FS_ENG_GEN_L, bool) 0 ==
+							(L:EMER_GEN_AC_AVAIL) 0 == and
+							(L:EXTARNAL_AC_AVAIL) 0 == and
+								if{
+									0 (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+								}
+						<!-- LMAIN GEN DISABLED , EMER GEN DISABLED , EXT POWER ENABLED -->
+							(L:SW1_FS_ENG_GEN_L, bool) 0 ==
+							(L:EMER_GEN_AC_AVAIL) 0 == and
+							(L:EXTARNAL_AC_AVAIL) 1 == and
+								if{
+									(L:EXTARNAL_AC_VOLTS) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+								}
+						<!-- LMAIN GEN DISABLED , EMER GEN ENABLED , EXT PWR DISABLED -->
+							(L:SW1_FS_ENG_GEN_L, bool) 0 ==
+							(L:EMER_GEN_AC_AVAIL) 1 == and
+							(L:EXTARNAL_AC_AVAIL) 0 == and
+								if{
+									(L:EMER_GEN_AC_BUS_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+								}
+						<!-- LMAIN GEN DISABLED , EMER GEN ENABLED , EXT POWER ENABLED -->
+							(L:SW1_FS_ENG_GEN_L, bool) 0 ==
+							(L:EMER_GEN_AC_AVAIL) 1 == and
+							(L:EXTARNAL_AC_AVAIL) 1 == and
+								if{
+									(L:EMER_GEN_AC_BUS_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+								}
 						<!-- LMAIN GEN ENABLED , EMER GEN DISABLED , EXT PWR DISABLED -->
 							(L:SW1_FS_ENG_GEN_L, bool) 1 ==
 							(L:EMER_GEN_AC_AVAIL) 0 == and
@@ -315,21 +343,29 @@ Version 5.0
 								if{
 									(L:LGEN_VOLTAGE_AC) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
 								}
-						<!-- LMAIN GEN DISABLED , EMER GEN DISABLED , EXT PWR DISABLED -->
-							(L:SW1_FS_ENG_GEN_L, bool) 0 ==
+						<!-- LMAIN GEN ENABLED , EMER GEN DISABLED , EXT PWR ENABLED -->
+							(L:SW1_FS_ENG_GEN_L, bool) 1 ==
 							(L:EMER_GEN_AC_AVAIL) 0 == and
+							(L:EXTARNAL_AC_AVAIL) 1 == and
+								if{
+									(L:LGEN_VOLTAGE_AC) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+								}
+						<!-- LMAIN GEN ENABLED , EMER GEN ENABLED , EXT PWR DISABLED -->
+							(L:SW1_FS_ENG_GEN_L, bool) 1 ==
+							(L:EMER_GEN_AC_AVAIL) 1 == and
 							(L:EXTARNAL_AC_AVAIL) 0 == and
 								if{
-									0 (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+									(L:LGEN_VOLTAGE_AC) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
 								}
-						<!-- LMAIN GEN DISABLED , EMER GEN ENABLED , EXT PWR DISABLED -->
-							(L:LGEN_VOLTAGE_AC) 100 &lt;
-							(L:SW1_FS_ENG_GEN_L, bool) 0 == or
-							(L:EMER_GEN_AC_AVAIL) 0 &gt; and
-							(L:EXTARNAL_AC_AVAIL) 0 == and
+						<!-- LMAIN GEN ENABLED , EMER GEN ENABLED , EXT PWR ENABLED -->
+							(L:SW1_FS_ENG_GEN_L, bool)  1 ==
+							(L:EMER_GEN_AC_AVAIL) 1 == and
+							(L:EXTARNAL_AC_AVAIL) 1 == and
 								if{
-									(L:EMER_GEN_AC_BUS_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+									(L:LGEN_VOLTAGE_AC) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
 								}
+
+								
 						<!-- RMAIN GEN -->
 							(L:SW1_FS_ENG_GEN_R, bool) 1 ==
 								if{
@@ -338,24 +374,17 @@ Version 5.0
 								els{
 									0 (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
 								}
-						<!--  EXTERNAL POWER ENABLED -->
-							(L:LEFT_AC_BUS_LINE_VOLTAGE) 28 &lt;
-							(L:EXTARNAL_AC_AVAIL) 1 == and
+
+							(L:LGEN_AVAIL, enum) 0 ==							
+							(L:RGEN_AVAIL, enum) 1 == and
 								if{
-									(L:EXTARNAL_AC_VOLTS) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+									<!-- (L:RIGHT_AC_BUS_LINE_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE) -->
 								}
 
-
-							(L:LEFT_AC_BUS_LINE_VOLTAGE) 100 &lt;
-							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 100 &gt; and
+							(L:LGEN_AVAIL, enum) 1 ==							
+							(L:RGEN_AVAIL, enum) 0 == and
 								if{
-									(L:RIGHT_AC_BUS_LINE_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
-								}
-
-							(L:LEFT_AC_BUS_LINE_VOLTAGE) 100 &gt;
-							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 100 &lt;
-								if{
-									(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
+									<!-- (L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:RIGHT_AC_BUS_LINE_VOLTAGE) -->
 								}
 						</Value>
 					</Select>
@@ -365,39 +394,85 @@ Version 5.0
 						<Value>
 							(L:L_XMFR_RECT_PWR) 1 ==
 								if{ (L:LEFT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:LEFT_XFMR_VOLTAGE) }
+								els{ 0 (>L:LEFT_XFMR_VOLTAGE) }
 							
 							(L:R_XMFR_RECT_PWR) 1 ==
 								if{ (L:RIGHT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:RIGHT_XFMR_VOLTAGE) }
+								els{ 0 (>L:RIGHT_XFMR_VOLTAGE) }
 							
 
-							(L:EMER_GEN_DC_AVAIL) 0 ==
+						<!-- XFMR ENABLED , EMER GEN DISABLED , EXT POWER DISABLED -->
+							(L:L_XMFR_RECT_PWR) 1 ==
+							(L:EMER_GEN_DC_AVAIL) 0 == and
+							(L:EXTARNAL_AC_AVAIL) 0 == and
+								if{
+									(L:LEFT_XFMR_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
+								}
+						<!-- XFMR ENABLED , EMER GEN ENABLED , EXT POWER ENABLED -->
+							(L:L_XMFR_RECT_PWR) 1 ==
+							(L:EMER_GEN_DC_AVAIL) 1 == and
+							(L:EXTARNAL_AC_AVAIL) 1 == and
+								if{
+									(L:LEFT_XFMR_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
+								}
+						<!-- XFMR ENABLED , EMER GEN ENABLED , EXT POWER DISABLED -->
+							(L:L_XMFR_RECT_PWR) 1 ==
+							(L:EMER_GEN_DC_AVAIL) 1 == and
+							(L:EXTARNAL_AC_AVAIL) 0 == and
+								if{
+									(L:LEFT_XFMR_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
+								}
+						<!-- XFMR ENABLED , EMER GEN DISABLED , EXT POWER ENABLED -->
+							(L:L_XMFR_RECT_PWR) 1 ==
+							(L:EMER_GEN_DC_AVAIL) 0 == and
+							(L:EXTARNAL_AC_AVAIL) 1 == and
 								if{
 									(L:LEFT_XFMR_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
 								}
 
-							(L:EMER_GEN_DC_AVAIL) 0 &gt;
+						<!--  XFMR DISABLED , EMER GEN ENABLED , EXT POWER ENABLED -->
+							(L:L_XMFR_RECT_PWR) 0 ==
+							(L:EMER_GEN_DC_AVAIL) 1 == and
+							(L:EXTARNAL_AC_AVAIL) 1 == and
 								if{
 									(L:EMER_GEN_DC_BUS_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
 								}
-
-							(L:LEFT_XFMR_VOLTAGE) 28 &lt;
+						<!--  XFMR DISABLED , EMER GEN ENABLED , EXT POWER DISABLED -->
+							(L:L_XMFR_RECT_PWR) 0 ==
+							(L:EMER_GEN_DC_AVAIL) 1 == and
+							(L:EXTARNAL_AC_AVAIL) 0 == and
+								if{
+									(L:EMER_GEN_DC_BUS_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
+								}
+						<!-- XFMR DISABLED , EMER GEN DISABLED , EXT POWER ENABLED -->
+							(L:L_XMFR_RECT_PWR) 0 ==
+							(L:EMER_GEN_DC_AVAIL) 0 == and
 							(L:EXTARNAL_AC_AVAIL) 1 == and
 								if{
 									(L:EXTARNAL_AC_VOLTS) (>L:LEFT_XFMR_LINE_VOLTAGE)
 								}
+
+						<!-- XFMR DISABLED , EMER GEN DISABLED , EXT POWER DISABLED -->
+							(L:L_XMFR_RECT_PWR) 0 ==
+							(L:EMER_GEN_DC_AVAIL) 0 == and
+							(L:EXTARNAL_AC_AVAIL) 0 == and
+								if{
+									0 (>L:LEFT_XFMR_LINE_VOLTAGE)
+								}
+								
 
 							(L:RIGHT_XFMR_VOLTAGE) (>L:RIGHT_XFMR_LINE_VOLTAGE)
 
 							(L:LEFT_XFMR_LINE_VOLTAGE) 20 &lt;
 							(L:RIGHT_XFMR_LINE_VOLTAGE) 25 &gt; and
 								if{
-									(L:RIGHT_XFMR_LINE_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
+									<!-- (L:RIGHT_XFMR_LINE_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE) -->
 								}
 
 							(L:LEFT_XFMR_LINE_VOLTAGE) 25 &gt;
 							(L:RIGHT_XFMR_LINE_VOLTAGE) 20 &lt; and
 								if{
-									(L:LEFT_XFMR_LINE_VOLTAGE) (>L:RIGHT_XFMR_LINE_VOLTAGE)
+									<!-- (L:LEFT_XFMR_LINE_VOLTAGE) (>L:RIGHT_XFMR_LINE_VOLTAGE) -->
 								}
 						</Value>
 					</Select>
@@ -405,16 +480,18 @@ Version 5.0
 				<Element Name="AC LINE">
 					<Select>
 						<Value>
-							(L:26_VAC_AUTO_XFMR_PWR) 1 ==
-							(L:EXTARNAL_AC_AVAIL) 0 == and
-								if{
-									(L:RIGHT_AC_BUS_LINE_VOLTAGE) 26 * 115 / (>L:RIGHT_26_AC_BUS_VOLTAGE)
-								}
-							(L:EXTARNAL_AC_AVAIL) 1 ==
+							(L:RIGHT_AC_BUS_AVAIL) 0 ==
+							(L:EXTARNAL_AC_AVAIL) 1 == and
 								if{
 									(L:EXTARNAL_AC_VOLTS) 26 * 28 / (>L:RIGHT_26_AC_BUS_VOLTAGE)
 								}
-							(L:EXTARNAL_AC_AVAIL) 0 ==
+							(L:RIGHT_AC_BUS_AVAIL) 1 ==
+							(L:26_VAC_AUTO_XFMR_PWR) 1 == and
+								if{
+									(L:RIGHT_AC_BUS_LINE_VOLTAGE) 26 * 115 / (>L:RIGHT_26_AC_BUS_VOLTAGE)
+								}
+							(L:RIGHT_AC_BUS_AVAIL) 0 ==
+							(L:EXTARNAL_AC_AVAIL) 0 == and
 								if{
 									0 (>L:RIGHT_26_AC_BUS_VOLTAGE)
 								}
@@ -548,11 +625,6 @@ Version 5.0
 									1 (>L:AA_STA_2_8_AC_PWR)
 									1 (>L:AG_STA_2_8_AC_PWR)
 									1 (>L:AG_STA_5_AC_PWR)
-									1 (>L:AIM-7_STA_3_4_PWR)
-									1 (>L:AIM-7_STA_6_7_PWR)
-									1 (>L:AIM-9_STA_2_AC_PWR)
-									1 (>L:AIM-9_STA_8_AC_PWR)
-									1 (>L:AIC_R_PWR)
 									1 (>L:CTVS_PWR)
 									1 (>L:ENG_ANTI_ICE_AC_PWR)
 									1 (>L:EXCEEDANCE_COUNTER)
@@ -560,10 +632,9 @@ Version 5.0
 									1 (>L:ICS_PWR)
 									1 (>L:JTIDS_PWR)
 									1 (>L:L_WING_XFR_PUMP_PWR)
-									1 (>L:MK-84_STA_AC_PWR)
 									1 (>L:OXY_GAGING_PWR)
 									1 (>L:R_AIR_INLET_CONT_AC_PWR)
-									1 (>L:R_AOA_PROBR_HTR_PWR)
+									1 (>L:R_AOA_PROVE_HTR_PWR)
 									1 (>L:R_BST_PUMP_PWR)
 									1 (>L:R_CFT_AFT_XFR_PUMP)
 									1 (>L:RH_TEWS_POD_AC_PWR)
@@ -586,11 +657,6 @@ Version 5.0
 									0 (>L:AA_STA_2_8_AC_PWR)
 									0 (>L:AG_STA_2_8_AC_PWR)
 									0 (>L:AG_STA_5_AC_PWR)
-									0 (>L:AIM-7_STA_3_4_PWR)
-									0 (>L:AIM-7_STA_6_7_PWR)
-									0 (>L:AIM-9_STA_2_AC_PWR)
-									0 (>L:AIM-9_STA_8_AC_PWR)
-									0 (>L:AIC_R_PWR)
 									0 (>L:CTVS_PWR)
 									0 (>L:ENG_ANTI_ICE_AC_PWR)
 									0 (>L:EXCEEDANCE_COUNTER)
@@ -598,10 +664,9 @@ Version 5.0
 									0 (>L:ICS_PWR)
 									0 (>L:JTIDS_PWR)
 									0 (>L:L_WING_XFR_PUMP_PWR)
-									0 (>L:MK-84_STA_AC_PWR)
 									0 (>L:OXY_GAGING_PWR)
 									0 (>L:R_AIR_INLET_CONT_AC_PWR)
-									0 (>L:R_AOA_PROBR_HTR_PWR)
+									0 (>L:R_AOA_PROVE_HTR_PWR)
 									0 (>L:R_BST_PUMP_PWR)
 									0 (>L:R_CFT_AFT_XFR_PUMP)
 									0 (>L:RH_TEWS_POD_AC_PWR)
@@ -609,7 +674,7 @@ Version 5.0
 									0 (>L:R_ENG_FUEL_FLOW_IND_PWR)
 									0 (>L:R_TOTAL_TEMP_PROBE_HTR_PWR)
 									0 (>L:R_WING_XFR_PUMP_PWR)
-									0 (>R_XMFR_RECT_PWR)
+									0 (>L:R_XMFR_RECT_PWR)
 									0 (>L:RDR_WARN_RCVR_POD_PWR)
 									0 (>L:RWR_AC_PWR)
 									0 (>L:SEAT_ADJ_PWR)
@@ -629,14 +694,12 @@ Version 5.0
 									1 (>L:ENG_OIL_PRESS_IND_PWR)
 									1 (>L:HYDR_PRESS_IND_PWR)
 									1 (>L:PRAD_IND_PWR)
-									1 (>L:PRC_IND_PWR)
 								}
 								els{
 									0 (>L:ENG_ENP_IND_PWR)
 									0 (>L:ENG_OIL_PRESS_IND_PWR)
 									0 (>L:HYDR_PRESS_IND_PWR)
 									0 (>L:PRAD_IND_PWR)
-									0 (>L:PRC_IND_PWR)
 								}
 						</Value>
 					</Select>
@@ -648,27 +711,15 @@ Version 5.0
 								if{
 									1 (>L:AA_MASTER_ARM_PWR)
 									1 (>L:AG_MASTER_ARM_PWR)
-									1 (>L:AIM-7_MOTOR_FIRE_RWR)
-									1 (>L:AIM-9_LAUNCHER_PWR)
-									1 (>L:GUN_CONT_PWR)
 									1 (>L:GUN_TRIG_PWR)
 									1 (>L:LOGIC_PWR)
-									1 (>L:STA2_ARMING_PWR)
-									1 (>L:STA5_ARMING_PWR)
-									1 (>L:STA8_ARMING_PWR)
 									1 (>L:UMB_RET_PWR)
 								}
 								els{
 									0 (>L:AA_MASTER_ARM_PWR)
 									0 (>L:AG_MASTER_ARM_PWR)
-									0 (>L:AIM-7_MOTOR_FIRE_RWR)
-									0 (>L:AIM-9_LAUNCHER_PWR)
-									0 (>L:GUN_CONT_PWR)
 									0 (>L:GUN_TRIG_PWR)
 									0 (>L:LOGIC_PWR)
-									0 (>L:STA2_ARMING_PWR)
-									0 (>L:STA5_ARMING_PWR)
-									0 (>L:STA8_ARMING_PWR)
 									0 (>L:UMB_RET_PWR)
 								}
 						</Value>
@@ -708,14 +759,11 @@ Version 5.0
 									1 (>L:AA_STA_2_8_DC_PWR)
 									1 (>L:AG_STA_2_8_DC_PWR)
 									1 (>L:AG_STA_5_DC_PWR)
-									1 (>L:AIM-9_STA_2_DC_PWR)
-									1 (>L:AIM-9_STA_8_DC_PWR)
 									1 (>L:ARM_BUS_CONT_PWR)
 									1 (>L:CSBPC_HYD_BYPASS_PWR)
 									1 (>L:ENG_ANTI_ICE_DC_PWR)
 									1 (>L:ENG_OIL_PRS_PWR)
 									1 (>L:GRD_FUEL_CONT_CK_PWR)
-									1 (>L:GUN_CLEAR_PWR)
 									1 (>L:GUN_CONT_DC_PWR)
 									1 (>L:HYD_PRESS_PWR)
 									1 (>L:ICS_CONT_PWR)
@@ -724,13 +772,11 @@ Version 5.0
 									1 (>L:LAST_ROUND_PWR)
 									1 (>L:LR_CFT_AG_PWR)
 									1 (>L:L_WG_XFER_PUMP_RLY_PWR)
-									1 (>L:MK-84_STA_DC_PWR)
 									1 (>L:MODE_SEL_PWR)
 									1 (>L:MPCD_PWR)
 									1 (>L:R_AIR_INLET_CONT_DC_PWR)
 									1 (>L:R_BST_PUMP_RLY_PWR)
 									1 (>L:R_CFT_HT_EXCH_DR_ACTR_PWR)
-									1 (>L:R_IDLE_NOZL_RESET_PWR)
 									1 (>L:RH_TEWS_POD_DC_PWR)
 									1 (>L:RUDDER_TRAVEL_LMTR_PWR)
 									1 (>L:R_WG_XFER_PUMP_RLY_PWR)
@@ -748,18 +794,15 @@ Version 5.0
 									0 (>L:AA_STA_2AB_DC_PWR)
 									0 (>L:AA_STA_8AB_DC_PWR)
 									0 (>L:AA_STA_3L_7R_CFT_DC_PWR)
-									0 (>L:AA_STA_4_DC_PWR)
-									0 (>L:AA_STA_6_DC_PWR)
+									0 (>L:AA_STA_4_6_DC_PWR)
+									0 (>L:AA_STA_2_8_DC_PWR)
 									0 (>L:AG_STA_2_8_DC_PWR)
 									0 (>L:AG_STA_5_DC_PWR)
-									0 (>L:AIM-9_STA_2_DC_PWR)
-									0 (>L:AIM-9_STA_8_DC_PWR)
 									0 (>L:ARM_BUS_CONT_PWR)
 									0 (>L:CSBPC_HYD_BYPASS_PWR)
 									0 (>L:ENG_ANTI_ICE_DC_PWR)
 									0 (>L:ENG_OIL_PRS_PWR)
 									0 (>L:GRD_FUEL_CONT_CK_PWR)
-									0 (>L:GUN_CLEAR_PWR)
 									0 (>L:GUN_CONT_DC_PWR)
 									0 (>L:HYD_PRESS_PWR)
 									0 (>L:ICS_CONT_PWR)
@@ -768,13 +811,11 @@ Version 5.0
 									0 (>L:LAST_ROUND_PWR)
 									0 (>L:LR_CFT_AG_PWR)
 									0 (>L:L_WG_XFER_PUMP_RLY_PWR)
-									0 (>L:MK-84_STA_DC_PWR)
 									0 (>L:MODE_SEL_PWR)
 									0 (>L:MPCD_PWR)
 									0 (>L:R_AIR_INLET_CONT_DC_PWR)
 									0 (>L:R_BST_PUMP_RLY_PWR)
 									0 (>L:R_CFT_HT_EXCH_DR_ACTR_PWR)
-									0 (>L:R_IDLE_NOZL_RESET_PWR)
 									0 (>L:RH_TEWS_POD_DC_PWR)
 									0 (>L:RUDDER_TRAVEL_LMTR_PWR)
 									0 (>L:R_WG_XFER_PUMP_RLY_PWR)
@@ -832,8 +873,7 @@ Version 5.0
 									1 (>L:SIGNAL_DATA_RCDR_PWR)
 									1 (>L:TACAN_RCVR_XMTR_PWR)
 									1 (>L:TIS_PWR)
-									1 (>L:TANK_XFR_PMP_AC_PWR)
-									1 (>L:UHF_AUX_RCVR_PWR)
+									1 (>L:TANK_XFR_PMP_PWR)
 									1 (>L:VS_IND_PWR)
 									1 (>L:VSD_PWR)
 								}
@@ -856,7 +896,7 @@ Version 5.0
 									0 (>L:IRE_PWR)
 									0 (>L:KIR_PWR)
 									0 (>L:KIT_PWR)
-									1 (>L:L_AIR_INLET_CONT_AC_PWR)
+									0 (>L:L_AIR_INLET_CONT_AC_PWR)
 									0 (>L:L_AOA_PROVE_HTR_PWR)
 									0 (>L:L_BST_PUMP_PWR)
 									0 (>L:L_CFT_AFT_XFR_PUMP)
@@ -875,8 +915,7 @@ Version 5.0
 									0 (>L:SIGNAL_DATA_RCDR_PWR)
 									0 (>L:TACAN_RCVR_XMTR_PWR)
 									0 (>L:TIS_PWR)
-									0 (>L:TANK_XFR_PMP_AC_PWR)
-									0 (>L:UHF_AUX_RCVR_PWR)
+									0 (>L:TANK_XFR_PMP_PWR)
 									0 (>L:VS_IND_PWR)
 									0 (>L:VSD_PWR)
 								}
@@ -903,7 +942,6 @@ Version 5.0
 									1 (>L:R_CFT_CTR_XFR_PUMP)
 									1 (>L:STBY_ATTD_IND_PWR)
 									1 (>L:STORM_FLOOD_LT_PWR)
-									1 (>L:UHF_RCVR_XMTR_PWR)
 								}
 								els{
 									0 (>L:AFCS_AC_PWR)
@@ -921,7 +959,6 @@ Version 5.0
 									0 (>L:R_CFT_CTR_XFR_PUMP)
 									0 (>L:STBY_ATTD_IND_PWR)
 									0 (>L:STORM_FLOOD_LT_PWR)
-									0 (>L:UHF_RCVR_XMTR_PWR)
 								}
 						</Value>
 					</Select>
@@ -950,7 +987,6 @@ Version 5.0
 									1 (>L:ARMT_CONT_SET_PWR)
 									1 (>L:ASP_BIT_CONT_PNL_PWR)
 									1 (>L:AV_GND_COOL_CONT_PWR)
-									1 (>L:CFT_LCV_PWR)
 									1 (>L:CFT_LVL_CONT_VALVE_PWR)
 									1 (>L:ECS_TEMP_CONT_PWR)
 									1 (>L:EMER_GEN_EBP_PWR)
@@ -959,7 +995,6 @@ Version 5.0
 									1 (>L:HUD_DC_PWR)
 									1 (>L:ILS_PWR)
 									1 (>L:ILE_PWR)
-									1 (>L:KY-28_PWR)
 									1 (>L:KY-58_PWR)
 									1 (>L:LEAD_COMP_GYRO_DC_PWR)
 									1 (>L:L_AIR_INLET_CONT_DC_PWR)
@@ -967,15 +1002,12 @@ Version 5.0
 									1 (>L:L_CFT_HT_EXCH_DR_ACTR_PWR)
 									1 (>L:LR_CFT_CTR_XFR_PUMP_PWR)
 									1 (>L:LH_TEWS_POD_DC_PWR)
-									1 (>L:L_IDLE_NOZL_RESET_PWR)
-									1 (>L:MLG_WHEEL_ANTI_SPIN_PWR)
 									1 (>L:PACS_DC_PWR)
 									1 (>L:PSN_ANTI_COLLISION_LT_CONT_PWR)
 									1 (>L:RDR_CONT_LVPS_PWR)
 									1 (>L:RDR_COOLANT_PUMP_DC_PWR)
 									1 (>L:RDR_LVPS_PWR)
 									1 (>L:TACAN_ADI_TCN_ILS_PNL_PWR)
-									1 (>L:TANK_XFR_PMP_DC_PWR)
 									1 (>L:TIS_PWR)
 									1 (>L:UHF_RT_2_PWR)
 								}
@@ -983,7 +1015,6 @@ Version 5.0
 									0 (>L:ARMT_CONT_SET_PWR)
 									0 (>L:ASP_BIT_CONT_PNL_PWR)
 									0 (>L:AV_GND_COOL_CONT_PWR)
-									0 (>L:CFT_LCV_PWR)
 									0 (>L:CFT_LVL_CONT_VALVE_PWR)
 									0 (>L:ECS_TEMP_CONT_PWR)
 									0 (>L:EMER_GEN_EBP_PWR)
@@ -992,7 +1023,6 @@ Version 5.0
 									0 (>L:HUD_DC_PWR)
 									0 (>L:ILS_PWR)
 									0 (>L:ILE_PWR)
-									0 (>L:KY-28_PWR)
 									0 (>L:KY-58_PWR)
 									0 (>L:LEAD_COMP_GYRO_DC_PWR)
 									0 (>L:L_AIR_INLET_CONT_DC_PWR)
@@ -1000,15 +1030,12 @@ Version 5.0
 									0 (>L:L_CFT_HT_EXCH_DR_ACTR_PWR)
 									0 (>L:LR_CFT_CTR_XFR_PUMP_PWR)
 									0 (>L:LH_TEWS_POD_DC_PWR)
-									0 (>L:L_IDLE_NOZL_RESET_PWR)
-									0 (>L:MLG_WHEEL_ANTI_SPIN_PWR)
 									0 (>L:PACS_DC_PWR)
 									0 (>L:PSN_ANTI_COLLISION_LT_CONT_PWR)
 									0 (>L:RDR_CONT_LVPS_PWR)
 									0 (>L:RDR_COOLANT_PUMP_DC_PWR)
 									0 (>L:RDR_LVPS_PWR)
 									0 (>L:TACAN_ADI_TCN_ILS_PNL_PWR)
-									0 (>L:TANK_XFR_PMP_DC_PWR)
 									0 (>L:TIS_PWR)
 									0 (>L:UHF_RT_2_PWR)
 								}
@@ -1023,7 +1050,6 @@ Version 5.0
 									1 (>L:AERIAL_REFUELING_PWR)
 									1 (>L:AFCS_DC_PWR)
 									1 (>L:AIM-7_EJECT_PWR)
-									1 (>L:ANTENNA_SEL_PWR)
 									1 (>L:ARI_SHUTOFF_ANTI-SKID_CONT_PWR)
 									1 (>L:ADF_PWR)
 									1 (>L:BLEED_AIR_LEAK_DET_DC_PWR)
@@ -1063,7 +1089,6 @@ Version 5.0
 									0 (>L:AERIAL_REFUELING_PWR)
 									0 (>L:AFCS_DC_PWR)
 									0 (>L:AIM-7_EJECT_PWR)
-									0 (>L:ANTENNA_SEL_PWR)
 									0 (>L:ARI_SHUTOFF_ANTI-SKID_CONT_PWR)
 									0 (>L:ADF_PWR)
 									0 (>L:BLEED_AIR_LEAK_DET_DC_PWR)
@@ -1110,11 +1135,9 @@ Version 5.0
 									1 (>L:CAUT_LT_CON_MA_CAUT_RESET_PWR)
 									1 (>L:ENG_FIRE_EXT_SYS_PWR)
 									1 (>L:ENG_FIRE_OVHT_DET_SYS_PWR)
-									1 (>L:L_ENG_EHR_START_BYP_PWR)
 									1 (>L:L_ENG_FUEL_SOV_PWR)
 									1 (>L:L_ENG_IND_ACCESS_PWR)
 									1 (>L:NOSE_LDG_WOW_PWR)
-									1 (>L:R_ENG_EHR_START_BYP_PWR)
 									1 (>L:R_ENG_FUEL_SOV_PWR)
 									1 (>L:R_ENG_IND_ACCESS_PWR)
 								}
@@ -1122,11 +1145,9 @@ Version 5.0
 									0 (>L:CAUT_LT_CON_MA_CAUT_RESET_PWR)
 									0 (>L:ENG_FIRE_EXT_SYS_PWR)
 									0 (>L:ENG_FIRE_OVHT_DET_SYS_PWR)
-									0 (>L:L_ENG_EHR_START_BYP_PWR)
 									0 (>L:L_ENG_FUEL_SOV_PWR)
 									0 (>L:L_ENG_IND_ACCESS_PWR)
 									0 (>L:NOSE_LDG_WOW_PWR)
-									0 (>L:R_ENG_EHR_START_BYP_PWR)
 									0 (>L:R_ENG_FUEL_SOV_PWR)
 									0 (>L:R_ENG_IND_ACCESS_PWR)
 								}
@@ -1142,12 +1163,14 @@ Version 5.0
 									1 (>L:INTERCOM_PWR)
 									1 (>L:LR_AMAD_SEL_PWR)
 									1 (>L:UTIL_FLOOD_LT_PWR)
+									1 (>L:FTIT_WARN_PWR)
 								}
 								els{
 									0 (>L:AMAD_FIRE_DET_SYS_PWR)
 									0 (>L:INTERCOM_PWR)
 									0 (>L:LR_AMAD_SEL_PWR)
 									0 (>L:UTIL_FLOOD_LT_PWR)
+									0 (>L:FTIT_WARN_PWR)
 								}
 						</Value>
 					</Select>
@@ -1161,7 +1184,7 @@ Version 5.0
 									1 (>L:AMAD_F_EXT_SYS_PWR)
 								}
 								els{
-									1 (>L:AMAD_F_EXT_SYS_PWR)
+									0 (>L:AMAD_F_EXT_SYS_PWR)
 								}
 						</Value>
 					</Select>
@@ -1204,20 +1227,20 @@ Version 5.0
 					<Select>
 						<Value>
 							(L:HYD_PRESS_PWR) 1 ==
-							(L:HYD_INIT) 0 == and
+							(L:HYD_L_INIT) 0 == and
 							(A:HYDRAULIC SWITCH, bool) 0 == and
 								if{
 									1 (>K:HYDRAULIC_SWITCH_TOGGLE)
 									2 (>K:HYDRAULIC_SWITCH_TOGGLE)
-									1 (>L:HYD_INIT)
+									1 (>L:HYD_L_INIT)
 								}
 							(L:HYD_PRESS_PWR) 0 ==
-							(L:HYD_INIT) 1 == and
+							(L:HYD_L_INIT) 1 == and
 							(A:HYDRAULIC SWITCH, bool) 1 == and
 								if{
 									1 (>K:HYDRAULIC_SWITCH_TOGGLE)
 									2 (>K:HYDRAULIC_SWITCH_TOGGLE)
-									0 (>L:HYD_INIT)
+									0 (>L:HYD_L_INIT)
 								}
 						</Value>
 					</Select>
@@ -1367,12 +1390,12 @@ Version 5.0
 									0 (>L:FUEL_GAUGE_PWR, enum)
 								}
 
-							(L:PRC_IND_PWR) 1 ==
+							(L:PRAD_IND_PWR) 1 ==
 								if{
-									1 (>L:PRC_GAUGE_PWR, enum)
+									1 (>L:PRAD_GAUGE_PWR, enum)
 								}
 								els{
-									0 (>L:PRC_GAUGE_PWR, enum)
+									0 (>L:PRAD_GAUGE_PWR, enum)
 								}
 							(L:OXY_GAGING_PWR) 1 ==
 								if{
@@ -1430,6 +1453,19 @@ Version 5.0
 								}
 								els{
 									0 (>L:RWWS_SYS_PWR)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="TAC INFO SYS PWR">
+					<Select>
+						<Value>
+							(L:TIS_PWR) 1 ==
+								if{
+									1 (>L:TIS_SYS_PWR)
+								}
+								els{
+									0 (>L:TIS_SYS_PWR)
 								}
 						</Value>
 					</Select>
@@ -1721,7 +1757,7 @@ Version 5.0
 			<Element Name="FLAPS">
 				<Select>
 					<Value>
-						(L:FLAPS_PWR) 1 ==
+						(L:FLAP_PWR) 1 ==
 							if{
 								(A:FLAPS HANDLE PERCENT, Percent) 0 &gt;
 									if{ 0 (>L:SW1_FLAPS, enum) }
@@ -2326,12 +2362,9 @@ Version 5.0
 									(A:ENG OIL PRESSURE:1, PSI) (>L:GAU_LENG_OIL_PRESS)
 									(A:ENG OIL PRESSURE:2, PSI) (>L:GAU_RENG_OIL_PRESS)
 								}
-								els{
-									0 (>L:GAU_LENG_OIL_PRESS)
-									0 (>L:GAU_RENG_OIL_PRESS)
-								}
 						}
-						els{
+					(L:ENG_OIL_PRS_PWR) 0 ==
+						if{
 							(L:GAU_LENG_OIL_PRESS) 0 &gt;
 								if{
 									(L:GAU_LENG_OIL_PRESS) + (L:GAU_LENG_OIL_PRESS) 100 / - (>L:GAU_LENG_OIL_PRESS)
@@ -2347,6 +2380,12 @@ Version 5.0
 									(L:PX_OIL, enum) + (L:PX_OIL, enum) 100 / - (>L:PX_OIL, enum)
 								}
 							
+						}
+					(L:ENG_OIL_PRS_PWR) 0 ==
+					(L:OIL_PRESS_GAUGE_PWR, enum) 0 == and
+						if{
+							0 (>L:GAU_LENG_OIL_PRESS)
+							0 (>L:GAU_RENG_OIL_PRESS)
 						}
       			</Value>
     		</Select>
@@ -2440,7 +2479,7 @@ Version 5.0
 		<Element Name="PITCH RATIO INDICATOR">
     		<Select>
       			<Value>
-					(L:PRC_GAUGE_PWR) 1 ==
+					(L:PRAD_GAUGE_PWR, enum) 1 ==
 						if{
 							(A:HYDRAULIC PRESSURE:1, PSI) 2000 &lt;
 							(A:HYDRAULIC PRESSURE:2, PSI) 2000 &lt; and
@@ -2465,13 +2504,27 @@ Version 5.0
       			</Value>
     		</Select>
 		</Element>
+		<Element Name="OXY GAUGE">
+    		<Select>
+      			<Value>
+					(L:OXY_GAUGE_PWR, enum) 1 ==
+					(L:SW2_FS_OXY_SUPPLY, enum) 1 == and
+						if{
+							4000 (>L:GAU_OXY_QTY)
+						}
+						els{
+							0 (>L:GAU_OXY_QTY)
+						}
+      			</Value>
+    		</Select>
+		</Element>
 	</Element>
 
 	<Element Name="LIGHT">
 		<Element Name="WARN CAUT LTS">
 			<Select>
 				<Value>
-					(L:CAUT_WRN_ADV_LTS_PWR) 1 ==
+					(L:CAUT_LT_CON_MA_CAUT_RESET_PWR) 1 ==
 						if{ 1 (>L:LIGHT_FLICKER, enum) }
 						els{ 0 (>L:LIGHT_FLICKER, enum) }
 
@@ -2487,7 +2540,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:WRN_ADV_CAUT_LTS_PWR) 1 ==
+						(L:CAUT_LT_CON_MA_CAUT_RESET_PWR) 1 ==
 						(L:LT-TIME, Seconds) 0 == and
 							if{
 								(P:LOCAL TIME, Seconds) (>L:LT-TIME, Seconds)
@@ -2499,7 +2552,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:WRN_ADV_CAUT_LTS_PWR) 1 ==
+						(L:CAUT_LT_CON_MA_CAUT_RESET_PWR) 1 ==
 						(L:LT-TIME, Seconds) 0 &gt; and
 							if{
 								0 (>L:LT-TIME, Seconds)
@@ -2511,7 +2564,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:WRN_ADV_CAUT_LTS_PWR) 1 ==
+						(L:CAUT_LT_CON_MA_CAUT_RESET_PWR) 1 ==
 						(P:LOCAL TIME, Seconds) (L:LT-TIME, Seconds) - 2 &gt; and
 							if{
 								0 (>L:SW1_FS_INT_LT_TEST)
@@ -3764,7 +3817,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(L:SW2_FS_OXY_SUPPLY, enum) 0 == and
+						(L:GAU_OXY_QTY) 2000 &lt; and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_OXYGEN, enum)  }
 							els{ 0 (>L:LT_FS_OXYGEN, enum) }
@@ -4271,7 +4324,7 @@ Version 5.0
 	<Element Name="INLET CONTROLER">
  		<Select>
    			<Value>
-				(L:L_AIC_PWR) 1 ==
+				(L:L_AIR_INLET_CONT_AC_PWR) 1 ==
 				(L:SW1_FS_MISC_L_INLET_RAMP) 1 == and
 					if{
 						1 (>L:LINLET_ENABLED, enum)
@@ -4280,7 +4333,7 @@ Version 5.0
 						0 (>L:LINLET_ENABLED, enum)
 						}
 
-				(L:R_AIC_PWR) 1 ==
+				(L:R_AIR_INLET_CONT_AC_PWR) 1 ==
 				(L:SW1_FS_MISC_R_INLET_RAMP) 1 == and
 					if{
 						1 (>L:RINLET_ENABLED, enum)
@@ -4289,7 +4342,7 @@ Version 5.0
 						0 (>L:RINLET_ENABLED, enum)
 					}
 
-				(L:L_AIC_POWER) 1 ==
+				(L:L_AIR_INLET_CONT_AC_PWR) 1 ==
 				(L:SW1_FS_MISC_L_INLET_RAMP, enum) 0 == and
 					if{
 						1 (>L:L_RAMP_LOCKED, enum)
@@ -4297,7 +4350,7 @@ Version 5.0
 					els{
 						0 (>L:L_RAMP_LOCKED, enum)
 					}
-				(L:L_AIC_POWER) 1 ==
+				(L:R_AIR_INLET_CONT_AC_PWR) 1 ==
 				(L:SW1_FS_MISC_R_INLET_RAMP, enum) 0 == and
 					if{
 						1 (>L:R_RAMP_LOCKED, enum)
@@ -4434,7 +4487,7 @@ Version 5.0
 							6 (>K:FUEL_SELECTOR_2_SET)
 						}
 					
-					(L:TANK_XFR_PMP_AC_PWR) 1 ==
+					(L:TANK_XFR_PMP_PWR) 1 ==
 						if{
 							(>K:CROSS_FEED_OPEN)
 						}
@@ -5149,7 +5202,7 @@ Version 5.0
 				<Value>
 					(L:KNOB_FS_UHF_1_MODE) 2 ==
 					(L:SW2_FS_UHF1_MODE) 1 == or
-					(L:UHF_RCVR_XMTR_PWR) 1 == and
+					(L:UHF_RT_1_PWR) 1 == and
 						if{ 118.2
 							118.1
 							126.2
@@ -5177,7 +5230,7 @@ Version 5.0
 		<Element Name="R1 MODE">
 			<Select>
 				<Value>
-					(L:UHF_RCVR_XMTR_PWR) 1 ==
+					(L:UHF_RT_1_PWR) 1 ==
 					(L:MODE_SEL_PWR) 1 == and
 						if{
 							(L:KNOB_FS_UHF_1_MODE) 0 ==
@@ -5206,7 +5259,7 @@ Version 5.0
 		<Element Name="R1 COMM VOLUME">
 			<Select>
 				<Value>
-					(L:UHF_RCVR_XMTR_PWR) 1 ==
+					(L:UHF_RT_1_PWR) 1 ==
 					(L:KNOB_FS_UHF_1_VOL) 0 &gt; and
 					(L:R1V_INIT) 0 == and
 						if{
@@ -5228,7 +5281,7 @@ Version 5.0
 			<Select>
 				<Value>
 					(L:KNOB_FS_RAD2_MODE) 2 ==
-					(L:UHF_AUX_RCVR_PWR) 1 == and
+					(L:UHF_RT_2_PWR) 1 == and
 						if{ 133.2
 							125.5
 							123.45
@@ -5256,7 +5309,7 @@ Version 5.0
 		<Element Name="R2 MODE">
 			<Select>
 				<Value>
-					(L:UHF_AUX_RCVR_PWR) 1 ==
+					(L:UHF_RT_2_PWR) 1 ==
 					(L:MODE_SEL_PWR) 1 == and
 						if{
 							(L:KNOB_FS_RAD2_MODE) 0 ==
@@ -5288,7 +5341,7 @@ Version 5.0
 		<Element Name="R2 COMM VOLUME">
 			<Select>
 				<Value>
-					(L:UHF_AUX_RCVR_PWR) 1 ==
+					(L:UHF_RT_2_PWR) 1 ==
 					(L:SW2_FS_RAD2_TRANS) 2 == and
 					(L:R2V_INIT) 0 == and
 						if{
@@ -5416,7 +5469,7 @@ Version 5.0
 			<Select>
 				<Value>
 					(L:KNOB_FS_VOL_R2) 0 &gt;
-					(L:UHF_AUX_RCVR_PWR) 1 == and
+					(L:UHF_RT_2_PWR) 1 == and
 					(L:R2V_INIT) 0 == and
 						if{
 						}
@@ -5564,15 +5617,15 @@ Version 5.0
 					(L:R_AOA_PROBR_HTR_PWR) 1 == and
 					(A:AMBIENT TEMPERATURE, Celsius) 0 &lt; and
 						if{
-								1 (>K:PITOT_HEAT_SET)
-							}
+							1 (>K:PITOT_HEAT_SET)
+						}
 						els{
-								0 (>K:PITOT_HEAT_SET)
+							0 (>K:PITOT_HEAT_SET)
 						}
 				</Value>
 			</Select>
 		</Element>
-		<Element Name="WINDSHLD CONTROLLER">
+		<Element Name="WINDSHIELD CONTROLLER">
 			<Select>
 				<Value>
 				(L:WSHLD_ANTI_ICE_PWR) 1 ==
@@ -5807,7 +5860,7 @@ Version 5.0
 						6000 (>L:GUN_RATE)
 					}
 					(L:GUN_PWR) 1 ==
-					(L:GUN_CONT_PWR) 1 == and
+					(L:GUN_TRIG_PWR) 1 == and
 						if{
 							(L:GUN_RUN) 2 ==
 							(L:AO_GUN_AMMO_COUNT, Number) 0 != and
@@ -6578,7 +6631,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:MPCD_PWR) 1==
-						(P:LOCAL TIME, Seconds) (L:MPCD-TIME, Seconds) - 1 &gt; and
+						(P:LOCAL TIME, Seconds) (L:MPCD-TIME, Seconds) - 8 &gt; and
 							if{
 								1 (>L:MPCD-POWER, enum)
 								0 (>L:MPCD-TIME, Seconds)
@@ -7123,7 +7176,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:CC_PWR, enum) 1 == and
+						(L:TEWS_SYS_PWR) 1 ==
 						(L:TEWS-TIME, Seconds) 0 == and
 							if{
 								(P:LOCAL TIME, Seconds) (>L:TEWS-TIME, Seconds)
@@ -7135,7 +7188,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:CC_PWR, enum) 1 == and
+						(L:TEWS_SYS_PWR) 0 == 
 						(L:TEWS-TIME, Seconds) 0 &gt; and
 							if{
 								0 (>L:TEWS-TIME, Seconds)
@@ -7146,8 +7199,10 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:CC_PWR, enum) 1 == and
+						(L:TEWS_SYS_PWR) 1 ==
 						(P:LOCAL TIME, Seconds) (L:TEWS-TIME, Seconds) - 6 &gt; and
+						(L:TEWS-INIT, enum) 1 == and
+							}
 							if{
 								1 (>L:TEWS-POWER, bool)
 								0 (>L:TEWS-TIME, Seconds)
@@ -7159,7 +7214,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:CC_PWR, enum) 0 == or
+						(L:TEWS_SYS_PWR) 0 ==
 							if{
 								0 (>L:TEWS-TIME, Seconds)
 								0 (>L:TEWS-POWER, bool)

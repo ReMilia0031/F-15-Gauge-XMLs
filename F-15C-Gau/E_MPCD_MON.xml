@@ -3502,8 +3502,37 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 										<Transparent>True</Transparent>
 									</GaugeText>
 								</Element>
-								<Element id="THRUST">
+								<Element id="OIL TEMPERATURE">
 									<FloatPosition>0.000,120.000</FloatPosition>
+									<Visibility>(A:ENG OIL TEMPERATURE:1, celsius) 800 &lt;</Visibility>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:ENG OIL TEMPERATURE:1, celsius))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="OIL TEMPERATUREW">
+									<FloatPosition>0.000,120.000</FloatPosition>
+									<Visibility>(A:ENG OIL TEMPERATURE:1, celsius) 800 &gt;</Visibility>
+									<GaugeText id="GaugeText">
+										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+										<Bright>True</Bright>
+										<FontColor>0x000000</FontColor>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:ENG OIL TEMPERATURE:1, celsius))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="THRUST">
+									<FloatPosition>0.000,144.000</FloatPosition>
 									<GaugeText id="GaugeText">
 										<Bright>True</Bright>
 										<FontColorScript>@ForeColor</FontColorScript>
@@ -3516,7 +3545,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="BLEED AIR">
-									<FloatPosition>0.000,144.000</FloatPosition>
+									<FloatPosition>0.000,168.000</FloatPosition>
 									<Visibility>(A:TURB ENG BLEED AIR:1, psi) 65 &gt;</Visibility>
 									<GaugeText id="GaugeText">
 										<Bright>True</Bright>
@@ -3530,7 +3559,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="BLEED AIRW">
-									<FloatPosition>0.000,144.000</FloatPosition>
+									<FloatPosition>0.000,168.000</FloatPosition>
 									<Visibility>(A:TURB ENG BLEED AIR:1, psi) 65 &lt;</Visibility>
 									<GaugeText id="GaugeText">
 										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
@@ -3545,7 +3574,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="FUEL PRESS">
-									<FloatPosition>0.000,168.000</FloatPosition>
+									<FloatPosition>0.000,192.000</FloatPosition>
 									<Visibility>(A:GENERAL ENG FUEL PRESSURE:1, psi) 15 &gt;</Visibility>
 									<GaugeText id="GaugeText">
 										<Bright>True</Bright>
@@ -3559,7 +3588,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="FUEL PRESSW">
-									<FloatPosition>0.000,168.000</FloatPosition>
+									<FloatPosition>0.000,192.000</FloatPosition>
 									<Visibility>(A:GENERAL ENG FUEL PRESSURE:1, psi) 15 &lt;</Visibility>
 									<GaugeText id="GaugeText">
 										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
@@ -3574,7 +3603,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="FUEL FLOW">
-									<FloatPosition>0.000,192.000</FloatPosition>
+									<FloatPosition>0.000,216.000</FloatPosition>
 									<Visibility>(A:TURB ENG FUEL FLOW PPH:1, pound per hour) 500 &gt;</Visibility>
 									<GaugeText id="GaugeText">
 										<Bright>True</Bright>
@@ -3588,7 +3617,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="FUEL FLOWW">
-									<FloatPosition>0.000,192.000</FloatPosition>
+									<FloatPosition>0.000,216.000</FloatPosition>
 									<Visibility>(A:TURB ENG FUEL FLOW PPH:1, pound per hour) 500 &lt;</Visibility>
 									<GaugeText id="GaugeText">
 										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
@@ -3603,7 +3632,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="OIL PRESS">
-									<FloatPosition>0.000,216.000</FloatPosition>
+									<FloatPosition>0.000,240.000</FloatPosition>
 									<Visibility>(A:ENG OIL PRESSURE:1, psi) 45 &gt;</Visibility>
 									<GaugeText id="GaugeText">
 										<Bright>True</Bright>
@@ -3617,7 +3646,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="OIL PRESSW">
-									<FloatPosition>0.000,216.000</FloatPosition>
+									<FloatPosition>0.000,240.000</FloatPosition>
 									<Visibility>(A:ENG OIL PRESSURE:1, psi) 45 &lt;</Visibility>
 									<GaugeText id="GaugeText">
 										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
@@ -3626,35 +3655,6 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 										<FontFace>Consolas</FontFace>
 										<FontHeight>22</FontHeight>
 										<GaugeString>%((A:ENG OIL PRESSURE:1, psi))%!1.2f!</GaugeString>
-										<HorizontalAlign>CENTER</HorizontalAlign>
-										<Size>130,24</Size>
-										<Transparent>True</Transparent>
-									</GaugeText>
-								</Element>
-								<Element id="OIL TEMPERATURE">
-									<FloatPosition>0.000,240.000</FloatPosition>
-									<Visibility>(A:ENG OIL TEMPERATURE:1, celsius) 800 &lt;</Visibility>
-									<GaugeText id="GaugeText">
-										<Bright>True</Bright>
-										<FontColorScript>@ForeColor</FontColorScript>
-										<FontFace>Consolas</FontFace>
-										<FontHeight>22</FontHeight>
-										<GaugeString>%((A:ENG OIL TEMPERATURE:1, celsius))%!1.2f!</GaugeString>
-										<HorizontalAlign>CENTER</HorizontalAlign>
-										<Size>130,24</Size>
-										<Transparent>True</Transparent>
-									</GaugeText>
-								</Element>
-								<Element id="OIL TEMPERATUREW">
-									<FloatPosition>0.000,240.000</FloatPosition>
-									<Visibility>(A:ENG OIL TEMPERATURE:1, celsius) 800 &gt;</Visibility>
-									<GaugeText id="GaugeText">
-										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
-										<Bright>True</Bright>
-										<FontColor>0x000000</FontColor>
-										<FontFace>Consolas</FontFace>
-										<FontHeight>22</FontHeight>
-										<GaugeString>%((A:ENG OIL TEMPERATURE:1, celsius))%!1.2f!</GaugeString>
 										<HorizontalAlign>CENTER</HorizontalAlign>
 										<Size>130,24</Size>
 										<Transparent>True</Transparent>
@@ -3844,8 +3844,37 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 										<Transparent>True</Transparent>
 									</GaugeText>
 								</Element>
-								<Element id="THRUST">
+								<Element id="OIL TEMPERATURE">
 									<FloatPosition>0.000,120.000</FloatPosition>
+									<Visibility>(A:ENG OIL TEMPERATURE:1, celsius) 800 &lt;</Visibility>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:ENG OIL TEMPERATURE:2, celsius))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="OIL TEMPERATUREW">
+									<FloatPosition>0.000,120.000</FloatPosition>
+									<Visibility>(A:ENG OIL TEMPERATURE:2, celsius) 800 &gt;</Visibility>
+									<GaugeText id="GaugeText">
+										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+										<Bright>True</Bright>
+										<FontColor>0x000000</FontColor>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((A:ENG OIL TEMPERATURE:2, celsius))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>								
+								<Element id="THRUST">
+									<FloatPosition>0.000,144.000</FloatPosition>
 									<GaugeText id="GaugeText">
 										<Bright>True</Bright>
 										<FontColorScript>@ForeColor</FontColorScript>
@@ -3858,7 +3887,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="BLEED AIR">
-									<FloatPosition>0.000,144.000</FloatPosition>
+									<FloatPosition>0.000,168.000</FloatPosition>
 									<Visibility>(A:TURB ENG BLEED AIR:2, psi) 65 &gt;</Visibility>
 									<GaugeText id="GaugeText">
 										<Bright>True</Bright>
@@ -3872,7 +3901,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="BLEED AIRW">
-									<FloatPosition>0.000,144.000</FloatPosition>
+									<FloatPosition>0.000,168.000</FloatPosition>
 									<Visibility>(A:TURB ENG BLEED AIR:2, psi) 65 &lt;</Visibility>
 									<GaugeText id="GaugeText">
 										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
@@ -3887,7 +3916,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="FUEL PRESS">
-									<FloatPosition>0.000,168.000</FloatPosition>
+									<FloatPosition>0.000,192.000</FloatPosition>
 									<Visibility>(A:GENERAL ENG FUEL PRESSURE:2, psi) 15 &gt;</Visibility>
 									<GaugeText id="GaugeText">
 										<Bright>True</Bright>
@@ -3901,7 +3930,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="FUEL PRESSW">
-									<FloatPosition>0.000,168.000</FloatPosition>
+									<FloatPosition>0.000,192.000</FloatPosition>
 									<Visibility>(A:GENERAL ENG FUEL PRESSURE:2, psi) 15 &lt;</Visibility>
 									<GaugeText id="GaugeText">
 										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
@@ -3916,7 +3945,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="FUEL FLOW">
-									<FloatPosition>0.000,192.000</FloatPosition>
+									<FloatPosition>0.000,216.000</FloatPosition>
 									<Visibility>(A:TURB ENG FUEL FLOW PPH:2, pound per hour) 500 &gt;</Visibility>
 									<GaugeText id="GaugeText">
 										<Bright>True</Bright>
@@ -3930,7 +3959,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="FUEL FLOWW">
-									<FloatPosition>0.000,192.000</FloatPosition>
+									<FloatPosition>0.000,216.000</FloatPosition>
 									<Visibility>(A:TURB ENG FUEL FLOW PPH:2, pound per hour) 500 &lt;</Visibility>
 									<GaugeText id="GaugeText">
 										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
@@ -3945,7 +3974,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="OIL PRESS">
-									<FloatPosition>0.000,216.000</FloatPosition>
+									<FloatPosition>0.000,240.000</FloatPosition>
 									<Visibility>(A:ENG OIL PRESSURE:2, psi) 45 &gt;</Visibility>
 									<GaugeText id="GaugeText">
 										<Bright>True</Bright>
@@ -3959,7 +3988,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									</GaugeText>
 								</Element>
 								<Element id="OIL PRESSW">
-									<FloatPosition>0.000,216.000</FloatPosition>
+									<FloatPosition>0.000,240.000</FloatPosition>
 									<Visibility>(A:ENG OIL PRESSURE:2, psi) 45 &lt;</Visibility>
 									<GaugeText id="GaugeText">
 										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
@@ -3968,35 +3997,6 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 										<FontFace>Consolas</FontFace>
 										<FontHeight>22</FontHeight>
 										<GaugeString>%((A:ENG OIL PRESSURE:2, psi))%!1.2f!</GaugeString>
-										<HorizontalAlign>CENTER</HorizontalAlign>
-										<Size>130,24</Size>
-										<Transparent>True</Transparent>
-									</GaugeText>
-								</Element>
-								<Element id="OIL TEMPERATURE">
-									<FloatPosition>0.000,240.000</FloatPosition>
-									<Visibility>(A:ENG OIL TEMPERATURE:1, celsius) 800 &lt;</Visibility>
-									<GaugeText id="GaugeText">
-										<Bright>True</Bright>
-										<FontColorScript>@ForeColor</FontColorScript>
-										<FontFace>Consolas</FontFace>
-										<FontHeight>22</FontHeight>
-										<GaugeString>%((A:ENG OIL TEMPERATURE:2, celsius))%!1.2f!</GaugeString>
-										<HorizontalAlign>CENTER</HorizontalAlign>
-										<Size>130,24</Size>
-										<Transparent>True</Transparent>
-									</GaugeText>
-								</Element>
-								<Element id="OIL TEMPERATUREW">
-									<FloatPosition>0.000,240.000</FloatPosition>
-									<Visibility>(A:ENG OIL TEMPERATURE:2, celsius) 800 &gt;</Visibility>
-									<GaugeText id="GaugeText">
-										<BackgroundColorScript>@ForeColor</BackgroundColorScript>
-										<Bright>True</Bright>
-										<FontColor>0x000000</FontColor>
-										<FontFace>Consolas</FontFace>
-										<FontHeight>22</FontHeight>
-										<GaugeString>%((A:ENG OIL TEMPERATURE:2, celsius))%!1.2f!</GaugeString>
 										<HorizontalAlign>CENTER</HorizontalAlign>
 										<Size>130,24</Size>
 										<Transparent>True</Transparent>

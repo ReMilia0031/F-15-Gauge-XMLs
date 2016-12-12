@@ -3830,7 +3830,7 @@
 			<MouseArea id="VSD_PANEL">
 				<CursorType>Hand</CursorType>
                     <MouseClick id="MouseClick">
-                        <Script>100 (&gt;K:PANEL_ID_TOGGLE)</Script>
+                        <Script>500 (&gt;K:PANEL_ID_TOGGLE)</Script>
                     </MouseClick>
 				<Tooltip id="Tooltip">
 					<DefaultScript>Vertical Situation Display</DefaultScript>
