@@ -2583,77 +2583,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 								<Transparent>True</Transparent>
 							</GaugeText>
 						</Element>
-						<Element id="AIM-9 STA-2">
-							<FloatPosition>0.000,20.000</FloatPosition>
-							<Visibility>(L:AIM-9_STA_2_AC_PWR) 0 == (L:AIM-9_STA_2_DC_PWR) 0 == or</Visibility>
-							<GaugeText id="GaugeText">
-								<Bright>True</Bright>
-								<FontColorScript>@ForeColor</FontColorScript>
-								<FontFace>Consolas</FontFace>
-								<FontHeight>20</FontHeight>
-								<GaugeString>AIM-9 STA-2</GaugeString>
-								<HorizontalAlign>LEFT</HorizontalAlign>
-								<Size>120,20</Size>
-								<Transparent>True</Transparent>
-							</GaugeText>
-						</Element>
-						<Element id="AIM-9 STA-8">
-							<FloatPosition>0.000,40.000</FloatPosition>
-							<Visibility>(L:AIM-9_STA_8_AC_PWR) 0 == (L:AIM-9_STA_8_DC_PWR) 0 == or</Visibility>
-							<GaugeText id="GaugeText">
-								<Bright>True</Bright>
-								<FontColorScript>@ForeColor</FontColorScript>
-								<FontFace>Consolas</FontFace>
-								<FontHeight>20</FontHeight>
-								<GaugeString>AIM-9 STA-8</GaugeString>
-								<HorizontalAlign>LEFT</HorizontalAlign>
-								<Size>120,20</Size>
-								<Transparent>True</Transparent>
-							</GaugeText>
-						</Element>
-						<Element id="AIM-7 STA-3/4">
-							<FloatPosition>0.000,60.000</FloatPosition>
-							<Visibility>(L:AIM-7_STA_3_4_PWR) 0 == (L:AIM-7_STA_3_4_PWR) 0 == or</Visibility>
-							<GaugeText id="GaugeText">
-								<Bright>True</Bright>
-								<FontColorScript>@ForeColor</FontColorScript>
-								<FontFace>Consolas</FontFace>
-								<FontHeight>20</FontHeight>
-								<GaugeString>AIM-7 STA-3/4</GaugeString>
-								<HorizontalAlign>LEFT</HorizontalAlign>
-								<Size>120,20</Size>
-								<Transparent>True</Transparent>
-							</GaugeText>
-						</Element>
-						<Element id="AIM-7 STA-6/7">
-							<FloatPosition>0.000,80.000</FloatPosition>
-							<Visibility>(L:AIM-7_STA_6_7_PWR) 0 == (L:AIM-7_STA_6_7_PWR) 0 == or</Visibility>
-							<GaugeText id="GaugeText">
-								<Bright>True</Bright>
-								<FontColorScript>@ForeColor</FontColorScript>
-								<FontFace>Consolas</FontFace>
-								<FontHeight>20</FontHeight>
-								<GaugeString>AIM-7 STA-6/7</GaugeString>
-								<HorizontalAlign>LEFT</HorizontalAlign>
-								<Size>120,20</Size>
-								<Transparent>True</Transparent>
-							</GaugeText>
-						</Element>
 
-						<Element id="MK-84 STA">
-							<FloatPosition>200.000,0.000</FloatPosition>
-							<Visibility>(L:MK-84_STA_AC_PWR) 0 == (L:MK-84_STA_AC_PWR) 0 == or</Visibility>
-							<GaugeText id="GaugeText">
-								<Bright>True</Bright>
-								<FontColorScript>@ForeColor</FontColorScript>
-								<FontFace>Consolas</FontFace>
-								<FontHeight>20</FontHeight>
-								<GaugeString>MK-84 STA</GaugeString>
-								<HorizontalAlign>LEFT</HorizontalAlign>
-								<Size>120,20</Size>
-								<Transparent>True</Transparent>
-							</GaugeText>
-						</Element>
 						<Element id="GUN">
 							<FloatPosition>200.000,20.000</FloatPosition>
 							<Visibility>(L:GUN_PWR) 0 ==</Visibility>

@@ -1,6 +1,10 @@
-<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="8.50">
+﻿<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="8.65">
 
 <!--
+Version 8.65
+	[EDT] ELECTRICAL とか MCCP,ICCP とか
+Version 8.60
+	[EDT] MCCP , ICCP
 Version 8.50
 	[EDT] ELECTRICAL
 Version 8.30
@@ -191,7 +195,7 @@ Version 5.0
 				<Select>
 					<Value>
 					(L:LGEN_VOLTAGE_AC) 115 ==
-					(L:SW1_FS_ENG_GEN_L, bool) 1 == and
+					(L:SW1_FS_ENG_GEN_L) 1 == and
 						if{ 1 (>L:LGEN_AVAIL, enum) }
 						els{ 0 (>L:LGEN_AVAIL, enum) }
 					</Value>
@@ -201,7 +205,7 @@ Version 5.0
 				<Select>
 					<Value>
 					(L:RGEN_VOLTAGE_AC) 115 ==
-					(L:SW1_FS_ENG_GEN_R, bool) 1 == and
+					(L:SW1_FS_ENG_GEN_R) 1 == and
 						if{ 1 (>L:RGEN_AVAIL, enum) }
 						els{ 0 (>L:RGEN_AVAIL, enum) }
 					</Value>
@@ -213,43 +217,26 @@ Version 5.0
 					<Value>
 						(L:LGEN_AVAIL, enum) 0 ==
 						(L:RGEN_AVAIL, enum) 0 == and
-						(A:SIM ON GROUND, bool) 0 == and
 						(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
 							if{
-								115 (>L:EMER_GEN_AC_VOLTAGE)
-								28 (>L:EMER_GEN_DC_VOLTAGE)
-							}
-
-						(L:LGEN_AVAIL, enum) 0 ==
-						(L:RGEN_AVAIL, enum) 0 == and
-						(A:SIM ON GROUND, bool) 1 == and
-						(L:JFS_GEN_AC_AVAIL) 1 == and
-						(L:JFS_GEN_DC_AVAIL) 1 == and
-						(L:SW2_FS_ENG_EMER_GEN, enum) 2 == and
-							if{
-								115 (>L:EMER_GEN_AC_VOLTAGE)
-								28 (>L:EMER_GEN_DC_VOLTAGE)
-							}
-
-						(L:LGEN_AVAIL, enum) 0 ==
-						(L:RGEN_AVAIL, enum) 0 == or
-						(L:L_BST_PUMP_ON) 0 == or
-						(L:R_BST_PUMP_ON) 0 == or
-						(A:SIM ON GROUND, bool) 0 == and
-						(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt; and
-							if{
-								28 (>L:EMER_ESS_DC_VOLTAGE)
+								(L:JFS_GEN_AC_AVAIL) 1 ==
+									if{
+										115 (>L:EMER_GEN_AC_VOLTAGE)
+									}
+									els{
+										0 (>L:EMER_GEN_AC_VOLTAGE)
+									}
+								(L:JFS_GEN_DC_AVAIL) 1 ==
+									if{
+										28 (>L:EMER_GEN_DC_VOLTAGE)
+										28 (>L:EMER_ESS_DC_VOLTAGE)
+									}
+									els{
+										0 (>L:EMER_GEN_DC_VOLTAGE)
+										0 (>L:EMER_ESS_DC_VOLTAGE)
+									}
 							}
 							els{
-								0 (>L:EMER_ESS_DC_VOLTAGE)
-							}
-
-						(L:LGEN_AVAIL, enum) 1 ==
-						(L:RGEN_AVAIL, enum) 1 == and
-						(L:JFS_GEN_AC_AVAIL) 0 == or
-						(L:JFS_GEN_DC_AVAIL) 0 == or
-						(L:SW2_FS_ENG_EMER_GEN, enum) 0 == or
-							if{
 								0 (>L:EMER_GEN_AC_VOLTAGE)
 								0 (>L:EMER_GEN_DC_VOLTAGE)
 							}
@@ -293,11 +280,11 @@ Version 5.0
 			<Element Name="JFS GENERATOR AVAILABLE">
 				<Select>
 					<Value>
-						(L:JFS_GEN_AC_VOLTAGE) 115 &gt;
+						(L:JFS_GEN_AC_VOLTAGE) 115 ==
 							if{ 1 (>L:JFS_GEN_AC_AVAIL) }
 							els{ 0 (>L:JFS_GEN_AC_AVAIL) }
 
-						(L:EMER_GEN_DC_VOLTAGE) 28 ==
+						(L:JFS_GEN_DC_VOLTAGE) 28 ==
 							if{ 1 (>L:JFS_GEN_DC_AVAIL) }
 							els{ 0 (>L:JFS_GEN_DC_AVAIL) }
 					</Value>
@@ -306,88 +293,79 @@ Version 5.0
 
 			<Element Name="BUS LINE">
 				<Element Name="GENERATOR BUS LINE">
-					<Select>
-						<Value>
-						<!-- LMAIN GEN DISABLED , EMER GEN DISABLED , EXT POWER DISABLED -->
-							(L:SW1_FS_ENG_GEN_L, bool) 0 ==
-							(L:EMER_GEN_AC_AVAIL) 0 == and
-							(L:EXTARNAL_AC_AVAIL) 0 == and
-								if{
-									0 (>L:LEFT_AC_BUS_LINE_VOLTAGE)
-								}
-						<!-- LMAIN GEN DISABLED , EMER GEN DISABLED , EXT POWER ENABLED -->
-							(L:SW1_FS_ENG_GEN_L, bool) 0 ==
-							(L:EMER_GEN_AC_AVAIL) 0 == and
-							(L:EXTARNAL_AC_AVAIL) 1 == and
-								if{
-									(L:EXTARNAL_AC_VOLTS) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
-								}
-						<!-- LMAIN GEN DISABLED , EMER GEN ENABLED , EXT PWR DISABLED -->
-							(L:SW1_FS_ENG_GEN_L, bool) 0 ==
-							(L:EMER_GEN_AC_AVAIL) 1 == and
-							(L:EXTARNAL_AC_AVAIL) 0 == and
-								if{
-									(L:EMER_GEN_AC_BUS_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
-								}
-						<!-- LMAIN GEN DISABLED , EMER GEN ENABLED , EXT POWER ENABLED -->
-							(L:SW1_FS_ENG_GEN_L, bool) 0 ==
-							(L:EMER_GEN_AC_AVAIL) 1 == and
-							(L:EXTARNAL_AC_AVAIL) 1 == and
-								if{
-									(L:EMER_GEN_AC_BUS_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
-								}
-						<!-- LMAIN GEN ENABLED , EMER GEN DISABLED , EXT PWR DISABLED -->
-							(L:SW1_FS_ENG_GEN_L, bool) 1 ==
-							(L:EMER_GEN_AC_AVAIL) 0 == and
-							(L:EXTARNAL_AC_AVAIL) 0 == and
-								if{
-									(L:LGEN_VOLTAGE_AC) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
-								}
-						<!-- LMAIN GEN ENABLED , EMER GEN DISABLED , EXT PWR ENABLED -->
-							(L:SW1_FS_ENG_GEN_L, bool) 1 ==
-							(L:EMER_GEN_AC_AVAIL) 0 == and
-							(L:EXTARNAL_AC_AVAIL) 1 == and
-								if{
-									(L:LGEN_VOLTAGE_AC) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
-								}
-						<!-- LMAIN GEN ENABLED , EMER GEN ENABLED , EXT PWR DISABLED -->
-							(L:SW1_FS_ENG_GEN_L, bool) 1 ==
-							(L:EMER_GEN_AC_AVAIL) 1 == and
-							(L:EXTARNAL_AC_AVAIL) 0 == and
-								if{
-									(L:LGEN_VOLTAGE_AC) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
-								}
-						<!-- LMAIN GEN ENABLED , EMER GEN ENABLED , EXT PWR ENABLED -->
-							(L:SW1_FS_ENG_GEN_L, bool)  1 ==
-							(L:EMER_GEN_AC_AVAIL) 1 == and
-							(L:EXTARNAL_AC_AVAIL) 1 == and
-								if{
-									(L:LGEN_VOLTAGE_AC) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
-								}
+					<Element Name="LEFT">
+						<Select>
+							<Value>
+							<!-- MAIN GEN DISABLED -->
+								(L:LGEN_AVAIL, enum) 0 ==
+								(L:RGEN_AVAIL, enum) 0 == and
+									if{
+									<!-- EMER GEN DISABLED , EXT POWER DISABLED -->
+										(L:EMER_GEN_AC_AVAIL) 0 ==
+										(L:EXTARNAL_AC_AVAIL) 0 == and
+											if{
+												0 (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+											}
+									<!-- EMER GEN DISABLED , EXT POWER ENABLED -->
+										(L:EMER_GEN_AC_AVAIL) 0 ==
+										(L:EXTARNAL_AC_AVAIL) 1 == and
+											if{
+												(L:EXTARNAL_AC_VOLTS) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+											}
+									<!-- EMER GEN ENABLED , EXT PWR DISABLED -->
+										(L:EMER_GEN_AC_AVAIL) 1 ==
+										(L:EXTARNAL_AC_AVAIL) 0 == and
+											if{
+												(L:EMER_GEN_AC_BUS_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+											}
 
-								
-						<!-- RMAIN GEN -->
-							(L:SW1_FS_ENG_GEN_R, bool) 1 ==
-								if{
-									(L:RGEN_VOLTAGE_AC) (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
-								}
-								els{
-									0 (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
-								}
+									<!-- EMER GEN ENABLED , EXT POWER ENABLED -->
+										(L:EMER_GEN_AC_AVAIL) 1 ==
+										(L:EXTARNAL_AC_AVAIL) 1 == and
+											if{
+												(L:EMER_GEN_AC_BUS_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+											}
+									}
+							<!-- LMAIN GEN ENABLED-->
+								(L:LGEN_AVAIL, enum) 1 ==
+								(L:RGEN_AVAIL, enum) 0 == and
+									if{
+										(L:LGEN_VOLTAGE_AC) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+										(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
+									}
+								(L:LGEN_AVAIL, enum) 1 ==
+								(L:RGEN_AVAIL, enum) 1 == and
+									if{
+										(L:LGEN_VOLTAGE_AC) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+									}
 
-							(L:LGEN_AVAIL, enum) 0 ==							
-							(L:RGEN_AVAIL, enum) 1 == and
-								if{
-									<!-- (L:RIGHT_AC_BUS_LINE_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE) -->
-								}
-
-							(L:LGEN_AVAIL, enum) 1 ==							
-							(L:RGEN_AVAIL, enum) 0 == and
-								if{
-									<!-- (L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:RIGHT_AC_BUS_LINE_VOLTAGE) -->
-								}
 						</Value>
 					</Select>
+				</Element>
+					<Element Name="RIGHT MAIN">
+						<Select>
+							<Value>
+
+								(L:LGEN_AVAIL, enum) 0 ==
+								(L:RGEN_AVAIL, enum) 0 == and
+									if{
+										0 (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
+									}
+								(L:LGEN_AVAIL, enum) 0 ==
+								(L:RGEN_AVAIL, enum) 1 == and
+									if{
+										(L:RGEN_VOLTAGE_AC) (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
+										(L:RIGHT_AC_BUS_LINE_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE)
+									}
+								(L:LGEN_AVAIL, enum) 1 ==
+								(L:RGEN_AVAIL, enum) 1 == and
+									if{
+										(L:RGEN_VOLTAGE_AC) (>L:RIGHT_AC_BUS_LINE_VOLTAGE)
+									}
+
+							</Value>
+						</Select>
+					</Element>
 				</Element>
 				<Element Name="XFMR RECTIFIER">
 					<Select>
@@ -395,11 +373,11 @@ Version 5.0
 							(L:L_XMFR_RECT_PWR) 1 ==
 								if{ (L:LEFT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:LEFT_XFMR_VOLTAGE) }
 								els{ 0 (>L:LEFT_XFMR_VOLTAGE) }
-							
+
 							(L:R_XMFR_RECT_PWR) 1 ==
 								if{ (L:RIGHT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:RIGHT_XFMR_VOLTAGE) }
 								els{ 0 (>L:RIGHT_XFMR_VOLTAGE) }
-							
+
 
 						<!-- XFMR ENABLED , EMER GEN DISABLED , EXT POWER DISABLED -->
 							(L:L_XMFR_RECT_PWR) 1 ==
@@ -459,20 +437,20 @@ Version 5.0
 								if{
 									0 (>L:LEFT_XFMR_LINE_VOLTAGE)
 								}
-								
+
 
 							(L:RIGHT_XFMR_VOLTAGE) (>L:RIGHT_XFMR_LINE_VOLTAGE)
 
 							(L:LEFT_XFMR_LINE_VOLTAGE) 20 &lt;
 							(L:RIGHT_XFMR_LINE_VOLTAGE) 25 &gt; and
 								if{
-									<!-- (L:RIGHT_XFMR_LINE_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE) -->
+									(L:RIGHT_XFMR_LINE_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE)
 								}
 
 							(L:LEFT_XFMR_LINE_VOLTAGE) 25 &gt;
 							(L:RIGHT_XFMR_LINE_VOLTAGE) 20 &lt; and
 								if{
-									<!-- (L:LEFT_XFMR_LINE_VOLTAGE) (>L:RIGHT_XFMR_LINE_VOLTAGE) -->
+									(L:LEFT_XFMR_LINE_VOLTAGE) (>L:RIGHT_XFMR_LINE_VOLTAGE)
 								}
 						</Value>
 					</Select>
@@ -1223,28 +1201,6 @@ Version 5.0
 						</Value>
 					</Select>
 				</Element>
-				<Element Name="HYD PUMP">
-					<Select>
-						<Value>
-							(L:HYD_PRESS_PWR) 1 ==
-							(L:HYD_L_INIT) 0 == and
-							(A:HYDRAULIC SWITCH, bool) 0 == and
-								if{
-									1 (>K:HYDRAULIC_SWITCH_TOGGLE)
-									2 (>K:HYDRAULIC_SWITCH_TOGGLE)
-									1 (>L:HYD_L_INIT)
-								}
-							(L:HYD_PRESS_PWR) 0 ==
-							(L:HYD_L_INIT) 1 == and
-							(A:HYDRAULIC SWITCH, bool) 1 == and
-								if{
-									1 (>K:HYDRAULIC_SWITCH_TOGGLE)
-									2 (>K:HYDRAULIC_SWITCH_TOGGLE)
-									0 (>L:HYD_L_INIT)
-								}
-						</Value>
-					</Select>
-				</Element>
 				<Element Name="GAUGE POWER">
 					<Select>
 						<Value>
@@ -1466,6 +1422,21 @@ Version 5.0
 								}
 								els{
 									0 (>L:TIS_SYS_PWR)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="PITOT PWR">
+					<Select>
+						<Value>
+							(L:LR_PITOT_MAST_HTR_PWR) 1 ==
+							(A:PITOT HEAT, bool) 0 == and
+							(L:SW2_FS_ECS_ENG, enum) 0 == and
+								if{
+									1 (>L:PITOT_PWR)
+								}
+								els{
+									0 (>L:PITOT_PWR)
 								}
 						</Value>
 					</Select>
@@ -1714,7 +1685,7 @@ Version 5.0
 						(L:CC_PWR, enum) 1 ==
 							if{
 								1 (>L:INS_GC_RDY, enum)
-								1 (>L:INS_RDY, bool)								
+								1 (>L:INS_RDY, bool)
 								(>K:RESET_G_FORCE_INDICATOR)
 							}
 							els{
@@ -2196,7 +2167,7 @@ Version 5.0
       			<Value>
 					(L:TACH_GAUGE_PWR, enum) 1 ==
 						if{
-							(L:L_ENG_IND_ACCESS_PWR) 1 ==					
+							(L:L_ENG_IND_ACCESS_PWR) 1 ==
 								if{
 									(A:TURB ENG N2:1, Percent) (>L:GAU_LENG_RPM)
 									(A:TURB ENG N2:1, Percent) (>L:IND_LENG_RPM)
@@ -2229,7 +2200,7 @@ Version 5.0
       			<Value>
 					(L:FTIT_GAUGE_PWR, enum) 1 ==
 						if{
-							(L:L_ENG_IND_ACCESS_PWR) 1 ==					
+							(L:L_ENG_IND_ACCESS_PWR) 1 ==
 								if{
 									(A:TURB ENG ITT:1, Celsius) (>L:GAU_LENG_ITT)
 									(A:TURB ENG ITT:1, Celsius) (>L:IND_LENG_ITT)
@@ -2289,7 +2260,6 @@ Version 5.0
 						if{
 							(L:SW1_FS_ENG_CONT_L, enum) 1 ==
 							(L:ENG1_AVAIL, bool) 1 == and
-							(L:L_IDLE_NOZL_RESET_PWR) 1 == and
 								if{
 									(A:GENERAL ENG1 THROTTLE LEVER POSITION, Percent) 75 &lt;
 										if{
@@ -2306,7 +2276,6 @@ Version 5.0
 
 							(L:SW1_FS_ENG_CONT_R, enum) 1 ==
 							(L:ENG2_AVAIL, bool) 1 == and
-							(L:R_IDLE_NOZL_RESET_PWR) 1 == and
 								if{
 									(A:GENERAL ENG2 THROTTLE LEVER POSITION, Percent) 75 &lt;
 										if{
@@ -2341,7 +2310,6 @@ Version 5.0
 							(L:PX_HYD) (>L:GAU_UTIL_HYD_PRESS)
 						}
 						els{
-
 							0 (>L:GAU_LENG_HYD_PRESS)
 							0 (>L:GAU_RENG_HYD_PRESS)
 							0 (>L:GAU_UTIL_HYD_PRESS)
@@ -2369,17 +2337,17 @@ Version 5.0
 								if{
 									(L:GAU_LENG_OIL_PRESS) + (L:GAU_LENG_OIL_PRESS) 100 / - (>L:GAU_LENG_OIL_PRESS)
 								}
-							
+
 							(L:GAU_RENG_OIL_PRESS) 0 &gt;
 								if{
 									(L:GAU_RENG_OIL_PRESS) + (L:GAU_RENG_OIL_PRESS) 100 / - (>L:GAU_RENG_OIL_PRESS)
 								}
-							
+
 							(L:PX_OIL, enum) 0 &gt;
 								if{
 									(L:PX_OIL, enum) + (L:PX_OIL, enum) 100 / - (>L:PX_OIL, enum)
 								}
-							
+
 						}
 					(L:ENG_OIL_PRS_PWR) 0 ==
 					(L:OIL_PRESS_GAUGE_PWR, enum) 0 == and
@@ -3684,6 +3652,7 @@ Version 5.0
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
 						(L:LEEC_ENABLED, enum) 0 == and
+						(A:GENERAL ENG COMBUSTION:1, bool) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_LEEC, enum)  }
 							els{ 0 (>L:LT_FS_LEEC, enum) }
@@ -3727,7 +3696,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
-						(A:TAILHOOK POSITION, Percent)  NEAR 100 == and
+						(A:TAILHOOK POSITION, Percent)  near 100 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_HOOK, enum)  }
 							els{ 0 (>L:LT_FS_HOOK, enum) }
@@ -3785,6 +3754,7 @@ Version 5.0
 					<Value>
 						(L:LIGHT_FLICKER, enum) 1 ==
 						(L:REEC_ENABLED, enum) 0 == and
+						(A:GENERAL ENG COMBUSTION:2, bool) 0 == and
 						(L:FS_LIGHT_TEST, enum)	1 == or
 							if{ 1 (>L:LT_FS_REEC, enum)  }
 							els{ 0 (>L:LT_FS_REEC, enum) }
@@ -4427,76 +4397,6 @@ Version 5.0
 		</Select>
 	</Element>
 	<Element Name="FUEL CONT">
-		<Element Name="TRANSFER">
-			<Select>
-				<Value>
-<!--				OFF			= 0		OFF
-					ALL			= 1		ALL
-					LEFT ALL	= 2		LEFT EXT/CONF
-					RIGHT ALL	= 3		RIGHT EXT/CONF
-					LEFT_AUX	= 4		EXT LEFT
-					RIGHT_AUX	= 5		EXT RIGHT
-					CENTER		= 6		TANK1
-					CENTER2		= 7		RIGHT FEED
-					CENTER3		= 8		LEFT FEED
-					EXTERNAL1	= 9		EXT CTR
-					EXTERNAL2	= 10
-					RIGHT_TIP	= 11	RIGHT CFT
-					LEFT_TIP	= 12	LEFT CFT
-								= 13	XFEED
-								= 14	XFEED L2R
-								= 15	XFEED R2L
-								= 16	BOTH
-								= 17	EXT ALL
-								= 18	ISOLATE
-								= 19	LEFT MAIN
-								= 20	RIGHT MAIN  -->
-					(A:FUEL TANK LEFT MAIN LEVEL, Percent) 0 ==
-						if{
-							6 (>K:FUEL_SELECTOR_SET)
-						}
-					(A:FUEL TANK RIGHT MAIN LEVEL, Percent) 0 ==
-						if{
-							6 (>K:FUEL_SELECTOR_2_SET)
-						}
-
-					(A:FUEL TANK CENTER LEVEL, Percent) 0 ==
-						if{
-							8 (>K:FUEL_SELECTOR_SET)
-							7 (>K:FUEL_SELECTOR_2_SET)
-						}
-
-					(A:FUEL TANK CENTER3 LEVEL, Percent) 0 ==
-						if{
-							1 (>K:FUEL_SELECTOR_SET)
-						}
-					(A:FUEL TANK CENTER2 LEVEL, Percent) 0 ==
-						if{
-							1 (>K:FUEL_SELECTOR_2_SET)
-						}
-
-					(L:L_WING_XFR_PUMP_PWR) 0 ==
-					(A:FUEL TANK SELECTOR:1, enum) 19 == and
-						if{
-							6 (>K:FUEL_SELECTOR_SET)
-						}
-
-					(L:R_WING_XFR_PUMP_PWR) 0 ==
-					(A:FUEL TANK SELECTOR:2, enum) 20 == and
-						if{
-							6 (>K:FUEL_SELECTOR_2_SET)
-						}
-					
-					(L:TANK_XFR_PMP_PWR) 1 ==
-						if{
-							(>K:CROSS_FEED_OPEN)
-						}
-						els{
-							(>K:CROSS_FEED_OFF)
-						}
-				</Value>
-			</Select>
-		</Element>
 		<Element Name="CONTROL SWITCHES">
 		<!--2 STOP TRANS
 			1 NORM
@@ -4720,6 +4620,76 @@ Version 5.0
 				</Select>
 			</Element>
 		</Element>
+		<Element Name="TRANSFER">
+			<Select>
+				<Value>
+<!--				OFF			= 0		OFF
+					ALL			= 1		ALL
+					LEFT ALL	= 2		LEFT EXT/CONF
+					RIGHT ALL	= 3		RIGHT EXT/CONF
+					LEFT_AUX	= 4		EXT LEFT
+					RIGHT_AUX	= 5		EXT RIGHT
+					CENTER		= 6		TANK1
+					CENTER2		= 7		RIGHT FEED
+					CENTER3		= 8		LEFT FEED
+					EXTERNAL1	= 9		EXT CTR
+					EXTERNAL2	= 10
+					RIGHT_TIP	= 11	RIGHT CFT
+					LEFT_TIP	= 12	LEFT CFT
+								= 13	XFEED
+								= 14	XFEED L2R
+								= 15	XFEED R2L
+								= 16	BOTH
+								= 17	EXT ALL
+								= 18	ISOLATE
+								= 19	LEFT MAIN
+								= 20	RIGHT MAIN  -->
+					(A:FUEL TANK LEFT MAIN LEVEL, Percent) 0 ==
+						if{
+							6 (>K:FUEL_SELECTOR_SET)
+						}
+					(A:FUEL TANK RIGHT MAIN LEVEL, Percent) 0 ==
+						if{
+							6 (>K:FUEL_SELECTOR_2_SET)
+						}
+
+					(A:FUEL TANK CENTER LEVEL, Percent) 0 ==
+						if{
+							8 (>K:FUEL_SELECTOR_SET)
+							7 (>K:FUEL_SELECTOR_2_SET)
+						}
+
+					(A:FUEL TANK CENTER3 LEVEL, Percent) 0 ==
+						if{
+							1 (>K:FUEL_SELECTOR_SET)
+						}
+					(A:FUEL TANK CENTER2 LEVEL, Percent) 0 ==
+						if{
+							1 (>K:FUEL_SELECTOR_2_SET)
+						}
+
+					(L:L_WING_XFR_PUMP_PWR) 0 ==
+					(A:FUEL TANK SELECTOR:1, enum) 19 == and
+						if{
+							6 (>K:FUEL_SELECTOR_SET)
+						}
+
+					(L:R_WING_XFR_PUMP_PWR) 0 ==
+					(A:FUEL TANK SELECTOR:2, enum) 20 == and
+						if{
+							6 (>K:FUEL_SELECTOR_2_SET)
+						}
+
+					(L:TANK_XFR_PMP_PWR) 1 ==
+						if{
+							(>K:CROSS_FEED_OPEN)
+						}
+						els{
+							(>K:CROSS_FEED_OFF)
+						}
+				</Value>
+			</Select>
+		</Element>
 		<Element Name="EXT_TX">
 			<Select>
 				<Value>
@@ -4839,20 +4809,23 @@ Version 5.0
 					(L:ILS_INIT) 0 ==
 						if{
 							1 (>L:ILS_INIT)
-							(A:NAV1 ACTIVE FREQUENCY, MHZ) (>L:ILS_FREQ, MHZ)
-							(L:ILS_FREQ, MHZ) FLR (>L:ILS_FREQ_100)
-							(L:ILS_FREQ, MHZ) (L:ILS_FREQ, MHZ) FLR - (>L:ILS_FREQ_1)
-							(L:ILS_FREQ, MHZ) (>L:ILS_FREQ_SLAVE, MHZ)
+							(A:NAV1 ACTIVE FREQUENCY, MHz) (>L:ILS_FREQ, MHz)
+							(L:ILS_FREQ, MHz) flr (>L:ILS_FREQ_100)
+							(L:ILS_FREQ, MHz) (L:ILS_FREQ, MHz) flr - (>L:ILS_FREQ_1)
+							(L:ILS_FREQ, MHz) (>L:ILS_FREQ_SLAVE, MHz)
+							(A:NAV1 ACTIVE FREQUENCY, MHz) (>L:NAV1_ACTV_FREQ_SLAVE, MHz)
 						}
 
-					(L:ILS_FREQ_100) (L:ILS_FREQ_1) + (>L:ILS_FREQ, MHZ)
-					(L:ILS_FREQ, MHZ) 100 * (>L:ILS_FREQ_I, MHZ)
+					(A:NAV1 ACTIVE FREQUENCY, MHz) (L:NAV1_ACTV_FREQ_SLAVE, MHz) - 0 !=
+						if{ 0 (>L:ILS_INIT) }
+					(L:ILS_FREQ_100) (L:ILS_FREQ_1) + (>L:ILS_FREQ, MHz)
 
-					(L:ILS_FREQ, MHZ) (L:ILS_FREQ_SLAVE, MHZ) - 0 !=
+					(L:ILS_FREQ, MHz) (L:ILS_FREQ_SLAVE, MHz) - 0 !=
 					(L:ILS_PWR) 1 == and
 						if{
-							(L:ILS_FREQ, MHZ) (>L:ILS_FREQ_SLAVE, MHZ)
-							(L:ILS_FREQ, FREQUENCY BCD16) (>K:NAV1_RADIO_SET)
+							(L:ILS_FREQ, MHz) (>L:ILS_FREQ_SLAVE, MHz)
+							(L:ILS_FREQ, MHz) 100 * near 10000 % d 10 % r 10 / int d 10 % r 10 / int d 10 % r 10 / int 16 * + 16 * + 16 * + (>K:NAV1_RADIO_SET)
+							(A:NAV1 ACTIVE FREQUENCY, MHz) (>L:NAV1_ACTV_FREQ_SLAVE, MHz)
 						}
 				</Value>
 			</Select>
@@ -4880,61 +4853,69 @@ Version 5.0
 		<Element Name="TCN FREQ">
 			<Select>
 				<Value>
-				(L:TCN_INIT) 0 ==
+					(L:TCN_INIT) 0 ==
 						if{
 							1 (>L:TCN_INIT)
-							(A:NAV2 ACTIVE FREQUENCY, MHZ) S0 112.3 &lt;
-								if{ L0 10 * 1063 - INT (>L:TCN_FREQ) }
-								els{ L0 10 * 1053 - INT (>L:TCN_FREQ) }
+							(A:NAV2 ACTIVE FREQUENCY, MHz) s0 112.3 &lt;
+								if{ l0 10 * 1063 - int (>L:TCN_FREQ) }
+								els{ l0 10 * 1053 - int (>L:TCN_FREQ) }
 
-							(A:NAV2 ACTIVE FREQUENCY, MHZ) 100 * 1 / 10 % INT (>L:TCN_XY)
-
+							(A:NAV2 ACTIVE FREQUENCY, MHz) 100 * 1 / 10 % int (>L:TCN_XY)
 							(L:TCN_XY) 5 ==
 								if{
 									1 (>L:SW1_FS_TCN_X_Y)
 								}
+								els{
+									0 (>L:SW1_FS_TCN_X_Y)
+								}
 
-							(L:TCN_FREQ) 10 / FLR (>L:TCN_FREQ_100)
+							(L:TCN_FREQ) 10 / flr (>L:TCN_FREQ_100)
 							(L:TCN_FREQ_100) 10 * (>L:TCN_FREQ_100)
 							(L:TCN_FREQ) (L:TCN_FREQ_100) - (>L:TCN_FREQ_1)
-							(L:VOR_FREQ) (>L:VOR_FREQ_SLAVE, MHZ)
+							(L:VOR_FREQ) (>L:VOR_FREQ_SLAVE, MHz)
+							(A:NAV2 ACTIVE FREQUENCY, MHz) (>L:NAV2_ACTV_FREQ_SLAVE, MHz)
 						}
+
+						(A:NAV2 ACTIVE FREQUENCY, MHz) (L:NAV2_ACTV_FREQ_SLAVE, MHz) - 0 !=
+							if{ 0 (>L:TCN_INIT) }
 
 						(L:TCN_FREQ_100) (L:TCN_FREQ_1) + (>L:TCN_FREQ)
 
-						1 126 (L:TCN_FREQ) RNG
+						1 126 (L:TCN_FREQ) rng
 							if{
-								1 16 (L:TCN_FREQ) RNG
+								1 16 (L:TCN_FREQ) rng
 									if{
-										(L:TCN_FREQ) 10 / 134.3 + (>L:VOR_FREQ, MHZ)
+										(L:TCN_FREQ) 10 / 134.3 + (>L:VOR_FREQ, MHz)
 									}
 									els{
-										17 59 (L:TCN_FREQ) RNG
+										17 59 (L:TCN_FREQ) rng
 											if{
-												(L:TCN_FREQ) 10 / 106.3 + (>L:VOR_FREQ, MHZ)
+												(L:TCN_FREQ) 10 / 106.3 + (>L:VOR_FREQ, MHz)
 											}
 											els{
-												60 69 (L:TCN_FREQ) RNG
+												60 69 (L:TCN_FREQ) rng
 													if{
-														(L:TCN_FREQ) 10 / 127.3 + (>L:VOR_FREQ, MHZ)
+														(L:TCN_FREQ) 10 / 127.3 + (>L:VOR_FREQ, MHz)
 													}
 													els{
-														(L:TCN_FREQ) 10 / 105.3 + (>L:VOR_FREQ, MHZ)
+														(L:TCN_FREQ) 10 / 105.3 + (>L:VOR_FREQ, MHz)
 													}
 											}
 									}
 								}
 						(L:SW1_FS_TCN_X_Y) 1 ==
 							if{
-								(L:VOR_FREQ, MHZ) 0.05 + (>L:VOR_FREQ, MHZ)
+								(L:VOR_FREQ, MHz) 0.05 + (>L:VOR_FREQ, MHz)
 							}
 
 						(L:TACAN_RCVR_XMTR_PWR) 1 ==
-						(L:VOR_FREQ, MHZ) (L:VOR_FREQ_SLAVE, MHZ) - 0 != and
+						(L:VOR_FREQ, MHz) (L:VOR_FREQ_SLAVE, MHz) - 0 != and
 							if{
-								(L:VOR_FREQ, MHZ)  100 * NEAR 10000 % D 10 % R 10 / INT D 10 % R 10 / INT D 10 % R 10 / INT 16 * + 16 * + 16 * +  (>K:NAV2_RADIO_SET)
-								(L:VOR_FREQ) (>L:VOR_FREQ_SLAVE, MHZ)
+								(L:VOR_FREQ, MHz) 100 * near 10000 % d 10 % r 10 / int d 10 % r 10 / int d 10 % r 10 / int 16 * + 16 * + 16 * + (>K:NAV2_RADIO_SET)
+								(A:NAV2 ACTIVE FREQUENCY, MHz) (>L:NAV2_ACTV_FREQ_SLAVE, MHz)
+								(L:VOR_FREQ) (>L:VOR_FREQ_SLAVE, MHz)
 							}
+
 				</Value>
 			</Select>
 		</Element>
@@ -4999,7 +4980,7 @@ Version 5.0
 						els{
 							0 (>L:PITCH_RATIO_RDY, enum)
 							0 (>L:ROLL_RATIO_RDY, enum)
-	
+
 							0 (>L:CAS_YAW_RDY, enum)
 							0 (>L:CAS_ROLL_RDY, enum)
 							0 (>L:CAS_PITCH_RDY, enum)
@@ -5197,366 +5178,581 @@ Version 5.0
 		</Element>
 	</Element>
 	<Element Name="COMMUNICATIONS">
-		<Element Name="R1 CHANNEL SELECTION">
-			<Select>
-				<Value>
-					(L:KNOB_FS_UHF_1_MODE) 2 ==
-					(L:SW2_FS_UHF1_MODE) 1 == or
-					(L:UHF_RT_1_PWR) 1 == and
-						if{ 118.2
-							118.1
-							126.2
-							118.25
-							120.1
-							122.0
-							120.1
-							119.5
-							122.05
-							134.3
-							118.0
-							122.2
-							118.85
-							122.5
-							118.5
-							121.9
-							121.8
-							121.7
-							118.75
-							19 (L:KNOB_FS_UHF_1_CHAN) CASE 100 * NEAR 10000 % D 10 % R 10 / INT D 10 % R 10 / INT D 10 % R 10 / INT 16 * + 16 * + 16 * + (&gt; K:COM_RADIO_SET)
-						}
-				</Value>
-			</Select>
-		</Element>
-		<Element Name="R1 MODE">
-			<Select>
-				<Value>
-					(L:UHF_RT_1_PWR) 1 ==
-					(L:MODE_SEL_PWR) 1 == and
-						if{
-							(L:KNOB_FS_UHF_1_MODE) 0 ==
-								if{
-									243000 (>L:UHF-1_FREQ, enum)
-									7338 (>K:COM_RADIO_SET)
+		<Element Name="Main Communications Control Panel">
+			<Element Name="R1 CHANNEL SELECTION">
+				<Select>
+					<Value>
+						(L:KNOB_FS_MCCP_MODE) 2 ==
+						<!-- (L:SW2_FS_MCCP_MODE) 1 == or -->
+						(L:UHF_RT_1_PWR) 1 == and
+							if{
+								118.2
+								118.1
+								126.2
+								118.25
+								120.1
+								122.0
+								120.1
+								119.5
+								122.05
+								134.3
+								118.0
+								122.2
+								118.85
+								122.5
+								118.5
+								121.9
+								121.8
+								121.7
+								118.75
+								19 (L:KNOB_FS_MCCP_CHAN) case (>L:MCCP_FREQ_CHAN, MHz)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="R1 MODE">
+				<Select>
+					<Value>
+						(L:R1_INIT) 0 ==
+							if{
+								1 (>L:R1_INIT)
+								(A:COM1 ACTIVE FREQUENCY, MHz) (>L:MCCP_FREQ, MHz)
+								(L:MCCP_FREQ, MHz) 10 / flr (>L:MCCP_FREQ_1000)
+								(L:MCCP_FREQ, KHz) 1000 / 10 % int  (>L:MCCP_FREQ_100)
+								(L:MCCP_FREQ, MHz) 1000 * 1000 % (>L:MCCP_FREQ_1)
+								(A:COM1 ACTIVE FREQUENCY, MHz) (>L:COM1 ACTIVE FREQUENCY_Slave, MHz)
+							}
+						(L:UHF_RT_1_PWR) 1 ==
+						(L:MODE_SEL_PWR) 1 == and
+							if{
+								(L:KNOB_FS_MCCP_MODE) 0 ==
+									if{
+										243000 (>L:MCCP_FREQ, KHz)
+										7338 (>K:COM_RADIO_SET)
+										}
+
+								(L:KNOB_FS_MCCP_MODE) 1 ==
+									if{
+										(A:COM1 ACTIVE FREQUENCY, MHz) (L:COM1 ACTIVE FREQUENCY_Slave, MHz) - 0 !=
+											if{ 2 (>L:R1_INIT) }
+
+										(L:MCCP_FREQ_1) + (L:MCCP_FREQ_100) 1000 * + (L:MCCP_FREQ_1000) 10000 * + (>L:MCCP_FREQ, kHz)
+										(L:MCCP_FREQ, MHz) (L:MCCP_FREQ_SLAVE, MHz) - 0 !=
+											if{
+												(L:MCCP_FREQ, MHz) (>L:MCCP_FREQ_SLAVE, MHz)
+												(L:MCCP_FREQ, MHz) 100 * near 10000 % d 10 % r 10 / int d 10 % r 10 / int d 10 % r 10 / int 16 * + 16 * + 16 * + (>K:COM_RADIO_SET)
+												(A:COM1 ACTIVE FREQUENCY, MHz) (>L:COM1 ACTIVE FREQUENCY_Slave, MHz)
+											}
 									}
 
-							(L:KNOB_FS_UHF_1_MODE) 1 ==
-							(L:KNOB_FS_UHF_1_MODE) 2 == or
-								if{
-									(A:COM1 ACTIVE FREQUENCY, KHZ) (>L:UHF-1_FREQ, enum)
-									0 (>L:UHF_1_INIT)
-								}
+								(L:KNOB_FS_MCCP_MODE) 2 ==
+									if{
+										(L:MCCP_FREQ_CHAN, MHz) 100 * near 10000 % d 10 % r 10 / int d 10 % r 10 / int d 10 % r 10 / int 16 * + 16 * + 16 * + (>K:COM_RADIO_SET)
+										(L:MCCP_FREQ_CHAN, MHz) (>L:MCCP_FREQ, MHz)
+									}
+								(L:KNOB_FS_MCCP_MODE) 3 ==
+									if{
+										225000 (>L:MCCP_FREQ, KHz)
+									}
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="R1 COMM VOLUME">
+				<Select>
+					<Value>
+						(L:UHF_RT_1_PWR) 1 ==
+						(L:KNOB_FS_MCCP_VOL) 0 &gt; and
+						(L:R1V_INIT) 0 == and
+							if{
+								1 (>K:COM1_TRANSMIT_SELECT)
+								1 (>L:R1V_INIT)
+							}
 
-							(L:KNOB_FS_UHF_1_MODE) 3 ==
-							(L:UHF_1_INIT) 0 == and
-								if{
-									1 (>L:UHF_1_INIT)
-									225000 (>L:UHF-1_FREQ, enum)
-								}
-						}
-				</Value>
-			</Select>
+						(L:KNOB_FS_MCCP_VOL) 0 ==
+						(L:R1V_INIT) 1 == and
+							if{
+								0 (>L:R1V_INIT)
+								1 (>K:COM2_TRANSMIT_SELECT)
+							}
+					</Value>
+				</Select>
+			</Element>
 		</Element>
-		<Element Name="R1 COMM VOLUME">
-			<Select>
-				<Value>
-					(L:UHF_RT_1_PWR) 1 ==
-					(L:KNOB_FS_UHF_1_VOL) 0 &gt; and
-					(L:R1V_INIT) 0 == and
-						if{
-							1 (>K:COM1_TRANSMIT_SELECT)
-							1 (>L:R1V_INIT)
-						}
-
-					(L:KNOB_FS_UHF_1_VOL) 0 ==
-					(L:R1V_INIT) 1 == and
-						if{
-							0 (>L:R1V_INIT)
-							1 (>K:COM2_TRANSMIT_SELECT)
-						}
-				</Value>
-			</Select>
-		</Element>
-
-		<Element Name="R2 CHANNEL SELECTION">
-			<Select>
-				<Value>
-					(L:KNOB_FS_RAD2_MODE) 2 ==
-					(L:UHF_RT_2_PWR) 1 == and
-						if{ 133.2
-							125.5
-							123.45
-							122.8
-							121.1
-							121.0
-							120.7
-							120.5
-							119.9
-							119.7
-							119.5
-							119.1
-							118.9
-							118.7
-							118.5
-							121.9
-							121.8
-							121.7
-							118.75
-							19 (L:KNOB_FS_RAD2_CHAN) CASE 100 * NEAR 10000 % D 10 % R 10 / INT D 10 % R 10 / INT D 10 % R 10 / INT 16 * + 16 * + 16 * + (&gt; K:COM2_RADIO_SET)
-						}
-				</Value>
-			</Select>
-		</Element>
-		<Element Name="R2 MODE">
-			<Select>
-				<Value>
-					(L:UHF_RT_2_PWR) 1 ==
-					(L:MODE_SEL_PWR) 1 == and
-						if{
-							(L:KNOB_FS_RAD2_MODE) 0 ==
-								if{
-									243000 (>L:UHF-2_FREQ, enum)
-									7338 (>K:COM2_RADIO_SET)
-									0x000000 (>L:R2_IND_COL)
+		<Element Name="Integrated Communications Control Panel (After TO 1F-15-857)">
+			<Element Name="R2 MODE">
+				<Select>
+					<Value>
+						(L:R2_INIT) 0 ==
+							if{
+								1 (>L:R2_INIT)
+								(A:COM2 ACTIVE FREQUENCY, KHz) (>L:R2_FREQ, KHz)
+							}
+						(L:UHF_RT_2_PWR) 1 ==
+						(L:MODE_SEL_PWR) 1 == and
+							if{
+								(L:KNOB_FS_ICCP3_MODE) 0 ==
+									if{
+										243000 (>L:R2_FREQ, KHz)
+										7338 (>K:COM2_RADIO_SET)
+										0x000000 (>L:R2_IND_COL)
+										}
+								(L:KNOB_FS_ICCP3_MODE) 0 &gt;
+									if{
+										(L:R2_INT_COL) (>L:R2_IND_COL)
 									}
 
-							(L:KNOB_FS_RAD2_MODE) 1 ==
-							(L:KNOB_FS_RAD2_MODE) 2 == or
-								if{
-									(L:R2_INT_COL) (>L:R2_IND_COL)
-									(A:COM2 ACTIVE FREQUENCY, KHZ) (>L:UHF-2_FREQ, enum)
-									0 (>L:UHF_2_INIT)
-								}
+								(L:KNOB_FS_ICCP3_MODE) 1 ==
+								(L:KNOB_FS_ICCP3_MODE) 2 == or
+									if{
+										(A:COM2 ACTIVE FREQUENCY, KHz) (>L:R2_FREQ, KHz)
+									}
 
-								(L:KNOB_FS_RAD2_MODE) 3 ==
-								(L:UHF_2_INIT) 0 == and
-								if{
-									(L:R2_INT_COL) (>L:R2_IND_COL)
-									1 (>L:UHF_2_INIT)
-									225000 (>L:UHF-2_FREQ, enum)
-								}
-					}
-				</Value>
-			</Select>
-		</Element>
-		<Element Name="R2 COMM VOLUME">
-			<Select>
-				<Value>
-					(L:UHF_RT_2_PWR) 1 ==
-					(L:SW2_FS_RAD2_TRANS) 2 == and
-					(L:R2V_INIT) 0 == and
-						if{
-							1 (>K:COM_RECEIVE_ALL_SET)
-							1 (>L:R2V_INIT)
-						}
-					(L:SW2_FS_RAD2_TRANS) 2 ! ==
-					(L:R2V_INIT) 1 == and
-						if{
-							0 (>L:R2V_INIT)
-							0 (>K:COM_RECEIVE_ALL_SET)
-						}
-				</Value>
-			</Select>
-		</Element>
-		<Element Name="R2 INTENCITY">
-			<Select>
-				<Value>
-					(L:KNOB_FS_RAD2_INT) 0 ==
-						if{
-							0x001000 (>L:R2_INT_COL)
-						}
-					(L:KNOB_FS_RAD2_INT) 1 ==
-						if{
-							0x002000 (>L:R2_INT_COL)
-						}
-					(L:KNOB_FS_RAD2_INT) 2 ==
-						if{
-							0x004000 (>L:R2_INT_COL)
-						}
-					(L:KNOB_FS_RAD2_INT) 3 ==
-						if{
-							0x008000 (>L:R2_INT_COL)
-						}
-					(L:KNOB_FS_RAD2_INT)) 4 ==
-						if{
-							0x00A000 (>L:R2_INT_COL)
-						}
-					(L:KNOB_FS_RAD2_INT) 5 ==
-						if{
-							0x00C000 (>L:R2_INT_COL)
-						}
-					(L:KNOB_FS_RAD2_INT) 6 ==
-						if{
-							0x00FF00 (>L:R2_INT_COL)
-						}
-				</Value>
-			</Select>
-		</Element>
-		<Element Name="ADF VOLUME">
-			<Select>
-				<Value>
-					(L:ADF_PWR) 1 ==
-					(L:SW2_FS_VOL_R1_ADF) 2 == and
-					(L:R2V_ADF_INIT) 0 == and
-						if{
-							1 (>K:RADIO_ADF_IDENT_ENABLE)
-							1 (>L:R2V_ADF_INIT)
-						}
-					(L:SW2_FS_VOL_R1_ADF) 2 ! ==
-					(L:R2V_ADF_INIT) 1 == and
-						if{
-							0 (>L:R2V_ADF_INIT)
-							0 (>K:RADIO_ADF_IDENT_DISABLE)
-						}
-				</Value>
-			</Select>
-		</Element>
+									(L:KNOB_FS_ICCP3_MODE) 3 ==
+									if{
+										225000 (>L:R2_FREQ, KHz)
+									}
+							}
+							els{
+								0x000000 (>L:R2_IND_COL)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="R2 CHAN SEL">
+				<Select>
+					<Value>
+						(L:KNOB_FS_ICCP3_MODE) 2 ==
+						(L:UHF_RT_2_PWR) 1 == and
+							if{
+								133.2
+								125.5
+								123.45
+								122.8
+								121.1
+								121.0
+								120.7
+								120.5
+								119.9
+								119.7
+								119.5
+								119.1
+								118.9
+								118.7
+								118.5
+								121.9
+								121.8
+								121.7
+								118.75
+								19 (L:KNOB_FS_ICCP3_CHAN) case 100 * near 10000 % d 10 % r 10 / int d 10 % r 10 / int d 10 % r 10 / int 16 * + 16 * + 16 * + (>K:COM2_RADIO_SET)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="R2 INTENCITY">
+				<Select>
+					<Value>
+						(L:KNOB_FS_ICCP3_INT) 0 ==
+							if{
+								0x001000 (>L:R2_INT_COL)
+							}
+						(L:KNOB_FS_ICCP3_INT) 1 ==
+							if{
+								0x002000 (>L:R2_INT_COL)
+							}
+						(L:KNOB_FS_ICCP3_INT) 2 ==
+							if{
+								0x004000 (>L:R2_INT_COL)
+							}
+						(L:KNOB_FS_ICCP3_INT) 3 ==
+							if{
+								0x008000 (>L:R2_INT_COL)
+							}
+						(L:KNOB_FS_ICCP3_INT)) 4 ==
+							if{
+								0x00A000 (>L:R2_INT_COL)
+							}
+						(L:KNOB_FS_ICCP3_INT) 5 ==
+							if{
+								0x00C000 (>L:R2_INT_COL)
+							}
+						(L:KNOB_FS_ICCP3_INT) 6 ==
+							if{
+								0x00FF00 (>L:R2_INT_COL)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="TRANS SEL">
+				<Select>
+					<Value>
+						(L:UHF_RT_2_PWR) 1 ==
+						(L:SW2_FS_ICCP3_TRANS) 2 == and
+						(L:R2V_INIT) 0 == and
+							if{
+								1 (>K:COM_RECEIVE_ALL_SET)
+								1 (>L:R2V_INIT)
+							}
+						(L:SW2_FS_ICCP3_TRANS) 2 ! ==
+						(L:R2V_INIT) 1 == and
+							if{
+								0 (>L:R2V_INIT)
+								0 (>K:COM_RECEIVE_ALL_SET)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="CHAN SET">
+				<Select>
+					<Value>
+						(L:SW2_FS_ICCP3_CHAN_SET) 2 ==
+							if{}
 
-		<Element Name="TEWS LAUNCH VOLUME">
-			<Select>
-				<Value>
-					(L:KNOB_FS_VOL_TEWS_LAUNCH) 0 &gt;
-					(L:R2V_INIT) 0 == and
-						if{
-						}
-					(L:R2V_INIT) 1 == and
-						if{
-						}
-				</Value>
-			</Select>
-		</Element>
-		<Element Name="TEWS CAUTION VOLUME">
-			<Select>
-				<Value>
-					(L:KNOB_FS_VOL_TEWS_LAUNCH) 0 &gt;
-					(L:R2V_INIT) 0 == and
-						if{
-						}
-					(L:R2V_INIT) 1 == and
-						if{
-						}
-				</Value>
-			</Select>
-		</Element>
-		<Element Name="ICS VOLUME">
-			<Select>
-				<Value>
-					(L:KNOB_FS_VOL_ICS) 0 &gt;
-					(L:ICS_PWR) 1 == and
-					(L:ICS_CONT_PWR) 1 == and
-					(L:R2V_INIT) 0 == and
-						if{
-						}
-					(L:R2V_INIT) 1 == and
-						if{
-						}
-				</Value>
-			</Select>
-		</Element>
-		<Element Name="WPN VOLUME">
-			<Select>
-				<Value>
-					(L:KNOB_FS_VOL_WPN) 0 &gt;
-					(L:R2V_INIT) 0 == and
-						if{
-						}
-					(L:R2V_INIT) 1 == and
-						if{
-						}
-				</Value>
-			</Select>
-		</Element>
-		<Element Name="R2 VOLUME">
-			<Select>
-				<Value>
-					(L:KNOB_FS_VOL_R2) 0 &gt;
-					(L:UHF_RT_2_PWR) 1 == and
-					(L:R2V_INIT) 0 == and
-						if{
-						}
-					(L:R2V_INIT) 1 == and
-						if{
-						}
-				</Value>
-			</Select>
-		</Element>
-		<Element Name="JTIDS VOLUME">
-			<Select>
-				<Value>
-					(L:KNOB_FS_VOL_JTIDS) 0 &gt;
-					(L:JTIDS_PWR) 1 == and
-					(L:R2V_INIT) 0 == and
-						if{
-						}
+						(L:SW2_FS_ICCP3_CHAN_SET) 1 ==
+							if{ }
 
-					(L:KNOB_FS_VOL_JTIDS) 0 ==
-					(L:JTIDS_PWR) 0 == or
-					(L:R2V_INIT) 1 == and
-						if{
-						}
-				</Value>
-			</Select>
+						(L:SW2_FS_ICCP3_CHAN_SET) 0 ==
+							if{ }
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="FREQ DSPL">
+				<Select>
+					<Value>
+						(L:SW2_FS_ICCP3_DSPL_FREQ) 2 ==
+							if{ (L:MCCP_FREQ, KHz) (>L:R2_FREQ_I, KHz) }
+
+						(L:SW2_FS_ICCP3_DSPL_FREQ) 1 ==
+							if{ 0 (>L:R2_FREQ_I, KHz) }
+
+						(L:SW2_FS_ICCP3_DSPL_FREQ) 0 ==
+							if{ (L:R2_FREQ, KHz) (>L:R2_FREQ_I, KHz) }
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="ICS VOL">
+				<Select>
+					<Value>
+						(L:KNOB_FS_ICCP3_ICS) 0 &gt;
+						(L:ICS_PWR) 1 == and
+						(L:ICS_CONT_PWR) 1 == and
+						(L:R2V_INIT) 0 == and
+							if{
+							}
+						(L:R2V_INIT) 1 == and
+							if{
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="R2 VOL">
+				<Select>
+					<Value>
+						(L:KNOB_FS_ICCP3_R2) 0 &gt;
+						(L:UHF_RT_2_PWR) 1 == and
+						(L:R2V_INIT) 0 == and
+							if{
+							}
+						(L:R2V_INIT) 1 == and
+							if{
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="R1 ANT SEL">
+				<Select>
+					<Value>
+						(L:SW2_FS_ICCP_R1_ANT)
+							if{
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="R2 ANT SEL">
+				<Select>
+					<Value>
+						(L:SW2_FS_ICCP3_R2_ANT)
+							if{
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="R1 GRD RECV/TONE">
+				<Select>
+					<Value>
+						(L:SW2_FS_ICCP3_GRD_RECV)
+							if{
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="R1 ADF/R1-R2 C-TEXT">
+				<Select>
+					<Value>
+						(L:ADF_PWR) 1 ==
+						(L:SW2_FS_ICCP3_ADF) 2 == and
+						(L:R2V_ADF_INIT) 0 == and
+							if{
+								1 (>K:RADIO_ADF_IDENT_ENABLE)
+								1 (>L:R2V_ADF_INIT)
+							}
+						(L:SW2_FS_ICCP3_ADF) 2 ! ==
+						(L:R2V_ADF_INIT) 1 == and
+							if{
+								0 (>L:R2V_ADF_INIT)
+								0 (>K:RADIO_ADF_IDENT_DISABLE)
+							}
+					</Value>
+				</Select>
+			</Element>
+
+		</Element>
+		<Element Name="Integrated Communications Control Panel (Before TO 1F-15-857)">
+			<Element Name="UHF 2 MODE">
+				<Select>
+					<Value>
+						(L:R2_INIT) 0 ==
+							if{
+								1 (>L:R2_INIT)
+								(A:COM2 ACTIVE FREQUENCY, KHz) (>L:R2_FREQ, KHz)
+							}
+						(L:UHF_RT_2_PWR) 1 ==
+						(L:MODE_SEL_PWR) 1 == and
+							if{
+								(L:SW2_FS_ICCP2_MODE) 0 ==
+									if{
+										243000 (>L:R2_FREQ, KHz)
+										7338 (>K:COM2_RADIO_SET)
+										}
+
+								(L:SW2_FS_ICCP2_MODE) 1 ==
+								(L:SW2_FS_ICCP2_MODE) 2 == or
+									if{
+										(A:COM2 ACTIVE FREQUENCY, KHz) (>L:R2_FREQ, KHz)
+									}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="UHF 2 CHAN SEL">
+				<Select>
+					<Value>
+						(L:SW2_FS_ICCP2_MODE) 2 ==
+						(L:UHF_RT_2_PWR) 1 == and
+							if{
+								133.2
+								125.5
+								123.45
+								122.8
+								121.1
+								121.0
+								120.7
+								120.5
+								119.9
+								119.7
+								119.5
+								119.1
+								118.9
+								118.7
+								118.5
+								121.9
+								121.8
+								121.7
+								118.75
+								19 (L:KNOB_FS_ICCP3_CHAN) case 100 * near 10000 % d 10 % r 10 / int d 10 % r 10 / int d 10 % r 10 / int 16 * + 16 * + 16 * + (>K:COM2_RADIO_SET)
+							}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="CHAN SET">
+				<Select>
+					<Value>
+						(L:BTN_FS_ICCP2_CHAN) 1 ==
+							if{
+								0 (>L:BTN_FS_ICCP2_CHAN)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="CIPHER ZERO-NORM">
+				<Select>
+					<Value>
+
+						(L:SW1_FS_ICCP2_CIPHER_ZERO) 1 ==
+							if{}
+						(L:SW1_FS_ICCP2_CIPHER_ZERO) 0 ==
+							if{}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="CIPHER RADIO SEL">
+				<Select>
+					<Value>
+
+						(L:SW2_FS_ICCP2_CIPHER_SEL) 2 ==
+							if{}
+						(L:SW2_FS_ICCP2_CIPHER_SEL) 1 ==
+							if{}
+						(L:SW2_FS_ICCP2_CIPHER_SEL) 0 ==
+							if{}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="UHF 2 VOL">
+				<Select>
+					<Value>
+						(L:KNOB_FS_ICCP2_UHF2_VOL) 0 &gt;
+						(L:UHF_RT_2_PWR) 1 == and
+						(L:R2V_INIT) 0 == and
+							if{
+							}
+						(L:R2V_INIT) 1 == and
+							if{
+							}
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="UHF 1 ANT SEL">
+				<Select>
+					<Value>
+						(L:SW2_FS_ICCP_R1_ANT)
+							if{
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="GRD SEL">
+				<Select>
+					<Value>
+						(L:SW2_FS_ICCP2_GRD_SEL)
+							if{
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="ADF SEL">
+				<Select>
+					<Value>
+						(L:ADF_PWR) 1 ==
+						(L:SW2_FS_ICCP2_ADF) 2 == and
+						(L:R2V_ADF_INIT) 2 == and
+							if{
+								(>K:RADIO_ADF_IDENT_ENABLE)
+								(>K:RADIO_ADF2_IDENT_DISABLE)
+								1 (>L:R2V_ADF_INIT)
+							}
+
+						(L:ADF_PWR) 1 ==
+						(L:SW2_FS_ICCP2_ADF) 1 == and
+						(L:R2V_ADF_INIT) 2 &lt; and
+							if{
+								(>K:RADIO_ADF2_IDENT_ENABLE)
+								(>K:RADIO_ADF_IDENT_DISABLE)
+								2 (>L:R2V_ADF_INIT)
+							}
+						(L:SW2_FS_ICCP2_ADF) 0 ==
+						(L:R2V_ADF_INIT) 1 == and
+							if{
+								0 (>L:R2V_ADF_INIT)
+								(>K:RADIO_ADF_IDENT_DISABLE)
+								(>K:RADIO_ADF2_IDENT_DISABLE)
+							}
+					</Value>
+				</Select>
+			</Element>
+
+		</Element>
+		<Element Name="Integrated Communications Control Panel (Misc)">
+			<Element Name="TEWS LAUNCH VOL">
+				<Select>
+					<Value>
+						(L:KNOB_FS_ICCP_TEWS_LAUNCH) 0 &gt;
+						(L:R2V_INIT) 0 == and
+							if{
+							}
+						(L:R2V_INIT) 1 == and
+							if{
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="TEWS CAUTION VOL">
+				<Select>
+					<Value>
+						(L:KNOB_FS_ICCP_TEWS_LAUNCH) 0 &gt;
+						(L:R2V_INIT) 0 == and
+							if{
+							}
+						(L:R2V_INIT) 1 == and
+							if{
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="WPN VOL">
+				<Select>
+					<Value>
+						(L:KNOB_FS_ICCP_WPN) 0 &gt;
+						(L:R2V_INIT) 0 == and
+							if{
+							}
+						(L:R2V_INIT) 1 == and
+							if{
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="JTIDS VOL">
+				<Select>
+					<Value>
+						(L:KNOB_FS_ICCP_JTIDS) 0 &gt;
+						(L:JTIDS_PWR) 1 == and
+						(L:R2V_INIT) 0 == and
+							if{
+							}
+
+						(L:KNOB_FS_ICCP_JTIDS) 0 ==
+						(L:JTIDS_PWR) 0 == or
+						(L:R2V_INIT) 1 == and
+							if{
+							}
+					</Value>
+				</Select>
+			</Element>
 		</Element>
 	</Element>
 
 	<Element Name="EMERGENCY BOOST PUMP">
 		<Select>
-			<Value>			
+			<Value>
 				(L:SW2_FS_ENG_EMER_GEN, enum) 0 &gt;
 				(L:EMER_GEN_EBP_PWR) 1 == and
-					if{			
+					if{
 						(L:L_BST_PUMP_ON) 0 ==
-						(A:GENERAL ENG FUEL PUMP SWITCH:1, bool) 0 == and
-						(L:EBP_L_INIT) 0 == and
-							if{
-								1 (>L:EMER_BST_ON, bool)
-								(>K:TOGGLE_ELECT_FUEL_PUMP1)
-								1 (>L:EBP_L_INIT)
-							}
-							
 						(L:R_BST_PUMP_ON) 0 ==
-						(A:GENERAL ENG FUEL PUMP SWITCH:2, bool) 0 == and
-						(L:EBP_R_INIT) 0 == and
+						(L:EBP_INIT) 0 == and
 							if{
 								1 (>L:EMER_BST_ON, bool)
-								(>K:TOGGLE_ELECT_FUEL_PUMP2)
-								1 (>L:EBP_R_INIT)
+								1 (>L:EBP_INIT)
 							}
 
 						(L:L_BST_PUMP_ON) 1 ==
-						(A:GENERAL ENG FUEL PUMP SWITCH:1, bool) 1 == and
-						(L:EBP_L_INIT) 1 == and
+						(L:R_BST_PUMP_ON) 1 == or
+						(L:EBP_INIT) 1 == and
 							if{
 								0 (>L:EMER_BST_ON, bool)
-								(>K:TOGGLE_ELECT_FUEL_PUMP1)
-								0 (>L:EBP_L_INIT)
-							}
-						(L:R_BST_PUMP_ON) 1 ==
-						(A:GENERAL ENG FUEL PUMP SWITCH:2, bool) 1 == and
-						(L:EBP_R_INIT) 1 == and
-							if{
-								0 (>L:EMER_BST_ON, bool)
-								(>K:TOGGLE_ELECT_FUEL_PUMP2)
-								0 (>L:EBP_R_INIT)
+								0 (>L:EBP_INIT)
 							}
 					}
 					els{
-						(A:GENERAL ENG FUEL PUMP SWITCH:1, bool) 1 == and
-						(L:EBP_L_INIT) 1 == and
-							if{
-								(>K:TOGGLE_ELECT_FUEL_PUMP1)
-								0 (>L:EBP_L_INIT)
-							}					
-						(A:GENERAL ENG FUEL PUMP SWITCH:2, bool) 1 == and
-						(L:EBP_R_INIT) 1 == and
-							if{
-								(>K:TOGGLE_ELECT_FUEL_PUMP2)
-								0 (>L:EBP_R_INIT)
-							}
+						0 (>L:EMER_BST_ON, bool)
 					}
 			</Value>
 		</Select>
 	</Element>
-	
+
 	<Element Name="EEC CONTROLER">
  		<Select>
    			<Value>
@@ -5721,7 +5917,7 @@ Version 5.0
 							1 (>L:CBN_AIR_DUMP_INIT)
 							0 (>K:PRESSURIZATION_PRESSURE_DUMP_SWTICH)
 						}
-						
+
 					(L:CBN_AIR_DUMP_SOL_PWR) 1 ==
 					(L:CBN_AIR_DUMP_INIT) 1 == and
 						if{
@@ -5902,7 +6098,7 @@ Version 5.0
 						940 (>L:AO_GUN_AMMO_COUNT, Number)
 						120 (>L:CHAFF_COUNT)
 						60 (>L:FLARE_COUNT)
-						
+
 						(L:AA_STA_2AB_AC_PWR) 1 ==
 							if{
 								1 (>L:AO_STA-2A_LTYPE, enum)
@@ -6847,8 +7043,8 @@ Version 5.0
 
 							(C:iTrafficInfo:CURRENTDISTANCE, nmiles) (>L:RDR_TGT_DIS)
 							(C:iTrafficInfo:S:ATC MODEL, STRING) (>L:RDR_TGT_MDL)
-							(C:iTrafficInfo:S:COM1 ACTIVE FREQUENCY, MHZ) (>L:RDR_TGT_COM)
-							(C:iTrafficInfo:S:NAV1 ACTIVE FREQUENCY, MHZ) (>L:RDR_TGT_NAV)
+							(C:iTrafficInfo:S:COM1 ACTIVE FREQUENCY, MHz) (>L:RDR_TGT_COM)
+							(C:iTrafficInfo:S:NAV1 ACTIVE FREQUENCY, MHz) (>L:RDR_TGT_NAV)
 							(C:iTrafficInfo:S:TRANSPONDER CODE, Number) (>L:RDR_TGT_IFF)
 							(C:iTrafficInfo:SELECTEDFLIGHTPLAN) (>L:RDR_TGT_PLN)
 						}
@@ -7017,11 +7213,11 @@ Version 5.0
 							(L:VSD_MODE) 2 ==
 							(L:VSD_MODE) 4 == or
 							if{
-								110 70 50 30 20 5 (L:VSD_EL_SCAN) CASE (>L:EL_SCAN)
-								2 4 6 8 10 5 (L:VSD_EL_SCAN) CASE (>L:EL_SCAN_TIME)
+								110 70 50 30 20 5 (L:VSD_EL_SCAN) case (>L:EL_SCAN)
+								2 4 6 8 10 5 (L:VSD_EL_SCAN) case (>L:EL_SCAN_TIME)
 
-								200 100 50 3 (L:VSD_AZ_SCAN) CASE (>L:AZ_SCAN)
-								2 4 8 3 (L:VSD_AZ_SCAN) CASE (>L:AZ_SCAN_TIME)
+								200 100 50 3 (L:VSD_AZ_SCAN) case (>L:AZ_SCAN)
+								2 4 8 3 (L:VSD_AZ_SCAN) case (>L:AZ_SCAN_TIME)
 
 								(P:LOCAL TIME, Seconds) (L:EL_SCAN_TIME) * 4 % 2 - ABS + 1 - (L:EL_SCAN) * 10 / INT 10 * (>L:VSD_EL_SCAN)
 								(P:LOCAL TIME, Seconds) (L:AZ_SCAN_TIME) * 4 % 2 - ABS + 1 - (L:AZ_SCAN) * (>L:VSD_AZ_SCAN)
@@ -7188,7 +7384,7 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(L:TEWS_SYS_PWR) 0 == 
+						(L:TEWS_SYS_PWR) 0 ==
 						(L:TEWS-TIME, Seconds) 0 &gt; and
 							if{
 								0 (>L:TEWS-TIME, Seconds)
