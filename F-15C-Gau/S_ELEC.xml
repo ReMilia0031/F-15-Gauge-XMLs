@@ -5065,85 +5065,105 @@ Version 5.0
 			</Select>
 		</Element>
 		<Element Name="CAS PITCH">
-			<Select>
-				<Value>
-					(L:CAS_PITCH_RDY) 1 ==
-					(L:CAS_ATT_HOLD_RDY) 1 == and
-					(L:CAS_ALT_HOLD_RDY) 0 == and
-					(A:AUTOPILOT MASTER,enum) 1 == and
-					(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
-						if{
-							(>K:AP_ATT_HOLD_ON)
-						}
+			<Element Name="ATT HOLD">
+				<Select>
+					<Value>
+						(L:CAS_PITCH_RDY) 1 ==
+						(L:CAS_ATT_HOLD_RDY) 1 == and
+						(L:CAS_ALT_HOLD_RDY) 0 == and
+						(L:HUD_MASTER_MODE) 0 == and
+						(A:AUTOPILOT MASTER,enum) 1 == and
+						(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
+							if{
+								(>K:AP_ATT_HOLD_ON)
+							}
+	
+						(L:CAS_PITCH_RDY) 0 ==
+						(L:CAS_ATT_HOLD_RDY) 0 == or
+						(L:CAS_ALT_HOLD_RDY) 1 == or
+						(L:HUD_MASTER_MODE) 0 != or
+						(A:AUTOPILOT APPROACH HOLD, bool) 1 == or
+						(A:YOKE Y POSITION, Position) 0 != or
+							if{
+								(>K:AP_ATT_HOLD_OFF)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="ALT HOLD">
+				<Select>
+					<Value>
+						(L:CAS_PITCH_RDY) 1 ==
+						(L:CAS_ALT_HOLD_RDY) 1 == and
+						(L:HUD_MASTER_MODE) 0 == and
+						(A:AUTOPILOT MASTER,enum) 1 == and
+						(A:VERTICAL SPEED, feet per minute) -4000 &gt; and
+						(A:VERTICAL SPEED, feet per minute) 4000 &lt; and
+						(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
+						(A:AUTOPILOT ALTITUDE LOCK) 0 == and
+							if{
+								(>K:AP_ALT_HOLD_ON)							
+								0 (>L:PIT_CAS_DSBL_INIT)
+							}
 
-					(L:CAS_ATT_HOLD_RDY) 0 ==
-					(L:CAS_ALT_HOLD_RDY) 1 == or
-					(A:AUTOPILOT APPROACH HOLD, bool) 1 == or
-						if{
-							(>K:AP_ATT_HOLD_OFF)
-						}
-
-					(L:CAS_PITCH_RDY) 1 ==
-					(L:CAS_ALT_HOLD_RDY) 1 == and
-					(A:AUTOPILOT MASTER,enum) 1 == and
-					(A:VERTICAL SPEED, feet per minute) 4000 &lt; and
-					(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
-					(A:AUTOPILOT ALTITUDE LOCK) 0 == and
-						if{
-							(>K:AP_ALT_HOLD_ON)
-							(L:ALT_INIT) 0 == and
-								if{
-									1 (>L:ALT_INIT)
-									(A:INDICATED ALTITUDE,Feet) (>K:AP_ALT_VAR_SET_ENGLISH)
-									0 (>L:PIT_CAS_DSBL_INIT)
-								}
-						}
-
-					(L:CAS_ALT_HOLD_RDY) 0 ==
-					(A:AUTOPILOT MASTER,enum) 0 == or
-					(A:VERTICAL SPEED,feet per minute) 4000 &gt; or
-					(A:AUTOPILOT ALTITUDE HOLD, bool) 1 == and
-						if{
-							0 (>L:ALT_INIT)
-							(>K:AP_ALT_HOLD_OFF)
-						}
-
-					(L:CAS_PITCH_RDY) 0 ==
-					(A:YOKE Y POSITION, Position) 0 != or
-						if{
-							0 (>L:ALT_INIT)
-							(>K:AP_ALT_HOLD_OFF)
-							(>K:AP_ATT_HOLD_OFF)
-							(L:PIT_CAS_DSBL_INIT) 0 ==
-								if{
-									1 (>L:PIT_CAS_DSBL_INIT)
-									0 (>K:AXIS_ELEV_TRIM_SET)
-								}
-						}
+						(A:AUTOPILOT ALTITUDE LOCK, bool) 1 ==
+						(L:ALT_INIT, bool) 0 == and
+							if{
+								1 (>L:ALT_INIT, bool)
+								(A:INDICATED ALTITUDE,Feet) (>K:AP_ALT_VAR_SET_ENGLISH)
+							}
+	
+						(L:CAS_PITCH_RDY) 0 ==
+						(L:CAS_ALT_HOLD_RDY) 0 == or
+						(L:HUD_MASTER_MODE) 0 != or
+						(A:AUTOPILOT MASTER,enum) 0 == or
+						(A:VERTICAL SPEED, feet per minute) -4000 &lt; or
+						(A:VERTICAL SPEED, feet per minute) 4000 &gt; or
+						(A:YOKE Y POSITION, Position) 0 != or
+							if{
+								0 (>L:ALT_INIT, bool)
+								(>K:AP_ALT_HOLD_OFF)
+								(L:PIT_CAS_DSBL_INIT) 0 ==
+									if{
+										1 (>L:PIT_CAS_DSBL_INIT)
+										0 (>K:AXIS_ELEV_TRIM_SET)
+									}
+							}
 				</Value>
 			</Select>
+		</Element>
 		</Element>
 		<Element Name="CAS ROLL">
 			<Select>
 				<Value>
 					(L:CAS_ROLL_RDY) 1 ==
 					(A:AUTOPILOT MASTER,enum) 1 == and
+					(L:HUD_MASTER_MODE) 0 == and
+					(A:YOKE X POSITION, Position) 0 == and
 					(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
 						if{
-							(A:AUTOPILOT HEADING LOCK) 0 ==
+							(A:GPS DRIVES NAV1,enum) 0 ==
 								if{
-									(>K:AP_HDG_HOLD_ON)
-									(L:HDG_INIT) 0 == and
+									(A:AUTOPILOT HEADING LOCK, bool) 0 ==
 										if{
-											1 (>L:HDG_INIT)
-											(A:PLANE HEADING DEGREES MAGNETIC, Degrees) (>K:HEADING_BUG_SET)
+											(>K:AP_HDG_HOLD_ON)
+																
 										}
 								}
+							(A:GPS DRIVES NAV1,enum) 1 ==
+								if{
+								}
 						}
-					(L:CAS_ROLL_RDY) 0 ==
-					(A:YOKE X POSITION, Position) 0 != or
-					(A:AUTOPILOT MASTER,enum) 0 == or
-					(A:AUTOPILOT HEADING LOCK) 1 == and
+						
+					(A:AUTOPILOT HEADING LOCK, bool) 1 ==
+					(L:HDG_INIT) 0 == and
+						if{
+							1 (>L:HDG_INIT)
+							(A:PLANE HEADING DEGREES MAGNETIC, Degrees) (>K:HEADING_BUG_SET)
+						}	
+					(A:YOKE X POSITION, Position) 0 !=					
+					(L:HUD_MASTER_MODE) 0 != or
+					(L:CAS_ROLL_RDY) 0 == or
 						if{
 							0 (>L:HDG_INIT)
 							(>K:AP_HDG_HOLD_OFF)
@@ -5192,6 +5212,31 @@ Version 5.0
 						0 (>K:AXIS_ELEV_TRIM_SET)
 						0 (>L:BTN_FS_TAKEOFF_TRIM_EXEC)
 					}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="!IN TEST!">
+			<Select>
+				<Value>
+					(L:PULL_UP_WARNING) 1 ==
+						if{
+							(P:LOCAL TIME, Seconds) (>L:PULL_UP_TIME, Seconds)
+							1 (>L:PULL_UP_INIT)
+						
+						(P:LOCAL TIME, Seconds) (L:PULL_UP_TIME, Seconds) - 2 &gt;
+							if{
+								-11468 (>K:ELEVATOR_SET)
+							}
+						
+						}
+							
+					(L:PULL_UP_INIT) 1 ==
+					(A:PLANE PITCH DEGREES, Degrees) -5 &lt; and
+						if{
+							0 (>K:ELEVATOR_SET)
+							0 (>L:PULL_UP_INIT)
+							0 (>L:PULL_UP_TIME, Seconds)
+						}
 				</Value>
 			</Select>
 		</Element>
