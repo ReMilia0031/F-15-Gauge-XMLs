@@ -1,6 +1,8 @@
-﻿<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="8.70">
+﻿<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="9.00">
 
 <!--
+Version 9.00
+	[ADD] (Fictional)Auto G-CAS (IN TEST)
 Version 8.70
 	[EDT} ***
 Version 8.65
@@ -1691,11 +1693,11 @@ Version 5.0
 							if{
 								1 (>L:INS_GC_RDY)
 								1 (>L:INS_RDY)
-								(>K:RESET_G_FORCE_INDICATOR)
 							}
 							els{
 								0 (>L:INS_GC_RDY)
 								0 (>L:INS_RDY)
+								(>K:RESET_G_FORCE_INDICATOR)
 							}
 					</Value>
 				</Select>
@@ -5110,7 +5112,7 @@ Version 5.0
 						(L:ALT_INIT, bool) 0 == and
 							if{
 								1 (>L:ALT_INIT, bool)
-								(A:INDICATED ALTITUDE,Feet) (>K:AP_ALT_VAR_SET_ENGLISH)
+								(A:INDICATED ALTITUDE,Feet) 100 / int 100 *  (>K:AP_ALT_VAR_SET_ENGLISH)
 							}
 	
 						(L:CAS_PITCH_RDY) 0 ==
@@ -5219,15 +5221,69 @@ Version 5.0
 			<Select>
 				<Value>
 					(L:PULL_UP_WARNING) 1 ==
+					(L:HUD_MASTER_MODE) 0 == and
 						if{
-							(P:LOCAL TIME, Seconds) (>L:PULL_UP_TIME, Seconds)
-							1 (>L:PULL_UP_INIT)
-						
-						(P:LOCAL TIME, Seconds) (L:PULL_UP_TIME, Seconds) - 2 &gt;
-							if{
-								-11468 (>K:ELEVATOR_SET)
-							}
-						
+							(L:PULL_UP_TIME, Seconds) 0 ==
+								if{
+									(P:LOCAL TIME, Seconds) (>L:PULL_UP_TIME, Seconds)
+									1 (>L:PULL_UP_INIT)
+								}
+
+								(L:PULL_UP_INIT) 1 ==
+								(A:RADIO HEIGHT, Feet) (A:VERTICAL SPEED, Feet per second) -10 * - 0 &lt;
+									if{
+										(A:PLANE BANK DEGREES, Degrees) -1 &lt;
+										(L:PU_ROLL_INIT) 0 == and
+											if{ 8192 (>K:AILERON_SET) 1 (>L:PU_ROLL_INIT) }
+											
+										(A:PLANE BANK DEGREES, Degrees) 1 &gt;
+										(L:PU_ROLL_INIT) 0 == and
+											if{ -8192 (>K:AILERON_SET) 1 (>L:PU_ROLL_INIT) }
+											
+										(A:PLANE BANK DEGREES, Degrees) -5 &gt;
+										(A:PLANE BANK DEGREES, Degrees) 5 &lt; and
+										(L:PU_ROLL_INIT) 1 == and
+											if{ 0 (>K:AILERON_SET) }
+											
+										<!-- 70% -->
+										-11468 (>K:ELEVATOR_SET)
+											(A:G FORCE, G FORCE) 7 &gt;
+											if{
+												<!-- 20% -->
+												-3276 (>K:ELEVATOR_SET)
+											}
+										(A:G FORCE, G FORCE) 6 &gt;
+										(A:G FORCE, G FORCE) 7 &lt;
+											if{
+												<!-- 30% -->
+												-4915 (>K:ELEVATOR_SET)
+											}
+										(A:G FORCE, G FORCE) 5 &gt;
+										(A:G FORCE, G FORCE) 6 &lt;
+											if{
+												<!-- 40% -->
+												-6553 (>K:ELEVATOR_SET)
+											}
+										(A:G FORCE, G FORCE) 4 &gt;
+										(A:G FORCE, G FORCE) 5 &lt;
+											if{
+												<!-- 50% -->
+												-8192 (>K:ELEVATOR_SET)
+											}
+										(A:G FORCE, G FORCE) 3 &gt;
+										(A:G FORCE, G FORCE) 4 &lt;
+											if{
+												<!-- 60% -->
+												-9830 (>K:ELEVATOR_SET)
+											}
+											
+										(A:RADIO HEIGHT, Feet) 1000 &lt;
+											if{
+												<!-- 100% -->
+												-16383 (>K:ELEVATOR_SET)
+											}
+											
+										}
 						}
 							
 					(L:PULL_UP_INIT) 1 ==
