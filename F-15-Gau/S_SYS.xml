@@ -932,9 +932,9 @@ Version 5.0
 								if{
 									(>K:ANTISKID_BRAKES_TOGGLE)
 								}
-							(L:JFS_ACCUM) 0 &gt;
+							(L:JFS_ACCUM_1) 0 &gt;
 								if{
-									(L:JFS_ACCUM) (A:AIRSPEED INDICATED, KNOTS) 0.01 * -  (>L:JFS_ACCUM)
+									(L:JFS_ACCUM_1) (A:AIRSPEED INDICATED, KNOTS) 0.01 * -  (>L:JFS_ACCUM_1)
 								}
 							(A:BRAKE PARKING INDICATOR, bool) 0 ==
 								if{

@@ -3120,7 +3120,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 								</GaugeText>
 							</Element>
 							<Element id="LABELS">
-							<FloatPosition>65.000,90.000</FloatPosition>
+							<FloatPosition>100.000,90.000</FloatPosition>
 								<Element id="TITLE">
 								<FloatPosition>0.000,0.000</FloatPosition>
 									<GaugeText id="GaugeText">
@@ -4020,7 +4020,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 								</GaugeText>
 							</Element>
 							<Element id="LABELS">
-							<FloatPosition>65.000,90.000</FloatPosition>
+							<FloatPosition>100.000,90.000</FloatPosition>
 								<Element id="ELEVATOR POSITION">
 									<FloatPosition>0.000,24.000</FloatPosition>
 									<GaugeText id="GaugeText">
@@ -4330,7 +4330,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 								</GaugeText>
 							</Element>
 							<Element id="LABELS">
-							<FloatPosition>65.000,90.000</FloatPosition>
+							<FloatPosition>100.000,90.000</FloatPosition>
 								<Element id="HANDLE POSITION">
 									<FloatPosition>0.000,24.000</FloatPosition>
 									<GaugeText id="GaugeText">
@@ -4614,7 +4614,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 								</GaugeText>
 							</Element>
 							<Element id="LABELS">
-							<FloatPosition>65.000,90.000</FloatPosition>
+							<FloatPosition>100.000,90.000</FloatPosition>
 								<Element id="TEMPERATURE">
 									<FloatPosition>0.000,24.000</FloatPosition>
 									<GaugeText id="GaugeText">
@@ -4969,7 +4969,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 								</GaugeText>
 							</Element>
 							<Element id="LABELS">
-							<FloatPosition>65.000,90.000</FloatPosition>
+							<FloatPosition>100.000,90.000</FloatPosition>
 								<Element id="LEFT ENGINE FEED TANK">
 									<FloatPosition>0.000,24.000</FloatPosition>
 									<GaugeText id="GaugeText">
@@ -5466,6 +5466,264 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 										<FontFace>Consolas</FontFace>
 										<FontHeight>22</FontHeight>
 										<GaugeString>%((A:FUEL TOTAL QUANTITY, gallons) (A:FUEL WEIGHT PER GALLON, pounds) * )%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+							</Element>
+						</Element>
+						<Element id="JFS">
+							<Visibility>
+								(L:BIT_FUNC_PAGES) 6 ==
+							</Visibility>
+							<Element id="TITLE">
+								<FloatPosition>190.000,50.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>35</FontHeight>
+									<GaugeString>JFS</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>120,50</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="LABELS">
+							<FloatPosition>100.000,90.000</FloatPosition>
+								<Element id="ACCUM 1">
+									<FloatPosition>0.000,24.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>ACCUM 1 PSI</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="ACCUM 2">
+									<FloatPosition>0.000,48.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>ACCUM 2 PSI</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="TURBINE RPM">
+									<FloatPosition>0.000,72.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>TURBINE rpm</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="GENERAT RPM">
+									<FloatPosition>0.000,96.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>GENERAT rpm</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="CENTRAL GEARBOX RPM">
+									<FloatPosition>0.000,120.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>CENTRAL GEARBOX rpm</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="L AMAD RPM">
+									<FloatPosition>0.000,144.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>L AMAD rpm</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="R AMAD RPM">
+									<FloatPosition>0.000,168.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>R AMAD rpm</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="JFS GEN AC VOLTAGE">
+									<FloatPosition>0.000,192.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>JFS GEN AC VOLTAGE</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="JFS GEN DC VOLTAGE">
+									<FloatPosition>0.000,215.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>JFS GEN DC VOLTAGE</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>220,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+							</Element>
+							<Element id="VALUE">
+								<FloatPosition>317.000,90.000</FloatPosition>
+								<Element id="ACCUM 1">
+									<FloatPosition>0.000,24.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:JFS_ACCUM_1, psi))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="ACCUM 2">
+									<FloatPosition>0.000,48.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:JFS_ACCUM_2, psi))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="TURBINE RPM">
+									<FloatPosition>0.000,72.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:JFS_TURBINE, rpm))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="GENERAT RPM">
+									<FloatPosition>0.000,96.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:JFS_GENERAT, rpm))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="CENTRAL GEARBOX RPM">
+									<FloatPosition>0.000,120.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:JFS_CG, rpm))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="L AMAD RPM">
+									<FloatPosition>0.000,144.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:JFS_L_AMAD, rpm))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="R AMAD RPM">
+									<FloatPosition>0.000,168.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:JFS_R_AMAD, rpm))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="JFS GEN AC VOLTAGE">
+									<FloatPosition>0.000,192.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:JFS_GEN_AC_VOLTAGE, volts))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+								<Element id="JFS GEN DC VOLTAGE">
+									<FloatPosition>0.000,215.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:JFS_GEN_DC_VOLTAGE, volts))%!1.2f!</GaugeString>
 										<HorizontalAlign>CENTER</HorizontalAlign>
 										<Size>130,24</Size>
 										<Transparent>True</Transparent>
@@ -7439,12 +7697,9 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 %((L:MPCD-menu, Enum) 1000 div )%{case}
 %{:0}ARMT
 %{:2}%((L:BIT_PAGES) 1 ==)
-	%{if}
-		%((L:BIT_FUNC_PAGES) 0 ==)
-			%{if}ENG
-			%{end}
-	%{else}FUNC
-	%{end}
+		%{if}ENG
+		%{else}FUNC
+		%{end}
 %{:15}D\nA\nT
 %{end}
 </GaugeString>
@@ -7481,11 +7736,8 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 		%{if}NML
 		%{end}
 %{:2}%((L:BIT_PAGES) 1 ==)
-	%{if}
-		%((L:BIT_FUNC_PAGES) 0 ==)
-			%{if}CONTROL
-			%{end}
-	%{end}
+		%{if}CONTROL
+		%{end}
 %{:15}S\nR\nV
 %{end}
 </GaugeString>
@@ -7522,10 +7774,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 		%{if}A/G
 		%{end}
 %{:2}%((L:BIT_PAGES) 1 ==)
-	%{if}
-		%((L:BIT_FUNC_PAGES) 0 ==)
-			%{if}GEAR
-			%{end}
+	%{if}GEAR
 	%{end}
 %{:15}T\nG\nT
 %{end}
@@ -7561,10 +7810,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 	%{end}
 %{:2}
 %((L:BIT_PAGES) 1 ==)
-	%{if}
-		%((L:BIT_FUNC_PAGES) 0 ==)
-			%{if}AMBIENT
-			%{end}
+	%{if}AMBIENT
 	%{end}
 %((L:BIT_PAGES) 15 ==)
 	%{if}%((L:BIT_TEWS_PAGES) 0 == )
@@ -7608,10 +7854,8 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 		%{end}
 %{:2}
 %((L:BIT_PAGES) 1 ==)
-	%{if}
-		%((L:BIT_FUNC_PAGES) 0 ==)
-			%{if}FUEL
-			%{end}
+	%{if}FUEL
+	%{end}
 %{:15}S\nH\nR
 %{end}
 </GaugeString>
@@ -7658,7 +7902,10 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 %{:1}%((L:ARMT_PAGES) 1 ==)
 	%{if}%MODE S
 	%{end}
-%{:2}%((L:BIT_PAGES) 15 ==)
+%{:2}%((L:BIT_PAGES) 1 ==)
+	%{if}JFS
+	%{end}
+	%((L:BIT_PAGES) 15 ==)
 	%{if}
 		%((L:BIT_TEWS_PAGES) 6 ==)
 			%{if}RWR
@@ -8170,9 +8417,6 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									if{
 										2 (>L:BIT_FUNC_PAGES)
 									}
-									els{
-										1 (>L:BIT_PAGES)
-									}
 								quit
 							}
 							(L:MPCD-menu, Enum) 1000 div 15 == if{
@@ -8225,9 +8469,6 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									if{
 										3 (>L:BIT_FUNC_PAGES)
 									}
-									els{
-										1 (>L:BIT_PAGES)
-									}
 								quit
 							}
 							(L:MPCD-menu, Enum) 1000 div 15 == if{
@@ -8277,9 +8518,6 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 										if{
 											4 (>L:BIT_FUNC_PAGES)
 										}
-										els{
-											1 (>L:BIT_PAGES)
-										}
 									(L:BIT_PAGES) 15 ==
 										if{
 											4 (>L:BIT_TEWS_PAGES)
@@ -8315,9 +8553,6 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									(L:BIT_PAGES) 1 ==
 										if{
 											5 (>L:BIT_FUNC_PAGES)
-										}
-										els{
-											1 (>L:BIT_PAGES)
 										}
 									(L:BIT_PAGES) 15 ==
 										if{
@@ -8370,14 +8605,22 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 										(L:IF15E_CBT_1_PROG, Number) 10000 / flr 1 == (&gt;L:IF15E_RCFT_JETT, Bool)
 									}
 							}
-							(L:MPCD-menu, Enum) 1000 div 2 == if{
-								(L:BIT_TEWS_PAGES) 0 ==
-									if{
-										6 (>L:BIT_TEWS_PAGES)
-									}
+							(L:MPCD-menu, Enum) 1000 div 2 ==
+								if{
+									(L:BIT_PAGES) 1 ==
+										if{
+											6 (>L:BIT_FUNC_PAGES)
+										}
+									(L:BIT_PAGES) 15 ==
+										if{											
+											(L:BIT_TEWS_PAGES) 0 ==
+												if{
+													6 (>L:BIT_TEWS_PAGES)
+												}
+										}
+								}
 								quit
 							}
-						}
 					</Script>
 				</Expression>
 			</Shift>

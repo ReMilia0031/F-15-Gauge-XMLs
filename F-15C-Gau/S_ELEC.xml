@@ -227,6 +227,7 @@ Version 5.0
 						(L:SW2_FS_ENG_EMER_GEN) 0 &gt; and
 							if{
 								(L:JFS_GEN_AC_AVAIL) 1 ==
+								(L:PX_HYD) 2000 &gt; or
 									if{
 										115 (>L:EMER_GEN_AC_VOLTAGE)
 									}
@@ -234,6 +235,7 @@ Version 5.0
 										0 (>L:EMER_GEN_AC_VOLTAGE)
 									}
 								(L:JFS_GEN_DC_AVAIL) 1 ==
+								(L:PX_HYD) 2000 &gt; or
 									if{
 										28 (>L:EMER_GEN_DC_VOLTAGE)
 										28 (>L:EMER_ESS_DC_VOLTAGE)
@@ -274,8 +276,8 @@ Version 5.0
 			<Element Name="JFS GENERATOR">
 				<Select>
 					<Value>
-						(L:JFS_GENERAT_RPM) 115 * 54000 / (>L:JFS_GEN_AC_VOLTAGE)
-						(L:JFS_GENERAT_RPM) 28 * 54000 / (>L:JFS_GEN_DC_VOLTAGE)
+						(L:JFS_GENERAT) 115 * 54000 / (>L:JFS_GEN_AC_VOLTAGE)
+						(L:JFS_GENERAT) 28 * 54000 / (>L:JFS_GEN_DC_VOLTAGE)
 
 						(L:JFS_GEN_AC_VOLTAGE) 115 &gt;
 							if{ 115 (>L:JFS_GEN_AC_VOLTAGE) }
@@ -2294,7 +2296,7 @@ Version 5.0
 									}
 								}
 								els{
-									0 (>L:ENG2_NOZZLE))
+									0 (>L:ENG2_NOZZLE)
 								}
 						}
 						els{
@@ -5099,8 +5101,6 @@ Version 5.0
 						(L:CAS_ALT_HOLD_RDY) 1 == and
 						(L:HUD_MASTER_MODE) 0 == and
 						(A:AUTOPILOT MASTER,enum) 1 == and
-						(A:VERTICAL SPEED, feet per minute) -4000 &gt; and
-						(A:VERTICAL SPEED, feet per minute) 4000 &lt; and
 						(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
 						(A:AUTOPILOT ALTITUDE LOCK) 0 == and
 							if{
@@ -5221,6 +5221,9 @@ Version 5.0
 			<Select>
 				<Value>
 					(L:PULL_UP_WARNING) 1 ==
+					(A:GEAR HANDLE POSITION, bool) 0 == and
+					(A:SIM ON GROUND, bool) 0 == and
+					(A:AUTOPILOT MASTER,enum) 1 == and
 					(L:HUD_MASTER_MODE) 0 == and
 						if{
 							(L:PULL_UP_TIME, Seconds) 0 ==
@@ -5286,7 +5289,10 @@ Version 5.0
 										}
 						}
 							
-					(L:PULL_UP_INIT) 1 ==
+					(A:GEAR HANDLE POSITION, bool) 1 == or
+					(A:SIM ON GROUND, bool) 1 == or
+					(A:AUTOPILOT MASTER,enum) 0 == or
+					(L:PULL_UP_INIT) 1 == or
 					(A:PLANE PITCH DEGREES, Degrees) -5 &lt; and
 						if{
 							0 (>K:ELEVATOR_SET)
