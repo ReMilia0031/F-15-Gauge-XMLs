@@ -18,11 +18,12 @@
 				(L:TEWS_COLOR_SYM_DARK)
 			</MacroValue>
         </Macro>
+
 		<Element id="STBY">
             <FloatPosition>210.000,240.000</FloatPosition>
             <Visibility>
 				(L:TEWS_SYS_PWR) 1 ==
-				(L:TEWS_POD_CONT_PWR) 1 ==
+				(L:TEWS_POD_CONT_PWR) 1 == and
 				(L:SW1_FS_TEWS_ICS) 1 == and
 				(L:TEWS-POWER, bool) 0 == and
 				(P:absolute time, number) 0.5 % 0.25 &lt; and
@@ -73,7 +74,7 @@
 						<CustomDrawParam id="UpdateAlways" Name="UpdateAlways">
 							<Value>1</Value>
 						</CustomDrawParam>
-		
+
 		<!-- Vehicle -->
 						<CustomDrawParam id="LayerVehicles" Name="LayerVehicles">
 							<Value>1</Value>
@@ -191,7 +192,7 @@
 							<Axis>30,30</Axis>
 						</PolyLine>
 					</Element>
-				
+
 				</Element>
 				<Element id="TEWS_BACKGROUND">
 					<FloatPosition>0.000,0.000</FloatPosition>
@@ -199,7 +200,7 @@
 						<Transparent>True</Transparent>
 						<Bright>True</Bright>
 					</Image>
-				</Element>	
+				</Element>
 			</Element>
 		</Element>
 		<MouseArea id="TEWS_PANEL">

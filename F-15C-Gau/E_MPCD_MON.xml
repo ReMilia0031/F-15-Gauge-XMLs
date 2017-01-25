@@ -3802,7 +3802,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 										<Size>130,24</Size>
 										<Transparent>True</Transparent>
 									</GaugeText>
-								</Element>								
+								</Element>
 								<Element id="THRUST">
 									<FloatPosition>0.000,144.000</FloatPosition>
 									<GaugeText id="GaugeText">
@@ -8612,7 +8612,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 											6 (>L:BIT_FUNC_PAGES)
 										}
 									(L:BIT_PAGES) 15 ==
-										if{											
+										if{
 											(L:BIT_TEWS_PAGES) 0 ==
 												if{
 													6 (>L:BIT_TEWS_PAGES)

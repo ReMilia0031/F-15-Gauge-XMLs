@@ -2457,19 +2457,12 @@ Version 5.0
     		<Select>
       			<Value>
 					(L:PRAD_GAUGE_PWR) 1 ==
+					(L:NEEDLE_PITCH_RATIO) 0 &gt; and
 						if{
-							(A:HYDRAULIC PRESSURE:1, PSI) 2000 &lt;
-							(A:HYDRAULIC PRESSURE:2, PSI) 2000 &lt; and
-							(L:SW1_FS_PITCH_RATIO) 0 == or
-								if{
-									40 (>L:NEEDLE_PITCH_RATIO)
-								}
-								els{
-									(A:AIRSPEED MACH, mach) 100 * (>L:NEEDLE_PITCH_RATIO)
-								}
+							(L:NEEDLE_PITCH_RATIO) (>L:GAU_PITCH_RATIO)
 						}
 						els{
-							0 (>L:NEEDLE_PITCH_RATIO)
+							0 (>L:GAU_PITCH_RATIO)
 						}
       			</Value>
     		</Select>
@@ -2799,7 +2792,6 @@ Version 5.0
 								(L:LIGHT_FLICKER) 1 ==
 								(L:AMAD_FIRE_DET_SYS_PWR) 1 == and
 								(L:AMAD_FIRE) 1 == and
-								(L:SW2_FS_FIRE_DISCHARGE) 2 == and
 								(L:FS_LIGHT_TEST) 1 == or
 									if{ 1 (>L:LT_FS_AMAD_FIRE)  }
 							</Value>
@@ -3807,7 +3799,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(A:AUTOPILOT MASTER, bool) 0 == and
+						(L:AP_DISABLE, enum) 1 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_FLT_CONTR)  }
 							els{ 0 (>L:LT_FS_FLT_CONTR) }
@@ -4791,6 +4783,7 @@ Version 5.0
 				(L:IFF_MAIN_PWR) 1 ==
 				(L:IFF_MAIN_PWR_INIT) 1 == and
 					if{
+						4608 (>K:XPNDR_SET)
 						0 (>L:IFF_MAIN_PWR_INIT)
 					}
 			</Value>
@@ -4970,6 +4963,7 @@ Version 5.0
 								els{
 									0 (>L:CAS_PITCH_RDY)
 								}
+
 							(L:SW2_FS_CAS_ROLL) 2 ==
 								if{
 									1 (>L:CAS_ROLL_RDY)
@@ -4977,6 +4971,7 @@ Version 5.0
 								els{
 									0 (>L:CAS_ROLL_RDY)
 								}
+
 							(L:SW2_FS_CAS_YAW) 2 ==
 								if{
 									1 (>L:CAS_YAW_RDY)
@@ -5023,170 +5018,233 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-		<Element Name="AFCS MASTER">
+		<Element Name="CAS AIRCRAFT POSTURE">
 			<Select>
 				<Value>
-				(L:CAS_PITCH_RDY) 1 ==
-				(L:CAS_ROLL_RDY) 1 == and
-				(L:CAS_YAW_RDY) 1 == and
-				(L:AFCS_DC_PWR) 1 == and
-				(A:GEAR HANDLE POSITION, bool) 0 == and
-				(A:SIM ON GROUND, bool) 0 == and
-					if{
-						(>K:AUTOPILOT_ON)
-					}
+					(A:PLANE PITCH DEGREES, Degrees) -45 &gt;
+					(A:PLANE PITCH DEGREES, Degrees) 45 &lt; and
+					(A:PLANE BANK DEGREES, Degrees) -60 &gt; and
+					(A:PLANE BANK DEGREES, Degrees) 60 &lt; and
+					(A:YOKE X POSITION, Position) 0 == and
+					(A:YOKE Y POSITION, Position) 0 == and
+					(A:GEAR HANDLE POSITION, bool) 0 == and
+						if{
+							1 (>L:CAS_POSTURE)
+						}
+						els{
+							0 (>L:CAS_POSTURE)
+						}
+				</Value>
+			</Select>
+		</Element>
 
-				(L:CAS_PITCH_RDY) 0 ==
-				(L:CAS_ROLL_RDY) 0 == or
-				(L:CAS_YAW_RDY) 0 == or
-				(L:AFCS_DC_PWR) 0 == or
-				(A:GEAR HANDLE POSITION, bool) 0 &gt; or
-				(A:SIM ON GROUND, bool) 1 == or
-					if{
-						(>K:AUTOPILOT_OFF)
-					}
-
-				(L:CAS_PITCH_RDY) 1 ==
-				(L:CAS_ROLL_RDY) 1 == and
-				(A:NAV HAS LOCALIZER:1, bool) 1 == and
-				(A:NAV SIGNAL:1, bool) and
-				(A:YOKE X POSITION, Position) 0 == and
-				(A:YOKE Y POSITION, Position) 0 == and
-					if{
-						(L:KNOB_FS_STEER_MODE) 2 ==
-						(L:KNOB_FS_STEER_MODE) 3 == or
+		<Element Name="AFCS MASTER">
+			<Element Name="MASTER ON">
+				<Select>
+					<Value>
+						(L:AFCS_DC_PWR) 1 ==
+						(L:CAS_PITCH_RDY) 1 == and
+						(L:CAS_ROLL_RDY) 1 == and
+						(L:CAS_YAW_RDY) 1 == and
+						(A:GEAR HANDLE POSITION, bool) 0 == and
+						(L:HUD_MASTER_MODE) 0 == and
 							if{
-								(>K:AP_APR_HOLD_ON)
+								(>K:AUTOPILOT_ON)
 							}
-							els{
-								(>K:AP_APR_HOLD_OFF)
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="MASTER OFF">
+				<Select>
+					<Value>
+						(L:AFCS_DC_PWR) 0 ==
+						(L:CAS_PITCH_RDY) 0 == or
+						(L:CAS_ROLL_RDY) 0 == or
+						(L:CAS_YAW_RDY) 0 == or
+						(A:GEAR HANDLE POSITION, bool) 0 &gt; or
+						(L:HUD_MASTER_MODE) 0 != or
+							if{
+								(>K:AUTOPILOT_OFF)
 							}
-					}
-					els{
-						(>K:AP_APR_HOLD_OFF)
-					}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		<Element Name="AFCS DISENGAGED">
+			<Select>
+				<Value>
+					(A:AUTOPILOT MASTER, bool) 0 ==
+					(L:AP_WARN, Seconds) 0 == and
+						if{
+							(P:LOCAL TIME, Seconds) (>L:AP_WARN, Seconds)
+						}
+					(P:LOCAL TIME, Seconds) (L:AP_WARN, Seconds) - 0 &gt;
+					(P:LOCAL TIME, Seconds) (L:AP_WARN, Seconds) - 2.5 &lt; and
+					(P:absolute time, number) 0.5 % 0.25 &lt; and
+						if{
+							1 (>L:AP_DISABLE, enum)
+						}
+						els{
+							0 (>L:AP_DISABLE, enum)
+						}
+
+					(A:AUTOPILOT MASTER, bool) 1 ==
+						if{
+							0 (>L:AP_WARN, Seconds)
+						}
 				</Value>
 			</Select>
 		</Element>
 		<Element Name="CAS PITCH">
 			<Element Name="ATT HOLD">
+				<Element Name="ATT HOLD ON">
+					<Select>
+						<Value>
+							(L:CAS_PITCH_RDY) 1 ==
+							(L:CAS_ATT_HOLD_RDY) 1 == and
+							(L:CAS_ALT_HOLD_RDY) 0 == and
+							(L:HUD_MASTER_MODE) 0 == and
+							(A:AUTOPILOT MASTER,enum) 1 == and
+							(L:CAS_POSTURE) 1 == and
+							(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
+								if{
+									(>K:AP_ATT_HOLD_ON)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="ATT HOLD OFF">
+					<Select>
+						<Value>
+							(L:CAS_PITCH_RDY) 0 ==
+							(L:CAS_ATT_HOLD_RDY) 0 == or
+							(L:CAS_ALT_HOLD_RDY) 1 == or
+							(L:HUD_MASTER_MODE) 0 != or
+							(L:CAS_POSTURE) 0 == or
+								if{
+									(>K:AP_ATT_HOLD_OFF)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+			<Element Name="ALT HOLD">
+				<Element Name="ALT HOLD ON">
+					<Select>
+						<Value>
+							(L:CAS_PITCH_RDY) 1 ==
+							(L:CAS_ALT_HOLD_RDY) 1 == and
+							(L:HUD_MASTER_MODE) 0 == and
+							(L:CAS_POSTURE) 1 == and
+							(A:AUTOPILOT MASTER,enum) 1 == and
+							(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
+							(A:AUTOPILOT ALTITUDE LOCK) 0 == and
+								if{
+									(>K:AP_ALT_HOLD_ON)
+									0 (>L:PIT_CAS_DSBL_INIT)
+								}
+
+							(A:AUTOPILOT ALTITUDE LOCK, bool) 1 ==
+							(L:ALT_INIT, bool) 0 == and
+								if{
+									1 (>L:ALT_INIT, bool)
+									(A:INDICATED ALTITUDE,Feet) 100 / int 100 *  (>K:AP_ALT_VAR_SET_ENGLISH)
+								}
+					</Value>
+				</Select>
+			</Element>
+				<Element Name="ALT HOLD OFF">
+					<Select>
+						<Value>
+							(L:CAS_PITCH_RDY) 0 ==
+							(L:CAS_ALT_HOLD_RDY) 0 == or
+							(L:HUD_MASTER_MODE) 0 != or
+							(L:CAS_POSTURE) 0 == or
+							(A:AUTOPILOT MASTER,enum) 0 == or
+								if{
+									(>K:AP_ALT_HOLD_OFF)
+									0 (>L:ALT_INIT, bool)
+
+									(L:PIT_CAS_DSBL_INIT) 0 ==
+										if{
+											1 (>L:PIT_CAS_DSBL_INIT)
+											0 (>K:AXIS_ELEV_TRIM_SET)
+										}
+								}
+
+							(L:HUD_MASTER_MODE) 0 !=
+								if{
+									(A:ELEVATOR POSITION, percent) -163.83 * (>K:AXIS_ELEV_TRIM_SET)
+								}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		</Element>
+		<Element Name="CAS ROLL">
+			<Element Name="CAS ROLL ON">
 				<Select>
 					<Value>
-						(L:CAS_PITCH_RDY) 1 ==
-						(L:CAS_ATT_HOLD_RDY) 1 == and
-						(L:CAS_ALT_HOLD_RDY) 0 == and
-						(L:HUD_MASTER_MODE) 0 == and
+						(L:CAS_ROLL_RDY) 1 ==
 						(A:AUTOPILOT MASTER,enum) 1 == and
+						(L:HUD_MASTER_MODE) 0 == and
+						(L:CAS_POSTURE) 1 == and
 						(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
 							if{
-								(>K:AP_ATT_HOLD_ON)
+								(A:GPS DRIVES NAV1, enum) 0 ==
+									if{
+										(A:AUTOPILOT HEADING LOCK, bool) 0 ==
+											if{
+												(>K:AP_HDG_HOLD_ON)
+											}
+									}
+								(A:GPS DRIVES NAV1, enum) 1 ==
+									if{
+										(A:AUTOPILOT NAV1 LOCK, bool) 0 ==
+											if{
+												(>K:AP_NAV1_HOLD_ON)
+											}
+									}
 							}
 
-						(L:CAS_PITCH_RDY) 0 ==
-						(L:CAS_ATT_HOLD_RDY) 0 == or
-						(L:CAS_ALT_HOLD_RDY) 1 == or
-						(L:HUD_MASTER_MODE) 0 != or
-						(A:AUTOPILOT APPROACH HOLD, bool) 1 == or
-						(A:YOKE Y POSITION, Position) 0 != or
+						(A:AUTOPILOT HEADING LOCK, bool) 1 ==
+						(L:HDG_INIT) 0 == and
 							if{
-								(>K:AP_ATT_HOLD_OFF)
+								1 (>L:HDG_INIT)
+								(A:PLANE HEADING DEGREES MAGNETIC, Degrees) (>K:HEADING_BUG_SET)
 							}
 					</Value>
 				</Select>
 			</Element>
-			<Element Name="ALT HOLD">
+			<Element Name="CAS ROLL OFF">
 				<Select>
 					<Value>
-						(L:CAS_PITCH_RDY) 1 ==
-						(L:CAS_ALT_HOLD_RDY) 1 == and
-						(L:HUD_MASTER_MODE) 0 == and
-						(A:AUTOPILOT MASTER,enum) 1 == and
-						(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
-						(A:AUTOPILOT ALTITUDE LOCK) 0 == and
-							if{
-								(>K:AP_ALT_HOLD_ON)
-								0 (>L:PIT_CAS_DSBL_INIT)
-							}
-
-						(A:AUTOPILOT ALTITUDE LOCK, bool) 1 ==
-						(L:ALT_INIT, bool) 0 == and
-							if{
-								1 (>L:ALT_INIT, bool)
-								(A:INDICATED ALTITUDE,Feet) 100 / int 100 *  (>K:AP_ALT_VAR_SET_ENGLISH)
-							}
-
-						(L:CAS_PITCH_RDY) 0 ==
-						(L:CAS_ALT_HOLD_RDY) 0 == or
+						(A:YOKE X POSITION, Position) 0 !=
 						(L:HUD_MASTER_MODE) 0 != or
-						(A:AUTOPILOT MASTER,enum) 0 == or
-						(A:YOKE Y POSITION, Position) 0 != or
+						(L:CAS_POSTURE) 0 == or
+						(L:CAS_ROLL_RDY) 0 == or
+						(A:AUTOPILOT APPROACH HOLD, bool) 1 == or
 							if{
-								0 (>L:ALT_INIT, bool)
-								(>K:AP_ALT_HOLD_OFF)
-								(L:PIT_CAS_DSBL_INIT) 0 ==
-									if{
-										1 (>L:PIT_CAS_DSBL_INIT)
-										0 (>K:AXIS_ELEV_TRIM_SET)
-									}
+								0 (>L:HDG_INIT)
+								(>K:AP_HDG_HOLD_OFF)
+								(>K:AP_NAV1_HOLD_OFF)
 							}
-				</Value>
-			</Select>
-		</Element>
-		</Element>
-		<Element Name="CAS ROLL">
-			<Select>
-				<Value>
-					(L:CAS_ROLL_RDY) 1 ==
-					(A:AUTOPILOT MASTER,enum) 1 == and
-					(L:HUD_MASTER_MODE) 0 == and
-					(A:YOKE X POSITION, Position) 0 == and
-					(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
-						if{
-							(A:GPS DRIVES NAV1,enum) 0 ==
-								if{
-									(A:AUTOPILOT HEADING LOCK, bool) 0 ==
-										if{
-											(>K:AP_NAV1_HOLD_OFF)
-											(>K:AP_HDG_HOLD_ON)
-										}
-								}
-							(A:GPS DRIVES NAV1,enum) 1 ==
-								if{
-									(A:AUTOPILOT NAV1 LOCK, bool) 0 ==
-										if{
-											(>K:AP_NAV1_HOLD_ON)
-											(>K:AP_HDG_HOLD_OFF)
-										}
-								}
-						}
-
-					(A:AUTOPILOT HEADING LOCK, bool) 1 ==
-					(L:HDG_INIT) 0 == and
-						if{
-							1 (>L:HDG_INIT)
-							(A:PLANE HEADING DEGREES MAGNETIC, Degrees) (>K:HEADING_BUG_SET)
-						}
-					(A:YOKE X POSITION, Position) 0 !=
-					(L:HUD_MASTER_MODE) 0 != or
-					(L:CAS_ROLL_RDY) 0 == or
-						if{
-							0 (>L:HDG_INIT)
-							(>K:AP_HDG_HOLD_OFF)
-							(>K:AP_NAV1_HOLD_OFF)
-						}
-				</Value>
-			</Select>
+					</Value>
+				</Select>
+			</Element>
 		</Element>
 		<Element Name="CAS YAW">
 			<Select>
 				<Value>
 					(A:RUDDER POSITION, Position) 0 ==
+					(L:CAS_POSTURE) 1 == and
 					(L:CAS_YAW_RDY) 1 == and
 						if{
 							(>K:YAW_DAMPER_ON)
 						}
 
 					(A:RUDDER POSITION, Position) 0 !=
+					(L:CAS_POSTURE) 0 == and
 					(L:CAS_YAW_RDY) 0 == or
 						if{
 							(>K:YAW_DAMPER_OFF)
@@ -5194,7 +5252,21 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-
+		<Element Name="ROLL RATIO CONTROLER">
+			<Select>
+				<Value>
+					(A:HYDRAULIC PRESSURE:1, PSI) 2000 &lt;
+					(A:HYDRAULIC PRESSURE:2, PSI) 2000 &lt; and
+					(L:SW1_FS_PITCH_RATIO) 0 == or
+						if{
+							40 (>L:NEEDLE_PITCH_RATIO)
+						}
+						els{
+							1 (A:AIRSPEED MACH, mach) - (>L:NEEDLE_PITCH_RATIO)
+						}
+				</Value>
+			</Select>
+		</Element>
 		<Element Name="ROLL RATIO CONTROLER">
 			<Select>
 				<Value>
@@ -5222,84 +5294,121 @@ Version 5.0
 			</Select>
 		</Element>
 		<Element Name="!IN TEST!">
-			<Select>
-				<Value>
-					(L:PULL_UP_WARNING) 1 ==
-					(A:GEAR HANDLE POSITION, bool) 0 == and
-					(A:AUTOPILOT MASTER,enum) 1 == and
-					(L:HUD_MASTER_MODE) 0 == and
-					(L:PULL_UP_INIT) 0 == and
-						if{
-							1 (>L:PULL_UP_INIT)
-						}
+			<Element Name="GCAS INIT">
+				<Select>
+					<Value>
+						(L:PULL_UP_WARNING) 1 ==
+						(A:GEAR HANDLE POSITION, bool) 0 == and
+						(A:AUTOPILOT MASTER,enum) 1 == and
+						(L:GCAS_INIT) 0 == and
+							if{
+								1 (>L:GCAS_INIT)
+							}
+						(A:RADIO HEIGHT, Feet) (A:VERTICAL SPEED, Feet per second) -8 * - (>L:GCAS_RDO_VERT)
 
-					(L:PULL_UP_INIT) 1 ==
-						if{
-							1 (>L:GCAS_START)
-							(A:PLANE BANK DEGREES, Degrees) -45 &lt;
-								if{ 16383 (>K:AILERON_SET) }
-					
-							(A:PLANE BANK DEGREES, Degrees) 45 &gt;
-								if{ -16383 (>K:AILERON_SET) }
-				
-							(A:PLANE BANK DEGREES, Degrees) -45 &gt;
-							(A:PLANE BANK DEGREES, Degrees) -1 &lt; and
-								if{ 8192 (>K:AILERON_SET) }
+						(A:GEAR HANDLE POSITION, bool) 0 ==
+						(A:PLANE PITCH DEGREES, Degrees) 40 &gt; and
+						(A:AUTOPILOT MASTER,enum) 1 == and
+						(L:GCAS_INIT) 0 == and
+							if{
+								1 (>L:GCAS_INIT)
+							}
+						(A:PLANE PITCH DEGREES, Degrees) -5 &lt;
+						(L:GCAS_INIT) 1 == and
+							if{
+								0 (>L:GCAS_INIT)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="GCAS AILRON">
+				<Select>
+					<Value>
+						(L:GCAS_INIT) 1 ==
+						(L:GCAS_RDO_VERT) 0 &lt; and
+							if{
+								1 (>L:GCAS_START)
+								(A:PLANE BANK DEGREES, Degrees) -45 &lt;
+									if{ 16383 (>K:AILERON_SET) }
 
-							(A:PLANE BANK DEGREES, Degrees) 1 &gt;							
-							(A:PLANE BANK DEGREES, Degrees) 45 &lt; and
-								if{ -8192 (>K:AILERON_SET) }
-								
-							(A:PLANE BANK DEGREES, Degrees) -5 &gt;
-							(A:PLANE BANK DEGREES, Degrees) 5 &lt; and
-								if{	0 (>K:AILERON_SET) 1 (>L:AIL_CMPL) }
+								(A:PLANE BANK DEGREES, Degrees) 45 &gt;
+									if{ -16383 (>K:AILERON_SET) }
 
-							(L:AIL_CMPL) 1 ==
-								if{
-									(A:G FORCE, G FORCE) 7 &gt;<!-- 20% -->
-										if{ -3276 (>K:ELEVATOR_SET) 2 (>L:ELEVATOR_NUMBER) }
+								(A:PLANE BANK DEGREES, Degrees) -45 &gt;
+								(A:PLANE BANK DEGREES, Degrees) -1 &lt; and
+									if{ 8192 (>K:AILERON_SET) }
 
-									(A:G FORCE, G FORCE) 6 &gt;
-									(A:G FORCE, G FORCE) 7 &lt; and<!-- 30% -->
-										if{ -4915 (>K:ELEVATOR_SET) 3 (>L:ELEVATOR_NUMBER)  }
+								(A:PLANE BANK DEGREES, Degrees) 1 &gt;
+								(A:PLANE BANK DEGREES, Degrees) 45 &lt; and
+									if{ -8192 (>K:AILERON_SET) }
 
-									(A:G FORCE, G FORCE) 5 &gt;
-									(A:G FORCE, G FORCE) 6 &lt; and <!-- 40% -->
-										if{ -6553 (>K:ELEVATOR_SET) 4 (>L:ELEVATOR_NUMBER)  }
+								(A:PLANE BANK DEGREES, Degrees) -5 &gt;
+								(A:PLANE BANK DEGREES, Degrees) 5 &lt; and
+									if{	0 (>K:AILERON_SET) 1 (>L:AIL_CMPL) }
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="GCAS ELEVATOR">
+				<Select>
+					<Value>
+						(L:AIL_CMPL) 1 ==
+							if{
+								0 (>K:AXIS_ELEV_TRIM_SET)
+								(A:G FORCE, G FORCE) 7 &gt;<!-- 20% -->
+									if{ -3276 (>K:ELEVATOR_SET) }
 
-									(A:G FORCE, G FORCE) 4 &gt;
-									(A:G FORCE, G FORCE) 5 &lt; and <!-- 50% -->
-										if{ -8192 (>K:ELEVATOR_SET) 5 (>L:ELEVATOR_NUMBER)  }
+								(A:G FORCE, G FORCE) 6 &gt;
+								(A:G FORCE, G FORCE) 7 &lt; and<!-- 30% -->
+									if{ -4915 (>K:ELEVATOR_SET) }
 
-									(A:G FORCE, G FORCE) 3 &gt;
-									(A:G FORCE, G FORCE) 4 &lt; and <!-- 60% -->
-										if{ -9830 (>K:ELEVATOR_SET) 6 (>L:ELEVATOR_NUMBER)  }
+								(A:G FORCE, G FORCE) 5 &gt;
+								(A:G FORCE, G FORCE) 6 &lt; and <!-- 40% -->
+									if{ -6553 (>K:ELEVATOR_SET) }
 
-									(A:G FORCE, G FORCE) 3 &lt; <!-- 70% -->
-										if{ -11468 (>K:ELEVATOR_SET) 7 (>L:ELEVATOR_NUMBER)  }
+								(A:G FORCE, G FORCE) 4 &gt;
+								(A:G FORCE, G FORCE) 5 &lt; and <!-- 50% -->
+									if{ -8192 (>K:ELEVATOR_SET) }
 
-									(A:RADIO HEIGHT, Feet) 1000 &lt;<!-- 100% -->
-										if{ -16383 (>K:ELEVATOR_SET) 10 (>L:ELEVATOR_NUMBER)  }
-								}
-						}
+								(A:G FORCE, G FORCE) 3 &gt;
+								(A:G FORCE, G FORCE) 4 &lt; and <!-- 60% -->
+									if{ -9830 (>K:ELEVATOR_SET) }
 
-					(A:PLANE PITCH DEGREES, Degrees) -5 &lt;
-					(L:GCAS_START) 1 == and
-						if{
-							0 (>K:ELEVATOR_SET)
-							0 (>K:AILERON_SET)
-							0 (>L:AIL_CMPL) 
-							0 (>L:PULL_UP_INIT)
-							0 (>L:GCAS_START)
-						}
-					
-					(A:YOKE X POSITION, Position) 0 != 
-					(A:YOKE Y POSITION, Position) 0 != or
-						if{ 
-							0 (>L:PULL_UP_INIT)
-						}
-				</Value>
-			</Select>
+								(A:G FORCE, G FORCE) 3 &lt; <!-- 70% -->
+									if{ -11468 (>K:ELEVATOR_SET) }
+
+								(A:RADIO HEIGHT, Feet) 1000 &lt;<!-- 100% -->
+									if{ -16383 (>K:ELEVATOR_SET) }
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="GCAS STOP">
+				<Select>
+					<Value>
+						(A:PLANE PITCH DEGREES, Degrees) -5 &lt;
+						(L:GCAS_START) 1 == and
+							if{
+								0 (>K:ELEVATOR_SET)
+								0 (>K:AILERON_SET)
+								0 (>L:AIL_CMPL)
+								0 (>L:GCAS_START)
+								0 (>L:GCAS_INIT)
+							}
+
+						(A:YOKE X POSITION, Position) -1 &lt;
+						(A:YOKE X POSITION, Position) 1 &gt; or
+						(A:YOKE Y POSITION, Position) -1 &lt; or
+						(A:YOKE Y POSITION, Position) 1 &gt; or
+						(L:GCAS_START) 1 == and
+							if{
+								0 (>L:GCAS_START)
+								0 (>L:AIL_CMPL)
+								0 (>L:GCAS_INIT)
+							}
+					</Value>
+				</Select>
+			</Element>
 		</Element>
 	</Element>
 	<Element Name="COMMUNICATIONS">

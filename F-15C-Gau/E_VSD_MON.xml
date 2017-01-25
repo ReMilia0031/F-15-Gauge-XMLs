@@ -9,13 +9,6 @@
 	<SimGauge.Gauge id="VERTICAL SITUATION DISPLAY" ArtDirectory=".">
 		<FloatPosition>0.000,-50.000</FloatPosition>
 		<Size>512,512</Size>
-		<Macro id="MapWidth" Name="MapWidth">
-			<MacroValue>394</MacroValue>
-		</Macro>
-		<Macro id="MapHeight" Name="MapHeight">
-			<MacroValue>394</MacroValue>
-		</Macro>
-
 		<Macro id="TextColor" Name="TextColor">
 			<MacroValue>
 				(L:VSD_COLOR)
@@ -36,12 +29,6 @@
 				(L:VSD_COLOR_SYM_DARK)
 			</MacroValue>
 		</Macro>
-<!-- 		<Element id="BCKGRD">
-			<Image id="vsd/background.bmp" Name="vsd/background.bmp">
-				<Transparent>True</Transparent>
-				<Bright>True</Bright>
-			</Image>
-		</Element> -->
 
 		<Element id="STBY">
             <FloatPosition>210.000,240.000</FloatPosition>
@@ -2360,10 +2347,10 @@
 							<Value>1</Value>
 						</CustomDrawParam>
 						<CustomDrawParam id="CenterX" Name="CenterX">
-							<Value>@MapWidth 2 /</Value>
+							<Value>197</Value>
 						</CustomDrawParam>
 						<CustomDrawParam id="CenterY" Name="CenterY">
-							<Value>@MapHeight</Value>
+							<Value>394</Value>
 						</CustomDrawParam>
 						<CustomDrawParam id="WaterColor" Name="WaterColor">
 							<Value>0x000000</Value>
@@ -2828,7 +2815,7 @@
                                 <Point id="Point">
                                     <FloatPosition>15.000,30.000</FloatPosition>
                                 </Point>
-                            </PolyLine>							
+                            </PolyLine>
 							<Shift id="PITCH">
 								<Scale>0.000,1.000</Scale>
 								<Expression id="Expression">
@@ -2851,7 +2838,7 @@
                                 <Point id="Point">
                                     <FloatPosition>10.000,0.000</FloatPosition>
                                 </Point>
-                            </PolyLine>							
+                            </PolyLine>
 							<Shift id="HEADING">
 								<Scale>1.000,0.000</Scale>
 								<Expression id="Expression">

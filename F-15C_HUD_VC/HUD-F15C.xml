@@ -19,6 +19,134 @@ Version 2.0
 	[EDT] F-15E -> F-15C
 	-->
 	<Image Name="HUD_back.bmp" ImageSizes="500,500"/>
+	<Element Name="Debug">
+		<Visible>(L:HUD_DEBUG, bool)</Visible>
+		<Element Name="GCAS">
+		<Position X="100" Y="100"/>
+			<Element>
+				<Position X="0" Y="0"/>
+				<Text X="500" Y="30" Bright="Yes" Length="20" Font="Consolas" Color="0x0000FF" Adjust="Left" Multiline="No" Fixed="No">
+					<String>GCAS</String>
+				</Text>
+			</Element>
+			<Element>
+				<Position X="20" Y="50"/>
+				<Text X="500" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+					<String>PW %((L:PULL_UP_WARNING))%!d!% GI %((L:GCAS_INIT))%!d!% S %((L:GCAS_START))%!d!% AIL %((L:AIL_CMPL))%!d!%</String>
+				</Text>
+			</Element>
+			<Element>
+				<Position X="20" Y="100"/>
+				<Text X="500" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+					<String> E%((A:ELEVATOR POSITION, percent))%!d! S%((A:AILERON POSITION, percent))%!d! R-V %((L:GCAS_RDO_VERT))%!d!</String>
+				</Text>
+			</Element>
+		</Element>
+
+		<Element Name="Airsp">
+			<Position X="0" Y="250"/>
+			<Text X="300" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+				<String>%((A:Airspeed indicated, knots))%!d!</String>
+			</Text>
+		</Element>
+		<Element Name="Mach">
+			<Position X="0" Y="300"/>
+			<Text X="300" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+				<String>M %((A:AIRSPEED MACH, machs))%!2.2f!</String>
+			</Text>
+		</Element>
+		<Element Name="AOA">
+			<Position X="0" Y="350"/>
+			<Text X="300" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+				<String>AOA %((A:INCIDENCE ALPHA, Degrees))%!d!</String>
+			</Text>
+		</Element>
+		<Element Name="G">
+			<Position X="0" Y="400"/>
+			<Text X="400" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+				<String>ACC %((A:G FORCE, G FORCE))%!2.2f! X %((A:MAX G FORCE, G FORCE))%!2.2f! N %((A:MIN G FORCE, G FORCE))%!2.2f!</String>
+			</Text>
+		</Element>
+
+		<Element Name="ALT">
+	  		<Position X="550" Y="250"/>
+			<Text X="300" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+	  			<String>%((A:Indicated Altitude, feet))%!d!</String>
+	  		</Text>
+	   	</Element>
+		<Element Name="VV">
+			<Position X="550" Y="300"/>
+			<Text X="300" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+				<String>VV %((A:Vertical speed,feet per minute) /-/)%!d!%</String>
+			</Text>
+		</Element>
+		<Element Name="Baro">
+			<Position X="550" Y="350"/>
+			<Text X="300" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+				<String>%((A:KOHLSMAN SETTING HG, inHg))%!4.2f!%{end}</String>
+			</Text>
+		</Element>
+
+		<Element Name="Pitch/Bank">
+			<Position X="150" Y="250"/>
+			<Text X="300" Y="50" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+				<String>P%((A:PLANE PITCH DEGREES, Degrees))%!d! B%((A:PLANE BANK DEGREES, Degrees))%!d!</String>
+			</Text>
+		</Element>
+		<Element Name="Pitch/Bank">
+			<Position X="150" Y="300"/>
+			<Text X="300" Y="50" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+				<String>P%((L:VVectY, degrees))%!d! B%((L:VVectX, degrees))%!d!</String>
+			</Text>
+		</Element>
+		<Element Name="HDG">
+			<Position X="175" Y="0"/>
+			<Text X="350" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+				<String>HDG%((A:PLANE HEADING DEGREES GYRO, Degrees))%!d! MARK %(@Marker_Bearing180)%!d!</String>
+			</Text>
+		</Element>
+
+		<Element Name="AP">
+		<Position X="100" Y="450"/>
+			<Element>
+				<Position X="0" Y="0"/>
+				<Text X="500" Y="30" Bright="Yes" Length="20" Font="Consolas" Color="0x0000FF" Adjust="Left" Multiline="No" Fixed="No">
+					<String>AP</String>
+				</Text>
+			</Element>
+			<Element>
+				<Position X="20" Y="40"/>
+				<Text X="500" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+					<String>M %((A:AUTOPILOT MASTER, bool))%!d!</String>
+				</Text>
+			</Element>
+			<Element>
+				<Position X="20" Y="80"/>
+				<Text X="500" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+					<String>H %((A:AUTOPILOT HEADING LOCK, bool))%!d! %((A:AUTOPILOT HEADING LOCK DIR, degrees))%!d! </String>
+				</Text>
+			</Element>
+			<Element>
+				<Position X="20" Y="120"/>
+				<Text X="500" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+					<String>N %((A:AUTOPILOT NAV1 LOCK, bool))%!d! G%((A:GPS WP BEARING, Degrees))%!d! T%((A:NAV2 OBS, Degrees))%!d! </String>
+				</Text>
+			</Element>
+			<Element>
+				<Position X="20" Y="160"/>
+				<Text X="500" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+					<String>A %((A:AUTOPILOT ALTITUDE LOCK, bool))%!d! %((A:AUTOPILOT ALTITUDE LOCK VAR, feet))%!d! </String>
+				</Text>
+			</Element>
+			<Element>
+				<Position X="20" Y="200"/>
+				<Text X="500" Y="30" Bright="Yes" Length="30" Font="Consolas" Color="0x0000FF" Adjust="Left"  Multiline="No" Fixed="No">
+					<String>ATT%((A:AUTOPILOT ATTITUDE HOLD, bool))%!d! Y%((A:AUTOPILOT YAW DAMPER, bool))%!d!</String>
+				</Text>
+			</Element>
+		</Element>
+	</Element>
+
 	<Element>
 		<Visible>(L:HUD Power, bool) ! (L:INS_RDY, bool) and</Visible>
 		<Element Name="Macro">
@@ -3864,7 +3992,7 @@ Version 2.0
 			</Element>
 
 			<Element Name="Pull Up Warning">
-				<Visible>(L:PULL_UP_WARNING)</Visible>
+				<Visible>(L:PULL_UP_WARNING) (A:GEAR HANDLE POSITION, bool) 0 == and</Visible>
 				<Element>
 					<Visible>(L:IsFlashTime)</Visible>
 					<Element>
@@ -3882,6 +4010,48 @@ Version 2.0
 						</Polyline>
 					</Element>
 				</Element>
+			</Element>
+
+			<Element Name="Fly Up Warning">
+				<Element>
+					<Visible>(A:GEAR HANDLE POSITION, bool) 0 == (A:PLANE PITCH DEGREES, Degrees) 5 &gt; and (L:GCAS_START) 1 == or</Visible>
+						<Position X="330" Y="287"/>
+					<Element>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="10" Bright="Yes">
+							<Point X="-75" Y="-75"/>
+							<Point X="0" Y="0"/>
+							<Point X="-75" Y="75"/>
+						</Polyline>
+					<Shift>
+						<Value Minimum="0.0" Maximum="1000.0">(L:GCAS_RDO_VERT)</Value>
+						<Nonlinearity>
+							<Item Value="1000.0" X="-450" Y="0"/>
+							<Item Value="0.0" X="0" Y="0"/>
+						</Nonlinearity>
+					</Shift>
+					</Element>
+					<Element>
+						<Polyline Color="%((L:HUD_COLOR_SYM))" LineWidth="10" Bright="Yes">
+							<Point X="75" Y="-75"/>
+							<Point X="0" Y="0"/>
+							<Point X="75" Y="75"/>
+						</Polyline>
+					<Shift>
+						<Value Minimum="0.0" Maximum="1000.0">(L:GCAS_RDO_VERT)</Value>
+						<Nonlinearity>
+							<Item Value="1000.0" X="450" Y="0"/>
+							<Item Value="0.0" X="0" Y="0"/>
+						</Nonlinearity>
+					</Shift>
+					</Element>
+				</Element>
+
+					<Element Name="Fly UP Text">
+						<Position X="230" Y="150"/>
+						<Text X="200" Y="45" Bright="Yes" Length="6" Font="Consolas" Color="%((L:HUD_COLOR_SYM))" Adjust="Center" Multiline="No" Fixed="No">
+							<String>%((L:GCAS_START) (L:IsFlashTime) and )%{if}FLY UP%{end}</String>
+						</Text>
+					</Element>
 			</Element>
 		</Element>
 

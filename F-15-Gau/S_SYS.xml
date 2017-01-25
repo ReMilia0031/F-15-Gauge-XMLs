@@ -73,7 +73,7 @@ Version 5.0
 					1 (>L:KNOB_FS_RDR_MODE_SEL)
 					1 (>L:IND_FS_RDR_BAND)
 					3 (>L:IND_FS_RDR_CHAN)
-				
+
 					1 (>L:SW2_FS_EW_RWR_ICS)
 					1 (>L:SW2_FS_EW_PODS)
 					1 (>L:SW2_FS_EW_ICS)
@@ -138,7 +138,7 @@ Version 5.0
 					0 (>L:KNOB_FS_ICCP_WPN)
 					0 (>L:KNOB_FS_ICCP_R2_VOL)
 					0 (>L:KNOB_FS_ICCP_JTIDS)
-					
+
 					0 (>L:SW2_FS_ICCP2_MODE_SEL)
 					2 (>L:BTN_FS_ICCP2_CHAN_SET)
 					0 (>L:KNOB_FS_ICCP2_UHF2_VOL)
@@ -223,7 +223,7 @@ Version 5.0
 					0 (>L:KNOB_FS_INT_LT_INST_ENG)
 					1 (>L:KNOB_FS_INT_LT_CAUTION)
 					0 (>L:KNOB_FS_INT_LT_STORM)
-					
+
 					2 (>L:KNOB_FS_ECM1_MODE)
 					2 (>L:BTN_FS_ECM1_RST)
 					2 (>L:KNOB_FS_ECM2_MODE)
@@ -1194,18 +1194,26 @@ Version 5.0
 					(L:KNOB_FS_STEER_MODE) 0 ==
 						if{
 							0 (>L:HSI_MODE)
+							(A:GPS DRIVES NAV1, bool) 0 ==
+								if{ (>K:TOGGLE_GPS_DRIVES_NAV1) }
 						}
 					(L:KNOB_FS_STEER_MODE) 1 ==
 						if{
 							2 (>L:HSI_MODE)
+							(A:GPS DRIVES NAV1, bool) 1 ==
+								if{ (>K:TOGGLE_GPS_DRIVES_NAV1) }
 						}
 					(L:KNOB_FS_STEER_MODE) 2 ==
 						if{
 							3 (>L:HSI_MODE)
+							(A:GPS DRIVES NAV1, bool) 0 ==
+								if{ (>K:TOGGLE_GPS_DRIVES_NAV1) }
 						}
 					(L:KNOB_FS_STEER_MODE) 3 ==
 						if{
 							4 (>L:HSI_MODE)
+							(A:GPS DRIVES NAV1, bool) 1 ==
+								if{ (>K:TOGGLE_GPS_DRIVES_NAV1) }
 						}
 				</Value>
 			</Select>
@@ -1448,7 +1456,7 @@ Version 5.0
 					<Select>
 						<Value>
 							(L:L_ENG_FIRE) 1 ==
-								if{ (A:ENG COMBUSTION:1) 1 ==
+								if{ (A:ENG COMBUSTION:1, bool) 1 ==
 									if{ (>K:TOGGLE_ENGINE1_FAILURE) }
 								}
 						</Value>
@@ -1813,43 +1821,12 @@ Version 5.0
 			</Element>
 		</Element>
 		<Element Name="AOA">
-			<Element Name="AOA FACTOR 0 WARN">
+			<Element Name="AOA FACTOR 1 WARN">
 				<Select>
 					<Value>
 						(A:INCIDENCE ALPHA, degrees) 30 &gt;
 						(A:INCIDENCE ALPHA, degrees) 35 &lt; and
 						(A:GEAR HANDLE POSITION, bool) 0 == and
-						(L:VMS_ENABLE) 1 == and
-						(L:AOA_FACTOR_0_INIT) 0 == and
-							if{
-								2 (>L:AOA_FACTOR_0)
-								1 (>L:AOA_FACTOR_0_INIT)
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element>
-				<Select>
-					<Value>
-						(A:INCIDENCE ALPHA, degrees) 30 &lt;
-						(A:INCIDENCE ALPHA, degrees) 35 &gt; or
-						(L:VMS_ENABLE) 0 == or
-						(L:AOA_FACTOR_0_INIT) 1 == and
-							if{
-								0 (>L:AOA_FACTOR_0)
-								0 (>L:AOA_FACTOR_0_INIT)
-							}
-					</Value>
-				</Select>
-			</Element>
-
-			<Element Name="AOA FACTOR 1 WARN">
-				<Select>
-					<Value>
-						(A:INCIDENCE ALPHA, degrees) 35 &gt;
-						(A:INCIDENCE ALPHA, degrees) 40 &lt; and
-						(A:GEAR HANDLE POSITION, bool) 0 == and
-
 						(L:VMS_ENABLE) 1 == and
 						(L:AOA_FACTOR_1_INIT) 0 == and
 							if{
@@ -1862,8 +1839,8 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(A:INCIDENCE ALPHA, degrees) 35 &lt;
-						(A:INCIDENCE ALPHA, degrees) 40 &gt; or
+						(A:INCIDENCE ALPHA, degrees) 30 &lt;
+						(A:INCIDENCE ALPHA, degrees) 35 &gt; or
 						(L:VMS_ENABLE) 0 == or
 						(L:AOA_FACTOR_1_INIT) 1 == and
 							if{
@@ -1876,7 +1853,8 @@ Version 5.0
 			<Element Name="AOA FACTOR 2 WARN">
 				<Select>
 					<Value>
-						(A:INCIDENCE ALPHA, degrees) 40 &gt;
+						(A:INCIDENCE ALPHA, degrees) 35 &gt;
+						(A:INCIDENCE ALPHA, degrees) 40 &lt; and
 						(A:GEAR HANDLE POSITION, bool) 0 == and
 
 						(L:VMS_ENABLE) 1 == and
@@ -1891,12 +1869,72 @@ Version 5.0
 			<Element>
 				<Select>
 					<Value>
-						(A:INCIDENCE ALPHA, degrees) 40 &lt;
+						(A:INCIDENCE ALPHA, degrees) 35 &lt;
+						(A:INCIDENCE ALPHA, degrees) 40 &gt; or
 						(L:VMS_ENABLE) 0 == or
 						(L:AOA_FACTOR_2_INIT) 1 == and
 							if{
 								0 (>L:AOA_FACTOR_2)
 								0 (>L:AOA_FACTOR_2_INIT)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="AOA FACTOR 3 WARN">
+				<Select>
+					<Value>
+						(A:INCIDENCE ALPHA, degrees) 40 &gt;
+						(A:GEAR HANDLE POSITION, bool) 0 == and
+
+						(L:VMS_ENABLE) 1 == and
+						(L:AOA_FACTOR_3_INIT) 0 == and
+							if{
+								2 (>L:AOA_FACTOR_3)
+								1 (>L:AOA_FACTOR_3_INIT)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(A:INCIDENCE ALPHA, degrees) 40 &lt;
+						(L:VMS_ENABLE) 0 == or
+						(L:AOA_FACTOR_3_INIT) 1 == and
+							if{
+								0 (>L:AOA_FACTOR_3)
+								0 (>L:AOA_FACTOR_3_INIT)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		<Element Name="LOW ALTITUDE WARN">
+			<Element>
+				<Select>
+					<Value>
+						(L:PULL_UP_WARNING) 1 ==
+
+						(A:GEAR HANDLE POSITION, bool) 0 == and
+						(L:VMS_ENABLE) 1 == and
+						(L:LOW_ALTITUDE_INIT) 0 == and
+							if{
+								1 (>L:LOW_ALT)
+								1 (>L:LOW_ALTITUDE_INIT)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(L:PULL_UP_WARNING) 0 ==
+
+						(L:VMS_ENABLE) 0 == or
+						(L:LOW_ALTITUDE_INIT) 1 == and
+							if{
+								0 (>L:LOW_ALT)
+								0 (>L:LOW_ALTITUDE_INIT)
 							}
 					</Value>
 				</Select>
@@ -2177,6 +2215,67 @@ Version 5.0
 				</Element>
 			</Element>
 		</Element>
+		<Element Name="FlyUp">
+			<Element Name="FlyUP">
+				<Select>
+					<Value>
+						(L:GCAS_START) 1 ==
+						(L:VMS_ENABLE) 1 == and
+						(L:FLY_UP_INIT) 0 == and
+							if{
+								2 (>L:FlyUp)
+								1 (>L:VMS_FLYUP)
+								1 (>L:FLY_UP_INIT)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(L:GCAS_START) 0 ==
+						(L:VMS_ENABLE) 0 == or
+						(L:FLY_UP_INIT) 1 == and
+							if{
+								0 (>L:FlyUp)
+								0 (>L:VMS_FLYUP)
+								0 (>L:FLY_UP_INIT)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+
+		<Element Name="Deperture Warn">
+			<Element>
+				<Select>
+					<Value>
+						(A:DELTA HEADING RATE, Rpm) -30 &lt;
+						(A:DELTA HEADING RATE, Rpm) 30 &gt; or
+						(L:VMS_ENABLE) 1 == and
+						(L:DEP_WARN_INIT) 0 == and
+							if{
+								2 (>L:DEP_WARN)
+								1 (>L:DEP_WARN_INIT)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(A:DELTA HEADING RATE, Rpm) -30 &gt;
+						(A:DELTA HEADING RATE, Rpm) 30 &lt; and
+						(L:VMS_ENABLE) 0 == or
+						(L:DEP_WARN_INIT) 1 == and
+							if{
+								0 (>L:DEP_WARN)
+								0 (>L:DEP_WARN_INIT)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
 
 		<Element Name="NOZZLE CONTROL" >
 			<Element>
@@ -2279,56 +2378,6 @@ Version 5.0
 				</Select>
 			</Element>
 		</Element>
-		<Element Name="RAMP BANG">
-			<Element>
-				<Select>
-					<Value>
-						(L:AIR_INLET_CONT_PWR) 1 ==
-						(A:GENERAL ENG COMBUSTION:1) 1 == and
-						(A:SIM ON GROUND, bool) 1 == and
-						(L:L_RAMP_INIT) 0 == and
-							if{
-								1 (>L:RAMP_BANG) 1 (>L:L_RAMP_INIT)
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element>
-				<Select>
-					<Value>
-						(A:GENERAL ENG COMBUSTION:1) 0 ==
-						(L:L_RAMP_INIT) 1 == and
-							if{
-								0 (>L:L_RAMP_INIT)
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element>
-				<Select>
-					<Value>
-						(L:AIR_INLET_CONT_PWR) 1 ==
-						(A:GENERAL ENG COMBUSTION:2) 1 == and
-						(A:SIM ON GROUND, bool) 1 == and
-						(L:R_RAMP_INIT) 0 == and
-							if{
-								1 (>L:RAMP_BANG) 1 (>L:R_RAMP_INIT)
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element>
-				<Select>
-					<Value>
-						(A:GENERAL ENG COMBUSTION:2) 0 ==
-						(L:R_RAMP_INIT) 1 == and
-							if{
-								0 (>L:R_RAMP_INIT)
-							}
-					</Value>
-				</Select>
-			</Element>
-		</Element>
 
 		<Element Name="VMS">
 		<!--		VMS LVARS
@@ -2338,7 +2387,6 @@ Version 5.0
 		*(L:VMS_ENGINE_FIRE_LEFT)
 		*(L:VMS_ENGINE_FIRE_RIGHT)
 		*(L:VMS_FUEL_LOW)
-		*(L:VMS_LOW_ALTITUDE)
 		*(L:VMS_OVER_G) * LOOPS
 		*(L:VMS_OVERTEMP_LEFT)
 		*(L:VMS_OVERTEMP_RIGHT)
@@ -2389,11 +2437,11 @@ Version 5.0
 							(L:VMS_AMAD_FIRE) 0 == and
 							(L:VMS_ENGINE_FIRE_LEFT) 0 == and
 							(L:VMS_ENGINE_FIRE_RIGHT) 0 == and
-							(L:VMS_FUEL_LOW) 0 == and
 							(L:VMS_LOW_ALTITUDE) 0 == and
 							(L:VMS_OVER_G) 0 == and
 							(L:VMS_OVERTEMP_LEFT) 0 == and
 							(L:VMS_OVERTEMP_RIGHT) 0 == and
+							(L:VMS_FUEL_LOW) 0 == and
 
 							(L:VMS_ENABLE) 1 == and
 							(L:VMS_BINGO_FUEL_INIT) 0 == and
@@ -2576,7 +2624,6 @@ Version 5.0
 							(L:VMS_BINGO_FUEL) 0 == and
 							(L:VMS_ENGINE_FIRE_LEFT) 0 == and
 							(L:VMS_FUEL_LOW) 0 == and
-							(L:VMS_LOW_ALTITUDE) 0 == and
 							(L:VMS_OVER_G) 0 == and
 							(L:VMS_OVERTEMP_LEFT) 0 == and
 							(L:VMS_OVERTEMP_RIGHT) 0 == and
@@ -2612,7 +2659,6 @@ Version 5.0
 							(L:VMS_ENGINE_FIRE_LEFT) 0 == and
 							(L:VMS_ENGINE_FIRE_RIGHT) 0 == and
 							(L:VMS_FUEL_LOW) 0 == and
-							(L:VMS_LOW_ALTITUDE) 0 == and
 							(L:VMS_OVER_G) 0 == and
 							(L:VMS_OVERTEMP_LEFT) 0 == and
 							(L:VMS_OVERTEMP_RIGHT) 0 == and
@@ -2640,37 +2686,6 @@ Version 5.0
 				</Element>
 			</Element>
 
-			<Element Name="LOW ALTITUDE WARN">
-				<Element>
-					<Select>
-						<Value>
-							(L:PULL_UP_WARNING) 1 ==
-
-							(A:GEAR HANDLE POSITION, bool) 0 == and
-							(L:VMS_ENABLE) 1 == and
-							(L:VMS_LOW_ALTITUDE_INIT) 0 == and
-								if{
-									1 (>L:low_alt)
-									1 (>L:VMS_LOW_ALTITUDE_INIT)
-								}
-						</Value>
-					</Select>
-				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:PULL_UP_WARNING) 0 ==
-
-							(L:VMS_ENABLE) 0 == or
-							(L:VMS_LOW_ALTITUDE_INIT) 1 == and
-								if{
-									0 (>L:low_alt)
-									0 (>L:VMS_LOW_ALTITUDE_INIT)
-								}
-						</Value>
-					</Select>
-				</Element>
-			</Element>
 			<Element Name="OVER-G WARN">
 				<Element>
 					<Select>
