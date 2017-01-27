@@ -1,6 +1,8 @@
-﻿<Gauge Name="HUD-F15C" Version="6.50">
+﻿<Gauge Name="HUD-F15C" Version="7.00">
 
 <!--
+Version 7.00
+	[ADD] Debug
 Version 6.50
 	[EDT] Fairing
 Version 6.00

@@ -10,31 +10,23 @@
 		<FloatPosition>0.000,-50.000</FloatPosition>
 		<Size>512,512</Size>
 		<Macro id="TextColor" Name="TextColor">
-			<MacroValue>
-				(L:VSD_COLOR)
-			</MacroValue>
+			<MacroValue>(L:VSD_COLOR)</MacroValue>
 		</Macro>
 		<Macro id="TextColorDark" Name="TextColorDark">
-			<MacroValue>
-				(L:VSD_COLOR_DARK)
-			</MacroValue>
+			<MacroValue>(L:VSD_COLOR_DARK)</MacroValue>
 		</Macro>
 		<Macro id="SymColor" Name="SymColor">
-			<MacroValue>
-				(L:VSD_COLOR_SYM)
-			</MacroValue>
+			<MacroValue>(L:VSD_COLOR_SYM)</MacroValue>
 		</Macro>
 		<Macro id="SymColorDark" Name="SymColorDark">
-			<MacroValue>
-				(L:VSD_COLOR_SYM_DARK)
-			</MacroValue>
+			<MacroValue>(L:VSD_COLOR_SYM_DARK)</MacroValue>
 		</Macro>
 
 		<Element id="STBY">
             <FloatPosition>210.000,240.000</FloatPosition>
             <Visibility>
-				(L:VSD_PWR) 1 ==
-				(L:KNOB_FS_RDR_PWR) 1 == and
+				(L:VSD_SYS_STBY) 1 ==
+				(P:absolute time, number) 0.5 % 0.25 &lt; and
 			</Visibility>
             <GaugeText id="GaugeText">
                 <BackgroundColorScript>@TextColor</BackgroundColorScript>
@@ -45,7 +37,7 @@
 				<FontHeight>28</FontHeight>
 				<GaugeString>STBY</GaugeString>
 				<HorizontalAlign>CENTER</HorizontalAlign>
-				<Size>85,30</Size>
+				<Size>100,30</Size>
 				<Transparent>True</Transparent>
 			</GaugeText>
         </Element>
@@ -2322,10 +2314,8 @@
 
 		<Element id="VSD">
 			<Visibility>
-				(L:VSD-POWER, bool) 1 ==
-				(L:KNOB_FS_VSD_BRT) 0 &gt; and
-				(L:KNOB_FS_RDR_PWR) 1 &gt; and
-				</Visibility>
+				(L:VSD_POWER) 1 ==
+			</Visibility>
 			<Element id="DISPLAY">
 				<Element id="RDR">
 					<FloatPosition>59.000,59.000</FloatPosition>
@@ -2993,6 +2983,7 @@
 						<Element id="BREAK X">
 							<Visibility>
 								(L:MRM_BREAK) 1 ==
+								(L:HUD_MASTER_MODE, Enum) 2 == and
 							</Visibility>
 							<FloatPosition>256.000,256.000</FloatPosition>
 							<Element id="ACQUISITION SYMBOL">
@@ -3182,7 +3173,21 @@
 										<FontColorScript>@TextColor</FontColorScript>
 										<FontFace>Consolas</FontFace>
 										<FontHeight>28</FontHeight>
-										<GaugeString>%((L:LAAN) 0 == )%{if}T%{end}%{else}%((L:LAAN) abs 18 == )%{if}H%{end}%( (L:LAAN) 0 != (L:LAAN) abs 18 != &amp;&amp; )%{if}%((L:LAAN) abs)%!02d!%( (L:LAAN) 0 &gt; )%{if}R%{else}L%{end}</GaugeString>
+										<GaugeString>
+											%((L:LAAN) 0 == )
+												%{if}  T
+												%{end}
+												%{else}
+													%((L:LAAN) abs 18 == )
+														%{if}  H
+														%{end}
+											%( (L:LAAN) 0 != (L:LAAN) abs 18 != and )
+											%{if}
+												%((L:LAAN) abs)%!02d!%((L:LAAN) 0 &gt; )
+													%{if}R
+													%{else}L
+													%{end}
+											</GaugeString>
 										<HorizontalAlign>LEFT</HorizontalAlign>
 										<Size>85,35</Size>
 										<Transparent>True</Transparent>

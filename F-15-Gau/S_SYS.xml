@@ -106,10 +106,10 @@ Version 5.0
 					0 (>L:SW1_FS_COOL_4)
 					1 (>L:SW2_FS_CC)
 
-					0 (>L:KNOB_FS_ILS_VOL)
-					0 (>L:SW1_FS_TCN_X_Y)
-					0 (>L:KNOB_FS_TCN_MODE)
-					0 (>L:KNOB_FS_TCN_VOL)
+					1 (>L:KNOB_FS_ILS_VOL)
+					1 (>L:SW1_FS_TCN_X_Y)
+					2 (>L:KNOB_FS_TCN_MODE)
+					1 (>L:KNOB_FS_TCN_VOL)
 
 					2 (>L:SW2_FS_CAS_YAW)
 					2 (>L:SW2_FS_CAS_PITCH)
@@ -134,18 +134,18 @@ Version 5.0
 					3 (>L:KNOB_FS_ICCP_TEWS_CAUT)
 					3 (>L:KNOB_FS_ICCP_TEWS_LAUNCH)
 					0 (>L:BTN_FS_ICCP_TEWS_LAUNCH)
-					0 (>L:KNOB_FS_ICCP_ICS)
+					3 (>L:KNOB_FS_ICCP_ICS)
 					0 (>L:KNOB_FS_ICCP_WPN)
 					0 (>L:KNOB_FS_ICCP_R2_VOL)
 					0 (>L:KNOB_FS_ICCP_JTIDS)
 
 					0 (>L:SW2_FS_ICCP2_MODE_SEL)
-					2 (>L:BTN_FS_ICCP2_CHAN_SET)
+					0 (>L:BTN_FS_ICCP2_CHAN_SET)
 					0 (>L:KNOB_FS_ICCP2_UHF2_VOL)
 					1 (>L:SW1_FS_ICCP2_CIPHER_ZERO)
-					2 (>L:SW2_FS_ICCP2_CIPHER_SEL)
+					0 (>L:SW2_FS_ICCP2_CIPHER_SEL)
 					0 (>L:SW2_FS_ICCP2_GRD_SEL)
-					2 (>L:SW2_FS_ICCP2_ADF)
+					0 (>L:SW2_FS_ICCP2_ADF)
 
 					6 (>L:KNOB_FS_ICCP3_INT)
 					0 (>L:KNOB_FS_ICCP3_CHAN)
@@ -246,7 +246,7 @@ Version 5.0
 					1 (>L:KNOB_FS_VSD_CONT)
 
 					11 (>L:KNOB_FS_MCCP_CHAN)
-					0 (>L:KNOB_FS_MCCP_VOL)
+					3 (>L:KNOB_FS_MCCP_VOL)
 					1 (>L:KNOB_FS_MCCP_MODE)
 					2 (>L:SW2_FS_MCCP_MODE)
 
@@ -1914,6 +1914,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:PULL_UP_WARNING) 1 ==
+						(L:GCAS_START) 0 == and
 
 						(A:GEAR HANDLE POSITION, bool) 0 == and
 						(L:VMS_ENABLE) 1 == and
@@ -1929,6 +1930,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:PULL_UP_WARNING) 0 ==
+						(L:GCAS_START) 1 == or
 
 						(L:VMS_ENABLE) 0 == or
 						(L:LOW_ALTITUDE_INIT) 1 == and
@@ -1997,221 +1999,241 @@ Version 5.0
 		</Element>
 		<Element Name="TEWS CONTROL" >
 			<Element Name="GPS MODE (FICTIONAL)">
-				<Element>
-					<Select>
-						<Value>
-							(L:TEWS-POWER) 1 ==
-							(L:RWR_AC_PWR) 1 == and
-							(L:VMS_MUTE) 0 == and
-							(L:KNOB_FS_AUD_TEWS_CAUT) 0 != and
-							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
-							(A:GPS WP DISTANCE,NMILES) 20 &lt; and
-							(L:TEWS_30_INIT) 0 == and
-								if{
-									2 (>L:TEWS_30) 1 (>L:TEWS_30_INIT)
-								}
-						</Value>
-					</Select>
+				<Element Name="WARNING(Under 20NM)">
+					<Element>
+						<Select>
+							<Value>
+								(L:TEWS_POWER) 1 ==
+								(L:TEWS_LAUNCH_ENABLE) 1 == and
+								(L:RWR_AC_PWR) 1 == and
+								(L:VMS_MUTE) 0 == and
+								(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
+								(A:GPS WP DISTANCE,NMILES) 15 &lt; and
+								(L:TEWS_WARN_INIT) 0 == and
+									if{
+										2 (>L:TEWS_Warning) 1 (>L:TEWS_WARN_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
+					<Element>
+						<Select>
+							<Value>
+								(L:TEWS_POWER) 0 ==
+								(L:TEWS_LAUNCH_ENABLE) 0 == or
+								(L:RWR_AC_PWR) 0 == or
+								(L:VMS_MUTE) 1 == or
+								(A:GPS IS ACTIVE FLIGHT PLAN, bool) 0 == or
+								(A:GPS WP DISTANCE,NMILES) 15 &gt; or
+								(L:TEWS_WARN_INIT) 1 == and
+									if{
+										0 (>L:TEWS_Warning) 0 (>L:TEWS_WARN_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
 				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:TEWS-POWER) 0 ==
-							(L:RWR_AC_PWR) 0 == or
-							(L:VMS_MUTE) 1 == or
-							(L:KNOB_FS_AUD_TEWS_CAUT) 0 == or
-							(A:GPS WP DISTANCE,NMILES) 20 &gt; or
-							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 0 == or
-							(L:TEWS_30_INIT) 1 == and
-								if{
-									0 (>L:TEWS_30) 0 (>L:TEWS_30_INIT)
-								}
-						</Value>
-					</Select>
+				<Element Name="15NM">
+					<Element>
+						<Select>
+							<Value>
+								(L:TEWS_POWER) 1 ==
+								(L:TEWS_CAUTION_ENABLE) 1 == and
+								(L:RWR_AC_PWR) 1 == and
+								(L:VMS_MUTE) 0 == and
+								(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
+								(A:GPS WP DISTANCE,NMILES) 15 &lt; and
+								(L:TEWS_15_INIT) 0 == and
+									if{
+										1 (>L:TEWS_Launch) 1 (>L:TEWS_15_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
+					<Element>
+						<Select>
+							<Value>
+								(L:TEWS_POWER) 0 ==
+								(L:TEWS_CAUTION_ENABLE) 0 == or
+								(L:RWR_AC_PWR) 0 == or
+								(L:VMS_MUTE) 1 == or
+								(A:GPS WP DISTANCE,NMILES) 15 &gt; or
+								(A:GPS IS ACTIVE FLIGHT PLAN, bool) 0 == or
+								(L:TEWS_15_INIT) 1 == and
+									if{
+										0 (>L:TEWS_15_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
 				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:TEWS-POWER) 1 ==
-							(L:RWR_AC_PWR) 1 == and
-							(L:VMS_MUTE) 0 == and
-							(L:KNOB_FS_AUD_TEWS_CAUT) 0 != and
-							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
-							(A:GPS WP DISTANCE,NMILES) 15 &lt; and
-							(L:TEWS_10_INIT) 0 == and
-								if{
-									1 (>L:TEWS_10) 1 (>L:TEWS_10_INIT)
-								}
-						</Value>
-					</Select>
+				<Element Name="10NM">
+					<Element>
+						<Select>
+							<Value>
+								(L:TEWS_POWER) 1 ==
+								(L:TEWS_CAUTION_ENABLE) 1 == and
+								(L:RWR_AC_PWR) 1 == and
+								(L:VMS_MUTE) 0 == and
+								(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
+								(A:GPS WP DISTANCE,NMILES) 10 &lt; and
+								(L:TEWS_10_INIT) 0 == and
+									if{
+										1 (>L:TEWS_Launch) 1 (>L:TEWS_10_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
+					<Element>
+						<Select>
+							<Value>
+								(L:TEWS_POWER) 0 ==
+								(L:TEWS_CAUTION_ENABLE) 0 == or
+								(L:RWR_AC_PWR) 0 == or
+								(L:VMS_MUTE) 1 == or
+								(A:GPS IS ACTIVE FLIGHT PLAN, bool) 0 == or
+								(A:GPS WP DISTANCE,NMILES) 10 &gt; or
+								(L:TEWS_10_INIT) 1 == and
+									if{
+										0 (>L:TEWS_10_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
 				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:TEWS-POWER) 0 ==
-							(L:RWR_AC_PWR) 0 == or
-							(L:VMS_MUTE) 1 == or
-							(L:KNOB_FS_AUD_TEWS_CAUT) 0 == or
-							(A:GPS WP DISTANCE,NMILES) 15 &gt; or
-							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 0 == or
-							(L:TEWS_10_INIT) 1 == and
-								if{
-									0 (>L:TEWS_10_INIT)
-								}
-						</Value>
-					</Select>
-				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:TEWS-POWER) 1 ==
-							(L:RWR_AC_PWR) 1 == and
-							(L:VMS_MUTE) 0 == and
-							(L:KNOB_FS_AUD_TEWS_CAUT) 0 != and
-							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
-							(A:GPS WP DISTANCE,NMILES) 10 &lt; and
-							(L:TEWS_5_INIT) 0 == and
-								if{
-									1 (>L:TEWS_5) 1 (>L:TEWS_5_INIT)
-								}
-						</Value>
-					</Select>
-				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:TEWS-POWER) 0 ==
-							(L:RWR_AC_PWR) 0 == or
-							(L:VMS_MUTE) 1 == or
-							(L:KNOB_FS_AUD_TEWS_CAUT) 0 == or
-							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 0 == or
-							(A:GPS WP DISTANCE,NMILES) 10 &gt; or
-							(L:TEWS_5_INIT) 1 == and
-								if{
-									0 (>L:TEWS_5_INIT)
-								}
-						</Value>
-					</Select>
-				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:TEWS-POWER) 1 ==
-							(L:RWR_AC_PWR) 1 == and
-							(L:VMS_MUTE) 0 == and
-							(L:KNOB_FS_AUD_TEWS_CAUT) 0 != and
-							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
-							(A:GPS WP DISTANCE,NMILES) 5 &lt; and
-							(A:GPS WP DISTANCE,NMILES) 4.5 &gt; and
-							(L:TEWS_2_INIT) 0 == and
-								if{
-									2 (>L:TEWS_2) 1 (>L:TEWS_5) 1 (>L:TEWS_2_INIT)
-								}
-						</Value>
-					</Select>
-				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:TEWS-POWER) 0 ==
-							(L:RWR_AC_PWR) 0 == or
-							(L:VMS_MUTE) 1 == or
-							(L:KNOB_FS_AUD_TEWS_CAUT) 0 == or
-							(A:GPS IS ACTIVE FLIGHT PLAN, bool) 0 == or
-							(A:GPS WP DISTANCE,NMILES) 5 &gt; or
-							(A:GPS WP DISTANCE,NMILES) 4.5 &lt; or
-							(L:TEWS_2_INIT) 1 == and
-								if{
-									0 (>L:TEWS_2) 0 (>L:TEWS_5) 0 (>L:TEWS_2_INIT)
-								}
-						</Value>
-					</Select>
+				<Element Name="5NM">
+					<Element>
+						<Select>
+							<Value>
+								(L:TEWS_POWER) 1 ==
+								(L:TEWS_CAUTION_ENABLE) 1 == and
+								(L:TEWS_LAUNCH_ENABLE) 1 == and
+								(L:RWR_AC_PWR) 1 == and
+								(L:VMS_MUTE) 0 == and
+								(A:GPS IS ACTIVE FLIGHT PLAN, bool) 1 == and
+								(A:GPS WP DISTANCE,NMILES) 5 &lt; and
+								(L:TEWS_2_INIT) 0 == and
+									if{
+										1 (>L:TEWS_Launch) 1 (>L:TEWS_2_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
+					<Element>
+						<Select>
+							<Value>
+								(L:TEWS_POWER) 0 ==
+								(L:TEWS_CAUTION_ENABLE) 0 == or
+								(L:TEWS_LAUNCH_ENABLE) 0 == or
+								(L:RWR_AC_PWR) 0 == or
+								(L:VMS_MUTE) 1 == or
+								(A:GPS IS ACTIVE FLIGHT PLAN, bool) 0 == or
+								(A:GPS WP DISTANCE,NMILES) 5 &gt; or
+								(L:TEWS_2_INIT) 1 == and
+									if{
+										0 (>L:TEWS_2) 0 (>L:TEWS_Launch) 0 (>L:TEWS_2_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
 				</Element>
 			</Element>
 			<Element Name="AIR INTERCEPT MODE">
-				<Element>
-					<Select>
-						<Value>
-							(L:TEWS-POWER) 1 ==
-							(L:INTERCEPT) 1 == and
-							(L:RWR_AC_PWR) 1 == and
-							(L:VMS_MUTE) 0 == and
-							(L:RDR_TEWS_30_INIT) 0 == and
-								if{
-									2 (>L:TEWS_30) 1 (>L:RDR_TEWS_30_INIT)
-								}
-						</Value>
-					</Select>
+				<Element Name="Under 10NM (Warning)">
+					<Element>
+						<Select>
+							<Value>
+								(L:TEWS_POWER) 1 ==
+								(L:TEWS_CAUTION_ENABLE) 1 == and
+								(L:AI_10NM) 1 == and
+								(L:RWR_AC_PWR) 1 == and
+								(L:VMS_MUTE) 0 == and
+								(L:RDR_TEWS_WARN_INIT) 0 == and
+									if{
+										2 (>L:TEWS_Warning) 1 (>L:RDR_TEWS_WARN_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
+					<Element>
+						<Select>
+							<Value>
+								(L:TEWS_POWER) 0 ==
+								(L:TEWS_CAUTION_ENABLE) 0 == or
+								(L:AI_10NM) 0 == or
+								(L:RWR_AC_PWR) 0 == or
+								(L:VMS_MUTE) 1 == or
+								(L:RDR_TEWS_WARN_INIT) 1 == and
+									if{
+										0 (>L:TEWS_Warning) 0 (>L:RDR_TEWS_WARN_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
 				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:TEWS-POWER) 0 ==
-							(L:INTERCEPT) 0 == or
-							(L:RWR_AC_PWR) 0 == or
-							(L:VMS_MUTE) 1 == or
-							(L:RDR_TEWS_30_INIT) 1 == and
-								if{
-									0 (>L:TEWS_30) 0 (>L:RDR_TEWS_30_INIT)
-								}
-						</Value>
-					</Select>
+				<Element Name="10NM (Launch)">
+					<Element>
+						<Select>
+							<Value>
+								(L:TEWS_POWER) 1 ==
+								(L:TEWS_LAUNCH_ENABLE) 1 == and
+								(L:AI_10NM) 1 == and
+								(L:RWR_AC_PWR) 1 == and
+								(L:VMS_MUTE) 0 == and
+								(L:RDR_TEWS_30_INIT) 0 == and
+									if{
+										1 (>L:TEWS_Launch) 1 (>L:RDR_TEWS_30_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
+					<Element>
+						<Select>
+							<Value>
+								(L:TEWS_POWER) 0 ==
+								(L:TEWS_LAUNCH_ENABLE) 0 == or
+								(L:AI_10NM) 0 == or
+								(L:RWR_AC_PWR) 0 == or
+								(L:VMS_MUTE) 1 == or
+								(L:RDR_TEWS_30_INIT) 1 == and
+									if{
+										0 (>L:TEWS_Launch) 0 (>L:RDR_TEWS_30_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
 				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:TEWS-POWER) 1 ==
-							(L:INTERCEPT) 1 == and
-							(L:RWR_AC_PWR) 1 == and
-							(L:VMS_MUTE) 0 == and
-							(L:RDR_TEWS_10_INIT) 0 == and
-								if{
-									1 (>L:TEWS_10) 1 (>L:RDR_TEWS_10_INIT)
-								}
-						</Value>
-					</Select>
-				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:TEWS-POWER) 0 ==
-							(L:INTERCEPT) 0 == or
-							(L:RWR_AC_PWR) 0 == or
-							(L:VMS_MUTE) 1 == or
-							(L:RDR_TEWS_10_INIT) 1 == and
-								if{
-									0 (>L:RDR_TEWS_10_INIT)
-								}
-						</Value>
-					</Select>
-				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:TEWS-POWER) 1 ==
-							(L:INTERCEPT_5) 1 == and
-							(L:RWR_AC_PWR) 1 == and
-							(L:VMS_MUTE) 0 == and
-							(L:RDR_TEWS_5_INIT) 0 == and
-								if{
-									1 (>L:TEWS_5) 1 (>L:RDR_TEWS_5_INIT)
-								}
-						</Value>
-					</Select>
-				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:TEWS-POWER) 0 ==
-							(L:INTERCEPT_5) 0 == or
-							(L:RWR_AC_PWR) 0 == or
-							(L:VMS_MUTE) 1 == or
-							(L:RDR_TEWS_5_INIT) 1 == and
-								if{
-									0 (>L:RDR_TEWS_5_INIT)
-								}
-						</Value>
-					</Select>
+				<Element Name="5NM (Launch)">
+					<Element>
+						<Select>
+							<Value>
+								(L:TEWS_POWER) 1 ==
+								(L:TEWS_LAUNCH_ENABLE) 1 == and
+								(L:AI_5NM) 1 == and
+								(L:RWR_AC_PWR) 1 == and
+								(L:VMS_MUTE) 0 == and
+								(L:RDR_TEWS_LAUNCH_INIT) 0 == and
+									if{
+										1 (>L:TEWS_Launch) 1 (>L:RDR_TEWS_LAUNCH_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
+					<Element>
+						<Select>
+							<Value>
+								(L:TEWS_POWER) 0 ==
+								(L:TEWS_LAUNCH_ENABLE) 0 == or
+								(L:AI_5NM) 0 == or
+								(L:RWR_AC_PWR) 0 == or
+								(L:VMS_MUTE) 1 == or
+								(L:RDR_TEWS_LAUNCH_INIT) 1 == and
+									if{
+										0 (>L:RDR_TEWS_LAUNCH_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
 				</Element>
 			</Element>
 		</Element>
@@ -2382,146 +2404,47 @@ Version 5.0
 		<Element Name="VMS">
 		<!--		VMS LVARS
 
-		*(L:VMS_AMAD_FIRE)
-		*(L:VMS_BINGO_FUEL)
+		*(L:VMS_FTIT_OVERTEMP_LEFT)
+		*(L:VMS_FTIT_OVERTEMP_RIGHT)
 		*(L:VMS_ENGINE_FIRE_LEFT)
 		*(L:VMS_ENGINE_FIRE_RIGHT)
+		*(L:VMS_AMAD_FIRE)
+		*(L:VMS_BINGO_FUEL)
 		*(L:VMS_FUEL_LOW)
 		*(L:VMS_OVER_G) * LOOPS
-		*(L:VMS_OVERTEMP_LEFT)
-		*(L:VMS_OVERTEMP_RIGHT)
 		-->
-			<Element Name="VMS MUTE" >
-				<Element>
-					<Select>
-						<Value>
-							(L:VMS_TIME, Seconds) 0 == and
-								if{
-									(P:ABSOLUTE TIME, Seconds) (>L:VMS_TIME, Seconds) 1 (>L:VMS_MUTE) 0 (>L:BTN_FS_ICCP3_TEWS_LAUNCH)
-								}
-						</Value>
-					</Select>
-				</Element>
-				<Element Name="IF VMS MUTED FOR 1 MINUTES THEN RESET SYSTEM">
-					<Select>
-						<Value>
-							(L:VMS_MUTE) 1 ==
-							(P:ABSOLUTE TIME, Seconds) (L:VMS_TIME, Seconds) - 60 &gt; and
-								if{
-									0 (>L:VMS_MUTE) 0 (>L:VMS_TIME, Seconds)
-								}
-						</Value>
-					</Select>
-				</Element>
-				<Element Name="VMS SYSTEM PWR">
-					<Select>
-						<Value>
-							(L:ICS_CONT_PWR) 1 ==
-							(L:VMS_MUTE) 0 == and
-								if{
-									1 (>L:VMS_ENABLE)
-								}
-								els{
-									0 (>L:VMS_ENABLE)
-								}
-						</Value>
-					</Select>
-				</Element>
-			</Element>
-			<Element Name="BINGO FUEL WARN" >
-				<Element>
-					<Select>
-						<Value>
-							(L:FUEL_INTERNAL) (L:SETTING BNGO) &lt;
-
-							(L:VMS_AMAD_FIRE) 0 == and
-							(L:VMS_ENGINE_FIRE_LEFT) 0 == and
-							(L:VMS_ENGINE_FIRE_RIGHT) 0 == and
-							(L:VMS_LOW_ALTITUDE) 0 == and
-							(L:VMS_OVER_G) 0 == and
-							(L:VMS_OVERTEMP_LEFT) 0 == and
-							(L:VMS_OVERTEMP_RIGHT) 0 == and
-							(L:VMS_FUEL_LOW) 0 == and
-
-							(L:VMS_ENABLE) 1 == and
-							(L:VMS_BINGO_FUEL_INIT) 0 == and
-								if{
-									1 (>L:VMS_BINGO_FUEL) 1 (>L:VMS_BINGO_FUEL_INIT)
-								}
-						</Value>
-					</Select>
-				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:FUEL_INTERNAL) (L:SETTING BNGO) &gt;
-
-							(L:VMS_ENABLE) 0 == or
-							(L:VMS_BINGO_FUEL_INIT) 1 == and
-								if{
-									0 (>L:VMS_BINGO_FUEL_INIT)
-								}
-						</Value>
-					</Select>
-				</Element>
-			</Element>
-			<Element Name="FUEL LOW WARN">
-				<Element>
-					<Select>
-						<Value>
-							(L:FUEL_LOW_WARN) 1 ==
-
-							(L:VMS_AMAD_FIRE) 0 == and
-							(L:VMS_BINGO_FUEL) 0 == and
-							(L:VMS_ENGINE_FIRE_LEFT) 0 == and
-							(L:VMS_ENGINE_FIRE_RIGHT) 0 == and
-							(L:VMS_LOW_ALTITUDE) 0 == and
-							(L:VMS_OVER_G) 0 == and
-							(L:VMS_OVERTEMP_LEFT) 0 == and
-							(L:VMS_OVERTEMP_RIGHT) 0 == and
-
-							(L:VMS_ENABLE) 1 == and
-							(L:VMS_FUEL_LOW_INIT) 0 == and
-								if{
-									1 (>L:VMS_FUEL_LOW) 1 (>L:VMS_FUEL_LOW_INIT)
-								}
-						</Value>
-					</Select>
-				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:FUEL_LOW_WARN) 0 ==
-
-							(L:VMS_ENABLE) 0 == or
-							(L:VMS_FUEL_LOW_INIT) 1 == and
-								if{
-									0 (>L:VMS_FUEL_LOW_INIT)
-								}
-						</Value>
-					</Select>
-				</Element>
+			<Element Name="VMS SYSTEM PWR">
+				<Select>
+					<Value>
+						(L:ICS_ENABLE) 1 ==
+							if{
+								1 (>L:VMS_ENABLE)
+							}
+							els{
+								0 (>L:VMS_ENABLE)
+							}
+					</Value>
+				</Select>
 			</Element>
 
-			<Element Name="OVERTEMP WARN">
+			<Element Name="FTIT OVERTEMP WARN">
 				<Element Name="LEFT WARN">
 					<Select>
 						<Value>
 							(A:TURB ENG ITT:1, Celsius) 960 &gt;
 
-							(L:VMS_AMAD_FIRE) 0 == and
-							(L:VMS_BINGO_FUEL) 0 == and
+							(L:VMS_FTIT_OVERTEMP_RIGHT) 0 == and
 							(L:VMS_ENGINE_FIRE_LEFT) 0 == and
 							(L:VMS_ENGINE_FIRE_RIGHT) 0 == and
+							(L:VMS_AMAD_FIRE) 0 == and
+							(L:VMS_BINGO_FUEL) 0 == and
 							(L:VMS_FUEL_LOW) 0 == and
-							(L:VMS_LOW_ALTITUDE) 0 == and
 							(L:VMS_OVER_G) 0 == and
-							(L:VMS_OVERTEMP_RIGHT) 0 == and
 
 							(L:VMS_ENABLE) 1 == and
-							(L:VMS_OVERTEMP_LEFT_INIT) 0 == and
+							(L:VMS_FTIT_OVERTEMP_LEFT_INIT) 0 == and
 								if{
-									1 (>L:VMS_OVERTEMP_LEFT) 1 (>L:VMS_OVERTEMP_LEFT_INIT)
+									1 (>L:VMS_FTIT_OVERTEMP_LEFT) 1 (>L:VMS_FTIT_OVERTEMP_LEFT_INIT)
 								}
 						</Value>
 					</Select>
@@ -2532,9 +2455,9 @@ Version 5.0
 							(A:TURB ENG ITT:1, Celsius) 960 &lt;
 
 							(L:VMS_ENABLE) 0 == or
-							(L:VMS_OVERTEMP_LEFT_INIT) 1 == and
+							(L:VMS_FTIT_OVERTEMP_LEFT_INIT) 1 == and
 								if{
-									0 (>L:VMS_OVERTEMP_LEFT_INIT)
+									0 (>L:VMS_FTIT_OVERTEMP_LEFT_INIT)
 								}
 						</Value>
 					</Select>
@@ -2545,19 +2468,18 @@ Version 5.0
 						<Value>
 							(A:TURB ENG ITT:2, Celsius) 960 &gt;
 
-							(L:VMS_AMAD_FIRE) 0 == and
-							(L:VMS_BINGO_FUEL) 0 == and
+							(L:VMS_FTIT_OVERTEMP_LEFT) 0 == and
 							(L:VMS_ENGINE_FIRE_LEFT) 0 == and
 							(L:VMS_ENGINE_FIRE_RIGHT) 0 == and
+							(L:VMS_AMAD_FIRE) 0 == and
+							(L:VMS_BINGO_FUEL) 0 == and
 							(L:VMS_FUEL_LOW) 0 == and
-							(L:VMS_LOW_ALTITUDE) 0 == and
 							(L:VMS_OVER_G) 0 == and
-							(L:VMS_OVERTEMP_LEFT) 0 == and
 
 							(L:VMS_ENABLE) 1 == and
-							(L:VMS_OVERTEMP_RIGHT_INIT) 0 == and
+							(L:VMS_FTIT_OVERTEMP_RIGHT_INIT) 0 == and
 								if{
-									1 (>L:VMS_OVERTEMP_RIGHT) 1 (>L:VMS_OVERTEMP_RIGHT_INIT)
+									1 (>L:VMS_FTIT_OVERTEMP_RIGHT) 1 (>L:VMS_FTIT_OVERTEMP_RIGHT_INIT)
 								}
 						</Value>
 					</Select>
@@ -2568,29 +2490,27 @@ Version 5.0
 							(A:TURB ENG ITT:2, Celsius) 960 &lt;
 
 							(L:VMS_ENABLE) 0 == or
-							(L:VMS_OVERTEMP_RIGHT_INIT) 1 == and
+							(L:VMS_FTIT_OVERTEMP_RIGHT_INIT) 1 == and
 								if{
-									0 (>L:VMS_OVERTEMP_RIGHT_INIT)
+									0 (>L:VMS_FTIT_OVERTEMP_RIGHT_INIT)
 								}
 						</Value>
 					</Select>
 				</Element>
 			</Element>
-
 			<Element Name="FIRE WARN">
 				<Element Name="LEFT ENG">
 					<Select>
 						<Value>
 							(L:L_ENG_FIRE) 1 ==
 
+							(L:VMS_FTIT_OVERTEMP_LEFT) 0 == and
+							(L:VMS_FTIT_OVERTEMP_RIGHT) 0 == and
+							(L:VMS_ENGINE_FIRE_RIGHT) 0 == and
 							(L:VMS_AMAD_FIRE) 0 == and
 							(L:VMS_BINGO_FUEL) 0 == and
-							(L:VMS_ENGINE_FIRE_RIGHT) 0 == and
 							(L:VMS_FUEL_LOW) 0 == and
-							(L:VMS_LOW_ALTITUDE) 0 == and
 							(L:VMS_OVER_G) 0 == and
-							(L:VMS_OVERTEMP_LEFT) 0 == and
-							(L:VMS_OVERTEMP_RIGHT) 0 == and
 
 							(L:VMS_ENABLE) 1 == and
 							(L:VMS_ENGINE_FIRE_LEFT_INIT) 0 == and
@@ -2620,13 +2540,13 @@ Version 5.0
 						<Value>
 							(L:R_ENG_FIRE) 1 ==
 
+							(L:VMS_FTIT_OVERTEMP_LEFT) 0 == and
+							(L:VMS_FTIT_OVERTEMP_RIGHT) 0 == and
+							(L:VMS_ENGINE_FIRE_LEFT) 0 == and
 							(L:VMS_AMAD_FIRE) 0 == and
 							(L:VMS_BINGO_FUEL) 0 == and
-							(L:VMS_ENGINE_FIRE_LEFT) 0 == and
 							(L:VMS_FUEL_LOW) 0 == and
 							(L:VMS_OVER_G) 0 == and
-							(L:VMS_OVERTEMP_LEFT) 0 == and
-							(L:VMS_OVERTEMP_RIGHT) 0 == and
 
 							(L:VMS_ENABLE) 1 == and
 							(L:VMS_ENGINE_FIRE_RIGHT_INIT) 0 == and
@@ -2655,13 +2575,13 @@ Version 5.0
 						<Value>
 							(L:AMAD_FIRE) 1 ==
 
-							(L:VMS_BINGO_FUEL) 0 == and
+							(L:VMS_FTIT_OVERTEMP_LEFT) 0 == and
+							(L:VMS_FTIT_OVERTEMP_RIGHT) 0 == and
 							(L:VMS_ENGINE_FIRE_LEFT) 0 == and
 							(L:VMS_ENGINE_FIRE_RIGHT) 0 == and
+							(L:VMS_BINGO_FUEL) 0 == and
 							(L:VMS_FUEL_LOW) 0 == and
 							(L:VMS_OVER_G) 0 == and
-							(L:VMS_OVERTEMP_LEFT) 0 == and
-							(L:VMS_OVERTEMP_RIGHT) 0 == and
 
 							(L:VMS_ENABLE) 1 == and
 							(L:VMS_AMAD_FIRE_INIT) 0 == and
@@ -2685,6 +2605,78 @@ Version 5.0
 					</Select>
 				</Element>
 			</Element>
+			<Element Name="BINGO FUEL WARN" >
+				<Element>
+					<Select>
+						<Value>
+							(L:FUEL_INTERNAL) (L:SETTING BNGO) &lt;
+
+							(L:VMS_FTIT_OVERTEMP_LEFT) 0 == and
+							(L:VMS_FTIT_OVERTEMP_RIGHT) 0 == and
+							(L:VMS_ENGINE_FIRE_LEFT) 0 == and
+							(L:VMS_ENGINE_FIRE_RIGHT) 0 == and
+							(L:VMS_AMAD_FIRE) 0 == and
+							(L:VMS_FUEL_LOW) 0 == and
+							(L:VMS_OVER_G) 0 == and
+
+							(L:VMS_ENABLE) 1 == and
+							(L:VMS_BINGO_FUEL_INIT) 0 == and
+								if{
+									1 (>L:VMS_BINGO_FUEL) 1 (>L:VMS_BINGO_FUEL_INIT)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:FUEL_INTERNAL) (L:SETTING BNGO) &gt;
+
+							(L:VMS_ENABLE) 0 == or
+							(L:VMS_BINGO_FUEL_INIT) 1 == and
+								if{
+									0 (>L:VMS_BINGO_FUEL_INIT)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
+			<Element Name="FUEL LOW WARN">
+				<Element>
+					<Select>
+						<Value>
+							(L:FUEL_LOW_WARN) 1 ==
+
+							(L:VMS_FTIT_OVERTEMP_LEFT) 0 == and
+							(L:VMS_FTIT_OVERTEMP_RIGHT) 0 == and
+							(L:VMS_ENGINE_FIRE_LEFT) 0 == and
+							(L:VMS_ENGINE_FIRE_RIGHT) 0 == and
+							(L:VMS_AMAD_FIRE) 0 == and
+							(L:VMS_BINGO_FUEL) 0 == and
+							(L:VMS_OVER_G) 0 == and
+
+							(L:VMS_ENABLE) 1 == and
+							(L:VMS_FUEL_LOW_INIT) 0 == and
+								if{
+									1 (>L:VMS_FUEL_LOW) 1 (>L:VMS_FUEL_LOW_INIT)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+					<Select>
+						<Value>
+							(L:FUEL_LOW_WARN) 0 ==
+
+							(L:VMS_ENABLE) 0 == or
+							(L:VMS_FUEL_LOW_INIT) 1 == and
+								if{
+									0 (>L:VMS_FUEL_LOW_INIT)
+								}
+						</Value>
+					</Select>
+				</Element>
+			</Element>
 
 			<Element Name="OVER-G WARN">
 				<Element>
@@ -2692,15 +2684,13 @@ Version 5.0
 						<Value>
 							(A:G FORCE, G FORCE) (L:OWS_OVER_G_LIMIT) &gt;
 
-							(L:VMS_AMAD_FIRE) 0 == and
-							(L:VMS_BINGO_FUEL) 0 == and
+							(L:VMS_FTIT_OVERTEMP_LEFT) 0 == and
+							(L:VMS_FTIT_OVERTEMP_RIGHT) 0 == and
 							(L:VMS_ENGINE_FIRE_LEFT) 0 == and
 							(L:VMS_ENGINE_FIRE_RIGHT) 0 == and
+							(L:VMS_AMAD_FIRE) 0 == and
+							(L:VMS_BINGO_FUEL) 0 == and
 							(L:VMS_FUEL_LOW) 0 == and
-							(L:VMS_LOW_ALTITUDE) 0 == and
-							(L:VMS_OVERTEMP_LEFT) 0 == and
-							(L:VMS_OVERTEMP_RIGHT) 0 == and
-
 
 							(A:GEAR HANDLE POSITION, bool) 0 == and
 							(L:VMS_ENABLE) 1 == and

@@ -9,24 +9,17 @@
     <SimGauge.Gauge id="TEWS Display Unit (65Z-J009)" ArtDirectory=".">
 		<Size>512,512</Size>
         <Macro id="SymColor" Name="SymColor">
-            <MacroValue>
-				(L:TEWS_COLOR_SYM)
-			</MacroValue>
+            <MacroValue>(L:TEWS_COLOR_SYM)</MacroValue>
         </Macro>
 		<Macro id="SymColorDark" Name="SymColorDark">
-            <MacroValue>
-				(L:TEWS_COLOR_SYM_DARK)
-			</MacroValue>
+            <MacroValue>(L:TEWS_COLOR_SYM_DARK)</MacroValue>
         </Macro>
 
 		<Element id="STBY">
             <FloatPosition>210.000,240.000</FloatPosition>
             <Visibility>
-				(L:TEWS_SYS_PWR) 1 ==
-				(L:TEWS_POD_CONT_PWR) 1 == and
-				(L:SW1_FS_TEWS_ICS) 1 == and
-				(L:TEWS-POWER, bool) 0 == and
-				(P:absolute time, number) 0.5 % 0.25 &lt; and
+				(L:TEWS_SYS_STBY) 1 ==
+				(P:absolute time, number) 0.5 % 0.25 &lt; and				
 			</Visibility>
             <GaugeText id="GaugeText">
                 <BackgroundColorScript>@SymColor</BackgroundColorScript>
@@ -42,10 +35,12 @@
             </GaugeText>
         </Element>
 		<Element id="TEWS">
-			<Visibility>(L:TEWS-POWER, bool) 1 ==</Visibility>
+			<Visibility>
+				(L:TEWS_POWER) 1 ==
+				(L:TEWS_SYS_STBY) 0 == and
+			</Visibility>
 			<Element id="DISPLAY">
 				<Element id="RWR">
-				<Visibility>(L:TEWS_SYS_PWR) 1 ==</Visibility>
 					<MaskImage id="TEWS/TEWS_MASK.bmp" Name="TEWS/TEWS_MASK.bmp"></MaskImage>
 					<CustomDraw id="CustomDraw" Name="fs9gps:1:map">
 						<Size>512,512</Size>
