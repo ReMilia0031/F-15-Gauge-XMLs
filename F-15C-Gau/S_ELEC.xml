@@ -1,6 +1,8 @@
 ﻿<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="9.20">
 
 <!--
+Version 9.30
+	[EDT] AUDIO VOLUME
 Version 9.20
 	[EDT] ICCP2 , ELEC
 Version 9.00
@@ -48,7 +50,7 @@ Version 5.0
 
 	<Element Name="SYS INIT">
 		<Select>
-      		<Value>
+			<Value>
 				(L:SYS_V_INIT) 0 ==
 					if{
 						1 (>L:SYS_V_INIT)
@@ -218,7 +220,7 @@ Version 5.0
 					<Value>
 						(L:LGEN_AVAIL) 0 ==
 						(L:RGEN_AVAIL) 0 == and
-						(L:SW2_FS_ENG_EMER_GEN) 2 == and						
+						(L:SW2_FS_ENG_EMER_GEN) 2 == and
 						(L:SW2_FS_ENG_EMER_GEN) 1 == or
 							if{
 								(L:JFS_GEN_AC_AVAIL) 1 ==
@@ -274,7 +276,7 @@ Version 5.0
 
 						(L:JFS_GEN_AC_VOLTAGE) 115 &gt;
 							if{ 115 (>L:JFS_GEN_AC_VOLTAGE) }
-						
+
 						(L:JFS_GEN_DC_VOLTAGE) 28 &gt;
 							if{ 28 (>L:JFS_GEN_DC_VOLTAGE) }
 					</Value>
@@ -316,7 +318,7 @@ Version 5.0
 							(L:LEFT_AC_BUS_LINE_VOLTAGE) 100 &lt;
 							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 100 &gt; and
 								if{ (L:RIGHT_AC_BUS_LINE_VOLTAGE) (>L:LEFT_AC_BUS_LINE_VOLTAGE) }
-	
+
 							(L:LEFT_AC_BUS_LINE_VOLTAGE) 100 &gt;
 							(L:RIGHT_AC_BUS_LINE_VOLTAGE) 100 &lt; and
 								if{ (L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:RIGHT_AC_BUS_LINE_VOLTAGE) }
@@ -334,7 +336,7 @@ Version 5.0
 								if{ (L:RIGHT_AC_BUS_LINE_VOLTAGE) 28 * 115 / (>L:RIGHT_XFMR_VOLTAGE) }
 								els{ 0 (>L:RIGHT_XFMR_VOLTAGE) }
 
-						<!-- L XFMR ENABLED -->							
+						<!-- L XFMR ENABLED -->
 							(L:L_XMFR_RECT_PWR) 1 ==
 								if{ (L:LEFT_XFMR_VOLTAGE) (>L:LEFT_XFMR_LINE_VOLTAGE) }
 								els{
@@ -344,13 +346,13 @@ Version 5.0
 									(L:EMER_GEN_DC_AVAIL) 0 ==
 									(L:EXTARNAL_AC_AVAIL) 1 == and
 										if{ (L:EXTARNAL_AC_VOLTS) (>L:LEFT_XFMR_LINE_VOLTAGE) }
-								
+
 									(L:EMER_GEN_DC_AVAIL) 0 ==
 									(L:EXTARNAL_AC_AVAIL) 0 == and
 										if{ 0 (>L:LEFT_XFMR_LINE_VOLTAGE) }
 								}
 
-						<!-- R XFMR -->	
+						<!-- R XFMR -->
 							(L:R_XMFR_RECT_PWR) 1 ==
 								if{ (L:RIGHT_XFMR_VOLTAGE) (>L:RIGHT_XFMR_LINE_VOLTAGE) }
 								els{ 0 (>L:RIGHT_XFMR_LINE_VOLTAGE) }
@@ -383,9 +385,9 @@ Version 5.0
 
 							(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:LEFT_AC_BUS_VOLTAGE)
 							(L:RIGHT_AC_BUS_LINE_VOLTAGE) (>L:RIGHT_AC_BUS_VOLTAGE)
-							
+
 							(L:LEFT_AC_BUS_LINE_VOLTAGE) (>L:ESS_AC_BUS_VOLTAGE)
-							
+
 							(L:ESS_AC_BUS_VOLTAGE) (>L:ENG_INST_AC_BUS_VOLTAGE)
 							(L:ESS_AC_BUS_VOLTAGE) (>L:AUTO_XMFR_VOLTAGE)
 						</Value>
@@ -1740,9 +1742,9 @@ Version 5.0
 
 	<Element Name="GAUGE NEEDLE CIRCUIT">
 		<Element Name="AIRSPEED/MACH INDICATOR">
-    		<Select>
-      			<Value>
- 					(A:AIRSPEED SELECT INDICATED OR TRUE:2, Knots) (>L:GAU_STBY_AIRSPEED)
+			<Select>
+				<Value>
+					(A:AIRSPEED SELECT INDICATED OR TRUE:2, Knots) (>L:GAU_STBY_AIRSPEED)
 
 					(L:AMI_PWR) 1 ==
 					if{
@@ -1777,12 +1779,12 @@ Version 5.0
 						0 (>L:GAU_AIRSPEED_MACH)
 						0 (>L:GAU_AIRSPEED_INDEX)
 					}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="ANGLE OF ATTACK INDICATOR">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:AOA_PWR) 1 ==
 						if{
 							(A:INCIDENCE ALPHA, Degrees) (>L:GAU_AOA)
@@ -1790,12 +1792,12 @@ Version 5.0
 						els{
 							0 (>L:GAU_AOA)
 						}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="ACCELEROMETER">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:ACC_PWR) 1 ==
 						if{
 							(A:G FORCE, G FORCE) (>L:GAU_G_FORCE)
@@ -1807,12 +1809,12 @@ Version 5.0
 							0 (>L:MAX_G_FORCE)
 							0 (>L:MIN_G_FORCE)
 						}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="ILS STEERING BAR">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 				(L:TACAN_ADI_TCN_ILS_PNL_PWR) 1 ==
 				(L:ILS_PWR) 1 == and
 					if{
@@ -1823,12 +1825,12 @@ Version 5.0
 						0 (>L:GAU_ILS_LC)
 						0 (>L:GAU_ILS_GS)
 					}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="ATTITUDE DIRECTOR INDICATOR">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:ATTD_PWR) 1 ==
 						if{
 							(L:ADI_REF_SELECT) 0 ==
@@ -1915,12 +1917,12 @@ Version 5.0
 							(A:PLANE PITCH DEGREES, Degrees) (>L:GAU_STBY_ATT_PITCH)
 							(A:PLANE BANK DEGREES, Degrees) (>L:GAU_STBY_ATT_BANK)
 						}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="HORIZONTAL SITUATION INDICATOR">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:HSI_PWR) 1 ==
 						if{
 							(A:ADF SIGNAL:1,NUMBER) 0 &gt;
@@ -2000,12 +2002,12 @@ Version 5.0
 							0 (>L:HSI_DEVIATION)
 							0 (>L:HSI_COMPASS)
 						}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="ALTIMETER">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(A:INDICATED ALTITUDE:2,Feet) (>L:GAU_STBY_ALTITUDE)
 					(A:KOHLSMAN SETTING HG:2, INHG) (>L:GAU_STBY_KOHLSMAN)
 
@@ -2030,12 +2032,12 @@ Version 5.0
 							0 (>L:IND_ALTITUDE)
 							0 (>L:GAU_KOHLSMAN)
 						}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="VERTICAL VELOCITY INDICATOR">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:VSI_PWR) 1 ==
 						if{
 							(A:VERTICAL SPEED, Feet per Minute) (>L:GAU_VSI)
@@ -2043,12 +2045,12 @@ Version 5.0
 						els{
 							0 (>L:GAU_VSI)
 						}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="EIGHT DAY CLOCK">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 				(L:CLK_PWR) 1 ==
 					if{
 						0 (>L:CLK_INIT)
@@ -2070,13 +2072,13 @@ Version 5.0
 								(L:GAU_CLK_SEC) (>L:GAU_CLK_SEC)
 							}
 					}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 
 		<Element Name="ENGINE TACHOMETERS">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:TACH_GAUGE_PWR) 1 ==
 						if{
 							(L:L_ENG_IND_ACCESS_PWR) 1 ==
@@ -2104,12 +2106,12 @@ Version 5.0
 							0 (>L:GAU_RENG_RPM)
 							0 (>L:IND_RENG_RPM)
 						}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="FAN TURBINE INLET TEMPERATURE INDICATORS">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:FTIT_GAUGE_PWR) 1 ==
 						if{
 							(L:L_ENG_IND_ACCESS_PWR) 1 ==
@@ -2137,12 +2139,12 @@ Version 5.0
 							0 (>L:IND_LENG_ITT)
 							0 (>L:IND_RENG_ITT)
 						}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="FUEL FLOW INDICATORS">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:L_FF_GAUGE_PWR) 1 ==
 						if{
 							(A:TURB ENG FUEL FLOW PPH:1, Pounds per hour) (>L:GAU_LENG_FF)
@@ -2162,8 +2164,8 @@ Version 5.0
 							0 (>L:GAU_RENG_FF)
 							0 (>L:IND_RENG_FF)
 						}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="EXHAUST NOZZLE POSITION INDICATORS">
 			<Select>
@@ -2210,8 +2212,8 @@ Version 5.0
 			</Select>
 		</Element>
 		<Element Name="HYDRAULIC PRESSURE INDICATORS">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(A:HYDRAULIC PRESSURE:1, PSI)
 					(A:HYDRAULIC PRESSURE:2, PSI) + 2 / (>L:PX_HYD)
 
@@ -2226,12 +2228,12 @@ Version 5.0
 							0 (>L:GAU_RENG_HYD_PRESS)
 							0 (>L:GAU_UTIL_HYD_PRESS)
 						}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="OIL PRESSURE INDICATORS">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:ENG_OIL_PRS_PWR) 1 ==
 						if{
 							(A:ENG OIL PRESSURE:1, PSI)
@@ -2267,13 +2269,13 @@ Version 5.0
 							0 (>L:GAU_LENG_OIL_PRESS)
 							0 (>L:GAU_RENG_OIL_PRESS)
 						}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 
 		<Element Name="FUEL QUANTITY INDICATOR">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:FUEL_GAUGE_PWR) 1 ==
 					(L:FUEL_LEVEL_SENSING_UNIT_PWR) 1 == and
 					(L:FUEL_LVL_SENS_PWR) 1 == and
@@ -2353,12 +2355,12 @@ Version 5.0
 							0 (>L:SETTING BNGO)
 						}
 
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="PITCH RATIO INDICATOR">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:PRAD_GAUGE_PWR) 1 ==
 					(L:NEEDLE_PITCH_RATIO) 0 &gt; and
 						if{
@@ -2367,19 +2369,19 @@ Version 5.0
 						els{
 							0 (>L:GAU_PITCH_RATIO)
 						}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="STANDBY MAGNETIC COMPASS">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(A:WISKEY COMPASS INDICATION DEGREES, Degrees) (>L:GAU_STBY_COMPASS)
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="OXY GAUGE">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:OXY_GAUGE_PWR) 1 ==
 					(L:SW2_FS_OXY_SUPPLY) 1 == and
 						if{
@@ -2388,8 +2390,8 @@ Version 5.0
 						els{
 							0 (>L:GAU_OXY_QTY)
 						}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 	</Element>
 
@@ -3743,7 +3745,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-  			<Element Name="STORM FLOOD (CABIN LIGHT)" >
+			<Element Name="STORM FLOOD (CABIN LIGHT)" >
 				<Select>
 					<Value>
 						(L:STORM_FLOOD_LT_PWR) 1 ==
@@ -4192,8 +4194,8 @@ Version 5.0
 	</Element>
 
 	<Element Name="INLET CONTROLER">
- 		<Select>
-   			<Value>
+		<Select>
+			<Value>
 				(L:L_AIR_INLET_CONT_AC_PWR) 1 ==
 				(L:SW1_FS_MISC_L_INLET_RAMP) 1 == and
 					if{
@@ -4228,12 +4230,12 @@ Version 5.0
 					els{
 						0 (>L:R_RAMP_LOCKED)
 					}
-   			</Value>
- 		</Select>
+			</Value>
+		</Select>
 	</Element>
 	<Element Name="ANTI SKID CONTROLER">
- 		<Select>
-   			<Value>
+		<Select>
+			<Value>
 				(L:ARI_SHUTOFF_ANTI-SKID_CONT_PWR) 1 ==
 				(L:BK_PULSER_PWR) 1 == and
 				(L:SW2_FS_MISC_ANTI_SKID) 2 == and
@@ -4272,8 +4274,8 @@ Version 5.0
 							0 (>L:ANTI_SKID_DISABLE)
 							0 (>L:ANTI_SKID_TIME, Seconds)
 						}
-   			</Value>
- 		</Select>
+			</Value>
+		</Select>
 	</Element>
 	<Element Name="BLEED AIR LEAK DET CONTROLER">
 		<Select>
@@ -5663,9 +5665,9 @@ Version 5.0
 											if{
 												(A:COM2 ACTIVE FREQUENCY, MHz) (L:COM2 ACTIVE FREQUENCY_Slave, MHz) - 0 !=
 													if{ 2 (>L:ICCP_INIT) }
-		
+
 												(L:ICCP_FREQ_1) + (L:ICCP_FREQ_100) 1000 * + (L:ICCP_FREQ_1000) 10000 * + (>L:ICCP_FREQ, kHz)
-		
+
 												(L:ICCP_FREQ, MHz) (L:ICCP_FREQ_SLAVE, MHz) - 0 !=
 													if{
 														(L:ICCP_FREQ, MHz) (>L:ICCP_FREQ_SLAVE, MHz)
@@ -5848,6 +5850,40 @@ Version 5.0
 								0 (>L:TEWS_LV_INIT)
 								0 (>L:TEWS_LAUNCH_ENABLE)
 							}
+
+						(L:KNOB_FS_ICCP_TEWS_LAUNCH) 0 ==
+							if{
+								-10000 (>L:TEWS_LAUNCH_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_TEWS_LAUNCH) 1 ==
+							if{
+								-2500 (>L:TEWS_LAUNCH_VOL_CONT)
+							}
+						(L:KNOB_FS_ICCP_TEWS_LAUNCH) 2 ==
+							if{
+								-2000 (>L:TEWS_LAUNCH_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_TEWS_LAUNCH) 3 ==
+							if{
+								-1500 (>L:TEWS_LAUNCH_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_TEWS_LAUNCH) 4 ==
+							if{
+								-1000 (>L:TEWS_LAUNCH_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_TEWS_LAUNCH) 5 ==
+							if{
+								-500 (>L:TEWS_LAUNCH_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_TEWS_LAUNCH) 6 ==
+							if{
+								0 (>L:TEWS_LAUNCH_VOL_CONT)
+							}
 					</Value>
 				</Select>
 			</Element>
@@ -5866,6 +5902,40 @@ Version 5.0
 								0 (>L:TEWS_CV_INIT)
 								0 (>L:TEWS_CAUTION_ENABLE)
 							}
+						(L:KNOB_FS_ICCP_TEWS_CAUT) 0 ==
+							if{
+								-10000 (>L:TEWS_CAUTION_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_TEWS_CAUT) 1 ==
+							if{
+								-2500 (>L:TEWS_CAUTION_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_TEWS_CAUT) 2 ==
+							if{
+								-2000 (>L:TEWS_CAUTION_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_TEWS_CAUT) 3 ==
+							if{
+								-1500 (>L:TEWS_CAUTION_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_TEWS_CAUT) 4 ==
+							if{
+								-1000 (>L:TEWS_CAUTION_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_TEWS_CAUT) 5 ==
+							if{
+								-500 (>L:TEWS_CAUTION_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_TEWS_CAUT) 6 ==
+							if{
+								0 (>L:TEWS_CAUTION_VOL_CONT)
+							}
 					</Value>
 				</Select>
 			</Element>
@@ -5874,7 +5944,7 @@ Version 5.0
 					<Value>
 						(L:BTN_FS_ICCP_TEWS_DISABLE) 1 ==
 							if{
-								1 (>L:BTN_FS_ICCP_TEWS_DISABLE)
+								0 (>L:BTN_FS_ICCP_TEWS_DISABLE)
 							}
 					</Value>
 				</Select>
@@ -5891,7 +5961,7 @@ Version 5.0
 								1 (>L:ICS_ENABLE)
 								(A:MARKER SOUND, bool) 0 ==
 									if{ (>K:MARKER_SOUND_TOGGLE) }
-								
+
 							}
 						(L:KNOB_FS_ICCP_ICS) 0 ==
 						(L:ICS_VOL_INIT) 1 == and
@@ -5900,6 +5970,39 @@ Version 5.0
 								0 (>L:ICS_ENABLE)
 								(A:MARKER SOUND, bool) 1 ==
 									if{ (>K:MARKER_SOUND_TOGGLE) }
+							}
+
+						(L:KNOB_FS_ICCP_ICS) 0 ==
+							if{
+								-10000 (>L:ICS_VOL_CONT)
+							}
+						(L:KNOB_FS_ICCP_ICS) 1 ==
+							if{
+								-2500 (>L:ICS_VOL_CONT)
+							}
+						(L:KNOB_FS_ICCP_ICS) 2 ==
+							if{
+								-2000 (>L:ICS_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_ICS) 3 ==
+							if{
+								-1500 (>L:ICS_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_ICS) 4 ==
+							if{
+								-1000 (>L:ICS_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_ICS) 5 ==
+							if{
+								-500 (>L:ICS_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_ICS) 6 ==
+							if{
+								0 (>L:ICS_VOL_CONT)
 							}
 					</Value>
 				</Select>
@@ -5916,6 +6019,39 @@ Version 5.0
 						(L:WPNV_INIT) 1 == and
 							if{
 								0 (>L:WPNV_INIT)
+							}
+
+						(L:KNOB_FS_ICCP_WPN) 0 ==
+							if{
+								-10000 (>L:WPN_VOL_CONT)
+							}
+						(L:KNOB_FS_ICCP_WPN) 1 ==
+							if{
+								-2500 (>L:WPN_VOL_CONT)
+							}
+						(L:KNOB_FS_ICCP_WPN) 2 ==
+							if{
+								-2000 (>L:WPN_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_WPN) 3 ==
+							if{
+								-1500 (>L:WPN_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_WPN) 4 ==
+							if{
+								-1000 (>L:WPN_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_WPN) 5 ==
+							if{
+								-500 (>L:WPN_VOL_CONT)
+							}
+
+						(L:KNOB_FS_ICCP_WPN) 6 ==
+							if{
+								0 (>L:WPN_VOL_CONT)
 							}
 					</Value>
 				</Select>
@@ -5972,8 +6108,8 @@ Version 5.0
 	</Element>
 
 	<Element Name="EEC CONTROLER">
- 		<Select>
-   			<Value>
+		<Select>
+			<Value>
 				(L:ENG_CONT_ESS_BUS_PWR) 1 ==
 				(L:SW1_FS_ENG_CONT_L) 1 == and
 					if{
@@ -5991,12 +6127,12 @@ Version 5.0
 					els{
 						0 (>L:REEC_ENABLED)
 					}
-   			</Value>
- 		</Select>
+			</Value>
+		</Select>
 	</Element>
 	<Element Name="INTRL NAV SET">
- 		<Select>
-   			<Value>
+		<Select>
+			<Value>
 				(L:INTRL_NAV_SET_MEAS_UNIT_PWR) 1 ==
 				(L:SIGNAL_DATA_RCDR_PWR) 1 == and
 					if{
@@ -6005,8 +6141,8 @@ Version 5.0
 				(L:SIGNAL_DATA_RCDR_PWR) 1 == and
 					if{
 					}
-   			</Value>
- 		</Select>
+			</Value>
+		</Select>
 	</Element>
 
 	<Element Name="ECS/TEMP CONTROLER">
@@ -6127,8 +6263,8 @@ Version 5.0
 			</Select>
 		</Element>
 		<Element Name="CABIN AIR DUMP">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:CBN_AIR_DUMP_SOL_PWR) 0 ==
 					(L:CBN_AIR_DUMP_INIT) 0 == and
 						if{
@@ -6142,12 +6278,12 @@ Version 5.0
 							1 (>L:CBN_AIR_DUMP_INIT)
 						}
 
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="TOTAL TEMP HI CAUT">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:L_TOTAL_TEMP_SNSR_HTR_PWR) 1 ==
 					(L:R_TOTAL_TEMP_PROBE_HTR_PWR) 1 == and
 					(A:AMBIENT TEMPERATURE, Celsius) 30 &gt; and
@@ -6169,8 +6305,8 @@ Version 5.0
 					(A:AMBIENT TEMPERATURE, Celsius) 30 &lt;
 					(A:AIRSPEED MACH, machs) 1.5 &lt; or
 						if{ 0 (>L:INLET_OVERHEATED_TIME)  0 (>L:TOT_TEMP)}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 	</Element>
 
@@ -6685,17 +6821,17 @@ Version 5.0
 
 	<Element Name="HUD">
 		<Element Name="POWER">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:HUD_AC_PWR) 1 ==
 						if{ 0 (>L:HUD POWER) }
 	    				els{ 1 (>L:HUD POWER) }
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="INIT">
-    		<Select>
-      			<Value>
+			<Select>
+				<Value>
 					(L:HUD POWER) 1 ==
 						if{
 							(L:HUD_INIT) 0 ==
@@ -6708,8 +6844,8 @@ Version 5.0
 								1 (>L:HUD_INIT)
 							}
 						}
-      			</Value>
-    		</Select>
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="iTrafficInfo">
 			<Select>
