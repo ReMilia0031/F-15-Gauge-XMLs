@@ -44,9 +44,8 @@
 					<MaskImage id="TEWS/TEWS_MASK.bmp" Name="TEWS/TEWS_MASK.bmp"></MaskImage>
 					<CustomDraw id="CustomDraw" Name="fs9gps:1:map">
 						<Size>512,512</Size>
-						<Bright>True</Bright>
 						<CustomDrawParam id="Zoom" Name="Zoom">
-							<Value>(L:TEWS_RANGEStatic, number)</Value>
+							<Value>(L:TEWS_RANGESTATIC, Number)</Value>
 						</CustomDrawParam>
 						<CustomDrawParam id="Latitude" Name="Latitude">
 							<Value>(A:PLANE LATITUDE, radians) </Value>
@@ -66,6 +65,15 @@
 						<CustomDrawParam id="CenterY" Name="CenterY">
 							<Value>256</Value>
 						</CustomDrawParam>
+						<CustomDrawParam id="PanVertical" Name="PanVertical">
+							<Value>(L:PanVertical)</Value>
+						</CustomDrawParam>
+						<CustomDrawParam id="PanHorizontal" Name="PanHorizontal">
+							<Value>(L:PanHorizontal)</Value>
+						</CustomDrawParam>
+						<CustomDrawParam id="PanReset" Name="PanReset">
+							<Value>(L:PanReset)</Value>
+						</CustomDrawParam>
 						<CustomDrawParam id="UpdateAlways" Name="UpdateAlways">
 							<Value>1</Value>
 						</CustomDrawParam>
@@ -81,7 +89,7 @@
 							<Value>0</Value>
 						</CustomDrawParam>
 						<CustomDrawParam id="ObjectDetailLayerVehicles" Name="ObjectDetailLayerVehicles">
-							<Value>4</Value>
+							<Value>(L:VSD_TRACK_MODE)</Value>
 						</CustomDrawParam>
 						<CustomDrawParam id="ColorLayerVehicles" Name="ColorLayerVehicles">
 							<Value>@SymColor</Value>

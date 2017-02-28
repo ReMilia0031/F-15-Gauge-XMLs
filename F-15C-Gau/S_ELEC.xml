@@ -1,6 +1,10 @@
-﻿<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="9.20">
+﻿<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="10.10">
 
 <!--
+Version 10.10
+	[EDT} ***
+Version 10.00
+	[ADD] NCI
 Version 9.30
 	[EDT] AUDIO VOLUME
 Version 9.20
@@ -80,7 +84,11 @@ Version 5.0
 						1 (>L:MPCD_DTM_DAT)
 						1 (>L:MPCD_DTM_SRV)
 						1 (>L:MPCD_DTM_TGT)
+						0 (>L:MPCD_DTM_SAM)
 						1 (>L:MPCD_DTM_SHR)
+
+						1 (>L:MPCD_DTM_RTE)
+						1 (>L:MPCD_DTM_LNE)
 						1 (>L:MPCD_DTM_PLN)
 						6 (>L:KNOB_FS_TEWS_INT)
 					}
@@ -108,7 +116,6 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-
 			<Element Name="AVIONICS MASTER">
 				<Select>
 					<Value>
@@ -126,7 +133,6 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-
 			<Element Name="LEFT MASTER ALTERNATOR">
 				<Select>
 					<Value>
@@ -157,7 +163,6 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-
 			<Element Name="APU GENERATOR">
 				<Select>
 					<Value>
@@ -1624,7 +1629,32 @@ Version 5.0
 					<Value>
 						(L:GND_SPEED_BRAKE_PWR) 1 ==
 						(L:SPD_BRK_PWR) 1 == and
-							if{}
+							if{
+								(A:INCIDENCE ALPHA, Degrees) 25 &lt;
+								(A:SPOILERS LEFT POSITION, Percent) 0 &gt; and
+								(A:SPOILERS LEFT POSITION, Percent) 0.1 &lt; and
+								(L:SW2_FS_THR_SPD_BRK) 2 == and
+									if{ 16383 (>K:SPOILERS_SET) }
+
+								(A:INCIDENCE ALPHA, Degrees) 25 &gt;
+								(A:SPOILERS LEFT POSITION, Percent) 0 &gt; and
+								(L:SW2_FS_THR_SPD_BRK) 2 == and
+									if{ 1 (>K:SPOILERS_SET) }
+								}
+							<!-- (K:SPOILERS_SET) -->
+
+							(A:SPOILERS HANDLE POSITION, Percent) 0 &gt;
+							(L:SW2_FS_THR_SPD_BRK) 0 == and
+								if{
+									1 (>L:IF15C_SPD_BRK_TOGGLE)
+									2 (>L:SW2_FS_THR_SPD_BRK)
+								}
+							(A:SPOILERS HANDLE POSITION, Percent) 0  ==
+							(L:SW2_FS_THR_SPD_BRK) 2 == and
+									if{
+										0 (>L:IF15C_SPD_BRK_TOGGLE)
+										0 (>L:SW2_FS_THR_SPD_BRK)
+									}
 					</Value>
 				</Select>
 			</Element>
@@ -3709,158 +3739,6 @@ Version 5.0
 				</Select>
 			</Element>
 		</Element>
-		<Element Name="INTERIOR LIGHT">
-<!--			<Element Name="L/R CONSOLE / INST (PANEL LIGHT [LIGHT LANDING])">
-				<Select>
-					<Value>
-						(L:KNOB_FS_INT_LT_L_CONSOLE) 1 &gt;
-						(L:KNOB_FS_INT_LT_R_CONSOLE) 1 &gt; or
-						(L:KNOB_FS_INT_LT_INST_AUX) 1 &gt; or
-						(L:KNOB_FS_INT_LT_INST_FLT) 1 &gt; or
-						(L:KNOB_FS_INT_LT_INST_ENG) 1 &gt; or
-						(L:INTERIOR_LTS_PWR) 1 == and
-							if{
-								(A:LIGHT LANDING, bool) 0 ==
-								if{
-									(>K:LANDING_LIGHTS_TOGGLE)
-								}
-							}
-							els{
-								(A:LIGHT LANDING, bool) 1 ==
-								if{
-									(>K:LANDING_LIGHTS_TOGGLE)
-								}
-							}
-					</Value>
-				</Select>
-			</Element> -->
-			<Element Name="LIGHT TEST">
-				<Select>
-					<Value>
-						(L:LIGHT_FLICKER) 1 ==
-						(L:SW1_FS_INT_LT_TEST) 1 == and
-						(L:INT_LTS_TEST_PWR) 1 == and
-							if{ 1 (>L:FS_LIGHT_TEST) }
-							els{ 0 (>L:FS_LIGHT_TEST) }
-					</Value>
-				</Select>
-			</Element>
-			<Element Name="STORM FLOOD (CABIN LIGHT)" >
-				<Select>
-					<Value>
-						(L:STORM_FLOOD_LT_PWR) 1 ==
-						(L:KNOB_FS_INT_LT_STORM) 1 &gt; and
-							if{
-								(A:LIGHT CABIN, bool) 0 ==
-								if{
-									(>K:TOGGLE_CABIN_LIGHTS)
-								}
-							}
-							els{
-								(A:LIGHT CABIN, bool) 1 ==
-								if{
-									(>K:TOGGLE_CABIN_LIGHTS)
-								}
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element Name="WARNING CAUTION">
-				<Select>
-					<Value>
-						(L:KNOB_FS_INT_LT_CAUTION) (>L:WARN_CAUT_LTS)
-					</Value>
-				</Select>
-			</Element>
-		</Element>
-		<Element Name="EXTERIOR LIGHT">
-<!--  			<Element Name="LANDING / TAXI" >
-				<Select>
-					<Value>
-						(L:LANDING_TAXY_LT_CONT_PWR) 1 ==
-						(L:SW2_FS_MISC_LANDING_TAXI) 1 ! and
-						(A:GEAR CENTER POSITION, Percent) 100 == and
-							if{
-								(A:LIGHT TAXI, bool) 0 ==
-								if{
-									(>K:TOGGLE_TAXI_LIGHTS)
-								}
-							}
-							els{
-								(A:LIGHT TAXI, bool) 1 ==
-								if{
-									(>K:TOGGLE_TAXI_LIGHTS)
-								}
-							}
-
-						(A:GEAR CENTER POSITION, Percent) 100 !=
-							if{
-								0 (>L:LIGHT_TAXI)
-							}
-					</Value>
-				</Select>
-			</Element> -->
-<!-- 			<Element Name="FORMATION (INOP)" >
-				<Select>
-					<Value>
-						(L:FORM_LT_AVIONICS_DIM_CONT_PWR) 1 ==
-						(L:KNOB_FS_LIGHT_FORM) 1 &gt; and
-							if{
-								(L:LIGHT FORM) 0 ==
-								if{
-									1 (>L:LIGHT FORM)
-								}
-							}
-							els{
-								(L:LIGHT FORM) 1 ==
-								if{
-									0 (>L:LIGHT FORM)
-								}
-							}
-					</Value>
-				</Select>
-			</Element> -->
-<!-- 			<Element Name="ANTI COLLISION (BEACON)" >
-				<Select>
-					<Value>
-						(L:PSN_ANTI_COLLISION_LT_CONT_PWR) 1 ==
-							if{
-								(A:LIGHT BEACON, bool) 0 ==
-								if{
-									(>K:TOGGLE_BEACON_LIGHTS)
-								}
-							}
-							els{
-								(A:LIGHT BEACON, bool) 0 ==
-								if{
-									(>K:TOGGLE_BEACON_LIGHTS)
-								}
-							}
-					</Value>
-				</Select>
-			</Element> -->
-<!--  			<Element Name="POSITION (NAVIGATION)" >
-				<Select>
-					<Value>
-						(L:PSN_ANTI_COLLISION_LT_CONT_PWR) 1 ==
-						(L:KNOB_FS_LIGHT_POS) 1 &gt; and
-							if{
-								(A:LIGHT NAV, bool) 0 ==
-								if{
-									(>K:TOGGLE_NAV_LIGHTS)
-								}
-							}
-							els{
-								(A:LIGHT NAV, bool) 1 ==
-								if{
-									(>K:TOGGLE_NAV_LIGHTS)
-								}
-							}
-					</Value>
-				</Select>
-			</Element>
-		</Element> -->
-		</Element>
 		<Element Name="AVIONICS MODE LIGHTS">
 			<Element Name="A/G">
 				<Select>
@@ -3923,7 +3801,7 @@ Version 5.0
 		</Element>
 
 		<Element Name="GREEN GEAR LIGHTS">
-			<Element>
+			<Element Name="NGEAR">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
@@ -3935,19 +3813,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element>
-				<Select>
-					<Value>
-						(L:LIGHT_FLICKER) 1 ==
-						(L:LG_POS_IND_PWR) 1 == and
-						(A:GEAR RIGHT POSITION, Percent) 100 == and
-						(L:FS_LIGHT_TEST) 1 == or
-							if{ 1 (>L:LT_FS_RGEAR_GREEN) }
-							els{ 0 (>L:LT_FS_RGEAR_GREEN) }
-					</Value>
-				</Select>
-			</Element>
-			<Element>
+			<Element Name="LGEAR">
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
@@ -3956,6 +3822,18 @@ Version 5.0
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_LGEAR_GREEN) }
 							els{ 0 (>L:LT_FS_LGEAR_GREEN) }
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="RGEAR">
+				<Select>
+					<Value>
+						(L:LIGHT_FLICKER) 1 ==
+						(L:LG_POS_IND_PWR) 1 == and
+						(A:GEAR RIGHT POSITION, Percent) 100 == and
+						(L:FS_LIGHT_TEST) 1 == or
+							if{ 1 (>L:LT_FS_RGEAR_GREEN) }
+							els{ 0 (>L:LT_FS_RGEAR_GREEN) }
 					</Value>
 				</Select>
 			</Element>
@@ -3973,6 +3851,18 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
+			<Element Name="LGEAR">
+				<Select>
+					<Value>
+						(L:LIGHT_FLICKER) 1 ==
+						(L:LG_POS_IND_PWR) 1 == and
+						(A:GEAR LEFT POSITION, Percent) 1 > and
+						(A:GEAR LEFT POSITION, Percent) 100 &lt; and
+							if{ 1 (>L:LT_FS_LGEAR_RED) }
+							els{ 0 (>L:LT_FS_LGEAR_RED) }
+					</Value>
+				</Select>
+			</Element>
 			<Element Name="RGEAR">
 				<Select>
 					<Value>
@@ -3982,18 +3872,6 @@ Version 5.0
 						(A:GEAR RIGHT POSITION, Percent) 100 &lt; and
 							if{ 1 (>L:LT_FS_RGEAR_RED) }
 							els{ 0 (>L:LT_FS_RGEAR_RED) }
-					</Value>
-				</Select>
-			</Element>
-			<Element Name="NGEAR">
-				<Select>
-					<Value>
-						(L:LIGHT_FLICKER) 1 ==
-						(L:LG_POS_IND_PWR) 1 == and
-						(A:GEAR LEFT POSITION, Percent) 1 > and
-						(A:GEAR LEFT POSITION, Percent) 100 &lt; and
-							if{ 1 (>L:LT_FS_LGEAR_RED) }
-							els{ 0 (>L:LT_FS_LGEAR_RED) }
 					</Value>
 				</Select>
 			</Element>
@@ -4192,91 +4070,6 @@ Version 5.0
 			</Element>
 		</Element>
 	</Element>
-
-	<Element Name="INLET CONTROLER">
-		<Select>
-			<Value>
-				(L:L_AIR_INLET_CONT_AC_PWR) 1 ==
-				(L:SW1_FS_MISC_L_INLET_RAMP) 1 == and
-					if{
-						1 (>L:LINLET_ENABLED)
-					}
-					els{
-						0 (>L:LINLET_ENABLED)
-					}
-
-				(L:R_AIR_INLET_CONT_AC_PWR) 1 ==
-				(L:SW1_FS_MISC_R_INLET_RAMP) 1 == and
-					if{
-						1 (>L:RINLET_ENABLED)
-					}
-					els{
-						0 (>L:RINLET_ENABLED)
-					}
-
-				(L:L_AIR_INLET_CONT_AC_PWR) 1 ==
-				(L:SW1_FS_MISC_L_INLET_RAMP) 0 == and
-					if{
-						1 (>L:L_RAMP_LOCKED)
-					}
-					els{
-						0 (>L:L_RAMP_LOCKED)
-					}
-				(L:R_AIR_INLET_CONT_AC_PWR) 1 ==
-				(L:SW1_FS_MISC_R_INLET_RAMP) 0 == and
-					if{
-						1 (>L:R_RAMP_LOCKED)
-					}
-					els{
-						0 (>L:R_RAMP_LOCKED)
-					}
-			</Value>
-		</Select>
-	</Element>
-	<Element Name="ANTI SKID CONTROLER">
-		<Select>
-			<Value>
-				(L:ARI_SHUTOFF_ANTI-SKID_CONT_PWR) 1 ==
-				(L:BK_PULSER_PWR) 1 == and
-				(L:SW2_FS_MISC_ANTI_SKID) 2 == and
-				(L:SW1_FS_EMER_BRAKE) 0 == and
-					if{
-						(A:ANTISKID BRAKES ACTIVE, bool) 0 ==
-						if{
-							(>K:ANTISKID_BRAKES_TOGGLE)
-						}
-					}
-					els{
-						(A:ANTISKID BRAKES ACTIVE, bool) 1 ==
-						if{
-							(>K:ANTISKID_BRAKES_TOGGLE)
-						}
-					}
-
-					(A:SIM ON GROUND, bool) 1 ==
-					(A:AIRSPEED INDICATED, Knots) 5 &lt; and
-					(A:BRAKE PARKING INDICATOR, bool) 0 == and
-					(L:ANTI_SKID_TIME, Seconds) 0 == and
-						if{
-							(P:LOCAL TIME, Seconds) (>L:ANTI_SKID_TIME, Seconds)
-						}
-
-					(A:BRAKE PARKING INDICATOR, bool) 0 ==
-					(P:LOCAL TIME, Seconds) (L:ANTI_SKID_TIME, Seconds) - 20 &gt; and
-						if{
-							1 (>L:ANTI_SKID_DISABLE)
-						}
-
-					(A:SIM ON GROUND, bool) 0 ==
-					(A:AIRSPEED INDICATED, Knots) 5 &gt; or
-					(A:BRAKE PARKING INDICATOR, bool) 1 == or
-						if{
-							0 (>L:ANTI_SKID_DISABLE)
-							0 (>L:ANTI_SKID_TIME, Seconds)
-						}
-			</Value>
-		</Select>
-	</Element>
 	<Element Name="BLEED AIR LEAK DET CONTROLER">
 		<Select>
 			<Value>
@@ -4286,19 +4079,149 @@ Version 5.0
 			</Value>
 		</Select>
 	</Element>
-	<Element Name="GEAR">
+
+	<Element Name="EMERGENCY BOOST PUMP">
 		<Select>
 			<Value>
-				(L:LG_PWR) 1 ==
+				(L:SW2_FS_ENG_EMER_GEN) 0 &gt;
+				(L:EMER_GEN_EBP_PWR) 1 == and
 					if{
-						(L:NOSE_LDG_WOW_PWR)
-						(L:L_MAIN_GEAR_WOW_PWR)
-						(L:R_MAIN_GEAR_WOW_PWR)
+						(L:L_BST_PUMP_ON) 0 ==
+						(L:R_BST_PUMP_ON) 0 ==
+						(L:EBP_INIT) 0 == and
+							if{
+								1 (>L:EMER_BST_ON)
+								1 (>L:EBP_INIT)
+							}
+
+						(L:L_BST_PUMP_ON) 1 ==
+						(L:R_BST_PUMP_ON) 1 == or
+						(L:EBP_INIT) 1 == and
+							if{
+								0 (>L:EMER_BST_ON)
+								0 (>L:EBP_INIT)
+							}
+					}
+					els{
+						0 (>L:EMER_BST_ON)
 					}
 			</Value>
 		</Select>
 	</Element>
-	<Element Name="FUEL CONT">
+
+	<Element Name="MISC CONTROL">
+		<Element Name="INLET">
+			<Select>
+				<Value>
+					(L:L_AIR_INLET_CONT_AC_PWR) 1 ==
+					(L:SW1_FS_MISC_L_INLET_RAMP) 1 == and
+						if{
+							1 (>L:LINLET_ENABLED)
+						}
+						els{
+							0 (>L:LINLET_ENABLED)
+						}
+
+					(L:R_AIR_INLET_CONT_AC_PWR) 1 ==
+					(L:SW1_FS_MISC_R_INLET_RAMP) 1 == and
+						if{
+							1 (>L:RINLET_ENABLED)
+						}
+						els{
+							0 (>L:RINLET_ENABLED)
+						}
+
+					(L:L_AIR_INLET_CONT_AC_PWR) 1 ==
+					(L:SW1_FS_MISC_L_INLET_RAMP) 0 == and
+						if{
+							1 (>L:L_RAMP_LOCKED)
+						}
+						els{
+							0 (>L:L_RAMP_LOCKED)
+						}
+					(L:R_AIR_INLET_CONT_AC_PWR) 1 ==
+					(L:SW1_FS_MISC_R_INLET_RAMP) 0 == and
+						if{
+							1 (>L:R_RAMP_LOCKED)
+						}
+						els{
+							0 (>L:R_RAMP_LOCKED)
+						}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="ANTI SKID">
+			<Select>
+				<Value>
+					(L:ARI_SHUTOFF_ANTI-SKID_CONT_PWR) 1 ==
+					(L:BK_PULSER_PWR) 1 == and
+					(L:SW2_FS_MISC_ANTI_SKID) 2 == and
+					(L:SW1_FS_EMER_BRAKE) 0 == and
+						if{
+							(A:ANTISKID BRAKES ACTIVE, bool) 0 ==
+							if{
+								(>K:ANTISKID_BRAKES_TOGGLE)
+							}
+						}
+						els{
+							(A:ANTISKID BRAKES ACTIVE, bool) 1 ==
+							if{
+								(>K:ANTISKID_BRAKES_TOGGLE)
+							}
+						}
+
+						(A:SIM ON GROUND, bool) 1 ==
+						(A:AIRSPEED INDICATED, Knots) 5 &lt; and
+						(A:BRAKE PARKING INDICATOR, bool) 0 == and
+						(L:ANTI_SKID_TIME, Seconds) 0 == and
+							if{
+								(P:LOCAL TIME, Seconds) (>L:ANTI_SKID_TIME, Seconds)
+							}
+
+						(A:BRAKE PARKING INDICATOR, bool) 0 ==
+						(P:LOCAL TIME, Seconds) (L:ANTI_SKID_TIME, Seconds) - 20 &gt; and
+							if{
+								1 (>L:ANTI_SKID_DISABLE)
+							}
+
+						(A:SIM ON GROUND, bool) 0 ==
+						(A:AIRSPEED INDICATED, Knots) 5 &gt; or
+						(A:BRAKE PARKING INDICATOR, bool) 1 == or
+							if{
+								0 (>L:ANTI_SKID_DISABLE)
+								0 (>L:ANTI_SKID_TIME, Seconds)
+							}
+				</Value>
+			</Select>
+		</Element>
+<!-- 		<Element Name="LANDING / TAXI" >
+			<Select>
+				<Value>
+					(L:LANDING_TAXY_LT_CONT_PWR) 1 ==
+					(L:SW2_FS_MISC_LANDING_TAXI) 1 ! and
+					(A:GEAR CENTER POSITION, Percent) 100 == and
+						if{
+							(A:LIGHT TAXI, bool) 0 ==
+							if{
+								(>K:TOGGLE_TAXI_LIGHTS)
+							}
+						}
+						els{
+							(A:LIGHT TAXI, bool) 1 ==
+							if{
+								(>K:TOGGLE_TAXI_LIGHTS)
+							}
+						}
+
+					(A:GEAR CENTER POSITION, Percent) 100 !=
+						if{
+							0 (>L:LIGHT_TAXI)
+						}
+				</Value>
+			</Select>
+		</Element> -->
+	</Element>
+	<Element Name="FUEL CONTROL">
 		<Element Name="CONTROL SWITCHES">
 		<!--2 STOP TRANS
 			1 NORM
@@ -4544,8 +4467,8 @@ Version 5.0
 								= 16	BOTH
 								= 17	EXT ALL
 								= 18	ISOLATE
-								= 19	LEFT MAIN
-								= 20	RIGHT MAIN  -->
+					LEFT_MAIN	= 19	INT LEFT
+					RIGHT_MAIN 	= 20	INT RIGHT  -->
 					(A:FUEL TANK LEFT MAIN LEVEL, Percent) 0 ==
 						if{
 							6 (>K:FUEL_SELECTOR_SET)
@@ -4618,7 +4541,8 @@ Version 5.0
 		<Element Name="DUMP">
 			<Select>
 				<Value>
-				<!-- LCFT RCFT LEXT REXT LWING RWING LFEED RFEED TANK 1 CEXT -->
+				<!-- [default] LEFT_TIP RIGHT_TIP LEFT_AUX RIGHT_AUX LWING RWING LFEED RFEED TANK 1 CEXT -->
+
 					(L:SW1_FS_FUEL_DUMP) 1 ==
 					(L:FUEL_DUMP_PWR) 1 == and
 						if{
@@ -4662,8 +4586,7 @@ Version 5.0
 			</Select>
 		</Element>
 	</Element>
-
-	<Element Name="IFF CONTROLER">
+	<Element Name="IFF CONTROL">
 		<Select>
 			<Value>
 				(L:SW2_FS_IFF_MODE) 0 &gt;
@@ -4691,21 +4614,21 @@ Version 5.0
 			</Value>
 		</Select>
 	</Element>
-	<Element Name="KY-58">
+	<Element Name="KY-58 CONTROL">
 		<Select>
 			<Value>
 				(L:KY-58_PWR) 1 ==
 			</Value>
 		</Select>
 	</Element>
-	<Element Name="BIT">
+	<Element Name="BIT CONTROL">
 		<Select>
 			<Value>
 				(L:ASP_BIT_CONT_PNL_PWR) 1 ==
 			</Value>
 		</Select>
 	</Element>
-	<Element Name="ILS/TCN">
+	<Element Name="ILS/TCN CONTROL">
 		<Element Name="ILS FREQ">
 			<Select>
 				<Value>
@@ -4849,7 +4772,7 @@ Version 5.0
 			</Select>
 		</Element>
 	</Element>
-	<Element Name="AFCS CONTROLER">
+	<Element Name="AFCS CONTROL">
 		<Element Name="CAS RDY">
 			<Select>
 				<Value>
@@ -5006,9 +4929,8 @@ Version 5.0
 							(L:CAS_ATT_HOLD_RDY) 1 == and
 							(L:CAS_ALT_HOLD_RDY) 0 == and
 							(L:HUD_MASTER_MODE) 0 == and
-							(A:AUTOPILOT MASTER,enum) 1 == and
+							(A:AUTOPILOT MASTER, bool) 1 == and
 							(L:CAS_POSTURE) 1 == and
-							(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
 								if{
 									(>K:AP_ATT_HOLD_ON)
 								}
@@ -5038,9 +4960,8 @@ Version 5.0
 							(L:CAS_ALT_HOLD_RDY) 1 == and
 							(L:HUD_MASTER_MODE) 0 == and
 							(L:CAS_POSTURE) 1 == and
-							(A:AUTOPILOT MASTER,enum) 1 == and
-							(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
-							(A:AUTOPILOT ALTITUDE LOCK) 0 == and
+							(A:AUTOPILOT MASTER, bool) 1 == and
+							(A:AUTOPILOT ALTITUDE LOCK, bool) 0 == and
 								if{
 									(>K:AP_ALT_HOLD_ON)
 									0 (>L:PIT_CAS_DSBL_INIT)
@@ -5062,7 +4983,7 @@ Version 5.0
 							(L:CAS_ALT_HOLD_RDY) 0 == or
 							(L:HUD_MASTER_MODE) 0 != or
 							(L:CAS_POSTURE) 0 == or
-							(A:AUTOPILOT MASTER,enum) 0 == or
+							(A:AUTOPILOT MASTER, bool) 0 == or
 								if{
 									(>K:AP_ALT_HOLD_OFF)
 									0 (>L:ALT_INIT, bool)
@@ -5088,19 +5009,18 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:CAS_ROLL_RDY) 1 ==
-						(A:AUTOPILOT MASTER,enum) 1 == and
+						(A:AUTOPILOT MASTER, bool) 1 == and
 						(L:HUD_MASTER_MODE) 0 == and
 						(L:CAS_POSTURE) 1 == and
-						(A:AUTOPILOT APPROACH HOLD, bool) 0 == and
 							if{
-								(A:GPS DRIVES NAV1, enum) 0 ==
+								(A:GPS DRIVES NAV1, bool) 0 ==
 									if{
 										(A:AUTOPILOT HEADING LOCK, bool) 0 ==
 											if{
 												(>K:AP_HDG_HOLD_ON)
 											}
 									}
-								(A:GPS DRIVES NAV1, enum) 1 ==
+								(A:GPS DRIVES NAV1, bool) 1 ==
 									if{
 										(A:AUTOPILOT NAV1 LOCK, bool) 0 ==
 											if{
@@ -5125,7 +5045,6 @@ Version 5.0
 						(L:HUD_MASTER_MODE) 0 != or
 						(L:CAS_POSTURE) 0 == or
 						(L:CAS_ROLL_RDY) 0 == or
-						(A:AUTOPILOT APPROACH HOLD, bool) 1 == or
 							if{
 								0 (>L:HDG_INIT)
 								(>K:AP_HDG_HOLD_OFF)
@@ -5154,7 +5073,7 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-		<Element Name="ROLL RATIO CONTROLER">
+		<Element Name="PITCH RATIO CONTROLER">
 			<Select>
 				<Value>
 					(A:HYDRAULIC PRESSURE:1, PSI) 2000 &lt;
@@ -5313,107 +5232,147 @@ Version 5.0
 			</Element>
 		</Element>
 	</Element>
-	<Element Name="COMMUNICATIONS">
-		<Element Name="Main Communications Control Panel">
-			<Element Name="R1 CHANNEL SELECTION">
-				<Select>
-					<Value>
-						(L:KNOB_FS_MCCP_MODE) 2 ==
-						<!-- (L:SW2_FS_MCCP_MODE) 1 == or -->
-						(L:UHF_RT_1_PWR) 1 == and
-							if{
-								118.2
-								118.1
-								126.2
-								118.25
-								120.1
-								122.0
-								120.1
-								119.5
-								122.05
-								134.3
-								118.0
-								122.2
-								118.85
-								122.5
-								118.5
-								121.9
-								121.8
-								121.7
-								118.75
-								19 (L:KNOB_FS_MCCP_CHAN) case (>L:MCCP_FREQ_CHAN, MHz)
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element Name="R1 MODE">
-				<Select>
-					<Value>
-						(L:R1_INIT) 0 ==
-							if{
-								1 (>L:R1_INIT)
-								(A:COM1 ACTIVE FREQUENCY, MHz) (>L:MCCP_FREQ, MHz)
-								(L:MCCP_FREQ, MHz) 10 / flr (>L:MCCP_FREQ_1000)
-								(L:MCCP_FREQ, KHz) 1000 / 10 % int  (>L:MCCP_FREQ_100)
-								(L:MCCP_FREQ, MHz) 1000 * 1000 % (>L:MCCP_FREQ_1)
-								(A:COM1 ACTIVE FREQUENCY, MHz) (>L:COM1 ACTIVE FREQUENCY_Slave, MHz)
-							}
-						(L:UHF_RT_1_PWR) 1 ==
-						(L:MODE_SEL_PWR) 1 == and
-							if{
-								(L:KNOB_FS_MCCP_MODE) 0 ==
-									if{
-										243000 (>L:MCCP_FREQ, KHz)
-										7338 (>K:COM_RADIO_SET)
-									}
+	<Element Name="THROTTLE CONTROL">
+		<Element Name="FINGER">
+			<Select>
+				<Value>
+					(A:TURB ENG2 N2, Percent) 20 &gt;
+					(A:GENERAL ENG1 THROTTLE LEVER POSITION, Percent) 1 &gt; and
+						if{
+							1 (>L:SW1_FS_THR_L_FING)
+						}
+						els{
+							0 (>L:SW1_FS_THR_L_FING)
+						}
 
-								(L:KNOB_FS_MCCP_MODE) 1 ==
-									if{
-										(A:COM1 ACTIVE FREQUENCY, MHz) (L:COM1 ACTIVE FREQUENCY_Slave, MHz) - 0 !=
-											if{ 2 (>L:R1_INIT) }
+					(A:GENERAL ENG2 THROTTLE LEVER POSITION, Percent) 1 &gt;
+						if{
+							1 (>L:SW1_FS_THR_R_FING)
+						}
+						els{
+							0 (>L:SW1_FS_THR_R_FING)
+						}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="THROTTLE LEVER POS">
+			<Select>
+				<Value>
+					(A:GENERAL ENG1 THROTTLE LEVER POSITION, Percent) 20 &gt;
+						if{
+							1 (>L:SW1_FS_THROT_L)
+						}
+						els{
+							(A:TURB ENG1 N2, Percent) 20 &lt;
+								if{
+									0 (>L:SW1_FS_THROT_L)
+								}
+						}
 
-										(L:MCCP_FREQ_1) + (L:MCCP_FREQ_100) 1000 * + (L:MCCP_FREQ_1000) 10000 * + (>L:MCCP_FREQ, kHz)
-										(L:MCCP_FREQ, MHz) (L:MCCP_FREQ_SLAVE, MHz) - 0 !=
-											if{
-												(L:MCCP_FREQ, MHz) (>L:MCCP_FREQ_SLAVE, MHz)
-												(L:MCCP_FREQ, MHz) 100 * near 10000 % d 10 % r 10 / int d 10 % r 10 / int d 10 % r 10 / int 16 * + 16 * + 16 * + (>K:COM_RADIO_SET)
-												(A:COM1 ACTIVE FREQUENCY, MHz) (>L:COM1 ACTIVE FREQUENCY_Slave, MHz)
-											}
-									}
-
-								(L:KNOB_FS_MCCP_MODE) 2 ==
-									if{
-										(L:MCCP_FREQ_CHAN, MHz) 100 * near 10000 % d 10 % r 10 / int d 10 % r 10 / int d 10 % r 10 / int 16 * + 16 * + 16 * + (>K:COM_RADIO_SET)
-										(L:MCCP_FREQ_CHAN, MHz) (>L:MCCP_FREQ, MHz)
-									}
-								(L:KNOB_FS_MCCP_MODE) 3 ==
-									if{
-										225000 (>L:MCCP_FREQ, KHz)
-									}
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element Name="R1 COMM VOLUME">
-				<Select>
-					<Value>
-						(L:UHF_RT_1_PWR) 1 ==
-						(L:KNOB_FS_MCCP_VOL) 0 &gt; and
-						(L:R1V_INIT) 0 == and
+					(A:GENERAL ENG2 THROTTLE LEVER POSITION, Percent) 20 &gt;
+						if{
+							1 (>L:SW1_FS_THROT_R)
+						}
+						els{
+							(A:TURB ENG2 N2, Percent) 20 &lt;
+								if{
+									0 (>L:SW1_FS_THROT_R)
+								}
+						}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="BTN">
+			<Select>
+				<Value>
+					(L:SW2_FS_THR_MIC)
+					(L:SW2_FS_THR_SPD_BRK)
+					(L:BTN_FS_THR_EWWS)
+					(L:SW2_FS_THR_WPN)
+					(L:BTN_FS_THR_IFF_INT)
+					(L:SW6_FS_THR_TGT_DISIG)
+					(L:BTN_FS_THR_RTCL_REJ)
+					(L:KNOB_FS_THR_ANT_ELEV)
+					(L:SW2_FS_THR_ECM_DISPENS)
+				</Value>
+			</Select>
+		</Element>
+	</Element>
+	<Element Name="EXTERIOR LIGHT CONTROL">
+<!-- 		<Element Name="FORMATION (INOP)" >
+			<Select>
+				<Value>
+					(L:FORM_LT_AVIONICS_DIM_CONT_PWR) 1 ==
+					(L:KNOB_FS_LIGHT_FORM) 1 &gt; and
+						if{
+							(L:LIGHT FORM) 0 ==
 							if{
-								1 (>K:COM1_TRANSMIT_SELECT)
-								1 (>L:R1V_INIT)
+								1 (>L:LIGHT FORM)
 							}
-
-						(L:KNOB_FS_MCCP_VOL) 0 ==
-						(L:R1V_INIT) 1 == and
+						}
+						els{
+							(L:LIGHT FORM) 1 ==
 							if{
-								1 (>K:COM2_TRANSMIT_SELECT)
-								0 (>L:R1V_INIT)
+								0 (>L:LIGHT FORM)
 							}
-					</Value>
-				</Select>
-			</Element>
+						}
+				</Value>
+			</Select>
+		</Element> -->
+<!-- 		<Element Name="ANTI COLLISION (BEACON)" >
+			<Select>
+				<Value>
+					(L:PSN_ANTI_COLLISION_LT_CONT_PWR) 1 ==
+						if{
+							(A:LIGHT BEACON, bool) 0 ==
+							if{
+								(>K:TOGGLE_BEACON_LIGHTS)
+							}
+						}
+						els{
+							(A:LIGHT BEACON, bool) 0 ==
+							if{
+								(>K:TOGGLE_BEACON_LIGHTS)
+							}
+						}
+				</Value>
+			</Select>
+		</Element> -->
+<!-- 		<Element Name="POSITION (NAVIGATION)" >
+			<Select>
+				<Value>
+					(L:PSN_ANTI_COLLISION_LT_CONT_PWR) 1 ==
+					(L:KNOB_FS_LIGHT_POS) 1 &gt; and
+						if{
+							(A:LIGHT NAV, bool) 0 ==
+							if{
+								(>K:TOGGLE_NAV_LIGHTS)
+							}
+						}
+						els{
+							(A:LIGHT NAV, bool) 1 ==
+							if{
+								(>K:TOGGLE_NAV_LIGHTS)
+							}
+						}
+				</Value>
+			</Select>
+		</Element> -->
+	</Element>
+	<Element Name="ICCP CONTROL">
+		<Element Name="ADF SYS">
+			<Select>
+				<Value>
+					(L:ADF_PWR) 1 ==
+						if{
+							(A:GPS POSITION LAT, Radians) (>C:fs9gps:NearestNdbCurrentLatitude, Radians)
+							(A:GPS POSITION LON, Radians) (>C:fs9gps:NearestNdbCurrentLongitude, Radians)
+							9 (>C:fs9gps:NearestNdbMaximumItems)
+							200 (>C:fs9gps:NearestNdbMaximumDistance, NMiles)
+							(C:fs9gps:NearestNdbCurrentFrequency, Frequency ADF BCD32) (>K:ADF2_COMPLETE_SET)
+						}
+				</Value>
+			</Select>
 		</Element>
 		<Element Name="ICCP INIT">
 			<Select>
@@ -5429,26 +5388,6 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-
-		<Element Name="ADF SYS">
-			<Select>
-				<Value>
-					(L:ADF_PWR) 1 ==
-						if{
-							(A:GPS POSITION LAT, Radians) (>C:fs9gps:NearestNdbCurrentLatitude, Radians)
-							(A:GPS POSITION LON, Radians) (>C:fs9gps:NearestNdbCurrentLongitude, Radians)
-							9 (>C:fs9gps:NearestNdbMaximumItems)
-							200 (>C:fs9gps:NearestNdbMaximumDistance, NMiles)
-							(C:fs9gps:NearestNdbCurrentFrequency, Frequency ADF BCD32) (>K:ADF2_COMPLETE_SET)
-						}
-
-					(C:fs9gps:NearestNdbCurrentDistance, nmiles)
-					(C:fs9gps:NearestNdbCurrentIdent)
-					(C:fs9gps:NearestNdbCurrentFrequency, KHz)
-				</Value>
-			</Select>
-		</Element>
-
 		<Element Name="[ICCP3]Integrated Communications Control Panel (After TO 1F-15-857)">
 			<Element Name="R2 MODE">
 				<Select>
@@ -6077,75 +6016,575 @@ Version 5.0
 			</Element>
 		</Element>
 	</Element>
-
-	<Element Name="EMERGENCY BOOST PUMP">
+	<Element Name="KY-58 CONTROL">
 		<Select>
 			<Value>
-				(L:SW2_FS_ENG_EMER_GEN) 0 &gt;
-				(L:EMER_GEN_EBP_PWR) 1 == and
-					if{
-						(L:L_BST_PUMP_ON) 0 ==
-						(L:R_BST_PUMP_ON) 0 ==
-						(L:EBP_INIT) 0 == and
+				(L:SW1_FS_KY58_ZEROIZE)
+				(L:SW1_FS_KY58_DELAY)
+				(L:KNOB_FS_KY58_PLAIN)
+				(L:KNOB_FS_KY58_MODE)
+				(L:KNOB_FS_KY58_FILL)
+				(L:SW1_FS_KY58_POWER)
+			</Value>
+		</Select>
+	</Element>
+
+	<Element Name="ENGINE CONTROL">
+		<Element Name="EEC">
+			<Select>
+				<Value>
+					(L:ENG_CONT_ESS_BUS_PWR) 1 ==
+					(L:SW1_FS_ENG_CONT_L) 1 == and
+						if{
+							1 (>L:LEEC_ENABLED)
+						}
+						els{
+							0 (>L:LEEC_ENABLED)
+						}
+
+					(L:ENG_CONT_ESS_BUS_PWR) 1 ==
+					(L:SW1_FS_ENG_CONT_R) 1 == and
+						if{
+							1 (>L:REEC_ENABLED)
+						}
+						els{
+							0 (>L:REEC_ENABLED)
+						}
+				</Value>
+			</Select>
+		</Element>
+	</Element>
+
+	<Element Name="NCI CONTROL">
+		<Element Name="PWR">
+			<Select>
+					<Value>
+						(L:INTRL_NAV_SET_MEAS_UNIT_PWR) 1 ==
+						(L:SIGNAL_DATA_RCDR_PWR) 1 == and
 							if{
-								1 (>L:EMER_BST_ON)
-								1 (>L:EBP_INIT)
+							}
+						(L:INTRL_NAV_SET_DSPL_UNIT_PWR) 1 ==
+						(L:SIGNAL_DATA_RCDR_PWR) 1 == and
+							if{
 							}
 
-						(L:L_BST_PUMP_ON) 1 ==
-						(L:R_BST_PUMP_ON) 1 == or
-						(L:EBP_INIT) 1 == and
+					(L:FS_NCI_DATA_INIT, enum) 0 ==
+						if{
+							-1 (>L:FS_NCI_01, enum)
+							-1 (>L:FS_NCI_02, enum)
+							-1 (>L:FS_NCI_03, enum)
+							-1 (>L:FS_NCI_04, enum)
+							-1 (>L:FS_NCI_05, enum)
+							-1 (>L:FS_NCI_06, enum)
+							-1 (>L:FS_NCI_07, enum)
+							-1 (>L:FS_NCI_08, enum)
+							-1 (>L:FS_NCI_09, enum)
+							-1 (>L:FS_NCI_10, enum)
+
+							0 (>L:FS_NCI_CC, enum)
+
+							0 (>L:FS_NCI_INPUT)
+
+							1 (>L:FS_NCI_DATA_INIT, enum)
+						}
+					</Value>
+				</Select>
+			</Element>
+		<Element Name="BUTTON">
+			<Element Name="KEYPAD">
+				<Select>
+					<Value>
+						(L:BTN_FS_NCI_1_EXEC)
+							if{ 1 (>L:FS_NCI_KB, enum) 0 (>L:BTN_FS_NCI_1_EXEC) }
+						(L:BTN_FS_NCI_2_EXEC)
+							if{ 2 (>L:FS_NCI_KB, enum) 0 (>L:BTN_FS_NCI_2_EXEC) }
+						(L:BTN_FS_NCI_3_EXEC)
+							if{ 3 (>L:FS_NCI_KB, enum) 0 (>L:BTN_FS_NCI_3_EXEC) }
+						(L:BTN_FS_NCI_4_EXEC)
+							if{ 4 (>L:FS_NCI_KB, enum) 0 (>L:BTN_FS_NCI_4_EXEC) }
+						(L:BTN_FS_NCI_5_EXEC)
+							if{ 5 (>L:FS_NCI_KB, enum) 0 (>L:BTN_FS_NCI_5_EXEC) }
+						(L:BTN_FS_NCI_6_EXEC)
+							if{ 6 (>L:FS_NCI_KB, enum) 0 (>L:BTN_FS_NCI_6_EXEC) }
+						(L:BTN_FS_NCI_7_EXEC)
+							if{ 7 (>L:FS_NCI_KB, enum) 0 (>L:BTN_FS_NCI_7_EXEC) }
+						(L:BTN_FS_NCI_8_EXEC)
+							if{ 8 (>L:FS_NCI_KB, enum) 0 (>L:BTN_FS_NCI_8_EXEC) }
+						(L:BTN_FS_NCI_9_EXEC)
+							if{ 9 (>L:FS_NCI_KB, enum) 0 (>L:BTN_FS_NCI_9_EXEC) }
+						(L:BTN_FS_NCI_0_EXEC)
+							if{ 0 (>L:FS_NCI_KB, enum) 0 (>L:BTN_FS_NCI_0_EXEC) }
+
+						(L:FS_NCI_KB, enum) -1 !=
 							if{
-								0 (>L:EMER_BST_ON)
-								0 (>L:EBP_INIT)
+								(L:FS_NCI_INPUT) 1 ==
+									if{
+										(L:FS_NCI_KB, enum) (>L:FS_NCI_LKB, enum)
+										(L:FS_NCI_01, enum) -1 ==
+											if{ (L:FS_NCI_LKB, enum) (>L:FS_NCI_01, enum)  }
+											els{
+												(L:FS_NCI_02, enum) -1 ==
+													if{ (L:FS_NCI_LKB, enum) (>L:FS_NCI_02, enum) }
+													els{
+														(L:FS_NCI_03, enum) -1 ==
+															if{  (L:FS_NCI_LKB, enum) (>L:FS_NCI_03, enum) }
+															els{
+																(L:FS_NCI_04, enum) -1 ==
+																	if{ (L:FS_NCI_LKB, enum) (>L:FS_NCI_04, enum) }
+																	els{
+																		(L:FS_NCI_05, enum) -1 ==
+																			if{ (L:FS_NCI_LKB, enum) (>L:FS_NCI_05, enum) }
+																			els{
+																				(L:FS_NCI_06, enum) -1 ==
+																					if{  (L:FS_NCI_LKB, enum) (>L:FS_NCI_06, enum)  }
+																					els{
+																						(L:FS_NCI_07, enum) -1 ==
+																							if{ (L:FS_NCI_LKB, enum) (>L:FS_NCI_07, enum) }
+																							els{
+																								(L:FS_NCI_08, enum) -1 ==
+																									if{ (L:FS_NCI_LKB, enum) (>L:FS_NCI_08, enum) }
+																									els{
+																										(L:FS_NCI_09, enum) -1 ==
+																											if{ (L:FS_NCI_LKB, enum) (>L:FS_NCI_09, enum) }
+																											els{
+																												(L:FS_NCI_10, enum) -1 ==
+																													if{ (L:FS_NCI_LKB, enum) (>L:FS_NCI_10, enum) }
+																											}
+																									}
+																							}
+																					}
+																			}
+																	}
+															}
+													}
+											}
+
+										(L:FS_NCI_CC, enum) ++ (>L:FS_NCI_CC, enum)
+									}
+							-1 (>L:FS_NCI_KB, enum)
+						}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="WIND KEYPAD ENTRY">
+				<Element>
+					<Select>
+						<Value>
+						(L:KNOB_FS_NCI_DATA) 2 ==
+						(L:NCI_READY) 1 == and
+							if{
+								1 (>L:FS_NCI_WIND_INPUT)
+								1 (>L:FS_NCI_INPUT)
 							}
-					}
-					els{
-						0 (>L:EMER_BST_ON)
-					}
-			</Value>
-		</Select>
-	</Element>
+						</Value>
+					</Select>
+				</Element>
 
-	<Element Name="EEC CONTROLER">
+				<Element>
+					<Select>
+						<Value>
+							(L:FS_NCI_WIND_INPUT) 1 ==
+								if{
+									(L:FS_NCI_01, enum) 7 ==
+										if{ 1 (>L:NCI_WIND_R) 1 (>L:FS_NCI_CLR) }
+
+									(L:FS_NCI_01, enum) 9 ==
+										if{ 1 (>L:NCI_WIND_B) 1 (>L:FS_NCI_CLR) }
+
+									(L:NCI_WIND_R)
+										if{
+											(L:FS_NCI_CC,enum) 0 == if{ 0 (>L:FS_NCI_SC) }
+											(L:FS_NCI_CC,enum) 1 == if{ (L:FS_NCI_01, enum) 1 * +  (>L:FS_NCI_SC) }
+											(L:FS_NCI_CC,enum) 2 == if{ (L:FS_NCI_01, enum) 10 * (L:FS_NCI_02, enum) 1 * +  (>L:FS_NCI_SC) }
+											(L:FS_NCI_CC,enum) 3 == if{ (L:FS_NCI_01, enum) 100 * (L:FS_NCI_02, enum) 10 * + (L:FS_NCI_03, enum) 1 * + (>L:FS_NCI_SC) }
+											(L:FS_NCI_SC) (>L:LEFT_DRD)
+										}
+									(L:NCI_WIND_B)
+										if{
+											(L:FS_NCI_CC,enum) 0 == if{ 0 (>L:FS_NCI_SC) }
+											(L:FS_NCI_CC,enum) 1 == if{ (L:FS_NCI_01, enum) 1 * +  (>L:FS_NCI_SC) }
+											(L:FS_NCI_CC,enum) 2 == if{ (L:FS_NCI_01, enum) 10 * (L:FS_NCI_02, enum) 1 * +  (>L:FS_NCI_SC) }
+											(L:FS_NCI_CC,enum) 3 == if{ (L:FS_NCI_01, enum) 100 * (L:FS_NCI_02, enum) 10 * + (L:FS_NCI_03, enum) 1 * + (>L:FS_NCI_SC) }
+											(L:FS_NCI_SC) (>L:RIGHT_DRD)
+									}
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element>
+						<Select>
+							<Value>
+							(L:BTN_FS_NCI_ENTR_EXEC) 1 ==
+							(L:FS_NCI_WIND_INPUT) 1 == and
+								if{
+									(L:NCI_WIND_B)
+										if{
+											(L:FS_NCI_SC) (>L:NCI_WIND_DEG)
+											0 (>L:NCI_WIND_B)
+										}
+									(L:NCI_WIND_R)
+										if{
+											(L:FS_NCI_SC) (>L:NCI_WIND_KTS)
+											0 (>L:NCI_WIND_R)
+										}
+									0 (>L:FS_NCI_WIND_INPUT)
+									0 (>L:FS_NCI_INPUT)
+									1 (>L:FS_NCI_CLR)
+								}
+							</Value>
+						</Select>
+				</Element>
+			</Element>
+
+			<Element Name="func">
+				<Select>
+					<Value>
+						(L:BTN_FS_NCI_MARK_EXEC)
+						(L:BTN_FS_NCI_OFLY_EXEC)
+						(L:BTN_FS_NCI_UPDATE_EXEC)
+						(L:BTN_FS_NCI_SEL_EXEC)
+
+
+						(L:BTN_FS_NCI_ENTR_EXEC)
+							if{
+								0 (>L:BTN_FS_NCI_ENTR_EXEC)
+								0 (>L:NCI_READY)
+							}
+
+						(L:BTN_FS_NCI_CLR_EXEC)  1 ==
+						(L:FS_NCI_CLR) 1 == or
+							if{
+								-1 (>L:FS_NCI_01, enum)
+								-1 (>L:FS_NCI_02, enum)
+								-1 (>L:FS_NCI_03, enum)
+								-1 (>L:FS_NCI_04, enum)
+								-1 (>L:FS_NCI_05, enum)
+								-1 (>L:FS_NCI_06, enum)
+								-1 (>L:FS_NCI_07, enum)
+								-1 (>L:FS_NCI_08, enum)
+								-1 (>L:FS_NCI_09, enum)
+								-1 (>L:FS_NCI_10, enum)
+
+								0 (>L:FS_NCI_CC, enum)
+								0 (>L:FS_UFC_SC,Mhz)
+
+								0 (>L:BTN_FS_NCI_CLR_EXEC)
+								0 (>L:FS_NCI_CLR)
+							}
+
+
+						(L:BTN_FS_NCI_RDY_EXEC) 1 ==
+							if{
+								(L:NCI_READY) 0 ==
+									if{
+										1 (>L:NCI_READY)
+									}
+									els{
+										0 (>L:NCI_READY)
+										0 (>L:BTN_FS_NCI_ENTR_EXEC)
+										0 (>L:FS_NCI_WIND_INPUT)
+										0 (>L:FS_NCI_INPUT)
+										1 (>L:FS_NCI_CLR)
+									}
+								0 (>L:BTN_FS_NCI_RDY_EXEC)
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		<Element Name="DRD">
+				<Element Name="ALIGN">
+					<Select>
+						<Value>
+							(L:KNOB_FS_NCI_MODE) 4 ==
+							(L:KNOB_FS_NCI_MODE) 5 == or
+								if{ (L:INS_TIME_DISP,seconds) 10 / (>L:LEFT_DRD) }
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="INPUT">
+					<Select>
+						<Value>
+							(L:FS_NCI_INPUT) 1 ==
+							(L:INPUT_INIT) 0 ==
+								if{
+									0 (>L:LEFT_DRD)
+									0 (>L:RIGHT_DRD)
+									1 (>L:INPUT_INIT)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="INS">
+					<Select>
+						<Value>
+							<!-- INS / TCN -->
+							(L:KNOB_FS_NCI_MODE) 6 ==
+							(L:KNOB_FS_NCI_MODE) 8 == or
+							(L:FS_NCI_INPUT) 0 ==
+								if{
+									<!-- M/V -->
+									(L:KNOB_FS_NCI_DATA) 1 ==
+										if{
+											(A:PLANE HEADING DEGREES MAGNETIC, degrees)  (>L:LEFT_DRD)
+											0 (>L:RIGHT_DRD)
+										}
+									<!-- WIND -->
+									(L:KNOB_FS_NCI_DATA) 2 ==
+										if{
+											(A:AMBIENT WIND VELOCITY, knots)  (>L:LEFT_DRD)
+											(A:AMBIENT WIND DIRECTION, degrees) (>L:RIGHT_DRD)
+
+											<!-- (L:NCI_WIND_KTS) (>L:LEFT_DRD) -->
+											<!-- (L:NCI_WIND_DEG) (>L:RIGHT_DRD) -->
+										}
+									<!-- VIS -->
+									(L:KNOB_FS_NCI_DATA) 3 ==
+										if{
+											(A:GPS WP DISTANCE, nmiles) (>L:LEFT_DRD)
+											0 (>L:RIGHT_DRD)
+										}
+									<!-- RDR -->
+									(L:KNOB_FS_NCI_DATA) 4 ==
+										if{
+											(L:RDR_TGT_DIS) (>L:LEFT_DRD)
+											(L:VSD_RANGEFactor, number) 2 / (>L:RIGHT_DRD)
+										}
+									<!-- TCN -->
+									(L:KNOB_FS_NCI_DATA) 5 ==
+										if{
+											(L:TCN_FREQ)  (>L:LEFT_DRD)
+											(A:NAV2 DME, nmiles) (>L:RIGHT_DRD)
+										}
+									<!-- PP -->
+									(L:KNOB_FS_NCI_DATA) 6 ==
+										if{
+											(A:GPS POSITION LAT, degrees) (>L:LEFT_DRD)
+											(A:GPS POSITION LON, degrees) (>L:RIGHT_DRD)
+										}
+									<!-- DEST -->
+									(L:KNOB_FS_NCI_DATA) 7 ==
+										if{
+											(A:GPS WP NEXT ALT, Feet) (>L:LEFT_DRD)
+											0 (>L:RIGHT_DRD)
+										}
+									<!-- O/S -->
+									(L:KNOB_FS_NCI_DATA) 8 ==
+										if{
+											(A:GPS WP DISTANCE, nmiles) (>L:LEFT_DRD)
+											(A:GPS WP BEARING, Degrees) (>L:RIGHT_DRD)
+										}
+								}
+						</Value>
+					</Select>
+				</Element>
+
+			<Element Name="DRD INDICATOR">
+				<Select>
+					<Value>
+					(L:KNOB_FS_NCI_DATA) 2 ==
+						if{
+							1 (>L:LT_DRD_KTS)
+						}
+						els{
+							0 (>L:LT_DRD_KTS)
+						}
+					(L:KNOB_FS_NCI_DATA) 3 ==
+					(L:KNOB_FS_NCI_DATA) 4 == or
+					(L:KNOB_FS_NCI_DATA) 8 == or
+						if{ 1 (>L:LT_DRD_NM) }
+						els{ 0 (>L:LT_DRD_NM) }
+
+					(L:KNOB_FS_NCI_DATA) 4 ==
+					(L:KNOB_FS_NCI_DATA) 5 == or
+						if{ 1 (>L:LT_DRD_NM_R) }
+						els{ 0 (>L:LT_DRD_NM_R) }
+
+
+					(L:KNOB_FS_NCI_DATA) 6 ==
+						if{
+							1 (>L:LT_DRD_LAT)
+							1 (>L:LT_DRD_LON)
+						}
+						els{
+							0 (>L:LT_DRD_LAT)
+							0 (>L:LT_DRD_LON)
+						}
+					(L:KNOB_FS_NCI_DATA) 7 ==
+						if{
+							1 (>L:LT_DRD_FT)
+						}
+						els{
+							0 (>L:LT_DRD_FT)
+						}
+
+					<!-- (L:LT_DRD_KTS) -->
+					<!-- (L:LT_DRD_X10) -->
+					<!-- (L:LT_DRD_M1) -->
+					<!-- (L:LT_DRD_M2) -->
+					<!-- (L:LT_DRD_M3) -->
+					<!-- (L:LT_DRD_LAT) -->
+					<!-- (L:LT_DRD_FT) -->
+					<!-- (L:LT_DRD_NM) -->
+					<!-- (L:LT_DRD_ALN) -->
+					<!-- (L:LT_DRD_LON) -->
+					<!-- (L:LT_DRD_FT_R) -->
+					<!-- (L:LT_DRD_NM_R) -->
+					</Value>
+				</Select>
+			</Element>
+
+			<Element Name="INS">
+				<Element Name="BASE">
+					<Select>
+						<Value>
+							(L:KNOB_FS_NCI_MODE)  2 ==
+							(L:INS_TIME,seconds) 0 &gt; and
+								if{
+									0 (>L:INS_TIME,seconds)
+									0 (>L:INS_TIME_DISP,seconds)
+									0 (>L:INS_GC_RDY, enum)
+									0 (>L:INS_RDY, enum)
+								}
+
+							(L:KNOB_FS_NCI_MODE)  4 ==
+							(L:KNOB_FS_NCI_MODE)  5 == or
+							(L:INS_TIME,seconds) 0 == and
+								if{
+									(P:ABSOLUTE TIME, seconds) (>L:INS_TIME,seconds)
+								}
+
+							(L:KNOB_FS_NCI_MODE)  4 ==
+							(L:KNOB_FS_NCI_MODE)  5 == or
+								if{
+									(P:ABSOLUTE TIME,seconds) (L:INS_TIME,seconds) - (>L:INS_TIME_DISP,seconds)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="GC">
+					<Select>
+						<Value>
+							(L:KNOB_FS_NCI_MODE)  5 ==
+							(P:ABSOLUTE TIME, seconds) (L:INS_TIME,seconds) - 60 &gt; and
+								if{
+									1 (>L:INS_GC_RDY, enum)
+								}
+
+							(L:KNOB_FS_NCI_MODE)  5 ==
+							(L:INS_GC_RDY, enum) 1 == and
+								if{
+									(P:ABSOLUTE TIME, seconds) (L:INS_TIME,seconds) - 60 &gt;
+									(P:ABSOLUTE TIME, seconds) (L:INS_TIME,seconds) - 90 &lt; and
+										if{
+											1 (>L:DRD_ALNGN1)
+											0 (>L:DRD_ALNGN2)
+											0 (>L:DRD_ALNGN3)
+										}
+										els{
+											0 (>L:DRD_ALNGN1)
+										}
+								<!-- 実際は6～7分後 -->
+									(P:ABSOLUTE TIME, seconds) (L:INS_TIME,seconds) - 90 &gt;
+									(P:ABSOLUTE TIME, seconds) (L:INS_TIME,seconds) - 120 &lt; and
+									(P:absolute time, number) 2 % 1 &lt; and
+										if{
+											0 (>L:DRD_ALNGN1)
+											1 (>L:DRD_ALNGN2)
+											0 (>L:DRD_ALNGN3)
+										}
+										els{
+											0 (>L:DRD_ALNGN2)
+										}
+								<!-- 実際は9分後 -->
+									(P:ABSOLUTE TIME, seconds) (L:INS_TIME,seconds) - 120 &gt;
+									(P:absolute time, number) 0.5 % 0.25 &lt; and
+										if{
+											0 (>L:DRD_ALNGN1)
+											0 (>L:DRD_ALNGN2)
+											1 (>L:DRD_ALNGN3)
+										}
+										els{
+											0 (>L:DRD_ALNGN3)
+										}
+									}
+									els{
+										0 (>L:DRD_ALNGN1)
+										0 (>L:DRD_ALNGN2)
+										0 (>L:DRD_ALNGN3)
+									}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="STOR">
+					<Select>
+						<Value>
+							(L:KNOB_FS_NCI_MODE)  6 ==
+							(P:ABSOLUTE TIME, seconds) (L:INS_TIME,seconds) - 120 &gt; and
+								if{
+									1 (>L:INS_GC_RDY, enum)
+								}
+
+							(L:KNOB_FS_NCI_MODE)  6 ==
+							(L:INS_GC_RDY, enum) 1 == and
+								if{
+									(P:ABSOLUTE TIME, seconds) (L:INS_TIME,seconds) - 120 &lt;
+									(P:absolute time, number) 2 % 1 &lt; and
+										if{
+											0 (>L:DRD_ALNGN4)
+										}
+										els{
+											0 (>L:DRD_ALNGN4)
+										}
+								}
+								els{ 0 (>L:DRD_ALNGN4) }
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="ALN Light">
+					<Select>
+						<Value>
+							(L:DRD_ALNGN1)
+							(L:DRD_ALNGN2) or
+							(L:DRD_ALNGN3) or
+							(L:DRD_ALNGN4) or
+								if{
+									1 (>L:LT_DRD_ALN)
+								}
+								els{
+									0 (>L:LT_DRD_ALN)
+								}
+						</Value>
+					</Select>
+				</Element>
+				<Element Name="READY">
+					<Select>
+						<Value>
+							(L:KNOB_FS_NCI_MODE)  5 == &gt;
+							(L:INS_GC_RDY,enum) 1 == and
+								if{
+									1 (>L:INS_RDY, enum)
+								}
+							</Value>
+						</Select>
+					</Element>
+			</Element>
+		</Element>
+	</Element>
+	<Element Name="TEWS CONTROL">
 		<Select>
 			<Value>
-				(L:ENG_CONT_ESS_BUS_PWR) 1 ==
-				(L:SW1_FS_ENG_CONT_L) 1 == and
-					if{
-						1 (>L:LEEC_ENABLED)
-					}
-					els{
-						0 (>L:LEEC_ENABLED)
-					}
-
-				(L:ENG_CONT_ESS_BUS_PWR) 1 ==
-				(L:SW1_FS_ENG_CONT_R) 1 == and
-					if{
-						1 (>L:REEC_ENABLED)
-					}
-					els{
-						0 (>L:REEC_ENABLED)
-					}
 			</Value>
 		</Select>
 	</Element>
-	<Element Name="INTRL NAV SET">
+	<Element Name="COMPASS CONTROL">
 		<Select>
 			<Value>
-				(L:INTRL_NAV_SET_MEAS_UNIT_PWR) 1 ==
-				(L:SIGNAL_DATA_RCDR_PWR) 1 == and
-					if{
-					}
-				(L:INTRL_NAV_SET_DSPL_UNIT_PWR) 1 ==
-				(L:SIGNAL_DATA_RCDR_PWR) 1 == and
-					if{
-					}
 			</Value>
 		</Select>
 	</Element>
 
-	<Element Name="ECS/TEMP CONTROLER">
+	<Element Name="ECS/TEMP CONTROL">
 		<Element Name="ANTI FOG CONTROLLER">
 			<Select>
 				<Value>
@@ -6309,61 +6748,390 @@ Version 5.0
 			</Select>
 		</Element>
 	</Element>
-
-	<Element Name="VTRS CONTROLER">
+	<Element Name="INTERIOR LIGHT CONTROL">
+		<!-- <Element Name="L/R CONSOLE / INST (PANEL LIGHT [LIGHT LANDING])">
+			<Select>
+				<Value>
+					(L:KNOB_FS_INT_LT_L_CONSOLE) 1 &gt;
+					(L:KNOB_FS_INT_LT_R_CONSOLE) 1 &gt; or
+					(L:KNOB_FS_INT_LT_INST_AUX) 1 &gt; or
+					(L:KNOB_FS_INT_LT_INST_FLT) 1 &gt; or
+					(L:KNOB_FS_INT_LT_INST_ENG) 1 &gt; or
+					(L:INTERIOR_LTS_PWR) 1 == and
+						if{
+							(A:LIGHT LANDING, bool) 0 ==
+							if{
+								(>K:LANDING_LIGHTS_TOGGLE)
+							}
+						}
+						els{
+							(A:LIGHT LANDING, bool) 1 ==
+							if{
+								(>K:LANDING_LIGHTS_TOGGLE)
+							}
+						}
+				</Value>
+			</Select>
+		</Element> -->
+		<Element Name="LIGHT TEST">
+			<Select>
+				<Value>
+					(L:LIGHT_FLICKER) 1 ==
+					(L:SW1_FS_INT_LT_TEST) 1 == and
+					(L:INT_LTS_TEST_PWR) 1 == and
+						if{ 1 (>L:FS_LIGHT_TEST) }
+						els{ 0 (>L:FS_LIGHT_TEST) }
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="STORM FLOOD (CABIN LIGHT)" >
+			<Select>
+				<Value>
+					(L:STORM_FLOOD_LT_PWR) 1 ==
+					(L:KNOB_FS_INT_LT_STORM) 1 &gt; and
+						if{
+							(A:LIGHT CABIN, bool) 0 ==
+							if{
+								(>K:TOGGLE_CABIN_LIGHTS)
+							}
+						}
+						els{
+							(A:LIGHT CABIN, bool) 1 ==
+							if{
+								(>K:TOGGLE_CABIN_LIGHTS)
+							}
+						}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="WARNING CAUTION">
+			<Select>
+				<Value>
+					(L:KNOB_FS_INT_LT_CAUTION) (>L:WARN_CAUT_LTS)
+				</Value>
+			</Select>
+		</Element>
+	</Element>
+	<Element Name="ECM CONTROL">
 		<Select>
 			<Value>
-				(L:KNOB_FS_VTRS_RECORD) 0 ==
-				(L:SW2_FS_VTRS_RECORD) 0 == or
-				(L:VTRS_CTVS_PWR) 0 == or
-					if{
-						0 (>L:VTRS_RUN)
-					}
-
-				(L:KNOB_FS_VTRS_RECORD) 1 ==
-				(L:SW2_FS_VTRS_RECORD) 1 == or
-				(L:VTRS_CTVS_PWR) 1 == and
-					if{
-						0 (>L:VTRS_RUN)
-					}
-				(L:KNOB_FS_VTRS_RECORD) 2 ==
-				(L:SW2_FS_VTRS_RECORD) 2 == or
-				(L:VTRS_CTVS_PWR) 1 == and
-					if{
-						1 (>L:VTRS_RUN)
-					}
-
-				(L:VTRS_RUN) 1 ==
-				(L:HUD_DC_PWR) 1 == and
-				(P:ABSOLUTE TIME, minutes) 1 % 0.996 &gt; and
-					if{
-						(L:IND_VTRS_REMAIN) + 1 - (>L:IND_VTRS_REMAIN)
-
-						(L:IND_VTRS_REMAIN) 0 ==
-							if{
-								0 (>L:IND_VTRS_REMAIN)
-							}
-					}
-
-				(L:KNOB_VTRS_RESET) 1 ==
-					if{
-						0 (>L:KNOB_VTRS_RESET)
-						(L:IND_VTRS_REMAIN) 30 &lt;
-						if{
-							(L:IND_VTRS_REMAIN) ++ (>L:IND_VTRS_REMAIN)
-						}
-					}
-				(L:KNOB_VTRS_RESET) -1 ==
-					if{
-						0 (>L:KNOB_VTRS_RESET)
-						(L:IND_VTRS_REMAIN) 0 &gt;
-						if{
-							(L:IND_VTRS_REMAIN) -- (>L:IND_VTRS_REMAIN)
-						}
-					}
+				(L:KNOB_FS_ECM1_MODE)
+				(L:BTN_FS_ECM1_RST)
+				(L:KNOB_FS_ECM2_MODE)
+				(L:BTN_FS_ECM2_RST)
 			</Value>
 		</Select>
 	</Element>
+	<Element Name="COUNTER MEASURE DISPENCER(CMD) CONTROL">
+		<Select>
+			<Value>
+				(L:SW2_FS_CMD_DISP_SEL)
+				(L:KNOB_FS_CMD_MODE)
+				(L:SW1_FS_CMD_JETT)
+			</Value>
+		</Select>
+	</Element>
+
+	<Element Name="MCCP CONTROL">
+		<Element Name="INIT">
+			<Select>
+				<Value>
+					(L:MCCP_INIT) 0 ==
+						if{
+							(A:COM1 ACTIVE FREQUENCY, MHz) (>L:MCCP_FREQ, MHz)
+							(L:MCCP_FREQ, MHz) 10 / flr (>L:MCCP_FREQ_1000)
+							(L:MCCP_FREQ, KHz) 1000 / 10 % int  (>L:MCCP_FREQ_100)
+							(L:MCCP_FREQ, MHz) 1000 * 1000 % (>L:MCCP_FREQ_1)
+							(A:COM1 ACTIVE FREQUENCY, MHz) (>L:COM1 ACTIVE FREQUENCY_Slave, MHz)
+							(L:MCCP_FREQ, MHz) (>L:MCCP_FREQ_SLAVE, MHz)
+							1 (>L:MCCP_INIT)
+						}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="CHANNEL SELECTION">
+			<Select>
+				<Value>
+					(L:KNOB_FS_MCCP_MODE) 2 ==
+					(L:SW2_FS_MCCP_MODE) 1 == or
+					(L:UHF_RT_1_PWR) 1 == and
+						if{
+							118.2
+							118.1
+							126.2
+							118.25
+							120.1
+							122.0
+							120.1
+							119.5
+							122.05
+							134.3
+							118.0
+							122.2
+							118.85
+							122.5
+							118.5
+							121.9
+							121.8
+							121.7
+							118.75
+							19 (L:KNOB_FS_MCCP_CHAN) case (>L:MCCP_FREQ_CHAN, MHz)
+						}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="MODE">
+			<Select>
+				<Value>
+					(L:UHF_RT_1_PWR) 1 ==
+					(L:MODE_SEL_PWR) 1 == and
+						if{
+							(L:KNOB_FS_MCCP_MODE) 0 ==
+								if{
+									243000 (>L:MCCP_FREQ, KHz)
+									7338 (>K:COM_RADIO_SET)
+								}
+
+							(L:KNOB_FS_MCCP_MODE) 1 ==
+							(L:MCCP_INIT) 1 == and
+								if{
+									(A:COM1 ACTIVE FREQUENCY, MHz) (L:COM1 ACTIVE FREQUENCY_Slave, MHz) - 0 !=
+										if{ 0 (>L:MCCP_INIT) }
+
+									(L:MCCP_FREQ_1) + (L:MCCP_FREQ_100) 1000 * + (L:MCCP_FREQ_1000) 10000 * + (>L:MCCP_FREQ, kHz)
+									(L:MCCP_FREQ, MHz) (L:MCCP_FREQ_SLAVE, MHz) - 0 !=
+										if{
+											(L:MCCP_FREQ, MHz) (>L:MCCP_FREQ_SLAVE, MHz)
+											(L:MCCP_FREQ, MHz) 100 * near 10000 % d 10 % r 10 / int d 10 % r 10 / int d 10 % r 10 / int 16 * + 16 * + 16 * + (>K:COM_RADIO_SET)
+											(A:COM1 ACTIVE FREQUENCY, MHz) (>L:COM1 ACTIVE FREQUENCY_Slave, MHz)
+										}
+								}
+
+							(L:KNOB_FS_MCCP_MODE) 2 ==
+								if{
+									(L:MCCP_FREQ_CHAN, MHz) 100 * near 10000 % d 10 % r 10 / int d 10 % r 10 / int d 10 % r 10 / int 16 * + 16 * + 16 * + (>K:COM_RADIO_SET)
+									(L:MCCP_FREQ_CHAN, MHz) (>L:MCCP_FREQ, MHz)
+								}
+							(L:KNOB_FS_MCCP_MODE) 3 ==
+								if{
+									225000 (>L:MCCP_FREQ, KHz)
+								}
+						}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="VOLUME">
+			<Select>
+				<Value>
+					(L:UHF_RT_1_PWR) 1 ==
+					(L:KNOB_FS_MCCP_VOL) 0 &gt; and
+					(L:R1V_INIT) 0 == and
+						if{
+							1 (>K:COM1_TRANSMIT_SELECT)
+							1 (>L:R1V_INIT)
+						}
+
+					(L:KNOB_FS_MCCP_VOL) 0 ==
+					(L:R1V_INIT) 1 == and
+						if{
+							1 (>K:COM2_TRANSMIT_SELECT)
+							0 (>L:R1V_INIT)
+						}
+				</Value>
+			</Select>
+		</Element>
+	</Element>
+	<Element Name="VTRS CONTROL">
+		<Element Name="CONTROL">
+			<Select>
+				<Value>
+					(L:KNOB_FS_VTRS_RECORD) 0 ==
+					(L:SW2_FS_VTRS_RECORD) 0 == or
+					(L:VTRS_CTVS_PWR) 0 == or
+						if{
+							0 (>L:VTRS_RUN)
+						}
+					(L:KNOB_FS_VTRS_RECORD) 1 ==
+					(L:SW2_FS_VTRS_RECORD) 1 == or
+					(L:VTRS_CTVS_PWR) 1 == and
+						if{
+							0 (>L:VTRS_RUN)
+						}
+					(L:KNOB_FS_VTRS_RECORD) 2 ==
+					(L:SW2_FS_VTRS_RECORD) 2 == or
+					(L:VTRS_CTVS_PWR) 1 == and
+						if{
+							1 (>L:VTRS_RUN)
+						}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="REMAIN">
+			<Select>
+				<Value>
+					(L:VTRS_RUN) 1 ==
+					(L:HUD_DC_PWR) 1 == and
+					(P:ABSOLUTE TIME, minutes) 1 % 0.996 &gt; and
+						if{
+							(L:IND_VTRS_REMAIN) + 1 - (>L:IND_VTRS_REMAIN)
+
+							(L:IND_VTRS_REMAIN) 0 ==
+								if{
+									0 (>L:IND_VTRS_REMAIN)
+								}
+						}
+					(L:KNOB_VTRS_RESET) 1 ==
+						if{
+							0 (>L:KNOB_VTRS_RESET)
+							(L:IND_VTRS_REMAIN) 30 &lt;
+							if{
+								(L:IND_VTRS_REMAIN) ++ (>L:IND_VTRS_REMAIN)
+							}
+						}
+					(L:KNOB_VTRS_RESET) -1 ==
+						if{
+							0 (>L:KNOB_VTRS_RESET)
+							(L:IND_VTRS_REMAIN) 0 &gt;
+							if{
+								(L:IND_VTRS_REMAIN) -- (>L:IND_VTRS_REMAIN)
+							}
+						}
+			</Value>
+		</Select>
+	</Element>
+	</Element>
+	<Element Name="ARAMENTS CONTROL PANEL CONTROL">
+		<Element Name="A/G">
+			<Element Name="STA-2">
+				<Select>
+					<Value>
+						(L:ACS_PWR) 1 ==
+						(L:BTN_FS_ARAM_STR_SEL_1_EXEC) 1 == and
+							if{
+								0 (>L:BTN_FS_ARAM_STR_SEL_1_EXEC)
+
+								(L:SELECT_FUEL_TANK_1) 0 ==
+									if{ 1 (>L:SELECT_FUEL_TANK_1) }
+									els{ 0 (>L:SELECT_FUEL_TANK_1) }
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="STA-5">
+				<Select>
+					<Value>
+						(L:ACS_PWR) 1 ==
+						(L:BTN_FS_ARAM_STR_SEL_2_EXEC) 1 == and
+							if{
+								0 (>L:BTN_FS_ARAM_STR_SEL_2_EXEC)
+
+								(L:SELECT_FUEL_TANK_2) 0 ==
+									if{ 1 (>L:SELECT_FUEL_TANK_2) }
+									els{ 0 (>L:SELECT_FUEL_TANK_2) }
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element Name="STA-8">
+				<Select>
+					<Value>
+						(L:ACS_PWR) 1 ==
+						(L:BTN_FS_ARAM_STR_SEL_3_EXEC) 1 == and
+							if{
+								0 (>L:BTN_FS_ARAM_STR_SEL_3_EXEC)
+
+								(L:SELECT_FUEL_TANK_3) 0 ==
+									if{ 1 (>L:SELECT_FUEL_TANK_3) }
+									els{ 0 (>L:SELECT_FUEL_TANK_3) }
+							}
+					</Value>
+				</Select>
+			</Element>
+		</Element>
+		<Element Name="INTERVAL">
+			<Select>
+				<Value>
+					(L:ACS_PWR) 1 ==
+					(L:SW1_FS_ARAM_INTERVAL) 1 == and
+						if{}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="QUANTITY">
+			<Select>
+				<Value>
+					(L:ACS_PWR) 1 ==
+					(L:SW1_FS_ARAM_QUANTITY) 1 == and
+						if{}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="MON/OPT BTNS">
+			<Select>
+				<Value>
+					(L:ACS_PWR) 1 ==
+						if{
+							(L:BTN_FS_ARAM_MON_1_EXEC) 1 ==
+								if{
+									0 (>L:BTN_FS_ARAM_MON_1_EXEC)
+									(>K:VOR1_OBI_INC)
+								}
+							(L:BTN_FS_ARAM_MON_2_EXEC) 1 ==
+								if{
+									0 (>L:BTN_FS_ARAM_MON_2_EXEC)
+									(>K:HEADING_BUG_INC)
+								}
+							(L:BTN_FS_ARAM_MON_3_EXEC) 1 ==
+								if{
+									0 (>L:BTN_FS_ARAM_MON_3_EXEC)
+									(>K:AP_ALT_VAR_INC)
+								}
+							(L:BTN_FS_ARAM_MON_4_EXEC) 1 ==
+								if{
+									0 (>L:BTN_FS_ARAM_MON_4_EXEC)
+									(>K:AP_SPD_VAR_DEC)
+								}
+							(L:BTN_FS_ARAM_OPT_1_EXEC) 1 ==
+								if{
+									0 (>L:BTN_FS_ARAM_OPT_1_EXEC)
+									(>K:VOR1_OBI_DEC)
+								}
+							(L:BTN_FS_ARAM_OPT_2_EXEC) 1 ==
+								if{
+									0 (>L:BTN_FS_ARAM_OPT_2_EXEC)
+									(>K:HEADING_BUG_DEC)
+								}
+							(L:BTN_FS_ARAM_OPT_3_EXEC) 1 ==
+								if{
+									0 (>L:BTN_FS_ARAM_OPT_3_EXEC)
+									(>K:AP_ALT_VAR_DEC)
+								}
+							(L:BTN_FS_ARAM_OPT_4_EXEC) 1 ==
+								if{
+									0 (>L:BTN_FS_ARAM_OPT_4_EXEC)
+									(>K:AP_SPD_VAR_DEC)
+								}
+							(L:BTN_FS_ARAM_OPT_5_EXEC) 1 ==
+								if{
+									0 (>L:BTN_FS_ARAM_OPT_5_EXEC)
+									(A:AUTOPILOT MASTER, bool) 0 ==
+										if{
+											2 (>L:SW2_FS_CAS_PITCH)
+											2 (>L:SW2_FS_CAS_ROLL)
+											2 (>L:SW2_FS_CAS_YAW)
+										}
+										els{
+											1 (>L:SW2_FS_CAS_PITCH)
+											1 (>L:SW2_FS_CAS_ROLL)
+											1 (>L:SW2_FS_CAS_YAW)
+										}
+								}
+						}
+				</Value>
+			</Select>
+		</Element>
+	</Element>
+
 
 	<Element Name="ARMT">
 		<Element Name="ARMT SYS">
@@ -6687,138 +7455,6 @@ Version 5.0
 		</Element>
 	</Element>
 
-	<Element Name="ARAMENTS CONTROL PANEL">
-		<Element Name="A/G">
-			<Element Name="STA-2">
-				<Select>
-					<Value>
-						(L:ACS_PWR) 1 ==
-						(L:BTN_FS_ARAM_STR_SEL_1_EXEC) 1 == and
-							if{
-								0 (>L:BTN_FS_ARAM_STR_SEL_1_EXEC)
-
-								(L:SELECT_FUEL_TANK_1) 0 ==
-									if{ 1 (>L:SELECT_FUEL_TANK_1) }
-									els{ 0 (>L:SELECT_FUEL_TANK_1) }
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element Name="STA-5">
-				<Select>
-					<Value>
-						(L:ACS_PWR) 1 ==
-						(L:BTN_FS_ARAM_STR_SEL_2_EXEC) 1 == and
-							if{
-								0 (>L:BTN_FS_ARAM_STR_SEL_2_EXEC)
-
-								(L:SELECT_FUEL_TANK_2) 0 ==
-									if{ 1 (>L:SELECT_FUEL_TANK_2) }
-									els{ 0 (>L:SELECT_FUEL_TANK_2) }
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element Name="STA-8">
-				<Select>
-					<Value>
-						(L:ACS_PWR) 1 ==
-						(L:BTN_FS_ARAM_STR_SEL_3_EXEC) 1 == and
-							if{
-								0 (>L:BTN_FS_ARAM_STR_SEL_3_EXEC)
-
-								(L:SELECT_FUEL_TANK_3) 0 ==
-									if{ 1 (>L:SELECT_FUEL_TANK_3) }
-									els{ 0 (>L:SELECT_FUEL_TANK_3) }
-							}
-					</Value>
-				</Select>
-			</Element>
-		</Element>
-		<Element Name="INTERVAL">
-			<Select>
-				<Value>
-					(L:ACS_PWR) 1 ==
-					(L:SW1_FS_ARAM_INTERVAL) 1 == and
-						if{}
-				</Value>
-			</Select>
-		</Element>
-		<Element Name="QUANTITY">
-			<Select>
-				<Value>
-					(L:ACS_PWR) 1 ==
-					(L:SW1_FS_ARAM_QUANTITY) 1 == and
-						if{}
-				</Value>
-			</Select>
-		</Element>
-		<Element Name="MON/OPT BTNS">
-			<Select>
-				<Value>
-					(L:ACS_PWR) 1 ==
-						if{
-							(L:BTN_FS_ARAM_MON_1_EXEC) 1 ==
-								if{
-									0 (>L:BTN_FS_ARAM_MON_1_EXEC)
-									(>K:VOR1_OBI_INC)
-								}
-							(L:BTN_FS_ARAM_MON_2_EXEC) 1 ==
-								if{
-									0 (>L:BTN_FS_ARAM_MON_2_EXEC)
-									(>K:HEADING_BUG_INC)
-								}
-							(L:BTN_FS_ARAM_MON_3_EXEC) 1 ==
-								if{
-									0 (>L:BTN_FS_ARAM_MON_3_EXEC)
-									(>K:AP_ALT_VAR_INC)
-								}
-							(L:BTN_FS_ARAM_MON_4_EXEC) 1 ==
-								if{
-									0 (>L:BTN_FS_ARAM_MON_4_EXEC)
-									(>K:AP_SPD_VAR_DEC)
-								}
-							(L:BTN_FS_ARAM_OPT_1_EXEC) 1 ==
-								if{
-									0 (>L:BTN_FS_ARAM_OPT_1_EXEC)
-									(>K:VOR1_OBI_DEC)
-								}
-							(L:BTN_FS_ARAM_OPT_2_EXEC) 1 ==
-								if{
-									0 (>L:BTN_FS_ARAM_OPT_2_EXEC)
-									(>K:HEADING_BUG_DEC)
-								}
-							(L:BTN_FS_ARAM_OPT_3_EXEC) 1 ==
-								if{
-									0 (>L:BTN_FS_ARAM_OPT_3_EXEC)
-									(>K:AP_ALT_VAR_DEC)
-								}
-							(L:BTN_FS_ARAM_OPT_4_EXEC) 1 ==
-								if{
-									0 (>L:BTN_FS_ARAM_OPT_4_EXEC)
-									(>K:AP_SPD_VAR_DEC)
-								}
-							(L:BTN_FS_ARAM_OPT_5_EXEC) 1 ==
-								if{
-									0 (>L:BTN_FS_ARAM_OPT_5_EXEC)
-									(A:AUTOPILOT MASTER, bool) 0 ==
-										if{
-											2 (>L:SW2_FS_CAS_PITCH)
-											2 (>L:SW2_FS_CAS_ROLL)
-											2 (>L:SW2_FS_CAS_YAW)
-										}
-										els{
-											1 (>L:SW2_FS_CAS_PITCH)
-											1 (>L:SW2_FS_CAS_ROLL)
-											1 (>L:SW2_FS_CAS_YAW)
-										}
-								}
-						}
-				</Value>
-			</Select>
-		</Element>
-	</Element>
-
 	<Element Name="HUD">
 		<Element Name="POWER">
 			<Select>
@@ -7073,7 +7709,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			</Element>
+		</Element>
 		<Element Name="SWITCH">
 			<Element Name="HUD BRT">
 				<Select>
@@ -7271,6 +7907,7 @@ Version 5.0
 						(L:VSD_PWR_TIME, Seconds) 0 &gt; and
 							if{
 								0 (>L:VSD_PWR_TIME, Seconds)
+								0 (>L:VSD_SYS_STBY)
 							}
 					</Value>
 				</Select>
@@ -7283,6 +7920,7 @@ Version 5.0
 						(L:VSD_SYS_STBY) 1 == and
 							if{
 								1 (>L:VSD_POWER)
+								0 (>L:VSD_SYS_STBY)
 								0 (>L:VSD_PWR_TIME, Seconds)
 							}
 					</Value>
@@ -7294,6 +7932,7 @@ Version 5.0
 						(L:RDR_SYS_PWR) 0 ==
 							if{
 								0 (>L:VSD_POWER)
+								0 (>L:VSD_SYS_STBY)
 								0 (>L:VSD_PWR_TIME, Seconds)
 							}
 					</Value>
@@ -7434,12 +8073,10 @@ Version 5.0
 						(L:VSD_TIME) 10 &lt; and
 							if{
 								800.00 (>L:VSD_RANGESTATIC, Number)
-								16000.00 (>L:TEWS_RANGESTATIC, Number)
 							}
 						(L:VSD_TIME) 10 &gt;
 							if{
 								800.01 (>L:VSD_RANGESTATIC, Number)
-								16000.01 (>L:TEWS_RANGESTATIC, Number)
 							}
 
 						(L:SW1_FS_RDR_MODE_CONTR) 0 ==
@@ -7497,6 +8134,32 @@ Version 5.0
 							if{ 160 (>L:VSD_RANGEFACTOR, Number) }
 
 						(L:VSD_RANGEFACTOR, Number) (>L:RADAR_SCALE, nmiles)
+
+						(L:SW1_FS_RDR_MODE_CONTR) 0 == if{
+							(L:KNOB_FS_RDR_RANGE) 0 ==
+								if{ 10 (>L:VSD_RANGE, Number) }
+							(L:KNOB_FS_RDR_RANGE) 1 ==
+								if{ 20 (>L:VSD_RANGE, Number) }
+							(L:KNOB_FS_RDR_RANGE) 2 ==
+								if{ 40 (>L:VSD_RANGE, Number) }
+							(L:KNOB_FS_RDR_RANGE) 3 ==
+								if{ 80 (>L:VSD_RANGE, Number) }
+							(L:KNOB_FS_RDR_RANGE) 4 ==
+								if{ 160 (>L:VSD_RANGE, Number) }
+						}
+						(L:SW1_FS_RDR_MODE_CONTR) 1 == if{
+							(L:VSD_AUTO_RANGE) 10 ==
+								if{ 10 (>L:VSD_RANGE, Number) }
+							(L:VSD_AUTO_RANGE) 20 ==
+								if{ 20 (>L:VSD_RANGE, Number) }
+							(L:VSD_AUTO_RANGE) 40 ==
+								if{ 40 (>L:VSD_RANGE, Number) }
+							(L:VSD_AUTO_RANGE) 80 ==
+								if{ 80 (>L:VSD_RANGE, Number) }
+							(L:VSD_AUTO_RANGE) 160 ==
+								if{ 160 (>L:VSD_RANGE, Number) }
+						}
+
 					</Value>
 				</Select>
 			</Element>
@@ -7616,36 +8279,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element Name="VSD_RANGE">
-				<Select>
-					<Value>
-						(L:SW1_FS_RDR_MODE_CONTR) 0 == if{
-							(L:KNOB_FS_RDR_RANGE) 0 ==
-								if{ 10 (>L:VSD_RANGE, Number) }
-							(L:KNOB_FS_RDR_RANGE) 1 ==
-								if{ 20 (>L:VSD_RANGE, Number) }
-							(L:KNOB_FS_RDR_RANGE) 2 ==
-								if{ 40 (>L:VSD_RANGE, Number) }
-							(L:KNOB_FS_RDR_RANGE) 3 ==
-								if{ 80 (>L:VSD_RANGE, Number) }
-							(L:KNOB_FS_RDR_RANGE) 4 ==
-								if{ 160 (>L:VSD_RANGE, Number) }
-						}
-						(L:SW1_FS_RDR_MODE_CONTR) 1 == if{
-							(L:VSD_AUTO_RANGE) 10 ==
-								if{ 10 (>L:VSD_RANGE, Number) }
-							(L:VSD_AUTO_RANGE) 20 ==
-								if{ 20 (>L:VSD_RANGE, Number) }
-							(L:VSD_AUTO_RANGE) 40 ==
-								if{ 40 (>L:VSD_RANGE, Number) }
-							(L:VSD_AUTO_RANGE) 80 ==
-								if{ 80 (>L:VSD_RANGE, Number) }
-							(L:VSD_AUTO_RANGE) 160 ==
-								if{ 160 (>L:VSD_RANGE, Number) }
-						}
-					</Value>
-				</Select>
-			</Element>
+
 			<Element Name="AAM MODE">
 				<Select>
 					<Value>
@@ -7753,11 +8387,11 @@ Version 5.0
 						(L:TEWS_TIME) 0 &gt;
 						(L:TEWS_TIME) 0.5 &lt; and
 							if{
-								1 (>L:TEWS_RANGESTATIC, Number)
+								8000.00 (>L:TEWS_RANGESTATIC, Number)
 							}
 						(L:TEWS_TIME) 0.5 &gt;
 							if{
-								1.001 (>L:TEWS_RANGESTATIC, Number)
+								8000.01 (>L:TEWS_RANGESTATIC, Number)
 							}
 					</Value>
 				</Select>

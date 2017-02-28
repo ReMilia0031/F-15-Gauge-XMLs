@@ -1,9 +1,13 @@
-<Gauge Name="F-15 SYSTEMS" Version="8.90">
+<Gauge Name="F-15 SYSTEMS" Version="9.10">
 <!--
+Version 9.10
+	[EDT] ***
+Version 9.00
+	[ADD] OXY
 Version 9.00
 	[EDT] AUDIO VOLUME
 Version 8.90
-	[EDT} ***
+	[EDT] ***
 Version 8.80
 	[EDT] COMM , VMS
 Version 8.50
@@ -48,8 +52,6 @@ Version 5.0
 			(L:SYS_INIT) 0 ==
 				if{
 					1 (>L:SYS_INIT)
-					0 (>L:ENG1_INIT)
-					0 (>L:ENG2_INIT)
 
 					1 (>L:SW1_FS_MISC_ROLL_RATIO)
 					1 (>L:SW1_FS_MISC_L_INLET_RAMP)
@@ -114,25 +116,34 @@ Version 5.0
 					1 (>L:KNOB_FS_TCN_VOL)
 
 					2 (>L:SW2_FS_CAS_YAW)
-					2 (>L:SW2_FS_CAS_PITCH)
 					2 (>L:SW2_FS_CAS_ROLL)
+					2 (>L:SW2_FS_CAS_PITCH)
 					1 (>L:SW1_FS_CAS_ALT_HOLD)
 					1 (>L:SW1_FS_CAS_ATT_HOLD)
+					0 (>L:BTN_FS_TAKEOFF_TRIM_EXEC)
 
 					0 (>L:SW1_FS_THR_L_FING)
 					0 (>L:SW1_FS_THR_R_FING)
 					0 (>L:SW1_FS_THROT_L)
 					0 (>L:SW1_FS_THROT_R)
+					1 (>L:SW2_FS_THR_MIC)
+					0 (>L:SW2_FS_THR_SPD_BRK)
+					0 (>L:BTN_FS_THR_EWWS)
+					0 (>L:SW2_FS_THR_WPN)
+					0 (>L:BTN_FS_THR_IFF_INT)
+					0 (>L:SW6_FS_THR_TGT_DISIG)
+					0 (>L:BTN_FS_THR_RTCL_REJ)
+					0 (>L:KNOB_FS_THR_ANT_ELEV)
+					0 (>L:SW2_FS_THR_ECM_DISPENS)
 
 					0 (>L:SW2_FS_THR_RUD_TRIM)
 					0 (>L:SW1_FLAPS)
 
 					0 (>L:KNOB_FS_LIGHT_FORM)
-					0 (>L:KNOB_FS_LIGHT_POS)
 					0 (>L:SW1_FS_LIGHT_ANTICOL)
+					0 (>L:KNOB_FS_LIGHT_POS)
 
 					1 (>L:SW2_FS_ICCP_R1_ANT)
-
 					6 (>L:KNOB_FS_ICCP_TEWS_CAUT)
 					6 (>L:KNOB_FS_ICCP_TEWS_LAUNCH)
 					0 (>L:BTN_FS_ICCP_TEWS_LAUNCH)
@@ -143,7 +154,6 @@ Version 5.0
 
 					0 (>L:SW2_FS_ICCP2_MODE_SEL)
 					0 (>L:BTN_FS_ICCP2_CHAN_SET)
-					0 (>L:KNOB_FS_ICCP2_UHF2_VOL)
 					1 (>L:SW1_FS_ICCP2_CIPHER_ZERO)
 					0 (>L:SW2_FS_ICCP2_CIPHER_SEL)
 					0 (>L:SW2_FS_ICCP2_GRD_SEL)
@@ -188,9 +198,9 @@ Version 5.0
 					1 (>L:SW1_FS_ENG_MASTER_R)
 					0 (>L:SW1_FS_ENG_JFS)
 
-					1 (>L:KNOB_FS_NAV_DATA)
-					1 (>L:KNOB_FS_NAV_MODE)
-					1 (>L:KNOB_FS_NAV_INT)
+					1 (>L:KNOB_FS_NCI_DATA)
+					1 (>L:KNOB_FS_NCI_MODE)
+					1 (>L:KNOB_FS_NCI_INT)
 
 					1 (>L:SW1_FS_TEWS_ICS)
 					1 (>L:SW1_FS_TEWS_SET1)
@@ -294,7 +304,7 @@ Version 5.0
 	</Element>
 	<Element Name="ENGINE">
 		<Element Name="JET FUEL STARTER SYSTEM">
-			<Element Name="JFS STARTER FOR ACCUMULATOR 1">
+			<Element Name="START FOR ACCUM 1">
 				<Select>
 					<Value>
 						(L:SW2_FS_JFS_LEVER) 1 ==
@@ -311,7 +321,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element Name="JFS STARTER FOR ACCUMULATOR 2">
+			<Element Name="START FOR ACCUM 2">
 				<Select>
 					<Value>
 						(L:SW2_FS_JFS_LEVER) 2 ==
@@ -329,7 +339,7 @@ Version 5.0
 				</Select>
 			</Element>
 
-			<Element Name="JFS STOP FOR ENGINE STARTED">
+			<Element Name="STOP FOR ENGINE STARTED">
 				<Select>
 					<Value>
 						(A:TURB ENG1 N2, Percent) 35 &gt;
@@ -343,7 +353,7 @@ Version 5.0
 					</Value>
 				</Select>
 			</Element>
-			<Element Name="JFS STOP FOR SWITCH OR FAULT">
+			<Element Name="STOP FOR SWITCH OR FAULT">
 				<Select>
 					<Value>
 					(L:SW1_FS_ENG_JFS) 0 ==
@@ -412,71 +422,69 @@ Version 5.0
 			</Element>
 
 			<Element Name="JFS HYDRAULIC ACCUMULATORS">
-				<Element Name="JFS ACCUMULATOR 1">
-					<Select>
-						<Value>
-							(L:SW2_FS_JFS_LEVER) 1 ==
-							(L:SW1_FS_ENG_JFS) 1 == and
-							(L:JFS_LEVER_PULLED) 0 == and
-							(L:ENG_AVAIL) 0 == and
-								if{ 1 (>L:JFS_LEVER_PULLED) }
+				<Element Name="ACCUMULATOR 1">
+					<Element Name="DISCHARGE">
+						<Select>
+							<Value>
+								(L:SW2_FS_JFS_LEVER) 1 ==
+								(L:SW1_FS_ENG_JFS) 1 == and
+								(L:JFS_LEVER_PULLED) 0 == and
+								(L:ENG_AVAIL) 0 == and
+									if{ 1 (>L:JFS_LEVER_PULLED) }
 
-							(L:JFS_LEVER_PULLED) 1 ==
-							(L:JFS_ACCUM_1) 400 &gt; and
-								if{	(L:JFS_ACCUM_1) 500 - (>L:JFS_ACCUM_1) }
-						</Value>
-					</Select>
-				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:JFS_LEVER_PULLED) 1 ==
-							(L:JFS_ACCUM_1) 100 &lt; and
-								if{ 0 (>L:JFS_LEVER_PULLED) }
-						</Value>
-					</Select>
-				</Element>
+								(L:JFS_LEVER_PULLED) 1 ==
+								(L:JFS_ACCUM_1) 400 &gt; and
+									if{	(L:JFS_ACCUM_1) 500 - (>L:JFS_ACCUM_1) }
 
-				<Element Name="JFS ACCUMULATOR 2">
-					<Select>
-						<Value>
-							(L:SW2_FS_JFS_LEVER) 2 ==
-							(L:SW1_FS_ENG_JFS) 1 == and
-							(L:JFS_LEVER_PULLED) 0 == and
-							(L:ENG_AVAIL) 0 == and
-								if{ 2 (>L:JFS_LEVER_PULLED) }
-
-							(L:JFS_LEVER_PULLED) 2 ==
-							(L:JFS_ACCUM_2) 400 &gt; and
-								if{ (L:JFS_ACCUM_2) 500 - (>L:JFS_ACCUM_2) }
-						</Value>
-					</Select>
+								(L:JFS_LEVER_PULLED) 1 ==
+								(L:JFS_ACCUM_1) 100 &lt; and
+									if{ 0 (>L:JFS_LEVER_PULLED) }
+							</Value>
+						</Select>
+					</Element>
+					<Element Name="RECHARGE">
+						<Select>
+							<Value>
+								(L:JFS_RUN) 0 ==
+								(L:JFS_ACCUM_1) 7000 &lt; and
+									if{
+										(L:JFS_ACCUM_1) (L:PX_HYD) 500 / + (>L:JFS_ACCUM_1)
+									}
+							</Value>
+						</Select>
+					</Element>
 				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:JFS_LEVER_PULLED) 2 ==
-							(L:JFS_ACCUM_2) 100 &lt; and
-								if{ 0 (>L:JFS_LEVER_PULLED) }
-						</Value>
-					</Select>
-				</Element>
+				<Element Name="ACCUMULATOR 2">
+					<Element Name="DISCHARGE">
+						<Select>
+							<Value>
+								(L:SW2_FS_JFS_LEVER) 2 ==
+								(L:SW1_FS_ENG_JFS) 1 == and
+								(L:JFS_LEVER_PULLED) 0 == and
+								(L:ENG_AVAIL) 0 == and
+									if{ 2 (>L:JFS_LEVER_PULLED) }
 
-				<Element Name="JFS ACCUMULATORS RECHARGE">
-					<Select>
-						<Value>
-							(L:JFS_RUN) 0 ==
-							(L:JFS_ACCUM_1) 7000 &lt; and
-								if{
-									(L:JFS_ACCUM_1) (L:PX_HYD) 500 / + (>L:JFS_ACCUM_1)
-								}
-							(L:JFS_RUN) 0 ==
-							(L:JFS_ACCUM_2) 7000 &lt; and
-								if{
-									(L:JFS_ACCUM_2) (L:PX_HYD) 500 / + (>L:JFS_ACCUM_2)
-								}
-						</Value>
-					</Select>
+								(L:JFS_LEVER_PULLED) 2 ==
+								(L:JFS_ACCUM_2) 400 &gt; and
+									if{ (L:JFS_ACCUM_2) 500 - (>L:JFS_ACCUM_2) }
+
+								(L:JFS_LEVER_PULLED) 2 ==
+								(L:JFS_ACCUM_2) 100 &lt; and
+									if{ 0 (>L:JFS_LEVER_PULLED) }
+							</Value>
+						</Select>
+					</Element>
+					<Element Name="RECHARGE">
+						<Select>
+							<Value>
+								(L:JFS_RUN) 0 ==
+								(L:JFS_ACCUM_2) 7000 &lt; and
+									if{
+										(L:JFS_ACCUM_2) (L:PX_HYD) 500 / + (>L:JFS_ACCUM_2)
+									}
+							</Value>
+						</Select>
+					</Element>
 				</Element>
 			</Element>
 			<Element Name="JFS MECH">
@@ -515,298 +523,157 @@ Version 5.0
 			</Element>
 		</Element>
 
-		<Element Name="STARTER SYSTEM">
-			<Element Name="ENG1 STARTER">
-				<Select>
-					<Value>
-						(A:GENERAL ENG COMBUSTION:2, bool) 1 ==
-						(L:SW1_FS_ENG_MASTER_L) 1 == and
-						(A:APU PCT RPM, Percent) 90 &gt; and
-						(L:SW1_FS_THR_L_FING) 1 == and
-						(L:ENG_L_STARTER_INIT) 0 == and
-							if{
-								1 (>L:AMAD_L_COUPLE)
-								1 (>L:ENG_L_STARTER)
-								1 (>L:ENG_L_STARTER_INIT)
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element>
-				<Select>
-					<Value>
-						(L:SW1_FS_ENG_MASTER_L) 0 ==
-						(A:APU PCT RPM, Percent) 90 &lt; or
-						(L:SW1_FS_THR_L_FING) 0 == or
-						(A:GENERAL ENG COMBUSTION:1, bool) 1 == or
-						(L:ENG_L_STARTER_INIT) 1 == and
-							if{
-								0 (>L:AMAD_L_COUPLE)
-								0 (>L:ENG_L_STARTER)
-								0 (>L:ENG_L_STARTER_INIT)
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element>
-				<Select>
-					<Value>
-						(L:ENG_L_STARTER) 1 ==
-							if{ (A:GENERAL ENG STARTER:1, bool) !
-								if{ (>K:TOGGLE_STARTER1)
-								}
-							}
-							els{ (A:GENERAL ENG STARTER:1, bool)
-								if{ (>K:TOGGLE_STARTER1)
-								}
-							}
-					</Value>
-				</Select>
-			</Element>
-
-			<Element Name="ENG2 STARTER">
-				<Select>
-					<Value>
-						(L:SW1_FS_ENG_MASTER_R) 1 ==
-						(A:APU PCT RPM, Percent) 90 &gt; and
-						(L:SW1_FS_THR_R_FING) 1 == and
-						(L:ENG_R_STARTER_INIT) 0 == and
-							if{
-								1 (>L:AMAD_R_COUPLE)
-								1 (>L:ENG_R_STARTER)
-								1 (>L:ENG_R_STARTER_INIT)
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element>
-				<Select>
-					<Value>
-						(L:SW1_FS_ENG_MASTER_R) 0 ==
-						(A:APU PCT RPM, Percent) 90 &lt; or
-						(L:SW1_FS_THR_R_FING) 0 == or
-						(A:GENERAL ENG COMBUSTION:2, bool) 1 == or
-						(L:ENG_R_STARTER_INIT) 1 == and
-							if{
-								0 (>L:AMAD_R_COUPLE)
-								0 (>L:ENG_R_STARTER)
-								0 (>L:ENG_R_STARTER_INIT)
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element>
-				<Select>
-					<Value>
-						(L:ENG_R_STARTER) 1 ==
-							if{ (A:GENERAL ENG STARTER:2, bool) !
-								if{ (>K:TOGGLE_STARTER2)
-								}
-							}
-							els{ (A:GENERAL ENG STARTER:2, bool)
-								if{ (>K:TOGGLE_STARTER2)
-								}
-							}
-					</Value>
-				</Select>
-			</Element>
-		</Element>
-
-		<Element Name="ENGINE CONTROL">
-			<Element Name="FINGER">
-				<Select>
-					<Value>
-						(A:TURB ENG2 N2, Percent) 20 &gt;
-						(A:GENERAL ENG1 THROTTLE LEVER POSITION, Percent) 1 &gt; and
-							if{
-								1 (>L:SW1_FS_THR_L_FING)
-							}
-							els{
-								0 (>L:SW1_FS_THR_L_FING)
-							}
-
-						(A:GENERAL ENG2 THROTTLE LEVER POSITION, Percent) 1 &gt;
-							if{
-								1 (>L:SW1_FS_THR_R_FING)
-							}
-							els{
-								0 (>L:SW1_FS_THR_R_FING)
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element Name="THROTTLE LEVER POS">
-				<Select>
-					<Value>
-						(A:GENERAL ENG1 THROTTLE LEVER POSITION, Percent) 20 &gt;
-							if{
-								1 (>L:SW1_FS_THROT_L)
-							}
-							els{
-								(A:TURB ENG1 N2, Percent) 20 &lt;
+		<Element Name="ENGINE">
+			<Element Name="ENGINE 1">
+				<Element Name="STARTER">
+					<Element Name="ENGAGE">
+						<Select>
+							<Value>
+								(A:GENERAL ENG COMBUSTION:2, bool) 1 ==
+								(L:SW1_FS_ENG_MASTER_L) 1 == and
+								(A:APU PCT RPM, Percent) 90 &gt; and
+								(L:SW1_FS_THR_L_FING) 1 == and
+								(L:ENG_L_STARTER_INIT) 0 == and
 									if{
-										0 (>L:SW1_FS_THROT_L)
+										1 (>L:AMAD_L_COUPLE)
+										1 (>L:ENG_L_STARTER)
+										1 (>L:ENG_L_STARTER_INIT)
 									}
-							}
-
-						(A:GENERAL ENG2 THROTTLE LEVER POSITION, Percent) 20 &gt;
-							if{
-								1 (>L:SW1_FS_THROT_R)
-							}
-							els{
-								(A:TURB ENG2 N2, Percent) 20 &lt;
+							</Value>
+						</Select>
+					</Element>
+					<Element Name="STOPED">
+						<Select>
+							<Value>
+								(L:SW1_FS_ENG_MASTER_L) 0 ==
+								(A:APU PCT RPM, Percent) 90 &lt; or
+								(L:SW1_FS_THR_L_FING) 0 == or
+								(A:GENERAL ENG COMBUSTION:1, bool) 1 == or
+								(L:ENG_L_STARTER_INIT) 1 == and
 									if{
-										0 (>L:SW1_FS_THROT_R)
+										0 (>L:AMAD_L_COUPLE)
+										0 (>L:ENG_L_STARTER)
+										0 (>L:ENG_L_STARTER_INIT)
 									}
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element Name="THROTTLE SET">
-				<Select>
-					<Value>
-						(A:GENERAL ENG1 THROTTLE LEVER POSITION, Percent) 20 &lt;
-						(A:TURB ENG1 N2, Percent) 35 &gt; and
-							if{
-								3276 (>K:THROTTLE1_SET)
-							}
+							</Value>
+						</Select>
+					</Element>
+					<Element Name="FSX STARTER">
+						<Select>
+							<Value>
+								(L:ENG_L_STARTER) 1 ==
+									if{ (A:GENERAL ENG STARTER:1, bool) !
+										if{ (>K:TOGGLE_STARTER1)
+										}
+									}
+									els{ (A:GENERAL ENG STARTER:1, bool)
+										if{ (>K:TOGGLE_STARTER1)
+										}
+									}
+							</Value>
+						</Select>
+					</Element>
+				</Element>
+				<Element Name="MASTER">
+					<Element>
+						<Select>
+							<Value>
+								(L:SW1_FS_ENG_MASTER_L) 1 ==
+								(L:SW1_FS_ENG_CONT_L) 1 == and
+								(L:ENG_CONT_ESS_DC_BUS_AVAIL) 1 == and
+								(A:GENERAL ENG FUEL VALVE:1, bool) 0 == and
+									if{ (>K:TOGGLE_FUEL_VALVE_ENG1) }
 
-						(A:GENERAL ENG2 THROTTLE LEVER POSITION, Percent) 20 &lt;
-						(A:TURB ENG2 N2, Percent) 35 &gt; and
-							if{
-								3276 (>K:THROTTLE2_SET)
-							}
-
-						(A:GENERAL ENG1 THROTTLE LEVER POSITION, Percent) 70 &gt;
-						(A:TURB ENG N2:1, Percent) 96 &lt; and
-							if{
-								11468 (>K:THROTTLE_70)
-							}
-
-						(A:GENERAL ENG1 THROTTLE LEVER POSITION, Percent) 70 &gt;
-						(A:TURB ENG N2:1, Percent) 96 &lt; and
-							if{
-								11468 (>K:THROTTLE2_SET)
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element Name="ENG AVAIL">
-				<Select>
-					<Value>
-						(A:TURB ENG1 N2, Percent) 25 &gt;
-							if{
-								1 (>L:ENG1_AVAIL)
-							}
-							els{
-								0 (>L:ENG1_AVAIL)
-							}
-
-						(A:TURB ENG2 N2, Percent) 25 &gt;
-							if{
-								1 (>L:ENG2_AVAIL)
-							}
-							els{
-								0 (>L:ENG2_AVAIL)
-							}
-
-						(L:ENG1_AVAIL) 1 ==
-						(L:ENG2_AVAIL) 1 == and
-							if{
-								1 (>L:ENG_AVAIL)
-							}
-							els{
-								0 (>L:ENG_AVAIL)
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element Name="ENG1 FUEL FEED">
-				<Element>
-					<Select>
-						<Value>
-							(L:SW1_FS_THROT_L) 1 ==
-							(L:BTN_FS_FIRE_LENG_EXEC) 0 == and
-							(L:FUEL_L_INIT) 0 == and
-								if{
-									1000 (>K:MIXTURE1_SET)
-									1 (>L:FUEL_L_INIT)
-								}
-						</Value>
-					</Select>
+								(L:SW1_FS_ENG_MASTER_L) 0 ==
+								(L:SW1_FS_ENG_CONT_L) 1 == and
+								(L:ENG_CONT_ESS_DC_BUS_AVAIL) 1 == and
+								(A:GENERAL ENG FUEL VALVE:1, bool) 1 == and
+									if{ (>K:TOGGLE_FUEL_VALVE_ENG1) }
+							</Value>
+						</Select>
+					</Element>
 				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:SW1_FS_THROT_L) 0 ==
-							(L:BTN_FS_FIRE_LENG_EXEC) 1 == or
-							(L:FUEL_L_INIT) 1 == and
-								if{
-									0 (>K:MIXTURE1_SET)
-									0 (>L:FUEL_L_INIT)
-									0 (>L:SW1_FS_THR_L_FING)
-									0 (>L:BTN_FS_FIRE_LENG_EXEC)
-								}
-						</Value>
-					</Select>
+				<Element Name="FUEL FEED">
+					<Element Name="ON">
+						<Select>
+							<Value>
+								(L:SW1_FS_THROT_L) 1 ==
+								(L:BTN_FS_FIRE_LENG_EXEC) 0 == and
+								(L:FUEL_L_INIT) 0 == and
+									if{
+										1000 (>K:MIXTURE1_SET)
+										1 (>L:FUEL_L_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
+					<Element Name="CUT">
+						<Select>
+							<Value>
+								(L:SW1_FS_THROT_L) 0 ==
+								(L:BTN_FS_FIRE_LENG_EXEC) 1 == or
+								(L:FUEL_L_INIT) 1 == and
+									if{
+										0 (>K:MIXTURE1_SET)
+										0 (>L:FUEL_L_INIT)
+										0 (>L:SW1_FS_THR_L_FING)
+										0 (>L:BTN_FS_FIRE_LENG_EXEC)
+									}
+							</Value>
+						</Select>
+					</Element>
 				</Element>
 			</Element>
-			<Element Name="ENG2 FUEL FEED">
-				<Element>
-					<Select>
-						<Value>
-							(L:SW1_FS_THROT_R) 1 ==
-							(L:BTN_FS_FIRE_RENG_EXEC) 0 == and
-							(L:FUEL_R_INIT) 0 == and
-								if{
-									1000 (>K:MIXTURE2_SET)
-									1 (>L:FUEL_R_INIT)
-								}
-						</Value>
-					</Select>
+			<Element Name="ENGINE 2">
+				<Element Name="STARTER">
+					<Element Name="ENGAGE">
+						<Select>
+							<Value>
+								(L:SW1_FS_ENG_MASTER_R) 1 ==
+								(A:APU PCT RPM, Percent) 90 &gt; and
+								(L:SW1_FS_THR_R_FING) 1 == and
+								(L:ENG_R_STARTER_INIT) 0 == and
+									if{
+										1 (>L:AMAD_R_COUPLE)
+										1 (>L:ENG_R_STARTER)
+										1 (>L:ENG_R_STARTER_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
+					<Element Name="STOPED">
+						<Select>
+							<Value>
+								(L:SW1_FS_ENG_MASTER_R) 0 ==
+								(A:APU PCT RPM, Percent) 90 &lt; or
+								(L:SW1_FS_THR_R_FING) 0 == or
+								(A:GENERAL ENG COMBUSTION:2, bool) 1 == or
+								(L:ENG_R_STARTER_INIT) 1 == and
+									if{
+										0 (>L:AMAD_R_COUPLE)
+										0 (>L:ENG_R_STARTER)
+										0 (>L:ENG_R_STARTER_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
+					<Element Name="FSX STARTER">
+						<Select>
+							<Value>
+								(L:ENG_R_STARTER) 1 ==
+									if{ (A:GENERAL ENG STARTER:2, bool) !
+										if{ (>K:TOGGLE_STARTER2)
+										}
+									}
+									els{ (A:GENERAL ENG STARTER:2, bool)
+										if{ (>K:TOGGLE_STARTER2)
+										}
+									}
+							</Value>
+						</Select>
+					</Element>
 				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:SW1_FS_THROT_R) 0 ==
-							(L:BTN_FS_FIRE_RENG_EXEC) 1 == or
-							(L:FUEL_R_INIT) 1 == and
-								if{
-									0 (>K:MIXTURE2_SET)
-									0 (>L:FUEL_R_INIT)
-									0 (>L:SW1_FS_THR_R_FING)
-									0 (>L:BTN_FS_FIRE_RENG_EXEC)
-								}
-						</Value>
-					</Select>
-				</Element>
-			</Element>
-			<Element Name="ENG1 MASTER">
-				<Element>
-					<Select>
-						<Value>
-							(L:SW1_FS_ENG_MASTER_L) 1 ==
-							(L:SW1_FS_ENG_CONT_L) 1 == and
-							(L:ENG_CONT_ESS_DC_BUS_AVAIL) 1 == and
-							(A:GENERAL ENG FUEL VALVE:1, bool) 0 == and
-								if{ (>K:TOGGLE_FUEL_VALVE_ENG1) }
-						</Value>
-					</Select>
-				</Element>
-				<Element>
-					<Select>
-						<Value>
-							(L:SW1_FS_ENG_MASTER_L) 0 ==
-							(L:SW1_FS_ENG_CONT_L) 1 == and
-							(L:ENG_CONT_ESS_DC_BUS_AVAIL) 1 == and
-							(A:GENERAL ENG FUEL VALVE:1, bool) 1 == and
-								if{ (>K:TOGGLE_FUEL_VALVE_ENG1) }
-						</Value>
-					</Select>
-				</Element>
-			</Element>
-			<Element Name="ENG2 MASTER">
-				<Element>
+				<Element Name="MASTER">
 					<Select>
 						<Value>
 							(L:SW1_FS_ENG_MASTER_R) 1 ==
@@ -814,12 +681,7 @@ Version 5.0
 							(L:ENG_CONT_ESS_DC_BUS_AVAIL) 1 == and
 							(A:GENERAL ENG FUEL VALVE:2, bool) 0 == and
 								if{ (>K:TOGGLE_FUEL_VALVE_ENG2) }
-						</Value>
-					</Select>
-				</Element>
-				<Element>
-					<Select>
-						<Value>
+
 							(L:SW1_FS_ENG_MASTER_R) 0 ==
 							(L:SW1_FS_ENG_CONT_R) 1 == and
 							(L:ENG_CONT_ESS_DC_BUS_AVAIL) 1 == and
@@ -828,27 +690,118 @@ Version 5.0
 						</Value>
 					</Select>
 				</Element>
+				<Element Name="FUEL FEED">
+					<Element Name="ON">
+						<Select>
+							<Value>
+								(L:SW1_FS_THROT_R) 1 ==
+								(L:BTN_FS_FIRE_RENG_EXEC) 0 == and
+								(L:FUEL_R_INIT) 0 == and
+									if{
+										1000 (>K:MIXTURE2_SET)
+										1 (>L:FUEL_R_INIT)
+									}
+							</Value>
+						</Select>
+					</Element>
+					<Element Name="CUT">
+						<Select>
+							<Value>
+								(L:SW1_FS_THROT_R) 0 ==
+								(L:BTN_FS_FIRE_RENG_EXEC) 1 == or
+								(L:FUEL_R_INIT) 1 == and
+									if{
+										0 (>K:MIXTURE2_SET)
+										0 (>L:FUEL_R_INIT)
+										0 (>L:SW1_FS_THR_R_FING)
+										0 (>L:BTN_FS_FIRE_RENG_EXEC)
+									}
+							</Value>
+						</Select>
+					</Element>
+				</Element>
 			</Element>
-			<Element Name="ENG OVSP">
-				<Element>
+			<Element Name="MISC">
+				<Element Name="THROTTLE SET">
 					<Select>
 						<Value>
-							(A:TURB ENG N2:1, Percent) 110 &gt;
-							(L:L_ENG_OVSP_DET_PWR) 1 == and
-							(L:ENG_CONT_ESS_DC_BUS_AVAIL) 1 == and
-								if{}
+							(A:GENERAL ENG1 THROTTLE LEVER POSITION, Percent) 20 &lt;
+							(A:TURB ENG1 N2, Percent) 35 &gt; and
+								if{
+									3276 (>K:THROTTLE1_SET)
+								}
+
+							(A:GENERAL ENG2 THROTTLE LEVER POSITION, Percent) 20 &lt;
+							(A:TURB ENG2 N2, Percent) 35 &gt; and
+								if{
+									3276 (>K:THROTTLE2_SET)
+								}
+
+							(A:GENERAL ENG1 THROTTLE LEVER POSITION, Percent) 70 &gt;
+							(A:TURB ENG N2:1, Percent) 96 &lt; and
+								if{
+									11468 (>K:THROTTLE_70)
+								}
+
+							(A:GENERAL ENG1 THROTTLE LEVER POSITION, Percent) 70 &gt;
+							(A:TURB ENG N2:1, Percent) 96 &lt; and
+								if{
+									11468 (>K:THROTTLE2_SET)
+								}
 						</Value>
 					</Select>
 				</Element>
-				<Element>
+				<Element Name="ENG AVAIL">
 					<Select>
 						<Value>
-							(A:TURB ENG N2:2, Percent) 110 &gt;
-							(L:R_ENG_OVSP_DET_PWR) 1 == and
-							(L:ENG_CONT_ESS_DC_BUS_AVAIL) 1 == and
-								if{}
+							(A:TURB ENG1 N2, Percent) 25 &gt;
+								if{
+									1 (>L:ENG1_AVAIL)
+								}
+								els{
+									0 (>L:ENG1_AVAIL)
+								}
+
+							(A:TURB ENG2 N2, Percent) 25 &gt;
+								if{
+									1 (>L:ENG2_AVAIL)
+								}
+								els{
+									0 (>L:ENG2_AVAIL)
+								}
+
+							(L:ENG1_AVAIL) 1 ==
+							(L:ENG2_AVAIL) 1 == and
+								if{
+									1 (>L:ENG_AVAIL)
+								}
+								els{
+									0 (>L:ENG_AVAIL)
+								}
 						</Value>
 					</Select>
+				</Element>
+				<Element Name="ENG OVSP">
+					<Element>
+						<Select>
+							<Value>
+								(A:TURB ENG N2:1, Percent) 110 &gt;
+								(L:L_ENG_OVSP_DET_PWR) 1 == and
+								(L:ENG_CONT_ESS_DC_BUS_AVAIL) 1 == and
+									if{}
+							</Value>
+						</Select>
+					</Element>
+					<Element>
+						<Select>
+							<Value>
+								(A:TURB ENG N2:2, Percent) 110 &gt;
+								(L:R_ENG_OVSP_DET_PWR) 1 == and
+								(L:ENG_CONT_ESS_DC_BUS_AVAIL) 1 == and
+									if{}
+							</Value>
+						</Select>
+					</Element>
 				</Element>
 			</Element>
 		</Element>
@@ -925,7 +878,7 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-		<Element Name="EMERGENCY BRAKE CONTROLLER">
+		<Element Name="EMERGENCY BRAKE">
 			<Select>
 				<Value>
 					(L:SW1_FS_EMER_BRAKE) 1 ==
@@ -946,7 +899,7 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-		<Element Name="EMERGENCY GEAR CONTROLLER">
+		<Element Name="EMERGENCY GEAR">
 			<Select>
 				<Value>
 					(L:SW1_FS_EMER_GEAR) 1 ==
@@ -957,7 +910,7 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-		<Element Name="EMERGENCY JETTION CONTROLLER">
+		<Element Name="EMERGENCY JETTION">
 			<Select>
 				<Value>
 					(L:BTN_FS_EMER_JETT_EXEC) 1 ==
@@ -985,7 +938,7 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-		<Element Name="EMERGENCY VENT CONTROLLER">
+		<Element Name="EMERGENCY VENT">
 			<Select>
 				<Value>
 					(L:SW1_FS_EMER_VENT) 1 ==
@@ -994,7 +947,7 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-		<Element Name="EMERGENCY RF DOOR CONTROLLER">
+		<Element Name="EMERGENCY RF DOOR">
 			<Select>
 				<Value>
 					(L:SW1_FS_EAR) 1 ==
@@ -1007,7 +960,7 @@ Version 5.0
 				</Value>
 			</Select>
 		</Element>
-		<Element Name="CANOPY EJECTION CONTROLLER">
+		<Element Name="CANOPY EJECTION">
 			<Select>
 				<Value>
 				(L:SW1_FS_EMER_CANOPY) 1 ==
@@ -1268,7 +1221,7 @@ Version 5.0
 		</Element>
 	</Element>
 
-	<Element Name="ETC">
+	<Element Name="MISC">
 		<Element Name="HYD ELEV">
 			<Select>
 				<Value>
@@ -1280,6 +1233,39 @@ Version 5.0
 							L5 1600 - ABS 13.6525 * S5 6000 &lt;
 								if{ 0 (>K:AXIS_ELEVATOR_SET) }
 								els{ L5 (>K:AXIS_ELEVATOR_SET) }
+						}
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="OXY">
+			<Select>
+				<Value>
+					(L:SW2_FS_OXY_SUPPLY) 1 ==
+						if{
+							70 (>L:OXY_PRESS, psi)
+							2500 (>L:OXY_QTY, liters)
+						}
+
+					(L:SW2_FS_OXY_SUPPLY) 0 ==
+					(BTN_FS_ECS_OXY_TEST) 1 == or
+						if{
+							0 (>L:OXY_PRESS, psi)
+							0 (>L:OXY_QTY, liters)
+						}
+
+					(L:SW1_FS_OXY_DILUTER)
+					(L:SW2_FS_OXY_EMER)
+				</Value>
+			</Select>
+		</Element>
+		<Element Name="GEAR">
+			<Select>
+				<Value>
+					(L:LG_PWR) 1 ==
+						if{
+							(L:NOSE_LDG_WOW_PWR)
+							(L:L_MAIN_GEAR_WOW_PWR)
+							(L:R_MAIN_GEAR_WOW_PWR)
 						}
 				</Value>
 			</Select>

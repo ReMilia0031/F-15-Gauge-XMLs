@@ -2431,7 +2431,7 @@
 							<Value>2</Value>
 						</CustomDrawParam>
 						<CustomDrawParam id="ColorLayerBorders" Name="ColorLayerBorders">
-							<Value>@@SymColorDark</Value>
+							<Value>@SymColorDark</Value>
 						</CustomDrawParam>
 
 		<!-- AIRPORTS -->
