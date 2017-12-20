@@ -739,6 +739,7 @@ Version 5.0
 									1 (>L:INTRG_RCVR_XMTR_PWR)
 									1 (>L:INTRL_NAV_SET_DSPL_UNIT_PWR)
 									1 (>L:INTERIOR_LTS_PWR)
+									1 (>L:INTR_BLANKER_PWR)
 									1 (>L:IRE_PWR)
 									1 (>L:KIR_PWR)
 									1 (>L:KIT_PWR)
@@ -781,6 +782,7 @@ Version 5.0
 									0 (>L:INTRG_RCVR_XMTR_PWR)
 									0 (>L:INTRL_NAV_SET_DSPL_UNIT_PWR)
 									0 (>L:INTERIOR_LTS_PWR)
+									0 (>L:INTR_BLANKER_PWR)
 									0 (>L:IRE_PWR)
 									0 (>L:KIR_PWR)
 									0 (>L:KIT_PWR)
@@ -2707,7 +2709,7 @@ Version 5.0
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
 						(L:HUD_MASTER_MODE) 2 == and
-						(L:LEAD_COM_GYRO_PWR) 1 == and
+						(L:LEAD_COMP_GYRO_AC_PWR) 1 == and
 						(L:RLST) and
 						(L:GACQ SWITCH) and
 						(L:BGOH) and
@@ -2933,9 +2935,10 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:L_BST_PUMP_PWR) 0 == and
-							if{ 1 (>L:LT_FS_BIT_L_PUMP)  }
-							els{ 0 (>L:LT_FS_BIT_L_PUMP) }
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(A:TURB ENG1 N2,Percent) 40 &lt; and
+							if{ 1 (>L:LT_FS_L_PUMP)  }
+							els{ 0 (>L:LT_FS_L_PUMP) }
 					</Value>
 				</Select>
 			</Element>
@@ -2943,9 +2946,10 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:R_BST_PUMP_PWR) 0 == and
-							if{ 1 (>L:LT_FS_BIT_R_PUMP)  }
-							els{ 0 (>L:LT_FS_BIT_R_PUMP) }
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(A:TURB ENG2 N2,Percent) 40 &lt; and
+							if{ 1 (>L:LT_FS_R_PUMP)  }
+							els{ 0 (>L:LT_FS_R_PUMP) }
 					</Value>
 				</Select>
 			</Element>
@@ -2954,9 +2958,10 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(A:HYDRAULIC PRESSURE:1, PSI) 1000 &lt; and
-							if{ 1 (>L:LT_FS_BIT_UTL_A)  }
-							els{ 0 (>L:LT_FS_BIT_UTL_A) }
+							if{ 1 (>L:LT_FS_UTL_A)  }
+							els{ 0 (>L:LT_FS_UTL_A) }
 					</Value>
 				</Select>
 			</Element>
@@ -2964,9 +2969,10 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(A:HYDRAULIC PRESSURE:2, PSI) 1000 &lt; and
-							if{ 1 (>L:LT_FS_BIT_UTL_B)  }
-							els{ 0 (>L:LT_FS_BIT_UTL_B) }
+							if{ 1 (>L:LT_FS_UTL_B)  }
+							els{ 0 (>L:LT_FS_UTL_B) }
 					</Value>
 				</Select>
 			</Element>
@@ -2974,20 +2980,22 @@ Version 5.0
 			<Element Name="PC1 A">
 				<Select>
 					<Value>
-					(L:LIGHT_FLICKER) 1 ==
-					(A:HYDRAULIC PRESSURE:1, PSI) 2000 &lt; and
-						if{ 1 (>L:LT_FS_PC1_A)  }
-						els{ 0 (>L:LT_FS_PC1_A) }
+						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(A:HYDRAULIC PRESSURE:1, PSI) 2000 &lt; and
+							if{ 1 (>L:LT_FS_PC1_A)  }
+							els{ 0 (>L:LT_FS_PC1_A) }
 					</Value>
 				</Select>
 			</Element>
 			<Element Name="PC1 B">
 				<Select>
 					<Value>
-					(L:LIGHT_FLICKER) 1 ==
-					(A:HYDRAULIC PRESSURE:1, PSI) 2000 &lt; and
-						if{ 1 (>L:LT_FS_PC1_B)  }
-						els{ 0 (>L:LT_FS_PC1_B) }
+						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(A:HYDRAULIC PRESSURE:1, PSI) 2000 &lt; and
+							if{ 1 (>L:LT_FS_PC1_B)  }
+							els{ 0 (>L:LT_FS_PC1_B) }
 					</Value>
 				</Select>
 			</Element>
@@ -2995,20 +3003,22 @@ Version 5.0
 			<Element Name="PC2 A">
 				<Select>
 					<Value>
-					(L:LIGHT_FLICKER) 1 ==
-					(A:HYDRAULIC PRESSURE:2, PSI) 2000 &lt; and
-						if{ 1 (>L:LT_FS_PC2_B)  }
-						els{ 0 (>L:LT_FS_PC2_B) }
+						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(A:HYDRAULIC PRESSURE:2, PSI) 2000 &lt; and
+							if{ 1 (>L:LT_FS_PC2_A)  }
+							els{ 0 (>L:LT_FS_PC2_A) }
 					</Value>
 				</Select>
 			</Element>
 			<Element Name="PC2 B">
 				<Select>
 					<Value>
-					(L:LIGHT_FLICKER) 1 ==
-					(A:HYDRAULIC PRESSURE:2, PSI) 2000 &lt; and
-						if{ 1 (>L:LT_FS_PC2_B)  }
-						els{ 0 (>L:LT_FS_PC2_B) }
+						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(A:HYDRAULIC PRESSURE:2, PSI) 2000 &lt; and
+							if{ 1 (>L:LT_FS_PC2_B)  }
+							els{ 0 (>L:LT_FS_PC2_B) }
 					</Value>
 				</Select>
 			</Element>
@@ -3017,9 +3027,11 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:PARTIAL_SYS_TIS) 1 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:TIS_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
-							if{ 1 (>L:LT_FS_BIT_TIS)  }
+						(L:TIS_BIT) 1 == or
+							if{ 1 (>L:LT_FS_BIT_TIS) }
 							els{ 0 (>L:LT_FS_BIT_TIS) }
 					</Value>
 				</Select>
@@ -3028,9 +3040,10 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:RWR_DC_PWR) 0 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:RWR_AC_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
-							if{ 1 (>L:LT_FS_BIT_RWR)  }
+							if{ 1 (>L:LT_FS_BIT_RWR) }
 							els{ 0 (>L:LT_FS_BIT_RWR) }
 					</Value>
 				</Select>
@@ -3039,7 +3052,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:MPCD_DC_PWR) 0 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:MPCD_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_MPCD)  }
 							els{ 0 (>L:LT_FS_BIT_MPCD) }
@@ -3050,7 +3064,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:CCC_PWR) 0 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:CC_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_CC)  }
 							els{ 0 (>L:LT_FS_BIT_CC) }
@@ -3061,6 +3076,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(L:IFF_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_AAI)  }
@@ -3072,7 +3088,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:RDR_LVPS_PWR) 0 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:RDR_SYS_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_RDR)  }
 							els{ 0 (>L:LT_FS_BIT_RDR) }
@@ -3083,7 +3100,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:HUD_DC_PWR) 0 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:HUD_AC_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_HUD)  }
 							els{ 0 (>L:LT_FS_BIT_HUD) }
@@ -3095,7 +3113,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:PARTIAL_SYS_CMD) 1 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:CMD_PRGMR_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_CMD)  }
 							els{ 0 (>L:LT_FS_BIT_CMD) }
@@ -3106,7 +3125,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:EWWSS_PWR) 0 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:EWWS_AC_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_EWW)  }
 							els{ 0 (>L:LT_FS_BIT_EWW) }
@@ -3117,7 +3137,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:VSD_PWR) 0 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:RDR_SYS_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_VSD)  }
 							els{ 0 (>L:LT_FS_BIT_VSD) }
@@ -3128,7 +3149,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:ADC_PWR) 0 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:ADC_POWER) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_ADC)  }
 							els{ 0 (>L:LT_FS_BIT_ADC) }
@@ -3139,6 +3161,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(L:IFF_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_IFF)  }
@@ -3150,7 +3173,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:BIT_DUMMY) 1 ==	AND
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:BIT_DUMMY) 1 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_SPARE)  }
 							els{ 0 (>L:LT_FS_BIT_SPARE) }
@@ -3161,7 +3185,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:LEAD_COM_GYRO_PWR) 0 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:LEAD_COMP_GYRO_AC_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_LCG)  }
 							els{ 0 (>L:LT_FS_BIT_LCG) }
@@ -3173,6 +3198,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(L:IFF_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_M4)  }
@@ -3184,6 +3210,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(L:ICS_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_ICS)  }
@@ -3195,7 +3222,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:BIT_DUMMY) 1 ==	AND
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:BIT_DUMMY) 1 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_SPARE)  }
 							els{ 0 (>L:LT_FS_BIT_SPARE) }
@@ -3206,6 +3234,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(L:ARM_BUS_CONT_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_PACS)  }
@@ -3217,9 +3246,10 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:INTR_BLANER_PWR) 0 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:INTR_BLANKER_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
-							if{ 1 (>L:LT_FS_BIT_IBS)  }
+							if{ 1 (>L:LT_FS_BIT_IBS) }
 							els{ 0 (>L:LT_FS_BIT_IBS) }
 					</Value>
 				</Select>
@@ -3228,6 +3258,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(L:INTRL_NAV_SET_MEAS_UNIT_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_INS)  }
@@ -3239,7 +3270,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:HSI_IND_PWR) 0 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:HSI_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_HSI)  }
 							els{ 0 (>L:LT_FS_BIT_HSI) }
@@ -3251,6 +3283,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(L:ARM_BUS_CONT_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_AIM)  }
@@ -3262,6 +3295,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(L:ADF_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_ADF)  }
@@ -3273,7 +3307,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:BIT_DUMMY) 1 ==	AND
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:BIT_DUMMY) 1 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_SPARE)  }
 							els{ 0 (>L:LT_FS_BIT_SPARE) }
@@ -3284,7 +3319,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:UHF_RCVR_XMTR_PWR) 0 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:UHF_RT_1_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_COMM)  }
 							els{ 0 (>L:LT_FS_BIT_COMM) }
@@ -3295,7 +3331,8 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
-						(L:PARTIAL_SYS_JTIDS) 1 == and
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
+						(L:JTIDS_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_JTIDS)  }
 							els{ 0 (>L:LT_FS_BIT_JTIDS) }
@@ -3306,6 +3343,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(L:ATTD_HDG_REF_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_AHR)  }
@@ -3317,6 +3355,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:LIGHT_FLICKER) 1 ==
+						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(L:TACAN_RCVR_XMTR_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
 							if{ 1 (>L:LT_FS_BIT_TCN)  }
@@ -4274,7 +4313,11 @@ Version 5.0
 										9 (>K:FUEL_SELECTOR_2_SET)
 									}
 
-								(A:FUEL TANK EXTERNAL1 LEVEL, Percent) 0 ==
+								(A:FUEL TANK LEFT TIP LEVEL, Percent) 0 ==
+								(A:FUEL TANK LEFT AUX LEVEL, Percent) 0 == and
+								(A:FUEL TANK RIGHT TIP LEVEL, Percent) 0 == and
+								(A:FUEL TANK RIGHT AUX LEVEL, Percent) 0 == and
+								(A:FUEL TANK EXTERNAL1 LEVEL, Percent) 0 == and
 									if{
 										19 (>K:FUEL_SELECTOR_SET)
 										20 (>K:FUEL_SELECTOR_2_SET)
@@ -4622,11 +4665,20 @@ Version 5.0
 		</Select>
 	</Element>
 	<Element Name="BIT CONTROL">
-		<Select>
-			<Value>
-				(L:ASP_BIT_CONT_PNL_PWR) 1 ==
-			</Value>
-		</Select>
+		<Element Name="BIT CONTROL">
+			<Select>
+				<Value>
+					(L:ASP_BIT_CONT_PNL_PWR) 1 ==
+					(L:KNOB_FS_BIT_MODE) 9 == and
+						if{
+							1 (>L:TIS_BIT)
+						}
+						els{
+							0 (>L:TIS_BIT)
+						}
+				</Value>
+			</Select>
+		</Element>
 	</Element>
 	<Element Name="ILS/TCN CONTROL">
 		<Element Name="ILS FREQ">
@@ -6916,6 +6968,10 @@ Version 5.0
 								if{
 									225000 (>L:MCCP_FREQ, KHz)
 								}
+							(L:KNOB_FS_MCCP_MODE) 4 ==
+								if{
+									(L:MCCP_FREQ_1000) 10000 * + (L:MCCP_FREQ_100) 1000 * + (L:MCCP_FREQ_1) + (>L:MCCP_FREQ, KHz)
+								}
 						}
 				</Value>
 			</Select>
@@ -7891,6 +7947,7 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:RDR_SYS_PWR) 1 ==
+						(L:KNOB_FS_RDR_PWR) 0 &gt; and
 						(L:VSD_PWR_TIME, Seconds) 0 == and
 						(L:VSD_POWER) 0 == and
 							if{
@@ -7904,10 +7961,23 @@ Version 5.0
 				<Select>
 					<Value>
 						(L:RDR_SYS_PWR) 0 ==
-						(L:VSD_PWR_TIME, Seconds) 0 &gt; and
+						(L:KNOB_FS_RDR_PWR) 0 == or
 							if{
 								0 (>L:VSD_PWR_TIME, Seconds)
 								0 (>L:VSD_SYS_STBY)
+								0 (>L:VSD_POWER)
+							}
+					</Value>
+				</Select>
+			</Element>
+			<Element>
+				<Select>
+					<Value>
+						(L:RDR_SYS_PWR) 1 ==
+						(L:KNOB_FS_RDR_PWR) 1 == and
+							if{
+								0 (>L:VSD_POWER)
+								1 (>L:VSD_SYS_STBY)
 							}
 					</Value>
 				</Select>
@@ -7917,21 +7987,10 @@ Version 5.0
 					<Value>
 						(L:RDR_SYS_PWR) 1 ==
 						(P:LOCAL TIME, Seconds) (L:VSD_PWR_TIME, Seconds) - 5 &gt; and
+						(L:KNOB_FS_RDR_PWR) 1 &gt; and
 						(L:VSD_SYS_STBY) 1 == and
 							if{
 								1 (>L:VSD_POWER)
-								0 (>L:VSD_SYS_STBY)
-								0 (>L:VSD_PWR_TIME, Seconds)
-							}
-					</Value>
-				</Select>
-			</Element>
-			<Element>
-				<Select>
-					<Value>
-						(L:RDR_SYS_PWR) 0 ==
-							if{
-								0 (>L:VSD_POWER)
 								0 (>L:VSD_SYS_STBY)
 								0 (>L:VSD_PWR_TIME, Seconds)
 							}
