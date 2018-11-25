@@ -144,9 +144,9 @@
 			<Cursor Type="UpArrow"/>
 			<Tooltip>Brightness Up Switch</Tooltip>
 			<Click>
-				(L:MPCD_BRT, bool) 10 &lt;
+				(L:MPCD_BRT) 9 &lt;
 					if{
-						(L:MPCD_BRT, bool) ++ (>L:MPCD_BRT, bool)
+						(L:MPCD_BRT) ++ (>L:MPCD_BRT)
 					}
 			</Click>
 		</Area>
@@ -154,9 +154,9 @@
 			<Cursor Type="DownArrow"/>
 			<Tooltip>Brightness Down Switch</Tooltip>
 			<Click>
-				(L:MPCD_BRT, bool) 0 &gt;
+				(L:MPCD_BRT) 0 &gt;
 					if{
-						(L:MPCD_BRT, bool) -- (>L:MPCD_BRT, bool)
+						(L:MPCD_BRT) -- (>L:MPCD_BRT)
 					}
 			</Click>
 		</Area>
@@ -165,9 +165,9 @@
 			<Cursor Type="UpArrow"/>
 			<Tooltip>Contrast Up Switch</Tooltip>
 			<Click>
-				(L:MPCD_CTRS, bool) 10 &lt;
+				(L:MPCD_CTRS) 9 &lt;
 					if{
-						(L:MPCD_CTRS, bool) ++ (>L:MPCD_CTRS, bool)
+						(L:MPCD_CTRS) ++ (>L:MPCD_CTRS)
 					}
 			</Click>
 		</Area>
@@ -175,14 +175,14 @@
 			<Cursor Type="DownArrow"/>
 			<Tooltip>Contrast Down Switch</Tooltip>
 			<Click>
-				(L:MPCD_CTRS, bool) 0 &gt;
+				(L:MPCD_CTRS) 0 &gt;
 					if{
-						(L:MPCD_CTRS, bool) -- (>L:MPCD_CTRS, bool)
+						(L:MPCD_CTRS) -- (>L:MPCD_CTRS)
 					}
 			</Click>
 		</Area>
 <!-- Power -->
-		<Area Left="228" Right="270" Top="405" Bottom="435">
+		<Area Left="228" Right="260" Top="405" Bottom="435">
 			<Cursor Type="DownArrow"/>
 			<Tooltip>Power knob</Tooltip>
 			<Click>
@@ -195,7 +195,7 @@
 				}				
 			</Click>
 		</Area>
-		<Area Left="228" Right="270" Top="405" Bottom="435">
+		<Area Left="228" Right="260" Top="405" Bottom="435">
 			<Cursor Type="UpArrow"/>
 			<Tooltip>Power knob</Tooltip>
 			<Click>
@@ -217,13 +217,19 @@
 			</Click>	  
 		</Area>		
 <!-- Select Jettion -->
-		<Area Left="50" Right="150" Top="405" Bottom="485">
-			<Cursor Type="Hand"/>
+		<Area Left="50" Right="145" Top="405" Bottom="485">
+			<Cursor Type="DownArrow"/>
 			<Tooltip>Select Jettion knob (%((L:KNOB_FS_WEP_JETT_SEL))%{case}%{:0}Manual FF%{:1}Manual RET%{:2}ALTN REL%{:3}OFF%{:4}Combat Jettison%{:5}Air to Air Jettison%{:6}Air to Ground Jettison%{end})
 			</Tooltip>
-			 <Click></Click>	  
+			<Click></Click>
 		</Area>
-		<Area Left="52" Right="90" Top="448" Bottom="485">
+		<Area Left="50" Right="145" Top="405" Bottom="485">
+			<Cursor Type="UpArrow"/>
+			<Tooltip>Select Jettion knob (%((L:KNOB_FS_WEP_JETT_SEL))%{case}%{:0}Manual FF%{:1}Manual RET%{:2}ALTN REL%{:3}OFF%{:4}Combat Jettison%{:5}Air to Air Jettison%{:6}Air to Ground Jettison%{end})
+			</Tooltip>
+			<Click></Click>
+		</Area>
+		<Area Left="52" Right="110" Top="448" Bottom="485">
 			<Cursor Type="Hand"/>
 			<Tooltip>Select Jettion Button</Tooltip>
 			 <Click>
@@ -234,9 +240,7 @@
 		<Area Left="425" Right="445" Top="430" Bottom="450">
 			<Cursor Type="Hand"/>
 			<Tooltip>BIT Status Indicator</Tooltip>
-			 <Click>
-				1 (>L:JETT_EXEC, enum)
-			</Click>	  
+			<Click></Click>
 		</Area>				
 	</Mouse>
 

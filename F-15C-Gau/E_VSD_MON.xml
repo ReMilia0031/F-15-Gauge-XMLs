@@ -42,7 +42,7 @@
 			</GaugeText>
         </Element>
 		<Element id="BTI1">
-			<Visibility>(L:VSD-BIT, enum) 1 ==</Visibility>
+			<Visibility>(L:VSD_BIT) 1 ==</Visibility>
 			<FloatPosition>40.000,40.000</FloatPosition>
 				<Element id="TITLE">
 					<FloatPosition>0.000,0.000</FloatPosition>
@@ -1966,7 +1966,7 @@
 				</Element>
 			</Element>
 		<Element id="BIT2">
-			<Visibility>(L:VSD-BIT, enum) 2 ==</Visibility>
+			<Visibility>(L:VSD_BIT) 2 ==</Visibility>
 				<Element id="STICK FORCE">
 					<FloatPosition>120.000,20.000</FloatPosition>
 					<GaugeText id="GaugeText">
@@ -2315,6 +2315,7 @@
 		<Element id="VSD">
 			<Visibility>
 				(L:VSD_POWER) 1 ==
+				(L:VSD_BIT) 0 == and
 			</Visibility>
 			<Element id="DISPLAY">
 				<Element id="RDR">

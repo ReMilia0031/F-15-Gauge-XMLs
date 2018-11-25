@@ -1,9 +1,11 @@
-﻿<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="10.10">
+﻿<Gauge Name="F-15 ELECTRICAL SYSTEMS" Version="11.0">
 
 <!--
-Version 10.10
-	[EDT} ***
-Version 10.00
+Version 11.0
+	[ADD] BIT Control Panel 
+Version 10.1
+	[EDT] ***
+Version 10.0
 	[ADD] NCI
 Version 9.30
 	[EDT] AUDIO VOLUME
@@ -81,6 +83,9 @@ Version 5.0
 						1 (>L:ICMS_LIMIT_B3)
 
 						40 (>L:DTM_RANGE)
+						
+						9 (>L:MPCD_BRT)
+						9 (>L:MPCD_CTRS)
 						1 (>L:MPCD_DTM_DAT)
 						1 (>L:MPCD_DTM_SRV)
 						1 (>L:MPCD_DTM_TGT)
@@ -1805,6 +1810,11 @@ Version 5.0
 							if{
 								(A:AIRSPEED BARBER POLE, Knots) (>L:GAU_AIRSPEED_INDEX)
 							}
+							(L:ADC_BIT) 1 ==
+								if{
+									250 (>L:GAU_AIRSPEED_C)
+									0.465 (>L:GAU_AIRSPEED_MACH)
+								}
 						}
 					els{
 						0 (>L:GAU_AIRSPEED_C)
@@ -1905,6 +1915,11 @@ Version 5.0
 									-91 (>L:GAU_ATT_STR_BANK)
 									30 (>L:GAU_ATT_STR_PITCH)
 								}
+							(L:HSI_BIT) 1 ==
+								if{								
+									-7.5 (>L:GAU_ATT_STR_PITCH)	
+									50 (>L:GAU_ATT_STR_BANK)
+								}
 						}
 						els{
 							60 (>L:GAU_ATT_PITCH)
@@ -1965,15 +1980,14 @@ Version 5.0
 								els{
 									(A:NAV2 OBS, Radians) (>L:HSI_PTR1)
 								}
-
-							(A:PLANE HEADING DEGREES GYRO, Radians) /-/ (>L:HSI_COMPASS)
-
-
+		
+							(A:PLANE HEADING DEGREES GYRO, Radians) /-/ (>L:HSI_COMPASS)		
+		
 							(L:KNOB_FS_STEER_MODE) 0 &gt;
 								if{
 									(A:AUTOPILOT HEADING LOCK DIR, Radians) (>L:HSI_HDG)
 								}
-
+		
 							(L:KNOB_FS_STEER_MODE) 0 ==
 								if{
 									(A:GPS WP BEARING, Radians) (>L:HSI_PTR2)
@@ -2017,12 +2031,23 @@ Version 5.0
 									0 (>L:HSI_TO_FROM)
 									(L:GAU_ILS_LC) (>L:HSI_DEVIATION)
 								}
-
+		
 							(L:HSI_PTR1) (A:PLANE HEADING DEGREES GYRO, Radians) - (>L:HSI_PTR1)
 							(L:HSI_PTR2) (A:PLANE HEADING DEGREES GYRO, Radians) - (>L:HSI_PTR2)
 							(L:HSI_HDG) (A:PLANE HEADING DEGREES GYRO, Radians) - (>L:HSI_HDG)
-							(L:HSI_CRS_ALLOW) (A:PLANE HEADING DEGREES GYRO, Radians) - (>L:HSI_CRS_ALLOW)
-							}
+
+							(L:HSI_BIT) 1 ==
+								if{
+									1234 (>L:HSI_RANGE)
+									40 (>L:HSI_PTR1)
+									60 (>L:HSI_PTR2)
+									40 (>L:HSI_CRS_ALLOW)
+									1 (>L:HSI_TO_FROM)
+									40 (>L:HSI_CRS_SELECT)
+									50 (>L:HSI_DEVIATION)
+									20 (>L:HSI_COMPASS)
+								}
+						}
 						els{
 							0 (>L:HSI_RANGE)
 							0 (>L:HSI_PTR1)
@@ -2057,6 +2082,14 @@ Version 5.0
 
 							(A:PRESSURIZATION CABIN ALTITUDE,Feet) (>L:GAU_CABINALT)
 							(A:KOHLSMAN SETTING HG, INHG) (>L:GAU_KOHLSMAN)
+						
+							(L:ADC_BIT) 1 ==
+								if{
+									11500 (>L:GAU_ALTITUDE)
+									11500 (>L:IND_ALTITUDE)
+									29.92 (>L:GAU_KOHLSMAN)
+								}
+							
 						}
 						els{
 							0 (>L:GAU_ALTITUDE)
@@ -2073,6 +2106,11 @@ Version 5.0
 					(L:VSI_PWR) 1 ==
 						if{
 							(A:VERTICAL SPEED, Feet per Minute) (>L:GAU_VSI)
+
+							(L:ADC_BIT) 1 ==
+								if{
+									500 (>L:GAU_VSI)
+								}
 						}
 						els{
 							0 (>L:GAU_VSI)
@@ -3140,6 +3178,7 @@ Version 5.0
 						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(L:RDR_SYS_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
+						(L:VSD_BIT) 2 == or
 							if{ 1 (>L:LT_FS_BIT_VSD)  }
 							els{ 0 (>L:LT_FS_BIT_VSD) }
 					</Value>
@@ -3152,6 +3191,7 @@ Version 5.0
 						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(L:ADC_POWER) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
+						(L:ADC_BIT) 1 == or
 							if{ 1 (>L:LT_FS_BIT_ADC)  }
 							els{ 0 (>L:LT_FS_BIT_ADC) }
 					</Value>
@@ -3164,7 +3204,8 @@ Version 5.0
 						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(L:IFF_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
-							if{ 1 (>L:LT_FS_BIT_IFF)  }
+						(L:IFF_BIT) 1 == or
+							if{ 1 (>L:LT_FS_BIT_IFF) }
 							els{ 0 (>L:LT_FS_BIT_IFF) }
 					</Value>
 				</Select>
@@ -3273,6 +3314,7 @@ Version 5.0
 						(L:ASP_BIT_CONT_PNL_PWR) 1 == and
 						(L:HSI_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
+						(L:HSI_BIT) 1 == or
 							if{ 1 (>L:LT_FS_BIT_HSI)  }
 							els{ 0 (>L:LT_FS_BIT_HSI) }
 					</Value>
@@ -3437,6 +3479,8 @@ Version 5.0
 						(L:LIGHT_FLICKER) 1 ==
 						(L:IFF_MAIN_PWR) 0 == and
 						(L:FS_LIGHT_TEST) 1 == or
+						(L:IFF_BIT) 1 == or
+						(P:absolute time, number) 0.5 % 0.25 &lt; and
 							if{ 1 (>L:LT_FS_IFF)  }
 							els{ 0 (>L:LT_FS_IFF) }
 					</Value>
@@ -4481,8 +4525,8 @@ Version 5.0
 						(L:SW2_FS_FUEL_CTRL_CTR) 2 == and
 						(L:SW2_FS_FUEL_CTRL_CONF) 2 == and
 							if{
-								0 (>K:FUEL_SELECTOR_SET)
-								0 (>K:FUEL_SELECTOR_2_SET)
+								6 (>K:FUEL_SELECTOR_SET)
+								6 (>K:FUEL_SELECTOR_2_SET)
 							}
 					</Value>
 				</Select>
@@ -4513,10 +4557,15 @@ Version 5.0
 					LEFT_MAIN	= 19	INT LEFT
 					RIGHT_MAIN 	= 20	INT RIGHT  -->
 					(A:FUEL TANK LEFT MAIN LEVEL, Percent) 0 ==
+					(A:FUEL TANK LEFT AUX LEVEL, Percent) 0 == and
+					(A:FUEL TANK LEFT TIP LEVEL, Percent) 0 == and
 						if{
 							6 (>K:FUEL_SELECTOR_SET)
 						}
+						
 					(A:FUEL TANK RIGHT MAIN LEVEL, Percent) 0 ==
+					(A:FUEL TANK RIGHT AUX LEVEL, Percent) 0 == and
+					(A:FUEL TANK RIGHT TIP LEVEL, Percent) 0 == and
 						if{
 							6 (>K:FUEL_SELECTOR_2_SET)
 						}
@@ -4654,6 +4703,15 @@ Version 5.0
 						4608 (>K:XPNDR_SET)
 						0 (>L:IFF_MAIN_PWR_INIT)
 					}
+					
+				(L:IFF_BIT) 1 ==
+				(P:absolute time, number) 0.5 % 0.25 &lt; and
+					if{
+						1 (>L:LT_FS_IFF_M4_REPLY)
+					}
+					els{
+						0 (>L:LT_FS_IFF_M4_REPLY)
+					}
 			</Value>
 		</Select>
 	</Element>
@@ -4669,12 +4727,73 @@ Version 5.0
 			<Select>
 				<Value>
 					(L:ASP_BIT_CONT_PNL_PWR) 1 ==
-					(L:KNOB_FS_BIT_MODE) 9 == and
+					(l:BTN_FS_BIT_INITATE) 1 == and
+					(L:BIT_START) 0 == and
 						if{
-							1 (>L:TIS_BIT)
+							1 (>L:BIT_START)
+							(L:KNOB_FS_BIT_MODE) 0 ==
+								if{
+									1 (>L:HSI_BIT)
+								}
+								els{
+									0 (>L:HSI_BIT)
+								}
+							(L:KNOB_FS_BIT_MODE) 2 ==
+								if{
+									2 (>L:VSD_BIT)
+								}
+								els{
+									0 (>L:VSD_BIT)
+								}
+							(L:KNOB_FS_BIT_MODE) 5 ==
+								if{
+									1 (>L:ADC_BIT)
+								}
+								els{
+									0 (>L:ADC_BIT)
+								}
+							(L:KNOB_FS_BIT_MODE) 9 ==
+								if{
+									1 (>L:TIS_BIT)
+								}
+								els{
+									0 (>L:TIS_BIT)
+								}
+							(L:KNOB_FS_BIT_MODE) 19 ==
+								if{
+									1 (>L:IFF_BIT)
+								}
+								els{
+									0 (>L:IFF_BIT)
+								}
 						}
-						els{
+					(L:SW1_FS_BIT_RESET) 1 ==
+					(L:BIT_START) 1 == and
+						if{
+							0 (>L:BTN_FS_BIT_INITATE)
+							0 (>L:BIT_START)
+							0 (>L:HSI_BIT)
+							0 (>L:HUD_BIT)
+							0 (>L:VSD_BIT)
+							0 (>L:MPCD_BIT)
+							0 (>L:ADC_BIT)
+							0 (>L:LCC_BIT)
+							0 (>L:PACS_BIT)
+							0 (>L:AIM_BIT)
 							0 (>L:TIS_BIT)
+							0 (>L:CMD_BIT)
+							0 (>L:IBS_BIT)
+							0 (>L:EWW_BIT)
+							0 (>L:RWR_BIT)
+							0 (>L:ICS_BIT)
+							0 (>L:RDR_BIT)
+							0 (>L:AAI_BIT)
+							0 (>L:M4_BIT)
+							0 (>L:IFF_BIT)
+							0 (>L:JTIDS_BIT)
+							0 (>L:COMM_BIT)
+							0 (>L:ADF_BIT)
+							0 (>L:TCN_BIT)
 						}
 				</Value>
 			</Select>
@@ -7908,15 +8027,110 @@ Version 5.0
 					WHITE(FFFFFF) -->
 						(L:KNOB_FS_MPCD_PWR) 1 ==
 							if{
-								0x007E00 (>L:MPCD_COLOR)
-								0x003F00 (>L:MPCD_COLOR_DARK)
+								(L:MPCD_BRT) 0 ==
+									if{
+										0x000000 (>L:MPCD_COLOR)
+										0x000000 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 1 ==
+									if{
+										0x000800 (>L:MPCD_COLOR)
+										0x000400 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 2 ==
+									if{
+										0x001600 (>L:MPCD_COLOR)
+										0x000800 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 3 ==
+									if{
+										0x002400 (>L:MPCD_COLOR)
+										0x001200 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 4 ==
+									if{
+										0x003200 (>L:MPCD_COLOR)
+										0x001600 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 5 ==
+									if{
+										0x004000 (>L:MPCD_COLOR)
+										0x002000 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 6 ==
+									if{
+										0x004800 (>L:MPCD_COLOR)
+										0x002400 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 7 ==
+									if{
+										0x005600 (>L:MPCD_COLOR)
+										0x002800 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 8 ==
+									if{
+										0x006400 (>L:MPCD_COLOR)
+										0x003200 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 9 ==
+									if{
+										0x007200 (>L:MPCD_COLOR)
+										0x004800 (>L:MPCD_COLOR_DARK)
+									}
 							}
-
 						(L:KNOB_FS_MPCD_PWR) 2 ==
 							if{
-								0x00FE00 (>L:MPCD_COLOR)
-								0x007E00 (>L:MPCD_COLOR_DARK)
-							}
+								(L:MPCD_BRT) 0 ==
+									if{
+										0x000000 (>L:MPCD_COLOR)
+										0x000000 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 1 ==
+									if{
+										0x001F00 (>L:MPCD_COLOR)
+										0x000800 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 2 ==
+									if{
+										0x003F00 (>L:MPCD_COLOR)
+										0x000800 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 3 ==
+									if{
+										0x006000 (>L:MPCD_COLOR)
+										0x000800 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 4 ==
+									if{
+										0x008000 (>L:MPCD_COLOR)
+										0x000800 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 5 ==
+									if{
+										0x009000 (>L:MPCD_COLOR)
+										0x000800 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 6 ==
+									if{
+										0x00A000 (>L:MPCD_COLOR)
+										0x000800 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 7 ==
+									if{
+										0x00C000 (>L:MPCD_COLOR)
+										0x000800 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 8 ==
+									if{
+										0x00DF00 (>L:MPCD_COLOR)
+										0x000800 (>L:MPCD_COLOR_DARK)
+									}
+								(L:MPCD_BRT) 9 ==
+									if{
+										0x00FF00 (>L:MPCD_COLOR)
+										0x007F00 (>L:MPCD_COLOR_DARK)
+									}
+							}						
 					</Value>
 				</Select>
 			</Element>

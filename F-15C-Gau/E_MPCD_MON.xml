@@ -7043,6 +7043,537 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 								</Element>
 							</Element>
 						</Element>
+						<Element id="ENG">
+							<Visibility>
+								(L:BIT_FUNC_PAGES) 10 ==
+							</Visibility>
+							<Element id="TITLE">
+								<FloatPosition>190.000,50.000</FloatPosition>
+								<GaugeText id="GaugeText">
+									<Bright>True</Bright>
+									<FontColorScript>@ForeColor</FontColorScript>
+									<FontFace>Consolas</FontFace>
+									<FontHeight>35</FontHeight>
+									<GaugeString>POWER</GaugeString>
+									<HorizontalAlign>CENTER</HorizontalAlign>
+									<Size>120,50</Size>
+									<Transparent>True</Transparent>
+								</GaugeText>
+							</Element>
+							<Element id="LABELS">
+							<FloatPosition>100.000,90.000</FloatPosition>
+								<Element id="GEN VOLTAGE">
+									<FloatPosition>0.000,24.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>GEN VOLTAGE</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="AC BUS">
+									<FloatPosition>0.000,48.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>AC BUS</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="DC BUS">
+									<FloatPosition>0.000,72.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>DC BUS</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="XFMR">
+									<FloatPosition>0.000,96.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>XFMR</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="R 26V AC BUS">
+									<FloatPosition>0.000,120.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>R 26V AC</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="ESS AC BUS">
+									<FloatPosition>0.000,144.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>ESS AC</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="ESS DC BUS">
+									<FloatPosition>0.000,168.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>ESS DC</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="ENG INST AC">
+									<FloatPosition>0.000,192.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>ENG INST AC</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="ARAM DC">
+									<FloatPosition>0.000,216.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>ARAM DC</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="MASTER ARM DC">
+									<FloatPosition>0.000,240.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>MASTER ARM DC</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="ENG CONT ESS">
+									<FloatPosition>0.000,264.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>ENG CONT ESS</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="JFS ESS DC">
+									<FloatPosition>0.000,288.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>JFS ESS DC</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="FIRE EXT BUS">
+									<FloatPosition>0.000,312.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>FIRE EXT BUS</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="EMER GEN AC">
+									<FloatPosition>0.000,336.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>EMER GEN AC</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="EMER GEN DC">
+									<FloatPosition>0.000,360.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>EMER GEN DC</GaugeString>
+										<HorizontalAlign>LEFT</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+							</Element>
+							<Element id="t">
+							<FloatPosition>280.000,90.000</FloatPosition>
+								<Element id="R26V">
+									<FloatPosition>0.000,120.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:RIGHT_26_AC_BUS_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="ESS AC">
+									<FloatPosition>0.000,144.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:ESS_AC_BUS_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="ESS DC">
+									<FloatPosition>0.000,168.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:ESS_DC_BUS_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="ENG INST_AC">
+									<FloatPosition>0.000,192.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:ENG_INST_AC_BUS_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="ARAM DC">
+									<FloatPosition>0.000,216.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:ARAM_DC_BUS_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="M ARM DC">
+									<FloatPosition>0.000,240.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:M_ARM_DC_BUS_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="ENG CONT ESS">
+									<FloatPosition>0.000,264.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:ENG_CONT_ESS_DC_BUS_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="JFS ESS DC">
+									<FloatPosition>0.000,288.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:JFS_ESS_DC_BUS_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="FIRE EXT BUS">
+									<FloatPosition>0.000,312.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:FIRE_EXT_BUS_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="EMER GEN AC">
+									<FloatPosition>0.000,336.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:EMER_GEN_AC_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="EMER GEN DC">
+									<FloatPosition>0.000,360.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:EMER_GEN_DC_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+							</Element>
+							<Element id="L ENG">
+								<FloatPosition>210.000,90.000</FloatPosition>
+								<Element id="TITLE">
+									<FloatPosition>0.000,0.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>L</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="GEN VOLTAGE AC">
+									<FloatPosition>0.000,24.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:LEFT_AC_BUS_LINE_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="AC BUS">
+									<FloatPosition>0.000,48.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:LEFT_AC_BUS_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="DC BUS">
+									<FloatPosition>0.000,72.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:LEFT_DC_BUS_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="XFMR">
+									<FloatPosition>0.000,96.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:LEFT_XFMR_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+							</Element>
+							<Element id="R ENG">
+								<FloatPosition>340.000,90.000</FloatPosition>
+								<Element id="TITLE">
+									<FloatPosition>0.000,0.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>R</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="GEN VOLTAGE AC">
+									<FloatPosition>0.000,24.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:RIGHT_AC_BUS_LINE_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="AC BUS">
+									<FloatPosition>0.000,48.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:RIGHT_AC_BUS_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="DC BUS">
+									<FloatPosition>0.000,72.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:RIGHT_DC_BUS_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+								<Element id="XFMR">
+									<FloatPosition>0.000,96.000</FloatPosition>
+									<GaugeText id="GaugeText">
+										<Bright>True</Bright>
+										<FontColorScript>@ForeColor</FontColorScript>
+										<FontFace>Consolas</FontFace>
+										<FontHeight>22</FontHeight>
+										<GaugeString>%((L:RIGHT_XFMR_VOLTAGE))%!1.2f!</GaugeString>
+										<HorizontalAlign>CENTER</HorizontalAlign>
+										<Size>130,24</Size>
+										<Transparent>True</Transparent>
+									</GaugeText>
+								</Element>
+
+							</Element>
+						</Element>
 					</Element>
 
 					<Element id="TEWS">
@@ -7122,752 +7653,770 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 			</Element>
 			<Element id="SIT">
 				<Visibility>(L:MPCD-menu, Enum) 1000 div 3 ==</Visibility>
-				<Element id="COMPASS">
-					<FloatPosition>256.000,360.000</FloatPosition>
+				<Element id="STBY">
+					<FloatPosition>210.000,240.000</FloatPosition>
+					<Visibility>(L:RIGHT_AC_BUS_AVAIL) 0 ==</Visibility>
+					<GaugeText id="GaugeText">
+							<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+							<Bold>True</Bold>
+							<Bright>True</Bright>
+							<FontColor>0x000000</FontColor>
+							<FontFace>Consolas</FontFace>
+							<FontHeight>22</FontHeight>
+							<GaugeString>STBY</GaugeString>
+							<HorizontalAlign>CENTER</HorizontalAlign>
+							<Size>100,24</Size>
+							<Transparent>True</Transparent>
+					</GaugeText>
+				</Element>
+				<Element id="DISPLAY">
+					<Visibility>(L:RIGHT_AC_BUS_AVAIL) 1 ==</Visibility>
+					<Element id="COMPASS">
+						<FloatPosition>256.000,360.000</FloatPosition>
+							<Element id="1">
+								<PolyLine id="IND">
+									<Bright>True</Bright>
+									<LineWidth>4</LineWidth>
+									<Axis>100,100</Axis>
+									<LineColorScript>@ForeColor</LineColorScript>
+									<Point id="Point">
+										<FloatPosition>33.000,33.000</FloatPosition>
+									</Point>
+									<Point id="Point">
+										<FloatPosition>40.000,40.000</FloatPosition>
+									</Point>
+								</PolyLine>
+							</Element>
+							<Element id="2">
+								<PolyLine id="IND">
+									<Bright>True</Bright>
+									<LineWidth>4</LineWidth>
+									<Axis>100,100</Axis>
+									<LineColorScript>@ForeColor</LineColorScript>
+									<Point id="Point">
+										<FloatPosition>75.000,9.000</FloatPosition>
+									</Point>
+									<Point id="Point">
+										<FloatPosition>77.000,17.000</FloatPosition>
+									</Point>
+								</PolyLine>
+							</Element>
+							<Element id="3">
+								<PolyLine id="IND">
+									<Bright>True</Bright>
+									<LineWidth>4</LineWidth>
+									<Axis>100,100</Axis>
+									<LineColorScript>@ForeColor</LineColorScript>
+									<Point id="Point">
+										<FloatPosition>123.000,9.000</FloatPosition>
+									</Point>
+									<Point id="Point">
+										<FloatPosition>121.000,17.000</FloatPosition>
+									</Point>
+								</PolyLine>
+							</Element>
+							<Element id="4">
+								<PolyLine id="IND">
+									<Bright>True</Bright>
+									<LineWidth>4</LineWidth>
+									<Axis>100,100</Axis>
+									<LineColorScript>@ForeColor</LineColorScript>
+									<Point id="Point">
+										<FloatPosition>166.000,31.000</FloatPosition>
+									</Point>
+									<Point id="Point">
+										<FloatPosition>159.000,40.000</FloatPosition>
+									</Point>
+								</PolyLine>
+							</Element>
+							<Element id="5">
+								<PolyLine id="IND">
+									<Bright>True</Bright>
+									<LineWidth>4</LineWidth>
+									<Axis>100,100</Axis>
+									<LineColorScript>@ForeColor</LineColorScript>
+									<Point id="Point">
+										<FloatPosition>189.000,75.000</FloatPosition>
+									</Point>
+									<Point id="Point">
+										<FloatPosition>181.000,78.000</FloatPosition>
+									</Point>
+								</PolyLine>
+							</Element>
+							<Element id="6">
+								<PolyLine id="IND">
+									<Bright>True</Bright>
+									<LineWidth>4</LineWidth>
+									<Axis>100,100</Axis>
+									<LineColorScript>@ForeColor</LineColorScript>
+									<Point id="Point">
+										<FloatPosition>192.000,123.000</FloatPosition>
+									</Point>
+									<Point id="Point">
+										<FloatPosition>181.000,121.000</FloatPosition>
+									</Point>
+								</PolyLine>
+							</Element>
+							<Element id="7">
+								<PolyLine id="IND">
+									<Bright>True</Bright>
+									<LineWidth>4</LineWidth>
+									<Axis>100,100</Axis>
+									<LineColorScript>@ForeColor</LineColorScript>
+									<Point id="Point">
+										<FloatPosition>165.000,165.000</FloatPosition>
+									</Point>
+									<Point id="Point">
+										<FloatPosition>159.000,159.000</FloatPosition>
+									</Point>
+								</PolyLine>
+							</Element>
+							<Element id="8">
+								<PolyLine id="IND">
+									<Bright>True</Bright>
+									<LineWidth>4</LineWidth>
+									<Axis>100,100</Axis>
+									<LineColorScript>@ForeColor</LineColorScript>
+									<Point id="Point">
+										<FloatPosition>123.000,189.000</FloatPosition>
+									</Point>
+									<Point id="Point">
+										<FloatPosition>121.000,181.000</FloatPosition>
+									</Point>
+								</PolyLine>
+							</Element>
+							<Element id="9">
+								<PolyLine id="IND">
+									<Bright>True</Bright>
+									<LineWidth>4</LineWidth>
+									<Axis>100,100</Axis>
+									<LineColorScript>@ForeColor</LineColorScript>
+									<Point id="Point">
+										<FloatPosition>75.000,189.000</FloatPosition>
+									</Point>
+									<Point id="Point">
+										<FloatPosition>77.000,181.000</FloatPosition>
+									</Point>
+								</PolyLine>
+							</Element>
+							<Element id="10">
+								<PolyLine id="IND">
+									<Bright>True</Bright>
+									<LineWidth>4</LineWidth>
+									<Axis>100,100</Axis>
+									<LineColorScript>@ForeColor</LineColorScript>
+									<Point id="Point">
+										<FloatPosition>34.000,166.000</FloatPosition>
+									</Point>
+									<Point id="Point">
+										<FloatPosition>40.000,160.000</FloatPosition>
+									</Point>
+								</PolyLine>
+							</Element>
+							<Element id="11">
+								<PolyLine id="IND">
+									<Bright>True</Bright>
+									<LineWidth>4</LineWidth>
+									<Axis>100,100</Axis>
+									<LineColorScript>@ForeColor</LineColorScript>
+									<Point id="Point">
+										<FloatPosition>8.000,124.000</FloatPosition>
+									</Point>
+									<Point id="Point">
+										<FloatPosition>17.000,121.000</FloatPosition>
+									</Point>
+								</PolyLine>
+							</Element>
+							<Element id="12">
+								<PolyLine id="IND">
+									<Bright>True</Bright>
+									<LineWidth>4</LineWidth>
+									<Axis>100,100</Axis>
+									<LineColorScript>@ForeColor</LineColorScript>
+									<Point id="Point">
+										<FloatPosition>9.000,75.000</FloatPosition>
+									</Point>
+									<Point id="Point">
+										<FloatPosition>17.000,77.000</FloatPosition>
+									</Point>
+								</PolyLine>
+							</Element>
+							<Rotation id="HEADING">
+								<PointsTo>NORTH</PointsTo>
+								<Expression id="Expression">
+									<Script>(A:PLANE HEADING DEGREES GYRO, Radians) /-/</Script>
+								</Expression>
+							</Rotation>
+						</Element>
+					<Element id="COMPASS TEXT">
+						<FloatPosition>256.000,360.000</FloatPosition>
+						<Element id="N">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>14.000,14.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>N</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>28,28</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,0.500</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>0.500,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="W">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>14.000,14.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>W</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>28,28</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,0.500</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 270 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>0.500,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 270 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="E">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>14.000,14.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>E</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>28,28</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,0.500</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 90 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>0.500,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 90 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="S">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>14.000,14.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>20</FontHeight>
+								<GaugeString>S</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>28,28</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,0.500</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 180 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>0.500,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 180 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="3">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>18</FontHeight>
+								<GaugeString>3</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,0.500</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 30 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>0.500,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 30 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="6">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>18</FontHeight>
+								<GaugeString>6</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,0.500</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 60 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>0.500,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 60 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="12">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>18</FontHeight>
+								<GaugeString>12</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,0.500</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 120 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>0.500,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 120 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="15">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>18</FontHeight>
+								<GaugeString>15</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,0.500</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 150 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>0.500,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 150 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="21">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>18</FontHeight>
+								<GaugeString>21</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,0.500</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 210 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>0.500,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 210 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="24">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>18</FontHeight>
+								<GaugeString>24</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,0.500</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 240 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>0.500,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 240 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="30">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>18</FontHeight>
+								<GaugeString>30</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,0.500</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 300 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>0.500,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 300 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+						<Element id="33">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Axis>24.000,12.000</Axis>
+								<Bright>True</Bright>
+								<FontColor>@ForeColor</FontColor>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>18</FontHeight>
+								<GaugeString>33</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>48,24</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+							<Shift id="Y">
+								<Scale>0.000,0.500</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 330 dgrd - cos *</Script>
+								</Expression>
+							</Shift>
+							<Shift id="X">
+								<Scale>0.500,0.000</Scale>
+								<Expression id="Expression">
+									<Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 330 dgrd - sin *</Script>
+								</Expression>
+							</Shift>
+						</Element>
+					</Element>
+					<Element id="ACQUISITION SYMBOL">
+						<FloatPosition>256.000,240.000</FloatPosition>
 						<Element id="1">
 							<PolyLine id="IND">
 								<Bright>True</Bright>
-								<LineWidth>4</LineWidth>
-								<Axis>100,100</Axis>
+								<LineWidth>2</LineWidth>
 								<LineColorScript>@ForeColor</LineColorScript>
 								<Point id="Point">
-									<FloatPosition>33.000,33.000</FloatPosition>
+									<FloatPosition>-10.000,-10.000</FloatPosition>
 								</Point>
 								<Point id="Point">
-									<FloatPosition>40.000,40.000</FloatPosition>
+									<FloatPosition>-10.000,10.000</FloatPosition>
 								</Point>
 							</PolyLine>
 						</Element>
 						<Element id="2">
 							<PolyLine id="IND">
 								<Bright>True</Bright>
-								<LineWidth>4</LineWidth>
-								<Axis>100,100</Axis>
+								<LineWidth>2</LineWidth>
 								<LineColorScript>@ForeColor</LineColorScript>
 								<Point id="Point">
-									<FloatPosition>75.000,9.000</FloatPosition>
+									<FloatPosition>10.000,-10.000</FloatPosition>
 								</Point>
 								<Point id="Point">
-									<FloatPosition>77.000,17.000</FloatPosition>
+									<FloatPosition>10.000,10.000</FloatPosition>
 								</Point>
 							</PolyLine>
 						</Element>
-						<Element id="3">
-							<PolyLine id="IND">
-								<Bright>True</Bright>
-								<LineWidth>4</LineWidth>
-								<Axis>100,100</Axis>
-								<LineColorScript>@ForeColor</LineColorScript>
-								<Point id="Point">
-									<FloatPosition>123.000,9.000</FloatPosition>
-								</Point>
-								<Point id="Point">
-									<FloatPosition>121.000,17.000</FloatPosition>
-								</Point>
-							</PolyLine>
-						</Element>
-						<Element id="4">
-							<PolyLine id="IND">
-								<Bright>True</Bright>
-								<LineWidth>4</LineWidth>
-								<Axis>100,100</Axis>
-								<LineColorScript>@ForeColor</LineColorScript>
-								<Point id="Point">
-									<FloatPosition>166.000,31.000</FloatPosition>
-								</Point>
-								<Point id="Point">
-									<FloatPosition>159.000,40.000</FloatPosition>
-								</Point>
-							</PolyLine>
-						</Element>
-						<Element id="5">
-							<PolyLine id="IND">
-								<Bright>True</Bright>
-								<LineWidth>4</LineWidth>
-								<Axis>100,100</Axis>
-								<LineColorScript>@ForeColor</LineColorScript>
-								<Point id="Point">
-									<FloatPosition>189.000,75.000</FloatPosition>
-								</Point>
-								<Point id="Point">
-									<FloatPosition>181.000,78.000</FloatPosition>
-								</Point>
-							</PolyLine>
-						</Element>
-						<Element id="6">
-							<PolyLine id="IND">
-								<Bright>True</Bright>
-								<LineWidth>4</LineWidth>
-								<Axis>100,100</Axis>
-								<LineColorScript>@ForeColor</LineColorScript>
-								<Point id="Point">
-									<FloatPosition>192.000,123.000</FloatPosition>
-								</Point>
-								<Point id="Point">
-									<FloatPosition>181.000,121.000</FloatPosition>
-								</Point>
-							</PolyLine>
-						</Element>
-						<Element id="7">
-							<PolyLine id="IND">
-								<Bright>True</Bright>
-								<LineWidth>4</LineWidth>
-								<Axis>100,100</Axis>
-								<LineColorScript>@ForeColor</LineColorScript>
-								<Point id="Point">
-									<FloatPosition>165.000,165.000</FloatPosition>
-								</Point>
-								<Point id="Point">
-									<FloatPosition>159.000,159.000</FloatPosition>
-								</Point>
-							</PolyLine>
-						</Element>
-						<Element id="8">
-							<PolyLine id="IND">
-								<Bright>True</Bright>
-								<LineWidth>4</LineWidth>
-								<Axis>100,100</Axis>
-								<LineColorScript>@ForeColor</LineColorScript>
-								<Point id="Point">
-									<FloatPosition>123.000,189.000</FloatPosition>
-								</Point>
-								<Point id="Point">
-									<FloatPosition>121.000,181.000</FloatPosition>
-								</Point>
-							</PolyLine>
-						</Element>
-						<Element id="9">
-							<PolyLine id="IND">
-								<Bright>True</Bright>
-								<LineWidth>4</LineWidth>
-								<Axis>100,100</Axis>
-								<LineColorScript>@ForeColor</LineColorScript>
-								<Point id="Point">
-									<FloatPosition>75.000,189.000</FloatPosition>
-								</Point>
-								<Point id="Point">
-									<FloatPosition>77.000,181.000</FloatPosition>
-								</Point>
-							</PolyLine>
-						</Element>
-						<Element id="10">
-							<PolyLine id="IND">
-								<Bright>True</Bright>
-								<LineWidth>4</LineWidth>
-								<Axis>100,100</Axis>
-								<LineColorScript>@ForeColor</LineColorScript>
-								<Point id="Point">
-									<FloatPosition>34.000,166.000</FloatPosition>
-								</Point>
-								<Point id="Point">
-									<FloatPosition>40.000,160.000</FloatPosition>
-								</Point>
-							</PolyLine>
-						</Element>
-						<Element id="11">
-							<PolyLine id="IND">
-								<Bright>True</Bright>
-								<LineWidth>4</LineWidth>
-								<Axis>100,100</Axis>
-								<LineColorScript>@ForeColor</LineColorScript>
-								<Point id="Point">
-									<FloatPosition>8.000,124.000</FloatPosition>
-								</Point>
-								<Point id="Point">
-									<FloatPosition>17.000,121.000</FloatPosition>
-								</Point>
-							</PolyLine>
-						</Element>
-						<Element id="12">
-							<PolyLine id="IND">
-								<Bright>True</Bright>
-								<LineWidth>4</LineWidth>
-								<Axis>100,100</Axis>
-								<LineColorScript>@ForeColor</LineColorScript>
-								<Point id="Point">
-									<FloatPosition>9.000,75.000</FloatPosition>
-								</Point>
-								<Point id="Point">
-									<FloatPosition>17.000,77.000</FloatPosition>
-								</Point>
-							</PolyLine>
-						</Element>
-						<Rotation id="HEADING">
-							<PointsTo>NORTH</PointsTo>
-							<Expression id="Expression">
-								<Script>(A:PLANE HEADING DEGREES GYRO, Radians) /-/</Script>
-							</Expression>
-						</Rotation>
 					</Element>
-				<Element id="COMPASS TEXT">
-					 <FloatPosition>256.000,360.000</FloatPosition>
-					 <Element id="N">
-						 <FloatPosition>0.000,0.000</FloatPosition>
-						 <GaugeText id="GaugeText">
-							 <Axis>14.000,14.000</Axis>
-							 <Bright>True</Bright>
-							 <FontColor>@ForeColor</FontColor>
-							 <FontFace>Consolas</FontFace>
-							 <FontHeight>20</FontHeight>
-							 <GaugeString>N</GaugeString>
-							 <HorizontalAlign>CENTER</HorizontalAlign>
-							 <Size>28,28</Size>
-							 <Transparent>True</Transparent>
-						 </GaugeText>
-						 <Shift id="Y">
-							 <Scale>0.000,0.500</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) cos *</Script>
-							 </Expression>
-						 </Shift>
-						 <Shift id="X">
-							 <Scale>0.500,0.000</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) sin *</Script>
-							 </Expression>
-						 </Shift>
-					 </Element>
-					 <Element id="W">
-						 <FloatPosition>0.000,0.000</FloatPosition>
-						 <GaugeText id="GaugeText">
-							 <Axis>14.000,14.000</Axis>
-							 <Bright>True</Bright>
-							 <FontColor>@ForeColor</FontColor>
-							 <FontFace>Consolas</FontFace>
-							 <FontHeight>20</FontHeight>
-							 <GaugeString>W</GaugeString>
-							 <HorizontalAlign>CENTER</HorizontalAlign>
-							 <Size>28,28</Size>
-							 <Transparent>True</Transparent>
-						 </GaugeText>
-						 <Shift id="Y">
-							 <Scale>0.000,0.500</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 270 dgrd - cos *</Script>
-							 </Expression>
-						 </Shift>
-						 <Shift id="X">
-							 <Scale>0.500,0.000</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 270 dgrd - sin *</Script>
-							 </Expression>
-						 </Shift>
-					 </Element>
-					 <Element id="E">
-						 <FloatPosition>0.000,0.000</FloatPosition>
-						 <GaugeText id="GaugeText">
-							 <Axis>14.000,14.000</Axis>
-							 <Bright>True</Bright>
-							 <FontColor>@ForeColor</FontColor>
-							 <FontFace>Consolas</FontFace>
-							 <FontHeight>20</FontHeight>
-							 <GaugeString>E</GaugeString>
-							 <HorizontalAlign>CENTER</HorizontalAlign>
-							 <Size>28,28</Size>
-							 <Transparent>True</Transparent>
-						 </GaugeText>
-						 <Shift id="Y">
-							 <Scale>0.000,0.500</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 90 dgrd - cos *</Script>
-							 </Expression>
-						 </Shift>
-						 <Shift id="X">
-							 <Scale>0.500,0.000</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 90 dgrd - sin *</Script>
-							 </Expression>
-						 </Shift>
-					 </Element>
-					 <Element id="S">
-						 <FloatPosition>0.000,0.000</FloatPosition>
-						 <GaugeText id="GaugeText">
-							 <Axis>14.000,14.000</Axis>
-							 <Bright>True</Bright>
-							 <FontColor>@ForeColor</FontColor>
-							 <FontFace>Consolas</FontFace>
-							 <FontHeight>20</FontHeight>
-							 <GaugeString>S</GaugeString>
-							 <HorizontalAlign>CENTER</HorizontalAlign>
-							 <Size>28,28</Size>
-							 <Transparent>True</Transparent>
-						 </GaugeText>
-						 <Shift id="Y">
-							 <Scale>0.000,0.500</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 180 dgrd - cos *</Script>
-							 </Expression>
-						 </Shift>
-						 <Shift id="X">
-							 <Scale>0.500,0.000</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 180 dgrd - sin *</Script>
-							 </Expression>
-						 </Shift>
-					 </Element>
-					 <Element id="3">
-						 <FloatPosition>0.000,0.000</FloatPosition>
-						 <GaugeText id="GaugeText">
-							 <Axis>24.000,12.000</Axis>
-							 <Bright>True</Bright>
-							 <FontColor>@ForeColor</FontColor>
-							 <FontFace>Consolas</FontFace>
-							 <FontHeight>18</FontHeight>
-							 <GaugeString>3</GaugeString>
-							 <HorizontalAlign>CENTER</HorizontalAlign>
-							 <Size>48,24</Size>
-							 <Transparent>True</Transparent>
-						 </GaugeText>
-						 <Shift id="Y">
-							 <Scale>0.000,0.500</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 30 dgrd - cos *</Script>
-							 </Expression>
-						 </Shift>
-						 <Shift id="X">
-							 <Scale>0.500,0.000</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 30 dgrd - sin *</Script>
-							 </Expression>
-						 </Shift>
-					 </Element>
-					 <Element id="6">
-						 <FloatPosition>0.000,0.000</FloatPosition>
-						 <GaugeText id="GaugeText">
-							 <Axis>24.000,12.000</Axis>
-							 <Bright>True</Bright>
-							 <FontColor>@ForeColor</FontColor>
-							 <FontFace>Consolas</FontFace>
-							 <FontHeight>18</FontHeight>
-							 <GaugeString>6</GaugeString>
-							 <HorizontalAlign>CENTER</HorizontalAlign>
-							 <Size>48,24</Size>
-							 <Transparent>True</Transparent>
-						 </GaugeText>
-						 <Shift id="Y">
-							 <Scale>0.000,0.500</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 60 dgrd - cos *</Script>
-							 </Expression>
-						 </Shift>
-						 <Shift id="X">
-							 <Scale>0.500,0.000</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 60 dgrd - sin *</Script>
-							 </Expression>
-						 </Shift>
-					 </Element>
-					 <Element id="12">
-						 <FloatPosition>0.000,0.000</FloatPosition>
-						 <GaugeText id="GaugeText">
-							 <Axis>24.000,12.000</Axis>
-							 <Bright>True</Bright>
-							 <FontColor>@ForeColor</FontColor>
-							 <FontFace>Consolas</FontFace>
-							 <FontHeight>18</FontHeight>
-							 <GaugeString>12</GaugeString>
-							 <HorizontalAlign>CENTER</HorizontalAlign>
-							 <Size>48,24</Size>
-							 <Transparent>True</Transparent>
-						 </GaugeText>
-						 <Shift id="Y">
-							 <Scale>0.000,0.500</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 120 dgrd - cos *</Script>
-							 </Expression>
-						 </Shift>
-						 <Shift id="X">
-							 <Scale>0.500,0.000</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 120 dgrd - sin *</Script>
-							 </Expression>
-						 </Shift>
-					 </Element>
-					 <Element id="15">
-						 <FloatPosition>0.000,0.000</FloatPosition>
-						 <GaugeText id="GaugeText">
-							 <Axis>24.000,12.000</Axis>
-							 <Bright>True</Bright>
-							 <FontColor>@ForeColor</FontColor>
-							 <FontFace>Consolas</FontFace>
-							 <FontHeight>18</FontHeight>
-							 <GaugeString>15</GaugeString>
-							 <HorizontalAlign>CENTER</HorizontalAlign>
-							 <Size>48,24</Size>
-							 <Transparent>True</Transparent>
-						 </GaugeText>
-						 <Shift id="Y">
-							 <Scale>0.000,0.500</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 150 dgrd - cos *</Script>
-							 </Expression>
-						 </Shift>
-						 <Shift id="X">
-							 <Scale>0.500,0.000</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 150 dgrd - sin *</Script>
-							 </Expression>
-						 </Shift>
-					 </Element>
-					 <Element id="21">
-						 <FloatPosition>0.000,0.000</FloatPosition>
-						 <GaugeText id="GaugeText">
-							 <Axis>24.000,12.000</Axis>
-							 <Bright>True</Bright>
-							 <FontColor>@ForeColor</FontColor>
-							 <FontFace>Consolas</FontFace>
-							 <FontHeight>18</FontHeight>
-							 <GaugeString>21</GaugeString>
-							 <HorizontalAlign>CENTER</HorizontalAlign>
-							 <Size>48,24</Size>
-							 <Transparent>True</Transparent>
-						 </GaugeText>
-						 <Shift id="Y">
-							 <Scale>0.000,0.500</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 210 dgrd - cos *</Script>
-							 </Expression>
-						 </Shift>
-						 <Shift id="X">
-							 <Scale>0.500,0.000</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 210 dgrd - sin *</Script>
-							 </Expression>
-						 </Shift>
-					 </Element>
-					 <Element id="24">
-						 <FloatPosition>0.000,0.000</FloatPosition>
-						 <GaugeText id="GaugeText">
-							 <Axis>24.000,12.000</Axis>
-							 <Bright>True</Bright>
-							 <FontColor>@ForeColor</FontColor>
-							 <FontFace>Consolas</FontFace>
-							 <FontHeight>18</FontHeight>
-							 <GaugeString>24</GaugeString>
-							 <HorizontalAlign>CENTER</HorizontalAlign>
-							 <Size>48,24</Size>
-							 <Transparent>True</Transparent>
-						 </GaugeText>
-						 <Shift id="Y">
-							 <Scale>0.000,0.500</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 240 dgrd - cos *</Script>
-							 </Expression>
-						 </Shift>
-						 <Shift id="X">
-							 <Scale>0.500,0.000</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 240 dgrd - sin *</Script>
-							 </Expression>
-						 </Shift>
-					 </Element>
-					 <Element id="30">
-						 <FloatPosition>0.000,0.000</FloatPosition>
-						 <GaugeText id="GaugeText">
-							 <Axis>24.000,12.000</Axis>
-							 <Bright>True</Bright>
-							 <FontColor>@ForeColor</FontColor>
-							 <FontFace>Consolas</FontFace>
-							 <FontHeight>18</FontHeight>
-							 <GaugeString>30</GaugeString>
-							 <HorizontalAlign>CENTER</HorizontalAlign>
-							 <Size>48,24</Size>
-							 <Transparent>True</Transparent>
-						 </GaugeText>
-						 <Shift id="Y">
-							 <Scale>0.000,0.500</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 300 dgrd - cos *</Script>
-							 </Expression>
-						 </Shift>
-						 <Shift id="X">
-							 <Scale>0.500,0.000</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 300 dgrd - sin *</Script>
-							 </Expression>
-						 </Shift>
-					 </Element>
-					 <Element id="33">
-						 <FloatPosition>0.000,0.000</FloatPosition>
-						 <GaugeText id="GaugeText">
-							 <Axis>24.000,12.000</Axis>
-							 <Bright>True</Bright>
-							 <FontColor>@ForeColor</FontColor>
-							 <FontFace>Consolas</FontFace>
-							 <FontHeight>18</FontHeight>
-							 <GaugeString>33</GaugeString>
-							 <HorizontalAlign>CENTER</HorizontalAlign>
-							 <Size>48,24</Size>
-							 <Transparent>True</Transparent>
-						 </GaugeText>
-						 <Shift id="Y">
-							 <Scale>0.000,0.500</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 330 dgrd - cos *</Script>
-							 </Expression>
-						 </Shift>
-						 <Shift id="X">
-							 <Scale>0.500,0.000</Scale>
-							 <Expression id="Expression">
-								 <Script>-180 (A:PLANE HEADING DEGREES GYRO, radians) 330 dgrd - sin *</Script>
-							 </Expression>
-						 </Shift>
-					 </Element>
-				 </Element>
-				<Element id="ACQUISITION SYMBOL">
-					<FloatPosition>256.000,240.000</FloatPosition>
-					<Element id="1">
-						<PolyLine id="IND">
+					<Element id="AIR CENTER SYMBOL">
+						<FloatPosition>256.000,360.000</FloatPosition>
+						<Element id="1">
+							<PolyLine id="IND">
+								<Bright>True</Bright>
+								<LineWidth>5</LineWidth>
+								<LineColorScript>@ForeColor</LineColorScript>
+								<Point id="Point">
+									<FloatPosition>-15.000,-5.000</FloatPosition>
+								</Point>
+								<Point id="Point">
+									<FloatPosition>15.000,-5.000</FloatPosition>
+								</Point>
+							</PolyLine>
+						</Element>
+						<Element id="2">
+							<PolyLine id="IND">
+								<Bright>True</Bright>
+								<LineWidth>5</LineWidth>
+								<LineColorScript>@ForeColor</LineColorScript>
+								<Point id="Point">
+									<FloatPosition>-10.000,10.000</FloatPosition>
+								</Point>
+								<Point id="Point">
+									<FloatPosition>10.000,10.000</FloatPosition>
+								</Point>
+							</PolyLine>
+						</Element>
+						<Element id="2">
+							<PolyLine id="IND">
+								<Bright>True</Bright>
+								<LineWidth>5</LineWidth>
+								<LineColorScript>@ForeColor</LineColorScript>
+								<Point id="Point">
+									<FloatPosition>0.000,-12.000</FloatPosition>
+								</Point>
+								<Point id="Point">
+									<FloatPosition>0.000,12.000</FloatPosition>
+								</Point>
+							</PolyLine>
+						</Element>
+					</Element>
+					<Element id="BCKGRD">
+						<FloatPosition>256.000,256.000</FloatPosition>
+						<Image id="mpcd/TSD_BCKGRD.bmp" Name="mpcd/TSD_BCKGRD.bmp">
+							<Axis>200,200</Axis>
+							<Transparent>True</Transparent>
 							<Bright>True</Bright>
-							<LineWidth>2</LineWidth>
-							<LineColorScript>@ForeColor</LineColorScript>
-							<Point id="Point">
-								<FloatPosition>-10.000,-10.000</FloatPosition>
-							</Point>
-							<Point id="Point">
-								<FloatPosition>-10.000,10.000</FloatPosition>
-							</Point>
-						</PolyLine>
+						</Image>
 					</Element>
-					<Element id="2">
-						<PolyLine id="IND">
-							<Bright>True</Bright>
-							<LineWidth>2</LineWidth>
-							<LineColorScript>@ForeColor</LineColorScript>
-							<Point id="Point">
-								<FloatPosition>10.000,-10.000</FloatPosition>
-							</Point>
-							<Point id="Point">
-								<FloatPosition>10.000,10.000</FloatPosition>
-							</Point>
-						</PolyLine>
-					</Element>
-				</Element>
-				<Element id="AIR CENTER SYMBOL">
-					<FloatPosition>256.000,360.000</FloatPosition>
-					<Element id="1">
-						<PolyLine id="IND">
-							<Bright>True</Bright>
-							<LineWidth>5</LineWidth>
-							<LineColorScript>@ForeColor</LineColorScript>
-							<Point id="Point">
-								<FloatPosition>-15.000,-5.000</FloatPosition>
-							</Point>
-							<Point id="Point">
-								<FloatPosition>15.000,-5.000</FloatPosition>
-							</Point>
-						</PolyLine>
-					</Element>
-					<Element id="2">
-						<PolyLine id="IND">
-							<Bright>True</Bright>
-							<LineWidth>5</LineWidth>
-							<LineColorScript>@ForeColor</LineColorScript>
-							<Point id="Point">
-								<FloatPosition>-10.000,10.000</FloatPosition>
-							</Point>
-							<Point id="Point">
-								<FloatPosition>10.000,10.000</FloatPosition>
-							</Point>
-						</PolyLine>
-					</Element>
-					<Element id="2">
-						<PolyLine id="IND">
-							<Bright>True</Bright>
-							<LineWidth>5</LineWidth>
-							<LineColorScript>@ForeColor</LineColorScript>
-							<Point id="Point">
-								<FloatPosition>0.000,-12.000</FloatPosition>
-							</Point>
-							<Point id="Point">
-								<FloatPosition>0.000,12.000</FloatPosition>
-							</Point>
-						</PolyLine>
-					</Element>
-				</Element>
-				<Element id="BCKGRD">
-					<FloatPosition>256.000,256.000</FloatPosition>
-					<Image id="mpcd/TSD_BCKGRD.bmp" Name="mpcd/TSD_BCKGRD.bmp">
-						<Axis>200,200</Axis>
-						<Transparent>True</Transparent>
-						<Bright>True</Bright>
-					</Image>
-				</Element>
-
-				<Element id="RANGE">
-					<FloatPosition>420.000,69.000</FloatPosition>
-					<GaugeText id="GaugeText">
-						<Bold>True</Bold>
-						<Bright>True</Bright>
-						<FontColorScript>@ForeColor</FontColorScript>
-						<FontFace>Consolas</FontFace>
-						<FontHeight>26</FontHeight>
-						<GaugeString>20</GaugeString>
-						<HorizontalAlign>CENTER</HorizontalAlign>
-						<Size>70,48</Size>
-						<Transparent>True</Transparent>
-					</GaugeText>
-				</Element>
-				<Element id="ICMS">
-				<FloatPosition>420.000,390.000</FloatPosition>
-					<Element id="CMD Stores Display (CHAFF)">
+				
+					<Element id="RANGE">
+						<FloatPosition>420.000,69.000</FloatPosition>
 						<GaugeText id="GaugeText">
 							<Bold>True</Bold>
 							<Bright>True</Bright>
 							<FontColorScript>@ForeColor</FontColorScript>
 							<FontFace>Consolas</FontFace>
-							<FontHeight>22</FontHeight>
-							<GaugeString>C 120</GaugeString>
-							<HorizontalAlign>LEFT</HorizontalAlign>
-							<Size>70,25</Size>
+							<FontHeight>26</FontHeight>
+							<GaugeString>20</GaugeString>
+							<HorizontalAlign>CENTER</HorizontalAlign>
+							<Size>70,48</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
 					</Element>
-					<Element id="CMD Stores Display (FLARE)">
-						<FloatPosition>0.000,20.000</FloatPosition>
+					<Element id="ICMS">
+					<FloatPosition>420.000,390.000</FloatPosition>
+						<Element id="CMD Stores Display (CHAFF)">
 							<GaugeText id="GaugeText">
-							<Bold>True</Bold>
-							<Bright>True</Bright>
-							<FontColorScript>@ForeColor</FontColorScript>
-							<FontFace>Consolas</FontFace>
-							<FontHeight>22</FontHeight>
-							<GaugeString>F 60</GaugeString>
-							<HorizontalAlign>LEFT</HorizontalAlign>
-							<Size>70,25</Size>
-							<Transparent>True</Transparent>
-						</GaugeText>
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>C 120</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>70,25</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="CMD Stores Display (FLARE)">
+							<FloatPosition>0.000,20.000</FloatPosition>
+								<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>F 60</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>70,25</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="MSS Programming Indicators">
+							<FloatPosition>0.000,40.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>PFM</GaugeString>
+								<HorizontalAlign>LEFT</HorizontalAlign>
+								<Size>70,25</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="ICMS STATUS">
+							<FloatPosition>-20.000,60.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>B1 B2 B3</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>90,25</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="CRS/HDG">
+							<FloatPosition>-10.000,80.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>%((L:HSI_CRS_SELECT))%!03d!/%((A:AUTOPILOT HEADING LOCK DIR, degrees))%!03d!</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>70,25</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
 					</Element>
-					<Element id="MSS Programming Indicators">
-						<FloatPosition>0.000,40.000</FloatPosition>
+					<Element id="TIME">
+						<FloatPosition>40.000,69.000</FloatPosition>
 						<GaugeText id="GaugeText">
 							<Bold>True</Bold>
 							<Bright>True</Bright>
 							<FontColorScript>@ForeColor</FontColorScript>
 							<FontFace>Consolas</FontFace>
 							<FontHeight>22</FontHeight>
-							<GaugeString>PFM</GaugeString>
-							<HorizontalAlign>LEFT</HorizontalAlign>
-							<Size>70,25</Size>
-							<Transparent>True</Transparent>
-						</GaugeText>
-					</Element>
-					<Element id="ICMS STATUS">
-						<FloatPosition>-20.000,60.000</FloatPosition>
-						<GaugeText id="GaugeText">
-							<Bold>True</Bold>
-							<Bright>True</Bright>
-							<FontColorScript>@ForeColor</FontColorScript>
-							<FontFace>Consolas</FontFace>
-							<FontHeight>22</FontHeight>
-							<GaugeString>B1 B2 B3</GaugeString>
+							<GaugeString>%((P:ZULU TIME,hours) flr 23 + 24 % 1 +)%!02d!:%((P:ZULU TIME,minutes) flr 60 %)%!02d!:%((P:ZULU TIME,seconds) flr 60 %)%!02d!Z</GaugeString>
 							<HorizontalAlign>CENTER</HorizontalAlign>
-							<Size>90,25</Size>
+							<Size>90,48</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
 					</Element>
-					<Element id="CRS/HDG">
-						<FloatPosition>-10.000,80.000</FloatPosition>
+					<Element id="DCLTR">
+						<FloatPosition>40.000,89.000</FloatPosition>
 						<GaugeText id="GaugeText">
 							<Bold>True</Bold>
 							<Bright>True</Bright>
 							<FontColorScript>@ForeColor</FontColorScript>
 							<FontFace>Consolas</FontFace>
 							<FontHeight>22</FontHeight>
-							<GaugeString>%((L:HSI_CRS_SELECT))%!03d!/%((A:AUTOPILOT HEADING LOCK DIR, degrees))%!03d!</GaugeString>
-							<HorizontalAlign>CENTER</HorizontalAlign>
-							<Size>70,25</Size>
-							<Transparent>True</Transparent>
-						</GaugeText>
-					</Element>
-				</Element>
-				<Element id="TIME">
-					<FloatPosition>40.000,69.000</FloatPosition>
-					<GaugeText id="GaugeText">
-						<Bold>True</Bold>
-						<Bright>True</Bright>
-						<FontColorScript>@ForeColor</FontColorScript>
-						<FontFace>Consolas</FontFace>
-						<FontHeight>22</FontHeight>
-						<GaugeString>%((P:ZULU TIME,hours) flr 23 + 24 % 1 +)%!02d!:%((P:ZULU TIME,minutes) flr 60 %)%!02d!:%((P:ZULU TIME,seconds) flr 60 %)%!02d!Z</GaugeString>
-						<HorizontalAlign>CENTER</HorizontalAlign>
-						<Size>90,48</Size>
-						<Transparent>True</Transparent>
-					</GaugeText>
-				</Element>
-				<Element id="DCLTR">
-					<FloatPosition>40.000,89.000</FloatPosition>
-					<GaugeText id="GaugeText">
-						<Bold>True</Bold>
-						<Bright>True</Bright>
-						<FontColorScript>@ForeColor</FontColorScript>
-						<FontFace>Consolas</FontFace>
-						<FontHeight>22</FontHeight>
-						<GaugeString>DCLTR</GaugeString>
-						<HorizontalAlign>CENTER</HorizontalAlign>
-						<Size>70,48</Size>
-						<Transparent>True</Transparent>
-					</GaugeText>
-				</Element>
-				<Element id="LEFTDOWN">
-					<FloatPosition>40.000,390.000</FloatPosition>
-					<Element id="A4A">
-						<FloatPosition>0.000,0.000</FloatPosition>
-						<GaugeText id="GaugeText">
-							<Bold>True</Bold>
-							<Bright>True</Bright>
-							<FontColorScript>@ForeColor</FontColorScript>
-							<FontFace>Consolas</FontFace>
-							<FontHeight>22</FontHeight>
-							<GaugeString>A4A</GaugeString>
+							<GaugeString>DCLTR</GaugeString>
 							<HorizontalAlign>CENTER</HorizontalAlign>
 							<Size>70,48</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
 					</Element>
-					<Element id="M2M">
-						<FloatPosition>0.000,20.000</FloatPosition>
-						<GaugeText id="GaugeText">
-							<Bold>True</Bold>
-							<Bright>True</Bright>
-							<FontColorScript>@ForeColor</FontColorScript>
-							<FontFace>Consolas</FontFace>
-							<FontHeight>22</FontHeight>
-							<GaugeString>M2M</GaugeString>
-							<HorizontalAlign>CENTER</HorizontalAlign>
-							<Size>70,48</Size>
-							<Transparent>True</Transparent>
-						</GaugeText>
-					</Element>
-					<Element id="S2L">
-						<FloatPosition>0.000,40.000</FloatPosition>
-						<GaugeText id="GaugeText">
-							<Bold>True</Bold>
-							<Bright>True</Bright>
-							<FontColorScript>@ForeColor</FontColorScript>
-							<FontFace>Consolas</FontFace>
-							<FontHeight>22</FontHeight>
-							<GaugeString>S2L</GaugeString>
-							<HorizontalAlign>CENTER</HorizontalAlign>
-							<Size>70,48</Size>
-							<Transparent>True</Transparent>
-						</GaugeText>
-					</Element>
-					<Element id="G 900M">
-						<FloatPosition>0.000,60.000</FloatPosition>
-						<GaugeText id="GaugeText">
-							<Bold>True</Bold>
-							<Bright>True</Bright>
-							<FontColorScript>@ForeColor</FontColorScript>
-							<FontFace>Consolas</FontFace>
-							<FontHeight>22</FontHeight>
-							<GaugeString>G 900M</GaugeString>
-							<HorizontalAlign>CENTER</HorizontalAlign>
-							<Size>70,48</Size>
-							<Transparent>True</Transparent>
-						</GaugeText>
+					<Element id="LEFTDOWN">
+						<FloatPosition>40.000,390.000</FloatPosition>
+						<Element id="A4A">
+							<FloatPosition>0.000,0.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>A4A</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>70,48</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="M2M">
+							<FloatPosition>0.000,20.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>M2M</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>70,48</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="S2L">
+							<FloatPosition>0.000,40.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>S2L</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>70,48</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
+						<Element id="G 900M">
+							<FloatPosition>0.000,60.000</FloatPosition>
+							<GaugeText id="GaugeText">
+								<Bold>True</Bold>
+								<Bright>True</Bright>
+								<FontColorScript>@ForeColor</FontColorScript>
+								<FontFace>Consolas</FontFace>
+								<FontHeight>22</FontHeight>
+								<GaugeString>G 900M</GaugeString>
+								<HorizontalAlign>CENTER</HorizontalAlign>
+								<Size>70,48</Size>
+								<Transparent>True</Transparent>
+							</GaugeText>
+						</Element>
 					</Element>
 				</Element>
-
 			</Element>
 			<Element id="WPN">
 			<FloatPosition>210.000,240.000</FloatPosition>
@@ -7936,6 +8485,24 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 			</Element>
 			<Element id="DTM">
 				<Visibility>(L:MPCD-menu, Enum) 1000 div 15 ==</Visibility>
+				<Element id="STBY">
+					<FloatPosition>210.000,240.000</FloatPosition>
+					<Visibility>(L:JTIDS_PWR) 0 ==</Visibility>
+					<GaugeText id="GaugeText">
+							<BackgroundColorScript>@ForeColor</BackgroundColorScript>
+							<Bold>True</Bold>
+							<Bright>True</Bright>
+							<FontColor>0x000000</FontColor>
+							<FontFace>Consolas</FontFace>
+							<FontHeight>22</FontHeight>
+							<GaugeString>stby</GaugeString>
+							<HorizontalAlign>CENTER</HorizontalAlign>
+							<Size>100,24</Size>
+							<Transparent>True</Transparent>
+					</GaugeText>
+				</Element>
+				<Element id="DISPLAY">
+					<Visibility>(L:JTIDS_PWR) 1 ==</Visibility>
 				<Element id="DISPLAY - CENTERED">
 					<Element id="MODE 1">
 						<FloatPosition>32.000,32.000</FloatPosition>
@@ -8793,6 +9360,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 					</Element>
 
 				</Element>
+				</Element>
 			</Element>
 
 			<Element id="MAIN MENU">
@@ -8838,20 +9406,6 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 							<Size>80,22</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-						<Element id="SEL BOX">
-							<FloatPosition>0.000,0.000</FloatPosition>
-							<Visibility>
-(L:TF_ALT, enum) 1000 ==
-(L:MPCD-menu, Enum) 1000 div 17 == &amp;&amp;
-</Visibility>
-							<Rectangle id="Rectangle">
-								<LineWidth>2</LineWidth>
-								<Bright>True</Bright>
-								<Width>80</Width>
-								<Height>24</Height>
-								<LineColorScript>@ForeColor</LineColorScript>
-							</Rectangle>
-						</Element>
 					</Element>
 					<Element id="LEFT CFT">
 						<FloatPosition>140.000,0.000</FloatPosition>
@@ -8869,20 +9423,6 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 							<Size>80,22</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-						<Element id="SEL BOX">
-							<FloatPosition>0.000,0.000</FloatPosition>
-							<Visibility>
-(L:TF_ALT, enum) 2000 ==
-(L:MPCD-menu, Enum) 1000 div 17 == &amp;&amp;
-</Visibility>
-							<Rectangle id="Rectangle">
-								<LineWidth>2</LineWidth>
-								<Bright>True</Bright>
-								<Width>80</Width>
-								<Height>24</Height>
-								<LineColorScript>@ForeColor</LineColorScript>
-							</Rectangle>
-						</Element>
 					</Element>
 					<Element id="CENTER">
 						<FloatPosition>222.000,0.000</FloatPosition>
@@ -8923,20 +9463,6 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 							<Size>80,60</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-						<Element id="SEL BOX">
-							<FloatPosition>0.000,0.000</FloatPosition>
-							<Visibility>
-(L:TF_ALT, enum) 3000 ==
-(L:MPCD-menu, Enum) 1000 div 17 == &amp;&amp;
-</Visibility>
-							<Rectangle id="Rectangle">
-								<LineWidth>2</LineWidth>
-								<Bright>True</Bright>
-								<Width>80</Width>
-								<Height>24</Height>
-								<LineColorScript>@ForeColor</LineColorScript>
-							</Rectangle>
-						</Element>
 					</Element>
 					<Element id="RIGHT CFT">
 						<FloatPosition>304.000,0.000</FloatPosition>
@@ -9012,16 +9538,18 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 		%{if}ENG
 		%{else}FUNC
 		%{end}
-%{:15}D\nA\nT
+%{:15}%((L:JTIDS_PWR) 1 ==)
+		%{if}D\nA\nT
+		%{end}
 %{end}
 </GaugeString>
 							<VerticalAlign>CENTER</VerticalAlign>
 							<Size>100,72</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-						<Element id="DTM SEL BOX">
+						<Element id="SEL BOX - DTM">
 							<FloatPosition>-5.000,0.000</FloatPosition>
-							<Visibility>(L:MPCD_DTM_DAT) (L:MPCD-menu, Enum) 1000 div 15 == and</Visibility>
+							<Visibility>(L:MPCD_DTM_DAT) (L:MPCD-menu, Enum) 1000 div 15 == and (L:JTIDS_PWR) 1 == and</Visibility>
 							<Rectangle id="Rectangle">
 								<LineWidth>2</LineWidth>
 								<Bright>True</Bright>
@@ -9050,16 +9578,18 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 %{:2}%((L:BIT_PAGES) 1 ==)
 		%{if}CONTROL
 		%{end}
-%{:15}S\nR\nV
+%{:15}%((L:JTIDS_PWR) 1 ==)
+		%{if}S\nR\nV
+		%{end}
 %{end}
 </GaugeString>
 							<VerticalAlign>CENTER</VerticalAlign>
 							<Size>100,72</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-						<Element id="DTM SEL BOX">
+						<Element id="SEL BOX - DTM">
 							<FloatPosition>-5.000,0.000</FloatPosition>
-							<Visibility>(L:MPCD_DTM_SRV) (L:MPCD-menu, Enum) 1000 div 15 == and</Visibility>
+							<Visibility>(L:MPCD_DTM_SRV) (L:MPCD-menu, Enum) 1000 div 15 == and (L:JTIDS_PWR) 1 == and</Visibility>
 							<Rectangle id="Rectangle">
 								<LineWidth>2</LineWidth>
 								<Bright>True</Bright>
@@ -9088,16 +9618,18 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 %{:2}%((L:BIT_PAGES) 1 ==)
 	%{if}GEAR
 	%{end}
-%{:15}T\nG\nT
+%{:15}%((L:JTIDS_PWR) 1 ==)
+		%{if}T\nG\nT
+		%{end}
 %{end}
 </GaugeString>
 							<VerticalAlign>CENTER</VerticalAlign>
 							<Size>100,72</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-						<Element id="DTM SEL BOX">
+						<Element id="SEL BOX - DTM">
 							<FloatPosition>-5.000,0.000</FloatPosition>
-							<Visibility>(L:MPCD_DTM_TGT) (L:MPCD-menu, Enum) 1000 div 15 == and</Visibility>
+							<Visibility>(L:MPCD_DTM_TGT) (L:MPCD-menu, Enum) 1000 div 15 == and (L:JTIDS_PWR) 1 == and</Visibility>
 							<Rectangle id="Rectangle">
 								<LineWidth>2</LineWidth>
 								<Bright>True</Bright>
@@ -9130,16 +9662,18 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 		%{else}
 		%{end}
 	%{end}
-%{:15}S\nA\nM
+%{:15}%((L:JTIDS_PWR) 1 ==)
+		%{if}S\nA\nM
+		%{end}
 %{end}
 </GaugeString>
 							<VerticalAlign>CENTER</VerticalAlign>
 							<Size>100,72</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-						<Element id="DTM SEL BOX">
+						<Element id="SEL BOX - DTM">
 							<FloatPosition>-5.000,0.000</FloatPosition>
-							<Visibility>(L:MPCD_DTM_SAM) (L:MPCD-menu, Enum) 1000 div 15 == and</Visibility>
+							<Visibility>(L:MPCD_DTM_SAM) (L:MPCD-menu, Enum) 1000 div 15 == and (L:JTIDS_PWR) 1 == and</Visibility>
 							<Rectangle id="Rectangle">
 								<LineWidth>2</LineWidth>
 								<Bright>True</Bright>
@@ -9168,25 +9702,16 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 %((L:BIT_PAGES) 1 ==)
 	%{if}FUEL
 	%{end}
-%{:15}S\nH\nR
+%{:15}%((L:JTIDS_PWR) 1 ==)
+		%{if}S\nH\nR
+		%{end}
 %{end}
 </GaugeString>
 							<VerticalAlign>CENTER</VerticalAlign>
 							<Size>100,72</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-						<Element id="DTM SEL BOX">
-							<FloatPosition>-5.000,0.000</FloatPosition>
-							<Visibility>(L:MPCD_DTM_SHR) (L:MPCD-menu, Enum) 1000 div 15 == and</Visibility>
-							<Rectangle id="Rectangle">
-								<LineWidth>2</LineWidth>
-								<Bright>True</Bright>
-								<Width>20</Width>
-								<Height>75</Height>
-								<LineColorScript>@ForeColor</LineColorScript>
-							</Rectangle>
-						</Element>
-						<Element id="ARMT SCAN SEL BOX">
+						<Element id="SEL BOX - ARMT SCAN">
 							<FloatPosition>-5.000,0.000</FloatPosition>
 							<Visibility>(L:AAM_SEL, Enum) 1 == (L:MPCD-menu, Enum) 1000 div 1 == and</Visibility>
 							<Rectangle id="Rectangle">
@@ -9194,6 +9719,17 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 								<Bright>True</Bright>
 								  <Width>60</Width>
 								  <Height>24</Height>
+								<LineColorScript>@ForeColor</LineColorScript>
+							</Rectangle>
+						</Element>
+						<Element id="SEL BOX - DTM">
+							<FloatPosition>-5.000,0.000</FloatPosition>
+							<Visibility>(L:MPCD_DTM_SHR) (L:MPCD-menu, Enum) 1000 div 15 == and (L:JTIDS_PWR) 1 == and</Visibility>
+							<Rectangle id="Rectangle">
+								<LineWidth>2</LineWidth>
+								<Bright>True</Bright>
+								<Width>20</Width>
+								<Height>75</Height>
 								<LineColorScript>@ForeColor</LineColorScript>
 							</Rectangle>
 						</Element>
@@ -9232,19 +9768,6 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 							<Size>80,22</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-					   <Element id="SEL BOX">
-							<FloatPosition>0.000,0.000</FloatPosition>
-							<Visibility>
-								(L:BTN-15-SEL, Bool) (L:MPCD-menu, Enum) 1000 div 18 == and
-							</Visibility>
-							<Rectangle id="Rectangle">
-								<LineWidth>2</LineWidth>
-								<Bright>True</Bright>
-								<Width>80</Width>
-								<Height>24</Height>
-								<LineColorScript>@ForeColor</LineColorScript>
-							</Rectangle>
-						</Element>
 					</Element>
 					<Element id="BTN 07">
 						<FloatPosition>140.000,0.000</FloatPosition>
@@ -9276,21 +9799,6 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 							<Size>80,22</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-						<Element id="SEL BOX">
-							<FloatPosition>0.000,0.000</FloatPosition>
-							<Visibility>
-(L:BTN-14-SEL, Bool)
-(L:MPCD-menu, Enum) 1000 div 18 == &amp;&amp;
-(A:AUTOPILOT MASTER, Bool) 0 == &amp;&amp;
-</Visibility>
-							<Rectangle id="Rectangle">
-								<LineWidth>2</LineWidth>
-								<Bright>True</Bright>
-								<Width>80</Width>
-								<Height>24</Height>
-								<LineColorScript>@ForeColor</LineColorScript>
-							</Rectangle>
-						</Element>
 						<Element id="SEL BOX - DTM">
 							<FloatPosition>0.000,0.000</FloatPosition>
 							<Visibility>
@@ -9325,20 +9833,6 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 							<Size>80,24</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-						<Element id="SEL BOX">
-							<FloatPosition>0.000,0.000</FloatPosition>
-							<Visibility>
-(L:BTN-13-SEL, Bool)
-(L:MPCD-menu, Enum) 1000 div 18 == &amp;&amp;
-</Visibility>
-							<Rectangle id="Rectangle">
-								<LineWidth>2</LineWidth>
-								<Bright>True</Bright>
-								<Width>80</Width>
-								<Height>24</Height>
-								<LineColorScript>@ForeColor</LineColorScript>
-							</Rectangle>
-						</Element>
 					</Element>
 					<Element id="BTN 09">
 						<FloatPosition>304.000,0.000</FloatPosition>
@@ -9359,20 +9853,6 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 							<Size>80,24</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-						<Element id="SEL BOX">
-							<FloatPosition>0.000,0.000</FloatPosition>
-							<Visibility>(L:BTN-12-SEL, Bool)
-(L:MPCD-menu, Enum) 1000 div 18 == &amp;&amp;
-(A:AUTOPILOT MASTER, Bool) 0 == &amp;&amp;
-</Visibility>
-							<Rectangle id="Rectangle">
-								<LineWidth>2</LineWidth>
-								<Bright>True</Bright>
-								<Width>80</Width>
-								<Height>24</Height>
-								<LineColorScript>@ForeColor</LineColorScript>
-							</Rectangle>
-						</Element>
 					</Element>
 					<Element id="BTN 10">
 						<FloatPosition>386.000,0.000</FloatPosition>
@@ -9387,26 +9867,15 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 %{:1}%((L:ARMT_PAGES) 1 ==)
 	%{if}%SIT
 	%{end}
+	%{:2}%((L:BIT_PAGES) 1 ==)
+	%{if}POWER
+	%{end}
 %{end}
 </GaugeString>
 							<HorizontalAlign>CENTER</HorizontalAlign>
 							<Size>80,24</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-						<Element id="SEL BOX">
-							<FloatPosition>0.000,0.000</FloatPosition>
-							<Visibility>
-(L:BTN-11-SEL, Bool)
-(L:MPCD-menu, Enum) 1000 div 18 == &amp;&amp;
-</Visibility>
-							<Rectangle id="Rectangle">
-								<LineWidth>2</LineWidth>
-								<Bright>True</Bright>
-								<Width>80</Width>
-								<Height>24</Height>
-								<LineColorScript>@ForeColor</LineColorScript>
-							</Rectangle>
-						</Element>
 					</Element>
 				</Element>
 				<Element id="RIGHT">
@@ -9448,7 +9917,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 							<Size>100,48</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-						<Element id="ARMT ICS SEL BOX">
+						<Element id="SEL BOX - ARMT ICS">
 							<FloatPosition>60.000,0.000</FloatPosition>
 							<Visibility>(L:MPCD-menu, Enum) 1000 div 1 == (L:ARMT_PAGES) 0 == and (L:ICS_STATUS_DCL) 1 == and</Visibility>
 							<Rectangle id="Rectangle">
@@ -9476,7 +9945,9 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 	%((L:ARMT_PAGES) 1 ==)
 	%{if}%COOL
 	%{end}
-%{:15}R\nT\nE
+%{:15}%((L:JTIDS_PWR) 1 ==)
+		%{if}R\nT\nE
+		%{end}
 %{end}
 </GaugeString>
 							<HorizontalAlign>RIGHT</HorizontalAlign>
@@ -9501,9 +9972,9 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 								</Point>
 							</Polygon>
 						</Element>
-						<Element id="DTM SEL BOX">
+						<Element id="SEL BOX - DTM">
 							<FloatPosition>85.000,0.000</FloatPosition>
-							<Visibility>(L:MPCD_DTM_RTE) (L:MPCD-menu, Enum) 1000 div 15 == and</Visibility>
+							<Visibility>(L:MPCD_DTM_RTE) (L:MPCD-menu, Enum) 1000 div 15 == and (L:JTIDS_PWR) 1 == and</Visibility>
 							<Rectangle id="Rectangle">
 								<LineWidth>2</LineWidth>
 								<Bright>True</Bright>
@@ -9512,7 +9983,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 								<LineColorScript>@ForeColor</LineColorScript>
 							</Rectangle>
 						</Element>
-						<Element id="ARMT CMD SEL BOX">
+						<Element id="SEL BOX - ARMT CMD">
 							<FloatPosition>60.000,0.000</FloatPosition>
 							<Visibility>(L:MPCD-menu, Enum) 1000 div 1 == (L:ARMT_PAGES) 0 == and (L:CMD_PROGRAM_CAP) 1 == and</Visibility>
 							<Rectangle id="Rectangle">
@@ -9523,7 +9994,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 								<LineColorScript>@ForeColor</LineColorScript>
 							</Rectangle>
 						</Element>
-						<Element id="ARMT SRM COOL SEL BOX">
+						<Element id="SEL BOX - ARMT SRM COOL">
 							<FloatPosition>50.000,0.000</FloatPosition>
 							<Visibility>(L:SRM_COOL, Enum) 1 == (L:MPCD-menu, Enum) 1000 div 1 == and</Visibility>
 							<Rectangle id="Rectangle">
@@ -9549,7 +10020,9 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 %{:1}%((L:ARMT_PAGES) 0 ==)
 	%{if}GLOBAL
 	%{end}
-%{:15}L\nN\nE
+%{:15}%((L:JTIDS_PWR) 1 ==)
+		%{if}L\nN\nE
+		%{end}
 %{:19}ICS
 %{end}
 </GaugeString>
@@ -9575,7 +10048,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 								</Point>
 							</Polygon>
 						</Element>
-						<Element id="ARMT CMD SEL BOX">
+						<Element id="SEL BOX - ARMT CMD">
 							<FloatPosition>30.000,0.000</FloatPosition>
 							<Visibility>(L:MPCD-menu, Enum) 1000 div 1 == (L:ARMT_PAGES) 0 == and (L:CMD_GLOBAL) 1 == and</Visibility>
 							<Rectangle id="Rectangle">
@@ -9586,9 +10059,9 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 								<LineColorScript>@ForeColor</LineColorScript>
 							</Rectangle>
 						</Element>
-						<Element id="DTM SEL BOX">
+						<Element id="SEL BOX - DTM">
 							<FloatPosition>85.000,0.000</FloatPosition>
-							<Visibility>(L:MPCD_DTM_LNE) (L:MPCD-menu, Enum) 1000 div 15 == and</Visibility>
+							<Visibility>(L:MPCD_DTM_LNE) (L:MPCD-menu, Enum) 1000 div 15 == and (L:JTIDS_PWR) 1 == and</Visibility>
 							<Rectangle id="Rectangle">
 								<LineWidth>2</LineWidth>
 								<Bright>True</Bright>
@@ -9618,7 +10091,9 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 			%{else}TEWS
 			%{end}
 	%{end}
-%{:15}P\nL\nN
+%{:15}%((L:JTIDS_PWR) 1 ==)
+		%{if}P\nL\nN
+		%{end}
 %{:19}RWR
 %{end}
 							</GaugeString>
@@ -9627,7 +10102,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 							<Size>100,72</Size>
 							<Transparent>True</Transparent>
 						</GaugeText>
-						<Element id="ARMT CMD SEL BOX">
+						<Element id="SEL BOX - ARMT CMD">
 							<FloatPosition>50.000,0.000</FloatPosition>
 							<Visibility>(L:MPCD-menu, Enum) 1000 div 1 == (L:ARMT_PAGES) 0 == and (L:CMD_GLOBAL) 0 == and</Visibility>
 							<Rectangle id="Rectangle">
@@ -9638,9 +10113,9 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 								<LineColorScript>@ForeColor</LineColorScript>
 							</Rectangle>
 						</Element>
-						<Element id="DTM SEL BOX">
+						<Element id="SEL BOX - DTM">
 							<FloatPosition>85.000,0.000</FloatPosition>
-							<Visibility>(L:MPCD_DTM_PLN) (L:MPCD-menu, Enum) 1000 div 15 == and</Visibility>
+							<Visibility>(L:MPCD_DTM_PLN) (L:MPCD-menu, Enum) 1000 div 15 == and (L:JTIDS_PWR) 1 == and</Visibility>
 							<Rectangle id="Rectangle">
 								<LineWidth>2</LineWidth>
 								<Bright>True</Bright>
@@ -10020,7 +10495,7 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 										if{
 											9 (>L:BIT_FUNC_PAGES)
 										}
-								}
+							}
 						}
 					</Script>
 				</Expression>
@@ -10037,6 +10512,12 @@ CBT 2: %((L:IF15E_CBT_2_PROG, Number) )%{case}
 									if{ 1 (>L:IF15E_CBJP_ENTER, Bool) }
 								quit
 							}
+							(L:MPCD-menu, Enum) 1000 div 2 == if{
+									(L:BIT_PAGES) 1 ==
+										if{
+											10 (>L:BIT_FUNC_PAGES)
+										}
+								}
 						}
 					</Script>
 				</Expression>
